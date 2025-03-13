@@ -36,11 +36,25 @@ app.post('/render', async (req, res) => {
     const sketchFilePath = path.join(__dirname, 'temp-sketch.js');
     require('fs').writeFileSync(sketchFilePath, `module.exports = \`${sketchCode.replace(/`/g, '\\`')}\`;`);
     
-    // Bundle the video
+    // Configure Webpack with path aliases
+    const webpackOverride = (config) => {
+      return {
+        ...config,
+        resolve: {
+          ...config.resolve,
+          alias: {
+            ...config.resolve.alias,
+            '@': path.resolve(__dirname, '../src')
+          }
+        }
+      };
+    };
+    
+    // Bundle the video with webpack configuration
     console.log('Bundling video...');
     const bundleLocation = await bundle({
       entryPoint: path.join(__dirname, '../src/remotion/index.ts'),
-      // You can pass webpack overrides here if needed
+      webpackOverride,
     });
     
     // Select the composition

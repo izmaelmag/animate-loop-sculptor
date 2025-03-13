@@ -1,7 +1,7 @@
 
 import { Composition } from 'remotion';
 import { P5Animation } from './P5Animation';
-import { defaultSketch } from '@/utils/templates';
+import { defaultSketch } from '../utils/templates';
 
 // Video configuration for Instagram Reels (9:16 aspect ratio)
 const COMPOSITION_WIDTH = 1080;
