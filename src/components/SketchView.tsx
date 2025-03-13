@@ -19,73 +19,72 @@ const SketchView = () => {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState('default');
   const [sketchCode, setSketchCode] = useState(defaultSketch);
+  const sketchFunctionRef = useRef<Function | null>(null);
   
   const totalFrames = DURATION * FPS;
   
-  // Initialize and clean up p5 instance
+  // Create a persistent P5 instance once
   useEffect(() => {
-    if (!sketchRef.current) return;
-    
-    // Clean up previous instance if it exists
-    if (p5InstanceRef.current) {
-      p5InstanceRef.current.remove();
-      p5InstanceRef.current = null;
-    }
+    if (!sketchRef.current || p5InstanceRef.current) return;
     
     try {
-      // Create a sketch function with the frame and normalized time available
+      // Create a sketch function that will be updated but not recreated
       const sketch = (p: p5) => {
-        // Calculate exact frame number
-        const exactFrame = Math.floor(normalizedTime * (totalFrames - 1));
+        let canvasWidth = 0;
+        let canvasHeight = 0;
         
         p.setup = () => {
           // Create canvas with 9:16 aspect ratio for Instagram Reels
           const container = sketchRef.current;
-          const width = container ? container.clientWidth : 360;
-          const height = (width * 16) / 9; // Maintain 9:16 aspect ratio
-          p.createCanvas(width, height);
+          canvasWidth = container ? container.clientWidth : 360;
+          canvasHeight = (canvasWidth * 16) / 9; // Maintain 9:16 aspect ratio
+          p.createCanvas(canvasWidth, canvasHeight);
           p.frameRate(FPS);
           p.background(0); // Initialize with black background
         };
         
         p.draw = () => {
-          try {
-            // Clear canvas on each frame to prevent artifacts
-            p.clear();
+          // Only redraw the canvas if we have a sketch function to run
+          if (sketchFunctionRef.current) {
+            try {
+              // Clear canvas on each frame to prevent artifacts
+              p.clear();
+              p.background(0);
+              
+              // Calculate exact frame number
+              const exactFrame = Math.floor(normalizedTime * (totalFrames - 1));
+              
+              // Execute the current sketch function
+              sketchFunctionRef.current(p, normalizedTime, exactFrame, totalFrames);
+            } catch (error) {
+              console.error('Error executing sketch:', error);
+              p.background(255, 0, 0);
+              p.fill(255);
+              p.textSize(24);
+              p.textAlign(p.CENTER, p.CENTER);
+              p.text(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, p.width/2, p.height/2);
+            }
+          } else {
+            // Fallback when no sketch function is available
             p.background(0);
-            
-            // Create a function from the sketch code with parameters
-            const sketchWithFrameInfo = new Function(
-              'p', 
-              'normalizedTime', 
-              'frameNumber', 
-              'totalFrames',
-              sketchCode
-            );
-            
-            // Run the user's sketch code with frame information
-            sketchWithFrameInfo(p, normalizedTime, exactFrame, totalFrames);
-          } catch (error) {
-            console.error('Error executing sketch:', error);
-            p.background(255, 0, 0);
             p.fill(255);
             p.textSize(24);
             p.textAlign(p.CENTER, p.CENTER);
-            p.text(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, p.width/2, p.height/2);
+            p.text('Loading sketch...', p.width/2, p.height/2);
           }
         };
         
         // Handle window resize to maintain aspect ratio
         p.windowResized = () => {
           if (sketchRef.current) {
-            const width = sketchRef.current.clientWidth;
-            const height = (width * 16) / 9;
-            p.resizeCanvas(width, height);
+            const newWidth = sketchRef.current.clientWidth;
+            const newHeight = (newWidth * 16) / 9;
+            p.resizeCanvas(newWidth, newHeight);
           }
         };
       };
       
-      // Create a new p5 instance with the sketch
+      // Create a single persistent p5 instance
       p5InstanceRef.current = new p5(sketch, sketchRef.current);
     } catch (error) {
       console.error('Error creating p5 sketch:', error);
@@ -98,7 +97,24 @@ const SketchView = () => {
         p5InstanceRef.current = null;
       }
     };
-  }, [sketchCode, normalizedTime, totalFrames]);
+  }, []);
+  
+  // Update the sketch function reference when sketchCode changes, without recreating the P5 instance
+  useEffect(() => {
+    try {
+      // Create a function from the sketch code with parameters
+      sketchFunctionRef.current = new Function(
+        'p', 
+        'normalizedTime', 
+        'frameNumber', 
+        'totalFrames',
+        sketchCode
+      );
+    } catch (error) {
+      console.error('Error compiling sketch code:', error);
+      sketchFunctionRef.current = null;
+    }
+  }, [sketchCode]);
   
   const handleTimeUpdate = (_time: number, normalized: number) => {
     setNormalizedTime(normalized);

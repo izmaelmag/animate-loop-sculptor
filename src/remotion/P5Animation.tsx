@@ -28,7 +28,8 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     return Math.floor(currentNormalizedFrame * (durationInFrames - 1));
   }, [currentNormalizedFrame, durationInFrames]);
   
-  // Memoize the sketch function to prevent unnecessary re-evaluations
+  // For video rendering, we still use the frame-by-frame approach
+  // but we ensure each frame is rendered cleanly and accurately
   const sketchFn = useMemo(() => {
     return (p: p5) => {
       let canvasCreated = false;
@@ -93,6 +94,8 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     };
   }, [sketch, currentNormalizedFrame, exactFrame, durationInFrames, fps]);
 
+  // For video rendering, we still recreate the P5 instance for each frame
+  // to ensure frame-perfect rendering without any state bleed between frames
   useEffect(() => {
     // Only delay render once on component mount
     if (!delayRenderHandleRef.current) {
