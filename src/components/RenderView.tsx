@@ -91,27 +91,33 @@ const RenderView = () => {
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center">
-        <Card className="p-0 overflow-hidden aspect-[9/16] max-h-[80vh] bg-black animate-fade-in">
-          <Player
-            component={P5Animation}
-            durationInFrames={settings.duration * settings.fps}
-            fps={settings.fps}
-            compositionWidth={1080}
-            compositionHeight={1920}
-            style={{ width: '100%', height: '100%' }}
-            controls
-            loop
-            showVolumeControls={false}
-            allowFullscreen
-            inputProps={{
-              sketch: controller.sketchCode,
-              normalizedTime,
-            }}
-          />
-        </Card>
-        
-        <div className="mt-4 text-sm">
-          <p>Frame: {currentFrame}/{controller.totalFrames-1} | Normalized Time: {normalizedTime.toFixed(4)}</p>
+        <div className="relative w-full max-h-[80vh]">
+          {/* Frame info overlay */}
+          <div className="canvas-frame-info">
+            Frame: {currentFrame}/{controller.totalFrames-1}
+            <br />
+            Normalized Time: {normalizedTime.toFixed(4)}
+          </div>
+          
+          {/* Canvas container with border */}
+          <Card className="p-0 overflow-hidden aspect-[9/16] w-full canvas-container">
+            <Player
+              component={P5Animation}
+              durationInFrames={settings.duration * settings.fps}
+              fps={settings.fps}
+              compositionWidth={1080}
+              compositionHeight={1920}
+              style={{ width: '100%', height: '100%' }}
+              controls
+              loop
+              showVolumeControls={false}
+              allowFullscreen
+              inputProps={{
+                sketch: controller.sketchCode,
+                normalizedTime,
+              }}
+            />
+          </Card>
         </div>
       </div>
       
@@ -146,7 +152,7 @@ const RenderView = () => {
           isPlayable={!isRendering}
         />
         
-        <div className="mt-4 p-3 bg-muted rounded-md text-xs">
+        <div className="mt-4 p-3 bg-zinc-800 rounded-md text-gray-200 text-xs">
           <p className="font-semibold">Frame-by-Frame Mode</p>
           <p>Each frame is rendered independently to prevent flickering</p>
           <p>When exporting, every frame will be rendered exactly as shown in preview</p>

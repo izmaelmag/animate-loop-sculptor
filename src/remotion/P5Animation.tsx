@@ -145,8 +145,12 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'black' 
+        background: '#121212',
+        border: '2px solid #FF8A00',
+        borderRadius: '4px',
+        position: 'relative'
       }} 
+      className="p5-canvas-container"
     />
   );
 };

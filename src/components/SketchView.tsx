@@ -53,9 +53,19 @@ const SketchView = () => {
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center p-6">
-        <Card className="p-0 overflow-hidden aspect-[9/16] w-full max-h-[80vh] bg-black animate-fade-in">
-          <div className="w-full h-full" ref={sketchRef} />
-        </Card>
+        <div className="relative w-full max-h-[80vh]">
+          {/* Frame info overlay */}
+          <div className="canvas-frame-info">
+            Frame: {currentFrame}/{controller.totalFrames-1}
+            <br />
+            Normalized Time: {normalizedTime.toFixed(4)}
+          </div>
+          
+          {/* Canvas container with border */}
+          <Card className="p-0 overflow-hidden aspect-[9/16] w-full bg-black shadow-lg canvas-container">
+            <div className="w-full h-full" ref={sketchRef} />
+          </Card>
+        </div>
       </div>
       
       <div className="w-1/3 content-area p-4">
@@ -68,7 +78,7 @@ const SketchView = () => {
             </TabsList>
           </Tabs>
           
-          <div className="h-[400px] overflow-auto bg-muted p-4 rounded-md mb-4 font-mono text-xs">
+          <div className="h-[400px] overflow-auto bg-zinc-900 text-gray-300 p-4 rounded-md mb-4 font-mono text-xs">
             <pre>{controller.sketchCode}</pre>
           </div>
           
@@ -86,7 +96,7 @@ const SketchView = () => {
         
         <Timeline onTimeUpdate={handleTimeUpdate} />
         
-        <div className="mt-4 p-3 bg-muted rounded-md text-xs">
+        <div className="mt-4 p-3 bg-zinc-800 rounded-md text-gray-200 text-xs">
           <p className="font-semibold">Frame-by-Frame Mode</p>
           <p>Current frame: {currentFrame}/{controller.totalFrames-1}</p>
           <p>Each frame is rendered independently to prevent flickering</p>
