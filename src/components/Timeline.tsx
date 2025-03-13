@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw } from "lucide-react";
@@ -20,34 +20,53 @@ const Timeline: React.FC<TimelineProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const animationFrameRef = useRef<number | null>(null);
+  const lastUpdateTimeRef = useRef<number>(0);
   const totalFrames = duration * fps;
   
   // Calculate the normalized time (0-1) based on current time
   const normalizedTime = currentTime / duration;
   
-  useEffect(() => {
-    let animationFrame: number;
+  // Update time using requestAnimationFrame for smooth playback
+  const updateTime = useCallback((timestamp: number) => {
+    if (!lastUpdateTimeRef.current) {
+      lastUpdateTimeRef.current = timestamp;
+    }
     
-    const updateTime = () => {
+    const deltaTime = timestamp - lastUpdateTimeRef.current;
+    const frameTime = 1000 / fps; // Time per frame in ms
+    
+    // Only update if enough time has passed for a frame
+    if (deltaTime >= frameTime) {
       setCurrentTime(prevTime => {
         // Loop back to start when reaching the end
-        const newTime = prevTime + (1 / fps);
+        const newTime = prevTime + (deltaTime / 1000);
         return newTime >= duration ? 0 : newTime;
       });
       
-      animationFrame = requestAnimationFrame(updateTime);
-    };
+      lastUpdateTimeRef.current = timestamp;
+    }
     
     if (isPlaying) {
-      animationFrame = requestAnimationFrame(updateTime);
+      animationFrameRef.current = requestAnimationFrame(updateTime);
+    }
+  }, [isPlaying, fps, duration]);
+  
+  // Start/stop animation loop
+  useEffect(() => {
+    if (isPlaying) {
+      lastUpdateTimeRef.current = 0; // Reset the time reference
+      animationFrameRef.current = requestAnimationFrame(updateTime);
+    } else if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
     }
     
     return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isPlaying, fps, duration]);
+  }, [isPlaying, updateTime]);
   
   // When time changes, call the onTimeUpdate callback
   useEffect(() => {

@@ -6,11 +6,13 @@ import Timeline from './Timeline';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { defaultSketch, gsapSequenceSketch } from '@/utils/templates';
+import { useNavigate } from 'react-router-dom';
 
 const DURATION = 10; // 10 seconds duration
 const FPS = 60;
 
 const SketchView = () => {
+  const navigate = useNavigate();
   const sketchRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
   const [normalizedTime, setNormalizedTime] = useState(0);
@@ -24,6 +26,7 @@ const SketchView = () => {
     // Clean up previous instance if it exists
     if (p5InstanceRef.current) {
       p5InstanceRef.current.remove();
+      p5InstanceRef.current = null;
     }
     
     try {
@@ -34,15 +37,35 @@ const SketchView = () => {
         
         p.setup = () => {
           // Create canvas with 9:16 aspect ratio for Instagram Reels
-          const width = 360; // Scaled down for performance
-          const height = 640;
+          const container = sketchRef.current;
+          const width = container ? container.clientWidth : 360;
+          const height = (width * 16) / 9; // Maintain 9:16 aspect ratio
           p.createCanvas(width, height);
           p.frameRate(FPS);
+          p.background(0); // Initialize with black background
         };
         
         p.draw = () => {
-          // Run the user's sketch code with the current normalized time
-          sketchWithTime(p, normalizedTime);
+          try {
+            // Run the user's sketch code with the current normalized time
+            sketchWithTime(p, normalizedTime);
+          } catch (error) {
+            console.error('Error executing sketch:', error);
+            p.background(255, 0, 0);
+            p.fill(255);
+            p.textSize(24);
+            p.textAlign(p.CENTER, p.CENTER);
+            p.text(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, p.width/2, p.height/2);
+          }
+        };
+        
+        // Handle window resize to maintain aspect ratio
+        p.windowResized = () => {
+          if (sketchRef.current) {
+            const width = sketchRef.current.clientWidth;
+            const height = (width * 16) / 9;
+            p.resizeCanvas(width, height);
+          }
         };
       };
       
@@ -56,9 +79,10 @@ const SketchView = () => {
     return () => {
       if (p5InstanceRef.current) {
         p5InstanceRef.current.remove();
+        p5InstanceRef.current = null;
       }
     };
-  }, [sketchCode]);
+  }, [sketchCode, normalizedTime]);
   
   const handleTimeUpdate = (_time: number, normalized: number) => {
     setNormalizedTime(normalized);
@@ -71,11 +95,13 @@ const SketchView = () => {
   
   return (
     <div className="flex h-full">
-      <div className="w-2/3 content-area flex flex-col items-center justify-center">
-        <div className="aspect-reels max-h-[80vh]" ref={sketchRef} />
+      <div className="w-2/3 content-area flex flex-col items-center justify-center p-6">
+        <Card className="p-0 overflow-hidden aspect-[9/16] w-full max-h-[80vh] bg-black animate-fade-in">
+          <div className="w-full h-full" ref={sketchRef} />
+        </Card>
       </div>
       
-      <div className="w-1/3 content-area">
+      <div className="w-1/3 content-area p-4">
         <Card className="p-4 mb-4">
           <h3 className="text-lg font-medium mb-2">Animation Settings</h3>
           <Tabs value={selectedTemplate} onValueChange={handleTemplateChange}>
@@ -89,7 +115,14 @@ const SketchView = () => {
             <pre>{sketchCode}</pre>
           </div>
           
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <Button 
+              className="mt-2" 
+              variant="outline"
+              onClick={() => navigate('/render')}
+            >
+              Preview & Export
+            </Button>
             <Button className="mt-2">Edit Sketch</Button>
           </div>
         </Card>
