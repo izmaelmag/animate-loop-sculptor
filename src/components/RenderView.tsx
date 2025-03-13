@@ -91,7 +91,7 @@ const RenderView = () => {
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center">
-        <Card className="p-0 overflow-hidden aspect-[9/16] max-h-[80vh] bg-black animate-fade-in">
+        <Card className="p-0 overflow-hidden aspect-[9/16] max-h-[80vh] bg-black animate-fade-in flex items-center justify-center">
           <Player
             component={P5Animation}
             durationInFrames={settings.duration * settings.fps}

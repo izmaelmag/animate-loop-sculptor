@@ -145,7 +145,6 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'black' 
       }} 
     />
   );
