@@ -16,8 +16,11 @@ const SketchView = () => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
   const [normalizedTime, setNormalizedTime] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState('default');
   const [sketchCode, setSketchCode] = useState(defaultSketch);
+  
+  const totalFrames = DURATION * FPS;
   
   // Initialize and clean up p5 instance
   useEffect(() => {
@@ -30,10 +33,10 @@ const SketchView = () => {
     }
     
     try {
-      // Create a sketch function with the normalized time available
+      // Create a sketch function with the frame and normalized time available
       const sketch = (p: p5) => {
-        // Inject the normalized time value into the sketch
-        const sketchWithTime = new Function('p', 'normalizedTime', sketchCode);
+        // Calculate exact frame number
+        const exactFrame = Math.floor(normalizedTime * (totalFrames - 1));
         
         p.setup = () => {
           // Create canvas with 9:16 aspect ratio for Instagram Reels
@@ -47,8 +50,21 @@ const SketchView = () => {
         
         p.draw = () => {
           try {
-            // Run the user's sketch code with the current normalized time
-            sketchWithTime(p, normalizedTime);
+            // Clear canvas on each frame to prevent artifacts
+            p.clear();
+            p.background(0);
+            
+            // Create a function from the sketch code with parameters
+            const sketchWithFrameInfo = new Function(
+              'p', 
+              'normalizedTime', 
+              'frameNumber', 
+              'totalFrames',
+              sketchCode
+            );
+            
+            // Run the user's sketch code with frame information
+            sketchWithFrameInfo(p, normalizedTime, exactFrame, totalFrames);
           } catch (error) {
             console.error('Error executing sketch:', error);
             p.background(255, 0, 0);
@@ -82,10 +98,11 @@ const SketchView = () => {
         p5InstanceRef.current = null;
       }
     };
-  }, [sketchCode, normalizedTime]);
+  }, [sketchCode, normalizedTime, totalFrames]);
   
   const handleTimeUpdate = (_time: number, normalized: number) => {
     setNormalizedTime(normalized);
+    setCurrentFrame(Math.floor(normalized * (totalFrames - 1)));
   };
   
   const handleTemplateChange = (template: string) => {
@@ -132,6 +149,12 @@ const SketchView = () => {
           fps={FPS} 
           onTimeUpdate={handleTimeUpdate} 
         />
+        
+        <div className="mt-4 p-3 bg-muted rounded-md text-xs">
+          <p className="font-semibold">Frame-by-Frame Mode</p>
+          <p>Current frame: {currentFrame}/{totalFrames-1}</p>
+          <p>Each frame is rendered independently to prevent flickering</p>
+        </div>
       </div>
     </div>
   );

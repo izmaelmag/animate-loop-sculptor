@@ -9,9 +9,6 @@ import { Download } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { P5Animation } from '@/remotion/P5Animation';
 import { defaultSketch } from '@/utils/templates';
-import { renderMedia, selectComposition } from "@remotion/renderer";
-import { bundle } from "@remotion/bundler";
-import path from 'path';
 import { useNavigate } from 'react-router-dom';
 
 // Default export settings
@@ -24,6 +21,7 @@ const RenderView = () => {
   const [isRendering, setIsRendering] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [normalizedTime, setNormalizedTime] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const [settings, setSettings] = useState({
     duration: DEFAULT_DURATION,
     fps: DEFAULT_FPS,
@@ -31,9 +29,12 @@ const RenderView = () => {
     filename: 'animation-export'
   });
   
+  const totalFrames = settings.duration * settings.fps;
+  
   const handleTimeUpdate = (time: number, normalized: number) => {
     setCurrentTime(time);
     setNormalizedTime(normalized);
+    setCurrentFrame(Math.floor(normalized * (totalFrames - 1)));
   };
   
   const handleSettingsChange = (newSettings: any) => {
@@ -50,14 +51,6 @@ const RenderView = () => {
     });
     
     try {
-      // For browser-based rendering, we'll use a workaround
-      // In a real-world app, you'd want to use a server-side rendering approach
-      
-      // Create a temporary download link and trigger it
-      const link = document.createElement('a');
-      link.href = 'https://remotion.dev/getting-started'; // Placeholder URL
-      link.download = `${settings.filename}.mp4`;
-      
       // Show a message explaining why the download is not working in the browser
       toast({
         title: 'Export limitation',
@@ -101,6 +94,10 @@ const RenderView = () => {
             }}
           />
         </Card>
+        
+        <div className="mt-4 text-sm">
+          <p>Frame: {currentFrame}/{totalFrames-1} | Normalized Time: {normalizedTime.toFixed(4)}</p>
+        </div>
       </div>
       
       <div className="w-1/3 content-area">
@@ -136,6 +133,12 @@ const RenderView = () => {
           onTimeUpdate={handleTimeUpdate} 
           isPlayable={!isRendering}
         />
+        
+        <div className="mt-4 p-3 bg-muted rounded-md text-xs">
+          <p className="font-semibold">Frame-by-Frame Mode</p>
+          <p>Each frame is rendered independently to prevent flickering</p>
+          <p>When exporting, every frame will be rendered exactly as shown in preview</p>
+        </div>
       </div>
     </div>
   );

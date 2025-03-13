@@ -1,23 +1,25 @@
 
-// Default template with basic animation and normalized time loop
+// Default template with basic animation using frames and normalized time
 export const defaultSketch = `
-// This is a template for a looped animation using P5.js
-// The 'normalizedTime' parameter (0-1) represents the position in the animation cycle
+// Frame-driven animation template using P5.js
+// Parameters:
+// - p: the p5 instance
+// - normalizedTime: position in animation cycle (0-1) 
+// - frameNumber: current exact frame number
+// - totalFrames: total number of frames in sequence
 
-// normalizedTime: 0 = start of loop, 1 = end of loop (loops back to 0)
-// p: p5 instance
-
-// Clear the canvas
+// Clear the canvas to prevent flickering
 p.background(0);
-
-// Calculate the current progress in the loop
-const progress = normalizedTime;
 
 // Example: Create a pulsing circle with changing colors
 const centerX = p.width / 2;
 const centerY = p.height / 2;
 
-// Size oscillation
+// Use the exact frame number for precise frame-by-frame animation
+// This ensures the same frame always looks identical, eliminating flickering
+const progress = normalizedTime;
+
+// Size oscillation based on frame position
 const minSize = p.width * 0.1;
 const maxSize = p.width * 0.4;
 const size = p.map(
@@ -58,24 +60,25 @@ for (let i = 0; i < orbitCount; i++) {
   p.line(centerX, centerY, x, y);
 }
 
-// Add text showing the normalized time
+// Add frame information
 p.fill(255);
 p.noStroke();
 p.textAlign(p.LEFT, p.TOP);
 p.textSize(16);
-p.text(\`Normalized Time: \${progress.toFixed(3)}\`, 20, 20);
+p.text(\`Frame: \${frameNumber}/\${totalFrames-1}\`, 20, 20);
+p.text(\`Normalized Time: \${normalizedTime.toFixed(3)}\`, 20, 50);
 `;
 
-// Template with GSAP sequenced animation
+// Template with GSAP sequenced animation based on frames
 export const gsapSequenceSketch = `
-// This example uses GSAP for animation sequencing
-// Note: This doesn't actually load GSAP, it's meant as a pattern example
-// for how you would structure GSAP animations in a real project
+// Frame-driven animation with GSAP-style sequencing
+// Parameters:
+// - p: the p5 instance
+// - normalizedTime: position in animation cycle (0-1)
+// - frameNumber: current exact frame number
+// - totalFrames: total number of frames in sequence
 
-// Simulate GSAP timeline with P5
-// In a real project, you would import and use GSAP properly
-
-// Clear the canvas
+// Clear the canvas to prevent flickering
 p.background(10, 20, 30);
 
 // Set up the scene
@@ -83,13 +86,13 @@ const centerX = p.width / 2;
 const centerY = p.height / 2;
 
 // Simulate a GSAP timeline with 5 segments
-// Each segment represents 20% of the total timeline
+// Each segment represents 20% of the total frames
 const segments = 5;
-const segmentDuration = 1 / segments;
+const segmentFrames = Math.floor(totalFrames / segments);
 
-// Determine which segment we're in
-const currentSegment = Math.floor(normalizedTime * segments);
-const segmentProgress = (normalizedTime * segments) % 1;
+// Determine which segment we're in based on the frame number
+const currentSegment = Math.min(Math.floor(frameNumber / segmentFrames), segments - 1);
+const segmentProgress = (frameNumber % segmentFrames) / segmentFrames;
 
 // Drawing function for shapes
 const drawShape = (x, y, size, rotation, color) => {
@@ -195,12 +198,12 @@ switch (currentSegment) {
     break;
 }
 
-// Add text showing which segment we're in
+// Add frame information
 p.fill(255);
 p.noStroke();
 p.textAlign(p.LEFT, p.TOP);
 p.textSize(16);
-p.text(\`Animation Segment: \${currentSegment + 1}/\${segments}\`, 20, 20);
+p.text(\`Segment: \${currentSegment + 1}/\${segments}\`, 20, 20);
 p.text(\`Segment Progress: \${segmentProgress.toFixed(3)}\`, 20, 50);
-p.text(\`Normalized Time: \${normalizedTime.toFixed(3)}\`, 20, 80);
+p.text(\`Frame: \${frameNumber}/\${totalFrames-1}\`, 20, 80);
 `;

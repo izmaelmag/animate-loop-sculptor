@@ -19,16 +19,16 @@ const Timeline: React.FC<TimelineProps> = ({
   isPlayable = true
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const animationFrameRef = useRef<number | null>(null);
   const lastUpdateTimeRef = useRef<number>(0);
   const totalFrames = duration * fps;
   
-  // Calculate the normalized time (0-1) based on current time
-  const normalizedTime = currentTime / duration;
+  // Calculate the normalized time (0-1) based on current frame
+  const normalizedTime = totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
   
-  // Update time using requestAnimationFrame for smooth playback
-  const updateTime = useCallback((timestamp: number) => {
+  // Update frame using requestAnimationFrame for smooth playback
+  const updateFrame = useCallback((timestamp: number) => {
     if (!lastUpdateTimeRef.current) {
       lastUpdateTimeRef.current = timestamp;
     }
@@ -38,25 +38,25 @@ const Timeline: React.FC<TimelineProps> = ({
     
     // Only update if enough time has passed for a frame
     if (deltaTime >= frameTime) {
-      setCurrentTime(prevTime => {
+      setCurrentFrame(prevFrame => {
         // Loop back to start when reaching the end
-        const newTime = prevTime + (deltaTime / 1000);
-        return newTime >= duration ? 0 : newTime;
+        const newFrame = prevFrame + 1;
+        return newFrame >= totalFrames ? 0 : newFrame;
       });
       
       lastUpdateTimeRef.current = timestamp;
     }
     
     if (isPlaying) {
-      animationFrameRef.current = requestAnimationFrame(updateTime);
+      animationFrameRef.current = requestAnimationFrame(updateFrame);
     }
-  }, [isPlaying, fps, duration]);
+  }, [isPlaying, fps, totalFrames]);
   
   // Start/stop animation loop
   useEffect(() => {
     if (isPlaying) {
       lastUpdateTimeRef.current = 0; // Reset the time reference
-      animationFrameRef.current = requestAnimationFrame(updateTime);
+      animationFrameRef.current = requestAnimationFrame(updateFrame);
     } else if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
@@ -66,16 +66,17 @@ const Timeline: React.FC<TimelineProps> = ({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isPlaying, updateTime]);
+  }, [isPlaying, updateFrame]);
   
-  // When time changes, call the onTimeUpdate callback
+  // When frame changes, calculate time and call the onTimeUpdate callback
   useEffect(() => {
-    onTimeUpdate(currentTime, normalizedTime);
-  }, [currentTime, normalizedTime, onTimeUpdate]);
+    const time = (currentFrame / fps);
+    onTimeUpdate(time, normalizedTime);
+  }, [currentFrame, normalizedTime, fps, onTimeUpdate]);
   
   const handleSliderChange = (value: number[]) => {
-    const newTime = value[0];
-    setCurrentTime(newTime);
+    const newFrame = Math.round(value[0]);
+    setCurrentFrame(newFrame);
   };
   
   const togglePlayback = () => {
@@ -84,14 +85,13 @@ const Timeline: React.FC<TimelineProps> = ({
   
   const resetTimeline = () => {
     setIsPlaying(false);
-    setCurrentTime(0);
+    setCurrentFrame(0);
   };
   
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    const frames = Math.floor((seconds % 1) * fps);
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${frames.toString().padStart(2, '0')}`;
+  const formatFrameInfo = (frame: number) => {
+    const mins = Math.floor(frame / (fps * 60));
+    const secs = Math.floor((frame % (fps * 60)) / fps);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${(frame % fps).toString().padStart(2, '0')}`;
   };
   
   return (
@@ -120,7 +120,7 @@ const Timeline: React.FC<TimelineProps> = ({
           </Button>
         </div>
         <div className="text-sm font-mono">
-          {formatTime(currentTime)} / {formatTime(duration)}
+          {formatFrameInfo(currentFrame)} / {formatFrameInfo(totalFrames - 1)}
         </div>
         <div className="flex gap-2 text-sm">
           <span>{fps} fps</span>
@@ -130,16 +130,17 @@ const Timeline: React.FC<TimelineProps> = ({
       
       <Slider
         disabled={!isPlayable}
-        value={[currentTime]}
+        value={[currentFrame]}
         min={0}
-        max={duration}
-        step={1 / fps}
+        max={totalFrames - 1}
+        step={1}
         onValueChange={handleSliderChange}
         className="my-2"
       />
       
       <div className="text-xs text-muted-foreground">
-        <span>Normalized time: {normalizedTime.toFixed(4)}</span>
+        <span>Frame: {currentFrame}/{totalFrames-1}</span>
+        <span className="ml-4">Normalized position: {normalizedTime.toFixed(4)}</span>
       </div>
     </div>
   );
