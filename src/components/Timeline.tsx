@@ -1,105 +1,85 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { cn } from '@/lib/utils';
+import { useAnimation } from '@/contexts/AnimationContext';
 
 interface TimelineProps {
-  duration: number;
-  fps: number;
-  onTimeUpdate: (time: number, normalizedTime: number) => void;
+  onTimeUpdate?: (time: number, normalizedTime: number) => void;
   isPlayable?: boolean;
 }
 
 const Timeline: React.FC<TimelineProps> = ({
-  duration,
-  fps,
   onTimeUpdate,
   isPlayable = true
 }) => {
+  const { controller } = useAnimation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentFrame, setCurrentFrame] = useState(0);
-  const animationFrameRef = useRef<number | null>(null);
-  const lastUpdateTimeRef = useRef<number>(0);
-  const totalFrames = duration * fps;
+  const [totalFrames, setTotalFrames] = useState(0);
+  const [fps, setFps] = useState(0);
   
-  // Calculate the normalized time (0-1) based on current frame
-  const normalizedTime = totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
-  
-  // Dispatch custom event when play state changes
+  // Initialize state from controller
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent('timeline-play-state-change', {
-      detail: { isPlaying }
-    }));
-  }, [isPlaying]);
-  
-  // Update frame using requestAnimationFrame for smooth playback
-  const updateFrame = useCallback((timestamp: number) => {
-    if (!lastUpdateTimeRef.current) {
-      lastUpdateTimeRef.current = timestamp;
-    }
+    if (!controller) return;
     
-    const deltaTime = timestamp - lastUpdateTimeRef.current;
-    const frameTime = 1000 / fps; // Time per frame in ms
+    setCurrentFrame(controller.currentFrame);
+    setIsPlaying(controller.isPlaying);
+    setTotalFrames(controller.totalFrames);
+    setFps(controller.fps);
     
-    // Only update if enough time has passed for a frame
-    if (deltaTime >= frameTime) {
-      setCurrentFrame(prevFrame => {
-        // Loop back to start when reaching the end
-        const newFrame = prevFrame + 1;
-        return newFrame >= totalFrames ? 0 : newFrame;
-      });
+    // Subscribe to frame changes
+    const unsubscribeFrame = controller.onFrameChanged((frame, normalizedTime) => {
+      setCurrentFrame(frame);
       
-      lastUpdateTimeRef.current = timestamp;
-    }
+      // Call external callback if provided
+      if (onTimeUpdate) {
+        const time = frame / controller.fps;
+        onTimeUpdate(time, normalizedTime);
+      }
+    });
     
-    if (isPlaying) {
-      animationFrameRef.current = requestAnimationFrame(updateFrame);
-    }
-  }, [isPlaying, fps, totalFrames]);
-  
-  // Start/stop animation loop
-  useEffect(() => {
-    if (isPlaying) {
-      lastUpdateTimeRef.current = 0; // Reset the time reference
-      animationFrameRef.current = requestAnimationFrame(updateFrame);
-    } else if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
+    // Subscribe to play state changes
+    const unsubscribePlayState = controller.onPlayStateChanged((playing) => {
+      setIsPlaying(playing);
+    });
     
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      unsubscribeFrame();
+      unsubscribePlayState();
     };
-  }, [isPlaying, updateFrame]);
-  
-  // When frame changes, calculate time and call the onTimeUpdate callback
-  useEffect(() => {
-    const time = (currentFrame / fps);
-    onTimeUpdate(time, normalizedTime);
-  }, [currentFrame, normalizedTime, fps, onTimeUpdate]);
+  }, [controller, onTimeUpdate]);
   
   const handleSliderChange = (value: number[]) => {
+    if (!controller) return;
+    
     const newFrame = Math.round(value[0]);
-    setCurrentFrame(newFrame);
+    controller.currentFrame = newFrame;
   };
   
   const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
+    if (!controller) return;
+    controller.isPlaying = !controller.isPlaying;
   };
   
   const resetTimeline = () => {
-    setIsPlaying(false);
-    setCurrentFrame(0);
+    if (!controller) return;
+    controller.reset();
   };
   
   const formatFrameInfo = (frame: number) => {
+    if (!fps) return "00:00:00";
+    
     const mins = Math.floor(frame / (fps * 60));
     const secs = Math.floor((frame % (fps * 60)) / fps);
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${(frame % fps).toString().padStart(2, '0')}`;
   };
+  
+  if (!controller || totalFrames === 0) {
+    return <div>Loading timeline...</div>;
+  }
   
   return (
     <div className={cn(
@@ -147,7 +127,7 @@ const Timeline: React.FC<TimelineProps> = ({
       
       <div className="text-xs text-muted-foreground">
         <span>Frame: {currentFrame}/{totalFrames-1}</span>
-        <span className="ml-4">Normalized position: {normalizedTime.toFixed(4)}</span>
+        <span className="ml-4">Normalized position: {controller.normalizedTime.toFixed(4)}</span>
       </div>
     </div>
   );

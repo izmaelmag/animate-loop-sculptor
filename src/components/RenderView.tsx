@@ -8,33 +8,44 @@ import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { P5Animation } from '@/remotion/P5Animation';
-import { defaultSketch } from '@/utils/templates';
 import { useNavigate } from 'react-router-dom';
-
-// Default export settings
-const DEFAULT_DURATION = 10;
-const DEFAULT_FPS = 60;
+import { useAnimation } from '@/contexts/AnimationContext';
 
 const RenderView = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { controller } = useAnimation();
   const [isRendering, setIsRendering] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [normalizedTime, setNormalizedTime] = useState(0);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [settings, setSettings] = useState({
-    duration: DEFAULT_DURATION,
-    fps: DEFAULT_FPS,
+    duration: 10,
+    fps: 60,
     quality: 'high',
     filename: 'animation-export'
   });
   
-  const totalFrames = settings.duration * settings.fps;
+  // Update settings from controller
+  useEffect(() => {
+    if (!controller) return;
+    
+    setSettings(prev => ({
+      ...prev,
+      duration: controller.duration,
+      fps: controller.fps
+    }));
+    
+    // Subscribe to frame changes
+    return controller.onFrameChanged((frame, normalized) => {
+      setCurrentFrame(frame);
+      setNormalizedTime(normalized);
+      setCurrentTime(frame / controller.fps);
+    });
+  }, [controller]);
   
   const handleTimeUpdate = (time: number, normalized: number) => {
-    setCurrentTime(time);
-    setNormalizedTime(normalized);
-    setCurrentFrame(Math.floor(normalized * (totalFrames - 1)));
+    // This is now handled by the controller
   };
   
   const handleSettingsChange = (newSettings: any) => {
@@ -73,6 +84,10 @@ const RenderView = () => {
     }
   }, [settings.filename, toast]);
   
+  if (!controller) {
+    return <div>Loading render view...</div>;
+  }
+  
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center">
@@ -89,14 +104,14 @@ const RenderView = () => {
             showVolumeControls={false}
             allowFullscreen
             inputProps={{
-              sketch: defaultSketch,
+              sketch: controller.sketchCode,
               normalizedTime,
             }}
           />
         </Card>
         
         <div className="mt-4 text-sm">
-          <p>Frame: {currentFrame}/{totalFrames-1} | Normalized Time: {normalizedTime.toFixed(4)}</p>
+          <p>Frame: {currentFrame}/{controller.totalFrames-1} | Normalized Time: {normalizedTime.toFixed(4)}</p>
         </div>
       </div>
       
@@ -128,9 +143,6 @@ const RenderView = () => {
         </div>
         
         <Timeline 
-          duration={settings.duration} 
-          fps={settings.fps} 
-          onTimeUpdate={handleTimeUpdate} 
           isPlayable={!isRendering}
         />
         
