@@ -27,6 +27,13 @@ const Timeline: React.FC<TimelineProps> = ({
   // Calculate the normalized time (0-1) based on current frame
   const normalizedTime = totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
   
+  // Dispatch custom event when play state changes
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('timeline-play-state-change', {
+      detail: { isPlaying }
+    }));
+  }, [isPlaying]);
+  
   // Update frame using requestAnimationFrame for smooth playback
   const updateFrame = useCallback((timestamp: number) => {
     if (!lastUpdateTimeRef.current) {

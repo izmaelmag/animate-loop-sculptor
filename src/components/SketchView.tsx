@@ -20,6 +20,7 @@ const SketchView = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('default');
   const [sketchCode, setSketchCode] = useState(defaultSketch);
   const sketchFunctionRef = useRef<Function | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   
   const totalFrames = DURATION * FPS;
   
@@ -41,6 +42,9 @@ const SketchView = () => {
           p.createCanvas(canvasWidth, canvasHeight);
           p.frameRate(FPS);
           p.background(0); // Initialize with black background
+          
+          // We don't want P5's automatic animation loop - we'll control it
+          p.noLoop();
         };
         
         p.draw = () => {
@@ -110,11 +114,38 @@ const SketchView = () => {
         'totalFrames',
         sketchCode
       );
+      
+      // Redraw with new sketch code
+      if (p5InstanceRef.current) {
+        p5InstanceRef.current.redraw();
+      }
     } catch (error) {
       console.error('Error compiling sketch code:', error);
       sketchFunctionRef.current = null;
     }
   }, [sketchCode]);
+  
+  // Redraw when normalized time changes
+  useEffect(() => {
+    if (p5InstanceRef.current && sketchFunctionRef.current) {
+      p5InstanceRef.current.redraw();
+    }
+  }, [normalizedTime]);
+  
+  // Handle play/pause state from Timeline
+  useEffect(() => {
+    const handleTimelinePlayStateChange = (playing: boolean) => {
+      setIsPlaying(playing);
+    };
+    
+    window.addEventListener('timeline-play-state-change', 
+      (e: any) => handleTimelinePlayStateChange(e.detail.isPlaying));
+    
+    return () => {
+      window.removeEventListener('timeline-play-state-change', 
+        (e: any) => handleTimelinePlayStateChange(e.detail.isPlaying));
+    };
+  }, []);
   
   const handleTimeUpdate = (_time: number, normalized: number) => {
     setNormalizedTime(normalized);
