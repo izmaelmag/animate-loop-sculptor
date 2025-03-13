@@ -53,9 +53,10 @@ const SketchView = () => {
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center p-6">
-        <Card className="p-0 overflow-hidden aspect-[9/16] w-full max-h-[80vh] bg-black animate-fade-in flex items-center justify-center">
+        {/* Canvas aspect ratio wrapper without styling */}
+        <div className="aspect-[9/16] w-full max-h-[80vh] flex items-center justify-center">
           <div className="w-full h-full flex items-center justify-center" ref={sketchRef} />
-        </Card>
+        </div>
       </div>
       
       <div className="w-1/3 content-area p-4">
