@@ -1,69 +1,80 @@
-# Welcome to your Lovable project
 
-## Project info
+# P5.js Animation Renderer
 
-**URL**: https://lovable.dev/projects/d58527e8-283f-4c5a-934b-14fe6f2dc107
+This application allows you to create, preview, and render videos from P5.js sketches.
 
-## How can I edit this code?
+## Requirements
 
-There are several ways of editing your application.
+- Node.js (v14 or later)
+- npm or yarn
 
-**Use Lovable**
+## Setup and Installation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d58527e8-283f-4c5a-934b-14fe6f2dc107) and start prompting.
+1. Clone the repository
+   ```
+   git clone <repository-url>
+   cd <repository-name>
+   ```
 
-Changes made via Lovable will be committed automatically to this repo.
+2. Install dependencies
+   ```
+   npm install
+   # or
+   yarn
+   ```
 
-**Use your preferred IDE**
+3. Install server dependencies
+   ```
+   cd server
+   npm install
+   # or
+   yarn
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Running the Application
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Start the frontend application
+   ```
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-Follow these steps:
+2. Start the rendering server (in a separate terminal)
+   ```
+   cd server
+   npm start
+   # or
+   yarn start
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Open your browser and navigate to `http://localhost:8080`
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## How to Use
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Create your animation in the Sketch Editor tab
+2. Preview and adjust your animation as needed
+3. Navigate to the Render tab
+4. Configure export settings (duration, FPS, quality)
+5. Click "Export Video" to render your animation
+6. Download the rendered video when complete
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## Troubleshooting
 
-**Edit a file directly in GitHub**
+- If the render server status shows "offline", make sure you've started the server with `cd server && npm start`
+- For rendering issues, check the server console for detailed error messages
+- Large or complex animations may take longer to render - be patient!
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
+- `src/` - Frontend application code
+  - `components/` - React components
+  - `remotion/` - Video rendering components
+  - `utils/` - Utility functions
+- `server/` - Backend rendering server
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Known Limitations
 
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d58527e8-283f-4c5a-934b-14fe6f2dc107) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- For performance reasons, animations with heavy computations may render slower
+- The P5 instance is recreated for each frame during rendering to ensure frame-perfect output
+- The maximum rendering duration is limited to 5 minutes (can be adjusted in the server code)

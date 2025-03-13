@@ -5,11 +5,15 @@ import { Card } from '@/components/ui/card';
 import Timeline from './Timeline';
 import ExportPanel from './ExportPanel';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { P5Animation } from '@/remotion/P5Animation';
 import { useNavigate } from 'react-router-dom';
 import { useAnimation } from '@/contexts/AnimationContext';
+import { Progress } from "@/components/ui/progress";
+
+// Server URL - change this to match your server deployment
+const RENDER_SERVER_URL = 'http://localhost:3001';
 
 const RenderView = () => {
   const { toast } = useToast();
@@ -19,12 +23,51 @@ const RenderView = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [normalizedTime, setNormalizedTime] = useState(0);
   const [currentFrame, setCurrentFrame] = useState(0);
+  const [renderProgress, setRenderProgress] = useState(0);
+  const [serverStatus, setServerStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [settings, setSettings] = useState({
     duration: 10,
     fps: 60,
     quality: 'high',
     filename: 'animation-export'
   });
+  
+  // Check if render server is online
+  useEffect(() => {
+    const checkServerStatus = async () => {
+      try {
+        const response = await fetch(`${RENDER_SERVER_URL}/status`, { 
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        if (response.ok) {
+          setServerStatus('online');
+          toast({
+            title: 'Render server connected',
+            description: 'Ready to export your animations',
+            duration: 3000,
+          });
+        } else {
+          setServerStatus('offline');
+        }
+      } catch (error) {
+        console.error('Server connection error:', error);
+        setServerStatus('offline');
+        toast({
+          title: 'Render server offline',
+          description: 'Start the server with "cd server && npm start"',
+          variant: 'destructive',
+          duration: 5000,
+        });
+      }
+    };
+    
+    checkServerStatus();
+  }, [toast]);
   
   // Update settings from controller
   useEffect(() => {
@@ -44,34 +87,86 @@ const RenderView = () => {
     });
   }, [controller]);
   
-  const handleTimeUpdate = (time: number, normalized: number) => {
-    // This is now handled by the controller
-  };
-  
   const handleSettingsChange = (newSettings: any) => {
     setSettings(newSettings);
   };
   
   const handleExport = useCallback(async () => {
+    if (!controller || !controller.sketchCode) {
+      toast({
+        title: 'No sketch available',
+        description: 'Please create a sketch first',
+        variant: 'destructive',
+        duration: 3000,
+      });
+      return;
+    }
+    
+    if (serverStatus !== 'online') {
+      toast({
+        title: 'Render server offline',
+        description: 'Make sure the render server is running',
+        variant: 'destructive',
+        duration: 5000,
+      });
+      return;
+    }
+    
     setIsRendering(true);
+    setRenderProgress(0);
+    setDownloadUrl(null);
     
     toast({
       title: 'Starting export...',
-      description: 'Your video is being prepared for export.',
+      description: 'Your video is being prepared for export',
       duration: 5000,
     });
     
     try {
-      // Show a message explaining why the download is not working in the browser
-      toast({
-        title: 'Export limitation',
-        description: 'Video rendering requires a Node.js environment. In a complete implementation, this would send the rendering job to a backend service.',
-        duration: 8000,
+      // Simulate progress updates (actual progress would come from the server)
+      const progressInterval = setInterval(() => {
+        setRenderProgress(prev => {
+          const newProgress = prev + Math.random() * 5;
+          return newProgress < 95 ? newProgress : prev;
+        });
+      }, 500);
+      
+      // Send render request to server
+      const response = await fetch(`${RENDER_SERVER_URL}/render`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sketchCode: controller.sketchCode,
+          duration: settings.duration,
+          fps: settings.fps,
+          quality: settings.quality,
+          filename: settings.filename
+        }),
       });
       
-      setTimeout(() => {
-        setIsRendering(false);
-      }, 2000);
+      clearInterval(progressInterval);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Server error');
+      }
+      
+      const data = await response.json();
+      setRenderProgress(100);
+      
+      if (data.success && data.downloadUrl) {
+        setDownloadUrl(`${RENDER_SERVER_URL}${data.downloadUrl}`);
+        
+        toast({
+          title: 'Export complete!',
+          description: 'Your video is ready for download',
+          duration: 5000,
+        });
+      } else {
+        throw new Error('Invalid server response');
+      }
     } catch (error) {
       console.error('Error during export:', error);
       toast({
@@ -80,9 +175,17 @@ const RenderView = () => {
         variant: 'destructive',
         duration: 5000,
       });
+    } finally {
       setIsRendering(false);
     }
-  }, [settings.filename, toast]);
+  }, [controller, settings, serverStatus, toast]);
+  
+  // Handle direct download
+  const handleDownload = useCallback(() => {
+    if (downloadUrl) {
+      window.open(downloadUrl, '_blank');
+    }
+  }, [downloadUrl]);
   
   if (!controller) {
     return <div>Loading render view...</div>;
@@ -124,12 +227,49 @@ const RenderView = () => {
         />
         
         <div className="mt-4">
+          {serverStatus === 'checking' && (
+            <div className="mb-2 text-sm text-center">
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="animate-spin h-4 w-4" />
+                Checking render server status...
+              </span>
+            </div>
+          )}
+          
+          {serverStatus === 'offline' && (
+            <div className="mb-2 p-2 bg-destructive/10 text-destructive rounded-md text-sm">
+              <p className="font-semibold">Render server offline</p>
+              <p>Start the server with: <code>cd server && npm start</code></p>
+            </div>
+          )}
+          
+          {isRendering && (
+            <div className="mb-4">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Rendering progress</span>
+                <span>{Math.round(renderProgress)}%</span>
+              </div>
+              <Progress value={renderProgress} className="h-2" />
+            </div>
+          )}
+          
+          {downloadUrl && !isRendering && (
+            <Button 
+              className="w-full mb-4 flex gap-2" 
+              onClick={handleDownload}
+              variant="secondary"
+            >
+              <Download size={16} />
+              <span>Download Video</span>
+            </Button>
+          )}
+          
           <Button 
             className="w-full mb-4 flex gap-2" 
             onClick={handleExport}
-            disabled={isRendering}
+            disabled={isRendering || serverStatus !== 'online'}
           >
-            <Download size={16} />
+            {isRendering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download size={16} />}
             <span>{isRendering ? 'Rendering...' : 'Export Video'}</span>
           </Button>
           
