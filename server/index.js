@@ -21,6 +21,15 @@ if (!existsSync(outputDir)) {
   mkdirSync(outputDir, { recursive: true });
 }
 
+// Helper function to escape special characters in template literals
+const escapeTemplateString = (str) => {
+  if (!str) return '';
+  return str
+    .replace(/\${/g, '\\${') // Escape ${} template literals
+    .replace(/`/g, '\\`')    // Escape backticks
+    .replace(/\\/g, '\\\\'); // Escape backslashes
+};
+
 app.post('/render', async (req, res) => {
   try {
     const { sketchCode, duration, fps, quality, filename } = req.body;
@@ -32,16 +41,22 @@ app.post('/render', async (req, res) => {
       return res.status(400).json({ error: 'Sketch code is required' });
     }
     
-    // Create a temporary file with the sketch code - properly escaped and formatted
-    // IMPORTANT: Make sure all variables are properly passed to the sketch function
+    // Create a temporary file with properly escaped sketch code
     const sketchFilePath = path.join(__dirname, 'temp-sketch.js');
-    const safeSketchCode = sketchCode.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    const escapedSketchCode = escapeTemplateString(sketchCode);
     
     const sketchFileContent = `
       // Generated sketch file at ${new Date().toISOString()}
       module.exports = function(p, normalizedTime, frameNumber, totalFrames) {
         try {
-          ${safeSketchCode}
+          // Set default values in case parameters are undefined
+          frameNumber = typeof frameNumber === 'undefined' ? 0 : frameNumber;
+          totalFrames = typeof totalFrames === 'undefined' ? 1 : totalFrames;
+          
+          // Log parameters to help debugging
+          console.log('Rendering with:', { normalizedTime, frameNumber, totalFrames });
+          
+          ${escapedSketchCode}
         } catch (error) {
           console.error('Sketch execution error:', error);
           p.background(255, 0, 0);
@@ -54,6 +69,7 @@ app.post('/render', async (req, res) => {
     `;
     
     require('fs').writeFileSync(sketchFilePath, sketchFileContent);
+    console.log('Sketch file written to:', sketchFilePath);
     
     // Configure Webpack with path aliases and React settings
     const webpackOverride = (config) => {
@@ -67,14 +83,19 @@ app.post('/render', async (req, res) => {
           },
           fallback: {
             ...config.resolve.fallback,
-            // Add Node.js polyfills if needed
             "path": false,
             "fs": false,
           }
         },
-        // Ensure React is properly configured
-        externals: {
-          ...config.externals,
+        module: {
+          ...config.module,
+          rules: [
+            ...config.module.rules,
+          ],
+        },
+        optimization: {
+          ...config.optimization,
+          minimizer: [],
         },
       };
     };
@@ -89,11 +110,23 @@ app.post('/render', async (req, res) => {
     // Select the composition
     console.log('Selecting composition...');
     const compositionId = 'P5Animation';
+    
+    // Ensure sketch path is absolute
+    const absoluteSketchPath = path.resolve(sketchFilePath);
+    console.log('Using absolute sketch path:', absoluteSketchPath);
+    
+    // Clear require cache for the sketch file to ensure fresh reload
+    delete require.cache[require.resolve(absoluteSketchPath)];
+    
+    // Load the sketch function
+    const sketchFunction = require(absoluteSketchPath);
+    console.log('Sketch function loaded:', typeof sketchFunction);
+    
     const composition = await selectComposition({
       serveUrl: bundleLocation,
       id: compositionId,
       inputProps: {
-        sketch: require('./temp-sketch.js'),
+        sketch: sketchFunction,
         normalizedTime: 0,
       },
     });
@@ -118,6 +151,10 @@ app.post('/render', async (req, res) => {
       videoConfig = { width: 1440, height: 2560 };
     }
     
+    // Calculate the correct number of frames
+    const durationInFrames = Math.ceil((duration || 10) * (fps || 30));
+    console.log(`Rendering ${durationInFrames} frames at ${fps || 30}fps`);
+    
     // Render the video
     await renderMedia({
       composition,
@@ -125,16 +162,22 @@ app.post('/render', async (req, res) => {
       codec: 'h264',
       outputLocation: outputFilePath,
       inputProps: {
-        sketch: require('./temp-sketch.js'),
+        sketch: sketchFunction,
         normalizedTime: 0, // Initial value, will be overridden by the animation
       },
       timeoutInMilliseconds: 300000, // 5 minutes timeout
       fps: fps || 30,
-      durationInFrames: Math.ceil((duration || 10) * (fps || 30)),
+      durationInFrames: durationInFrames,
       ...videoConfig,
       chromiumOptions: {
         ignoreDefaultArgs: ["--disable-extensions"],
-        args: ["--disable-gpu", "--no-sandbox", "--disable-web-security", "--disable-dev-shm-usage"]
+        args: [
+          "--disable-gpu", 
+          "--no-sandbox", 
+          "--disable-web-security", 
+          "--disable-dev-shm-usage",
+          "--js-flags=--max-old-space-size=4096" // Increase memory limit
+        ]
       }
     });
     
@@ -149,9 +192,11 @@ app.post('/render', async (req, res) => {
     });
   } catch (error) {
     console.error('Render error:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ 
       error: 'Error rendering video', 
-      details: error.message 
+      details: error.message,
+      stack: error.stack
     });
   }
 });

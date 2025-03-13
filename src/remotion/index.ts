@@ -16,10 +16,24 @@ try {
   // Register the root component for Remotion
   registerRoot(RemotionVideo);
   
+  // Log successful registration
+  console.log('Root component registered successfully');
+  
   // Additional React initialization for server-side rendering
   if (isNode) {
     console.log('Setting up server-side rendering environment');
-    // Any server-specific setup can go here
+    
+    // Check if React is properly configured
+    if (React.version) {
+      console.log('React is correctly initialized');
+    } else {
+      console.warn('React version is undefined, may cause issues');
+    }
+    
+    // Check if remotion is properly configured
+    if (typeof registerRoot !== 'function') {
+      console.error('registerRoot is not a function, Remotion may not be properly initialized');
+    }
   }
   
   console.log('Remotion bundle initialized successfully');
@@ -31,5 +45,15 @@ try {
     console.error('Error name:', error.name);
     console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
+    
+    // Attempt recovery if possible
+    if (error.message.includes('React')) {
+      console.warn('React error detected. Ensure React is properly configured for Remotion.');
+    }
+  }
+  
+  // Rethrow in development for better debugging
+  if (process.env.NODE_ENV === 'development') {
+    throw error;
   }
 }

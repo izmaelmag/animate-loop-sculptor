@@ -1,3 +1,8 @@
+// Helper to ensure template strings are properly escaped in code
+const safeTemplateString = (text: string) => {
+  // Use actual backticks for the outer template, but careful with inner ones
+  return text.replace(/`/g, '\'').replace(/\${/g, '{');
+};
 
 // Default template with basic animation using frames and normalized time
 export const defaultSketch = `
@@ -65,8 +70,8 @@ p.fill(255);
 p.noStroke();
 p.textAlign(p.LEFT, p.TOP);
 p.textSize(16);
-p.text(\`Frame: \${frameNumber}/\${totalFrames-1}\`, 20, 20);
-p.text(\`Normalized Time: \${normalizedTime.toFixed(3)}\`, 20, 50);
+p.text('Frame: ' + frameNumber + '/' + (totalFrames-1), 20, 20);
+p.text('Normalized Time: ' + normalizedTime.toFixed(3), 20, 50);
 `;
 
 // Template with GSAP sequenced animation based on frames
@@ -203,7 +208,12 @@ p.fill(255);
 p.noStroke();
 p.textAlign(p.LEFT, p.TOP);
 p.textSize(16);
-p.text(\`Segment: \${currentSegment + 1}/\${segments}\`, 20, 20);
-p.text(\`Segment Progress: \${segmentProgress.toFixed(3)}\`, 20, 50);
-p.text(\`Frame: \${frameNumber}/\${totalFrames-1}\`, 20, 80);
+p.text('Segment: ' + (currentSegment + 1) + '/' + segments, 20, 20);
+p.text('Segment Progress: ' + segmentProgress.toFixed(3), 20, 50);
+p.text('Frame: ' + frameNumber + '/' + (totalFrames-1), 20, 80);
 `;
+
+// Safe export of templates for both server and client environments
+export default {
+  defaultSketch
+};

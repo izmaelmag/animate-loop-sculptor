@@ -20,23 +20,25 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
   
   // Calculate the normalized frame (0-1) based on the current frame
   const currentNormalizedFrame = useMemo(() => {
-    return normalizedTime ?? (frame / (durationInFrames - 1));
+    return normalizedTime ?? (frame / Math.max(durationInFrames - 1, 1));
   }, [normalizedTime, frame, durationInFrames]);
   
   // Get exact frame number based on normalized position
   const exactFrame = useMemo(() => {
-    return Math.floor(currentNormalizedFrame * (durationInFrames - 1));
+    return Math.floor(currentNormalizedFrame * Math.max(durationInFrames - 1, 1));
   }, [currentNormalizedFrame, durationInFrames]);
 
   useEffect(() => {
     // Only delay render once
     if (handleRef.current === null) {
       handleRef.current = delayRender("Creating P5 instance");
+      console.log("Delaying render to create P5 instance");
     }
 
     // Skip rendering if we're in a Node.js environment (server-side rendering)
     const isNode = typeof window === 'undefined';
     if (isNode) {
+      console.log("Node environment detected, skipping P5 instantiation");
       if (handleRef.current !== null) {
         continueRender(handleRef.current);
         handleRef.current = null;
@@ -45,19 +47,24 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     }
     
     if (!canvasRef.current) {
+      console.warn("Canvas ref is not available yet");
       return;
     }
     
     // Clean up previous instance
     if (p5InstanceRef.current) {
+      console.log("Removing existing P5 instance");
       p5InstanceRef.current.remove();
       p5InstanceRef.current = null;
     }
     
     // Create a new p5 instance
     try {
+      console.log("Creating new P5 instance with sketch type:", typeof sketch);
+      
       const sketchFn = (p: p5) => {
         p.setup = () => {
+          console.log(`Setting up P5 canvas: ${width}x${height}`);
           p.createCanvas(width, height);
           p.frameRate(fps);
           p.background(0);
@@ -68,27 +75,40 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
             p.clear();
             p.background(0);
             
+            // Ensure we have valid frame values
+            const frameNumber = exactFrame;
+            const totalFrames = durationInFrames;
+            
             if (sketch) {
               // Execute the sketch code based on its type
               if (typeof sketch === 'function') {
                 // If it's a function (from server), call it directly
-                sketch(p, currentNormalizedFrame, exactFrame, durationInFrames);
+                sketch(p, currentNormalizedFrame, frameNumber, totalFrames);
               } else if (typeof sketch === 'string') {
-                // If it's a string (from frontend), use Function constructor
-                const sketchWithFrameInfo = new Function(
-                  'p', 
-                  'normalizedTime', 
-                  'frameNumber', 
-                  'totalFrames',
-                  sketch
-                );
-                
-                sketchWithFrameInfo(
-                  p, 
-                  currentNormalizedFrame, 
-                  exactFrame, 
-                  durationInFrames
-                );
+                try {
+                  // If it's a string (from frontend), use Function constructor
+                  const sketchWithFrameInfo = new Function(
+                    'p', 
+                    'normalizedTime', 
+                    'frameNumber', 
+                    'totalFrames',
+                    sketch
+                  );
+                  
+                  sketchWithFrameInfo(
+                    p, 
+                    currentNormalizedFrame, 
+                    frameNumber, 
+                    totalFrames
+                  );
+                } catch (stringError) {
+                  console.error('Error executing sketch string:', stringError);
+                  p.background(255, 0, 0);
+                  p.fill(255);
+                  p.textSize(24);
+                  p.textAlign(p.CENTER, p.CENTER);
+                  p.text(`String Sketch Error: ${stringError.message}`, p.width/2, p.height/2);
+                }
               } else {
                 // Fallback for unexpected sketch type
                 p.background(50);
@@ -111,7 +131,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
             p.noStroke();
             p.textAlign(p.LEFT, p.TOP);
             p.textSize(16);
-            p.text(`Frame: ${exactFrame}/${durationInFrames-1}`, 20, 20);
+            p.text(`Frame: ${frameNumber}/${totalFrames-1}`, 20, 20);
             p.text(`Normalized: ${currentNormalizedFrame.toFixed(4)}`, 20, 45);
           } catch (error) {
             console.error('Error in sketch execution:', error);
@@ -125,9 +145,11 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
       };
       
       p5InstanceRef.current = new p5(sketchFn, canvasRef.current);
+      console.log("P5 instance created successfully");
       
       // Continue rendering
       if (handleRef.current !== null) {
+        console.log("Continuing render after P5 initialization");
         continueRender(handleRef.current);
         handleRef.current = null;
       }
@@ -141,6 +163,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     
     return () => {
       if (p5InstanceRef.current) {
+        console.log("Cleanup: removing P5 instance");
         p5InstanceRef.current.remove();
         p5InstanceRef.current = null;
       }
