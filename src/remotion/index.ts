@@ -1,9 +1,18 @@
 
 import { registerRoot } from 'remotion';
 import { RemotionVideo } from './RemotionVideo';
+import React from 'react';
 
-// Register the root component for Remotion
-registerRoot(RemotionVideo);
-
-// Add a console log to verify the bundle is loading correctly
-console.log('Remotion bundle initialized');
+// Try to provide some debug information
+try {
+  console.log('React version:', React.version);
+  console.log('Remotion environment:', process.env.NODE_ENV);
+  console.log('Initializing Remotion bundle...');
+  
+  // Register the root component for Remotion
+  registerRoot(RemotionVideo);
+  
+  console.log('Remotion bundle initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize Remotion bundle:', error);
+}

@@ -14,7 +14,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
-  const delayRenderHandleRef = useRef<number | null>(null);
+  const handleRef = useRef<number | null>(null);
   const frame = useCurrentFrame();
   const { fps, durationInFrames, width, height } = useVideoConfig();
   
@@ -27,104 +27,102 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
   const exactFrame = useMemo(() => {
     return Math.floor(currentNormalizedFrame * (durationInFrames - 1));
   }, [currentNormalizedFrame, durationInFrames]);
-  
-  // For video rendering, we still use the frame-by-frame approach
-  // but we ensure each frame is rendered cleanly and accurately
-  const sketchFn = useMemo(() => {
-    return (p: p5) => {
-      let canvasCreated = false;
-      
-      p.setup = () => {
-        // Create canvas with exact video dimensions - this should be 9:16 ratio
-        p.createCanvas(width, height);
-        p.frameRate(fps);
-        p.background(0); // Initialize with black background
-        canvasCreated = true;
-      };
-      
-      p.draw = () => {
-        if (!canvasCreated) return;
-        
-        try {
-          if (sketch) {
-            // Clear the background on each frame to prevent artifacts
-            p.clear();
-            p.background(0);
-            
-            // Convert the sketch string to a function
-            const sketchWithFrameInfo = new Function(
-              'p', 
-              'normalizedTime', 
-              'frameNumber', 
-              'totalFrames',
-              sketch
-            );
-            
-            // Call the sketch function with the frame information
-            sketchWithFrameInfo(
-              p, 
-              currentNormalizedFrame, 
-              exactFrame, 
-              durationInFrames
-            );
-          } else {
-            // Fallback if no sketch is provided
-            p.background(0);
-            p.fill(255);
-            p.textSize(32);
-            p.textAlign(p.CENTER, p.CENTER);
-            p.text('No sketch code provided', p.width/2, p.height/2);
-          }
-        } catch (error) {
-          console.error('Error executing P5 sketch:', error);
-          p.background(255, 0, 0);
-          p.fill(255);
-          p.textSize(24);
-          p.textAlign(p.CENTER, p.CENTER);
-          p.text(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, p.width/2, p.height/2);
-        }
-        
-        // Draw frame number for debugging
-        p.fill(255);
-        p.noStroke();
-        p.textAlign(p.LEFT, p.TOP);
-        p.textSize(16);
-        p.text(`Frame: ${exactFrame}/${durationInFrames-1}`, 20, 20);
-        p.text(`Normalized: ${currentNormalizedFrame.toFixed(4)}`, 20, 45);
-      };
-    };
-  }, [sketch, currentNormalizedFrame, exactFrame, durationInFrames, fps, width, height]);
 
-  // For video rendering, we still recreate the P5 instance for each frame
-  // to ensure frame-perfect rendering without any state bleed between frames
   useEffect(() => {
-    // Only delay render once on component mount
-    if (!delayRenderHandleRef.current) {
-      delayRenderHandleRef.current = delayRender("Creating P5 instance");
+    // Only delay render once
+    if (handleRef.current === null) {
+      handleRef.current = delayRender("Creating P5 instance");
+    }
+
+    // Skip rendering if we're in a Node.js environment (server-side rendering)
+    const isNode = typeof window === 'undefined';
+    if (isNode) {
+      if (handleRef.current !== null) {
+        continueRender(handleRef.current);
+        handleRef.current = null;
+      }
+      return;
     }
     
     if (!canvasRef.current) {
       return;
     }
     
-    // Recreate p5 instance on each change to ensure frame-perfect rendering
+    // Clean up previous instance
     if (p5InstanceRef.current) {
       p5InstanceRef.current.remove();
+      p5InstanceRef.current = null;
     }
     
+    // Create a new p5 instance
     try {
+      const sketchFn = (p: p5) => {
+        p.setup = () => {
+          p.createCanvas(width, height);
+          p.frameRate(fps);
+          p.background(0);
+        };
+        
+        p.draw = () => {
+          try {
+            p.clear();
+            p.background(0);
+            
+            if (sketch) {
+              // Execute the sketch code
+              const sketchWithFrameInfo = new Function(
+                'p', 
+                'normalizedTime', 
+                'frameNumber', 
+                'totalFrames',
+                sketch
+              );
+              
+              sketchWithFrameInfo(
+                p, 
+                currentNormalizedFrame, 
+                exactFrame, 
+                durationInFrames
+              );
+            } else {
+              // Fallback
+              p.background(0);
+              p.fill(255);
+              p.textSize(32);
+              p.textAlign(p.CENTER, p.CENTER);
+              p.text('No sketch code provided', p.width/2, p.height/2);
+            }
+            
+            // Frame info
+            p.fill(255);
+            p.noStroke();
+            p.textAlign(p.LEFT, p.TOP);
+            p.textSize(16);
+            p.text(`Frame: ${exactFrame}/${durationInFrames-1}`, 20, 20);
+            p.text(`Normalized: ${currentNormalizedFrame.toFixed(4)}`, 20, 45);
+          } catch (error) {
+            console.error('Error in sketch execution:', error);
+            p.background(255, 0, 0);
+            p.fill(255);
+            p.textSize(24);
+            p.textAlign(p.CENTER, p.CENTER);
+            p.text(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, p.width/2, p.height/2);
+          }
+        };
+      };
+      
       p5InstanceRef.current = new p5(sketchFn, canvasRef.current);
       
-      // Continue render once p5 is set up
-      if (delayRenderHandleRef.current !== null) {
-        continueRender(delayRenderHandleRef.current);
-        delayRenderHandleRef.current = null;
+      // Continue rendering
+      if (handleRef.current !== null) {
+        continueRender(handleRef.current);
+        handleRef.current = null;
       }
     } catch (error) {
-      console.error('Error creating P5 sketch:', error);
-      if (delayRenderHandleRef.current !== null) {
-        continueRender(delayRenderHandleRef.current);
-        delayRenderHandleRef.current = null;
+      console.error('Error creating P5 instance:', error);
+      if (handleRef.current !== null) {
+        continueRender(handleRef.current);
+        handleRef.current = null;
       }
     }
     
@@ -134,7 +132,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
         p5InstanceRef.current = null;
       }
     };
-  }, [sketchFn]);
+  }, [sketch, currentNormalizedFrame, exactFrame, durationInFrames, fps, width, height]);
   
   return (
     <div 
@@ -145,6 +143,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#000',
       }} 
     />
   );

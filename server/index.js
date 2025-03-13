@@ -36,7 +36,7 @@ app.post('/render', async (req, res) => {
     const sketchFilePath = path.join(__dirname, 'temp-sketch.js');
     require('fs').writeFileSync(sketchFilePath, `module.exports = \`${sketchCode.replace(/`/g, '\\`')}\`;`);
     
-    // Configure Webpack with path aliases
+    // Configure Webpack with path aliases and React settings
     const webpackOverride = (config) => {
       return {
         ...config,
@@ -45,8 +45,18 @@ app.post('/render', async (req, res) => {
           alias: {
             ...config.resolve.alias,
             '@': path.resolve(__dirname, '../src')
+          },
+          fallback: {
+            ...config.resolve.fallback,
+            // Add Node.js polyfills if needed
+            "path": false,
+            "fs": false,
           }
-        }
+        },
+        // Ensure React is properly configured
+        externals: {
+          ...config.externals,
+        },
       };
     };
     
@@ -63,6 +73,10 @@ app.post('/render', async (req, res) => {
     const composition = await selectComposition({
       serveUrl: bundleLocation,
       id: compositionId,
+      inputProps: {
+        sketch: require('./temp-sketch.js'),
+        normalizedTime: 0,
+      },
     });
     
     // Set output file path
@@ -99,6 +113,10 @@ app.post('/render', async (req, res) => {
       fps: fps || 30,
       durationInFrames: Math.ceil((duration || 10) * (fps || 30)),
       ...videoConfig,
+      chromiumOptions: {
+        ignoreDefaultArgs: ["--disable-extensions"],
+        args: ["--disable-gpu", "--no-sandbox", "--disable-web-security", "--disable-dev-shm-usage"]
+      }
     });
     
     console.log('Rendering complete!');
