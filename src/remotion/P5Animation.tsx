@@ -1,44 +1,32 @@
 
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
 import { useCurrentFrame, useVideoConfig, delayRender, continueRender } from 'remotion';
 import p5 from 'p5';
 
 interface P5AnimationProps {
-  sketch?: any; // Accept both string and function
-  normalizedTime?: number;
+  sketch?: string;
 }
 
-export const P5Animation: React.FC<P5AnimationProps> = ({
-  sketch = '', 
-  normalizedTime
-}) => {
+export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = '' }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
   const handleRef = useRef<number | null>(null);
   const frame = useCurrentFrame();
   const { fps, durationInFrames, width, height } = useVideoConfig();
   
-  // Calculate the normalized frame (0-1) based on the current frame
-  const currentNormalizedFrame = useMemo(() => {
-    return normalizedTime ?? (frame / Math.max(durationInFrames - 1, 1));
-  }, [normalizedTime, frame, durationInFrames]);
+  // Calculate the normalized time based on current frame
+  const normalizedTime = frame / Math.max(durationInFrames - 1, 1);
   
-  // Get exact frame number based on normalized position
-  const exactFrame = useMemo(() => {
-    return Math.floor(currentNormalizedFrame * Math.max(durationInFrames - 1, 1));
-  }, [currentNormalizedFrame, durationInFrames]);
-
   useEffect(() => {
     // Only delay render once
     if (handleRef.current === null) {
       handleRef.current = delayRender("Creating P5 instance");
-      console.log("Delaying render to create P5 instance");
+      console.log("Remotion: Delaying render to create P5 instance");
     }
 
-    // Skip rendering if we're in a Node.js environment (server-side rendering)
-    const isNode = typeof window === 'undefined';
-    if (isNode) {
-      console.log("Node environment detected, skipping P5 instantiation");
+    // Skip rendering if we're in a Node.js environment for SSR
+    if (typeof window === 'undefined') {
+      console.log("Remotion: Node environment detected, skipping P5 instantiation");
       if (handleRef.current !== null) {
         continueRender(handleRef.current);
         handleRef.current = null;
@@ -47,24 +35,23 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     }
     
     if (!canvasRef.current) {
-      console.warn("Canvas ref is not available yet");
+      console.warn("Remotion: Canvas ref is not available yet");
       return;
     }
     
     // Clean up previous instance
     if (p5InstanceRef.current) {
-      console.log("Removing existing P5 instance");
+      console.log("Remotion: Removing existing P5 instance");
       p5InstanceRef.current.remove();
       p5InstanceRef.current = null;
     }
     
-    // Create a new p5 instance
     try {
-      console.log("Creating new P5 instance with sketch type:", typeof sketch);
+      console.log("Remotion: Creating new P5 instance");
       
       const sketchFn = (p: p5) => {
         p.setup = () => {
-          console.log(`Setting up P5 canvas: ${width}x${height}`);
+          console.log(`Remotion: Setting up P5 canvas: ${width}x${height}`);
           p.createCanvas(width, height);
           p.frameRate(fps);
           p.background(0);
@@ -75,47 +62,32 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
             p.clear();
             p.background(0);
             
-            // Ensure we have valid frame values
-            const frameNumber = exactFrame;
-            const totalFrames = durationInFrames;
-            
             if (sketch) {
-              // Execute the sketch code based on its type
-              if (typeof sketch === 'function') {
-                // If it's a function (from server), call it directly
-                sketch(p, currentNormalizedFrame, frameNumber, totalFrames);
-              } else if (typeof sketch === 'string') {
-                try {
-                  // If it's a string (from frontend), use Function constructor
-                  const sketchWithFrameInfo = new Function(
-                    'p', 
-                    'normalizedTime', 
-                    'frameNumber', 
-                    'totalFrames',
-                    sketch
-                  );
+              try {
+                // Use Function constructor to create a function that includes this scope's variables
+                const safeSketch = new Function(
+                  'p', 
+                  'normalizedTime', 
+                  'frameNumber', 
+                  'totalFrames',
+                  `
+                  // Set up safe fallbacks for variables
+                  const frame = frameNumber || 0;
+                  const duration = totalFrames || 1;
+                  const t = normalizedTime || 0;
                   
-                  sketchWithFrameInfo(
-                    p, 
-                    currentNormalizedFrame, 
-                    frameNumber, 
-                    totalFrames
-                  );
-                } catch (stringError) {
-                  console.error('Error executing sketch string:', stringError);
-                  p.background(255, 0, 0);
-                  p.fill(255);
-                  p.textSize(24);
-                  p.textAlign(p.CENTER, p.CENTER);
-                  p.text(`String Sketch Error: ${stringError.message}`, p.width/2, p.height/2);
-                }
-              } else {
-                // Fallback for unexpected sketch type
-                p.background(50);
+                  ${sketch}
+                  `
+                );
+                
+                safeSketch(p, normalizedTime, frame, durationInFrames);
+              } catch (stringError) {
+                console.error('Remotion: Error executing sketch:', stringError);
+                p.background(255, 0, 0);
                 p.fill(255);
                 p.textSize(24);
                 p.textAlign(p.CENTER, p.CENTER);
-                p.text(`Unsupported sketch type: ${typeof sketch}`, p.width/2, p.height/2);
+                p.text(`Error: ${stringError.message}`, p.width/2, p.height/2);
               }
             } else {
               // Fallback
@@ -126,15 +98,15 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
               p.text('No sketch code provided', p.width/2, p.height/2);
             }
             
-            // Frame info
+            // Frame info for debugging
             p.fill(255);
             p.noStroke();
             p.textAlign(p.LEFT, p.TOP);
             p.textSize(16);
-            p.text(`Frame: ${frameNumber}/${totalFrames-1}`, 20, 20);
-            p.text(`Normalized: ${currentNormalizedFrame.toFixed(4)}`, 20, 45);
+            p.text(`Frame: ${frame}/${durationInFrames-1}`, 20, 20);
+            p.text(`Normalized: ${normalizedTime.toFixed(4)}`, 20, 45);
           } catch (error) {
-            console.error('Error in sketch execution:', error);
+            console.error('Remotion: Error in sketch execution:', error);
             p.background(255, 0, 0);
             p.fill(255);
             p.textSize(24);
@@ -145,16 +117,16 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
       };
       
       p5InstanceRef.current = new p5(sketchFn, canvasRef.current);
-      console.log("P5 instance created successfully");
+      console.log("Remotion: P5 instance created successfully");
       
       // Continue rendering
       if (handleRef.current !== null) {
-        console.log("Continuing render after P5 initialization");
+        console.log("Remotion: Continuing render after P5 initialization");
         continueRender(handleRef.current);
         handleRef.current = null;
       }
     } catch (error) {
-      console.error('Error creating P5 instance:', error);
+      console.error('Remotion: Error creating P5 instance:', error);
       if (handleRef.current !== null) {
         continueRender(handleRef.current);
         handleRef.current = null;
@@ -163,12 +135,12 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     
     return () => {
       if (p5InstanceRef.current) {
-        console.log("Cleanup: removing P5 instance");
+        console.log("Remotion: Cleanup: removing P5 instance");
         p5InstanceRef.current.remove();
         p5InstanceRef.current = null;
       }
     };
-  }, [sketch, currentNormalizedFrame, exactFrame, durationInFrames, fps, width, height]);
+  }, [sketch, frame, durationInFrames, fps, width, height, normalizedTime]);
   
   return (
     <div 

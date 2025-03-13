@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Player } from '@remotion/player';
 import { Card } from '@/components/ui/card';
@@ -12,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAnimation } from '@/contexts/AnimationContext';
 import { Progress } from "@/components/ui/progress";
 
-// Server URL - change this to match your server deployment
 const RENDER_SERVER_URL = 'http://localhost:3001';
 
 const RenderView = () => {
@@ -32,8 +30,7 @@ const RenderView = () => {
     quality: 'high',
     filename: 'animation-export'
   });
-  
-  // Check if render server is online
+
   useEffect(() => {
     const checkServerStatus = async () => {
       try {
@@ -68,8 +65,7 @@ const RenderView = () => {
     
     checkServerStatus();
   }, [toast]);
-  
-  // Update settings from controller
+
   useEffect(() => {
     if (!controller) return;
     
@@ -79,18 +75,17 @@ const RenderView = () => {
       fps: controller.fps
     }));
     
-    // Subscribe to frame changes
     return controller.onFrameChanged((frame, normalized) => {
       setCurrentFrame(frame);
       setNormalizedTime(normalized);
       setCurrentTime(frame / controller.fps);
     });
   }, [controller]);
-  
+
   const handleSettingsChange = (newSettings: any) => {
     setSettings(newSettings);
   };
-  
+
   const handleExport = useCallback(async () => {
     if (!controller || !controller.sketchCode) {
       toast({
@@ -123,7 +118,6 @@ const RenderView = () => {
     });
     
     try {
-      // Simulate progress updates (actual progress would come from the server)
       const progressInterval = setInterval(() => {
         setRenderProgress(prev => {
           const newProgress = prev + Math.random() * 5;
@@ -131,7 +125,6 @@ const RenderView = () => {
         });
       }, 500);
       
-      // Send render request to server
       const response = await fetch(`${RENDER_SERVER_URL}/render`, {
         method: 'POST',
         headers: {
@@ -179,22 +172,20 @@ const RenderView = () => {
       setIsRendering(false);
     }
   }, [controller, settings, serverStatus, toast]);
-  
-  // Handle direct download
+
   const handleDownload = useCallback(() => {
     if (downloadUrl) {
       window.open(downloadUrl, '_blank');
     }
   }, [downloadUrl]);
-  
+
   if (!controller) {
     return <div>Loading render view...</div>;
   }
-  
+
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center">
-        {/* Canvas aspect ratio wrapper without styling */}
         <div className="aspect-[9/16] max-h-[80vh] flex items-center justify-center">
           <Player
             component={P5Animation}
@@ -209,7 +200,6 @@ const RenderView = () => {
             allowFullscreen
             inputProps={{
               sketch: controller.sketchCode,
-              normalizedTime,
             }}
           />
         </div>

@@ -10,13 +10,10 @@ const FPS = 60;
 const DURATION_IN_SECONDS = 10;
 const DURATION_IN_FRAMES = DURATION_IN_SECONDS * FPS;
 
-// Check if we're in a server environment
-const isServerSide = typeof window === 'undefined';
-
 export const RemotionVideo = () => {
-  console.log('Initializing RemotionVideo in', isServerSide ? 'server' : 'browser', 'environment');
+  console.log('Remotion: Initializing RemotionVideo');
   
-  // Make sure we have a valid sketch - important for server rendering
+  // Simple fallback sketch if needed
   const fallbackSketch = `
     // Simple fallback sketch
     p.background(0);
@@ -26,7 +23,7 @@ export const RemotionVideo = () => {
     p.text('P5.js Animation', p.width/2, p.height/2);
   `;
   
-  // Use default sketch from templates or fallback if it fails
+  // Use default sketch from templates or fallback
   const initialSketch = defaultSketch || fallbackSketch;
   
   return (
@@ -40,7 +37,6 @@ export const RemotionVideo = () => {
         height={COMPOSITION_HEIGHT}
         defaultProps={{
           sketch: initialSketch,
-          normalizedTime: 0,
         }}
       />
     </>
