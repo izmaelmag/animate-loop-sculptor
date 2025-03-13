@@ -85,9 +85,25 @@ export class AnimationController {
     const sketch = (p: p5) => {
       p.setup = () => {
         // Create canvas with 9:16 aspect ratio for Instagram Reels
+        // Fix: Calculate dimensions based on container height to maintain aspect ratio
+        const containerHeight = container.clientHeight;
         const containerWidth = container.clientWidth;
-        const containerHeight = (containerWidth * 16) / 9;
-        p.createCanvas(containerWidth, containerHeight);
+        
+        // Determine dimensions that fit within the container while preserving 9:16 ratio
+        let canvasWidth, canvasHeight;
+        
+        // If container is wider than tall (accounting for ratio)
+        if (containerWidth / containerHeight > 9/16) {
+          // Height limited, width calculated
+          canvasHeight = containerHeight;
+          canvasWidth = (canvasHeight * 9) / 16;
+        } else {
+          // Width limited, height calculated
+          canvasWidth = containerWidth;
+          canvasHeight = (canvasWidth * 16) / 9;
+        }
+        
+        p.createCanvas(canvasWidth, canvasHeight);
         p.frameRate(this.fps);
         p.background(0);
         
@@ -122,9 +138,24 @@ export class AnimationController {
       // Resize canvas when window resizes
       p.windowResized = () => {
         if (container) {
-          const newWidth = container.clientWidth;
-          const newHeight = (newWidth * 16) / 9;
-          p.resizeCanvas(newWidth, newHeight);
+          // Same logic as setup for consistent resizing
+          const containerHeight = container.clientHeight;
+          const containerWidth = container.clientWidth;
+          
+          let canvasWidth, canvasHeight;
+          
+          if (containerWidth / containerHeight > 9/16) {
+            // Height limited
+            canvasHeight = containerHeight;
+            canvasWidth = (canvasHeight * 9) / 16;
+          } else {
+            // Width limited
+            canvasWidth = containerWidth;
+            canvasHeight = (canvasWidth * 16) / 9;
+          }
+          
+          p.resizeCanvas(canvasWidth, canvasHeight);
+          this.redraw();
         }
       };
     };

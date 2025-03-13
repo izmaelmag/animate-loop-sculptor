@@ -16,7 +16,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
   const p5InstanceRef = useRef<p5 | null>(null);
   const delayRenderHandleRef = useRef<number | null>(null);
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  const { fps, durationInFrames, width, height } = useVideoConfig();
   
   // Calculate the normalized frame (0-1) based on the current frame
   const currentNormalizedFrame = useMemo(() => {
@@ -35,7 +35,8 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
       let canvasCreated = false;
       
       p.setup = () => {
-        p.createCanvas(1080, 1920);
+        // Create canvas with exact video dimensions - this should be 9:16 ratio
+        p.createCanvas(width, height);
         p.frameRate(fps);
         p.background(0); // Initialize with black background
         canvasCreated = true;
@@ -92,7 +93,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
         p.text(`Normalized: ${currentNormalizedFrame.toFixed(4)}`, 20, 45);
       };
     };
-  }, [sketch, currentNormalizedFrame, exactFrame, durationInFrames, fps]);
+  }, [sketch, currentNormalizedFrame, exactFrame, durationInFrames, fps, width, height]);
 
   // For video rendering, we still recreate the P5 instance for each frame
   // to ensure frame-perfect rendering without any state bleed between frames
