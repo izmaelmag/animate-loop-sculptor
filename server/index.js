@@ -32,9 +32,28 @@ app.post('/render', async (req, res) => {
       return res.status(400).json({ error: 'Sketch code is required' });
     }
     
-    // Create a temporary file with the sketch code
+    // Create a temporary file with the sketch code - properly escaped and formatted
+    // IMPORTANT: Make sure all variables are properly passed to the sketch function
     const sketchFilePath = path.join(__dirname, 'temp-sketch.js');
-    require('fs').writeFileSync(sketchFilePath, `module.exports = \`${sketchCode.replace(/`/g, '\\`')}\`;`);
+    const safeSketchCode = sketchCode.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    
+    const sketchFileContent = `
+      // Generated sketch file at ${new Date().toISOString()}
+      module.exports = function(p, normalizedTime, frameNumber, totalFrames) {
+        try {
+          ${safeSketchCode}
+        } catch (error) {
+          console.error('Sketch execution error:', error);
+          p.background(255, 0, 0);
+          p.fill(255);
+          p.textSize(24);
+          p.textAlign(p.CENTER, p.CENTER);
+          p.text('Error: ' + error.message, p.width/2, p.height/2);
+        }
+      };
+    `;
+    
+    require('fs').writeFileSync(sketchFilePath, sketchFileContent);
     
     // Configure Webpack with path aliases and React settings
     const webpackOverride = (config) => {

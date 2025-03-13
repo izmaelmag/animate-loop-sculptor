@@ -4,7 +4,7 @@ import { useCurrentFrame, useVideoConfig, delayRender, continueRender } from 're
 import p5 from 'p5';
 
 interface P5AnimationProps {
-  sketch?: string;
+  sketch?: any; // Accept both string and function
   normalizedTime?: number;
 }
 
@@ -69,21 +69,34 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
             p.background(0);
             
             if (sketch) {
-              // Execute the sketch code
-              const sketchWithFrameInfo = new Function(
-                'p', 
-                'normalizedTime', 
-                'frameNumber', 
-                'totalFrames',
-                sketch
-              );
-              
-              sketchWithFrameInfo(
-                p, 
-                currentNormalizedFrame, 
-                exactFrame, 
-                durationInFrames
-              );
+              // Execute the sketch code based on its type
+              if (typeof sketch === 'function') {
+                // If it's a function (from server), call it directly
+                sketch(p, currentNormalizedFrame, exactFrame, durationInFrames);
+              } else if (typeof sketch === 'string') {
+                // If it's a string (from frontend), use Function constructor
+                const sketchWithFrameInfo = new Function(
+                  'p', 
+                  'normalizedTime', 
+                  'frameNumber', 
+                  'totalFrames',
+                  sketch
+                );
+                
+                sketchWithFrameInfo(
+                  p, 
+                  currentNormalizedFrame, 
+                  exactFrame, 
+                  durationInFrames
+                );
+              } else {
+                // Fallback for unexpected sketch type
+                p.background(50);
+                p.fill(255);
+                p.textSize(24);
+                p.textAlign(p.CENTER, p.CENTER);
+                p.text(`Unsupported sketch type: ${typeof sketch}`, p.width/2, p.height/2);
+              }
             } else {
               // Fallback
               p.background(0);
