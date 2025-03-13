@@ -32,30 +32,12 @@ app.post('/render', async (req, res) => {
       return res.status(400).json({ error: 'Sketch code is required' });
     }
     
-    // Configure Webpack with path aliases and React settings
-    const webpackOverride = (config) => {
-      return {
-        ...config,
-        resolve: {
-          ...config.resolve,
-          alias: {
-            ...config.resolve.alias,
-            '@': path.resolve(__dirname, '../src')
-          },
-          fallback: {
-            ...config.resolve.fallback,
-            "path": false,
-            "fs": false,
-          }
-        }
-      };
-    };
-    
-    // Bundle the video with webpack configuration
+    // Bundle the video
     console.log('Bundling video...');
     const bundleLocation = await bundle({
       entryPoint: path.join(__dirname, '../src/remotion/index.ts'),
-      webpackOverride,
+      // Use minimal webpack config to avoid issues
+      webpackOverride: (config) => config,
     });
     
     // Select the composition
@@ -107,16 +89,6 @@ app.post('/render', async (req, res) => {
       fps: fps || 30,
       durationInFrames: durationInFrames,
       ...videoConfig,
-      chromiumOptions: {
-        ignoreDefaultArgs: ["--disable-extensions"],
-        args: [
-          "--disable-gpu", 
-          "--no-sandbox", 
-          "--disable-web-security", 
-          "--disable-dev-shm-usage",
-          "--js-flags=--max-old-space-size=4096" // Increase memory limit
-        ]
-      }
     });
     
     console.log('Rendering complete!');

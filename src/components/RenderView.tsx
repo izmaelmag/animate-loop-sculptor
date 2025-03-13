@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Player } from '@remotion/player';
+
+import { useState, useCallback } from 'react';
+import { Player, PlayerRef } from '@remotion/player';
 import { Card } from '@/components/ui/card';
-import Timeline from './Timeline';
 import ExportPanel from './ExportPanel';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2 } from 'lucide-react';
@@ -10,6 +10,8 @@ import { P5Animation } from '@/remotion/P5Animation';
 import { useNavigate } from 'react-router-dom';
 import { useAnimation } from '@/contexts/AnimationContext';
 import { Progress } from "@/components/ui/progress";
+import { useRef } from 'react';
+import Timeline from './Timeline';
 
 const RENDER_SERVER_URL = 'http://localhost:3001';
 
@@ -17,10 +19,8 @@ const RenderView = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { controller } = useAnimation();
+  const playerRef = useRef<PlayerRef>(null);
   const [isRendering, setIsRendering] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [normalizedTime, setNormalizedTime] = useState(0);
-  const [currentFrame, setCurrentFrame] = useState(0);
   const [renderProgress, setRenderProgress] = useState(0);
   const [serverStatus, setServerStatus] = useState<'checking' | 'online' | 'offline'>('checking');
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -31,15 +31,11 @@ const RenderView = () => {
     filename: 'animation-export'
   });
 
-  useEffect(() => {
+  // Check server status on component mount
+  useState(() => {
     const checkServerStatus = async () => {
       try {
-        const response = await fetch(`${RENDER_SERVER_URL}/status`, { 
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
+        const response = await fetch(`${RENDER_SERVER_URL}/status`);
         
         if (response.ok) {
           setServerStatus('online');
@@ -64,9 +60,10 @@ const RenderView = () => {
     };
     
     checkServerStatus();
-  }, [toast]);
+  });
 
-  useEffect(() => {
+  // Update settings based on controller
+  useState(() => {
     if (!controller) return;
     
     setSettings(prev => ({
@@ -74,13 +71,7 @@ const RenderView = () => {
       duration: controller.duration,
       fps: controller.fps
     }));
-    
-    return controller.onFrameChanged((frame, normalized) => {
-      setCurrentFrame(frame);
-      setNormalizedTime(normalized);
-      setCurrentTime(frame / controller.fps);
-    });
-  }, [controller]);
+  });
 
   const handleSettingsChange = (newSettings: any) => {
     setSettings(newSettings);
@@ -186,8 +177,9 @@ const RenderView = () => {
   return (
     <div className="flex h-full">
       <div className="w-2/3 content-area flex flex-col items-center justify-center">
-        <div className="aspect-[9/16] max-h-[80vh] flex items-center justify-center">
+        <Card className="aspect-[9/16] max-h-[80vh] flex items-center justify-center overflow-hidden">
           <Player
+            ref={playerRef}
             component={P5Animation}
             durationInFrames={settings.duration * settings.fps}
             fps={settings.fps}
@@ -201,11 +193,12 @@ const RenderView = () => {
             inputProps={{
               sketch: controller.sketchCode,
             }}
+            autoPlay
           />
-        </div>
+        </Card>
         
-        <div className="mt-4 text-sm">
-          <p>Frame: {currentFrame}/{controller.totalFrames-1} | Normalized Time: {normalizedTime.toFixed(4)}</p>
+        <div className="mt-4 text-sm p-2 bg-muted rounded-md">
+          <p>Use the player controls above to preview your animation</p>
         </div>
       </div>
       
@@ -278,9 +271,9 @@ const RenderView = () => {
         />
         
         <div className="mt-4 p-3 bg-muted rounded-md text-xs">
-          <p className="font-semibold">Frame-by-Frame Mode</p>
-          <p>Each frame is rendered independently to prevent flickering</p>
-          <p>When exporting, every frame will be rendered exactly as shown in preview</p>
+          <p className="font-semibold">Remotion Rendering</p>
+          <p>Using Remotion to export frame-accurate videos of your P5.js animations</p>
+          <p>Each frame is rendered independently to ensure consistent quality</p>
         </div>
       </div>
     </div>

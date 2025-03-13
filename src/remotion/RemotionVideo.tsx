@@ -11,9 +11,7 @@ const DURATION_IN_SECONDS = 10;
 const DURATION_IN_FRAMES = DURATION_IN_SECONDS * FPS;
 
 export const RemotionVideo = () => {
-  console.log('Remotion: Initializing RemotionVideo');
-  
-  // Simple fallback sketch if needed
+  // Use default sketch from templates or fallback
   const fallbackSketch = `
     // Simple fallback sketch
     p.background(0);
@@ -23,7 +21,6 @@ export const RemotionVideo = () => {
     p.text('P5.js Animation', p.width/2, p.height/2);
   `;
   
-  // Use default sketch from templates or fallback
   const initialSketch = defaultSketch || fallbackSketch;
   
   return (
