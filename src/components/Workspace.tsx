@@ -17,6 +17,7 @@ const Workspace = () => {
           <LoaderPinwheel size={24} className="text-white" />
           <span className="text-white">Sculptor</span>
         </div>
+
         <SketchView />
       </main>
     </div>

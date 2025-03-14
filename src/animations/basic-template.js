@@ -1,3 +1,5 @@
+export const name = "basic";
+
 /**
  * Basic Animation Template
  *

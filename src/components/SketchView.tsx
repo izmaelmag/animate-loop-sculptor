@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Timeline from "./Timeline";
 import { useAnimation } from "@/contexts/AnimationContext";
+import { animations } from "@/animations";
 
 const SketchView = () => {
   const { controller } = useAnimation();
   const sketchRef = useRef<HTMLDivElement>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState("default");
 
   // Initialize P5 instance when component mounts
   useEffect(() => {
@@ -18,8 +18,8 @@ const SketchView = () => {
   // Update sketch code when template changes
   useEffect(() => {
     if (!controller) return;
-    controller.setAnimation(selectedTemplate);
-  }, [selectedTemplate, controller]);
+    controller.setAnimationFunction(animations.basic);
+  }, [controller]);
 
   if (!controller) {
     return <div>Loading sketch view...</div>;

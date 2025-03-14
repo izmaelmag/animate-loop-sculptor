@@ -12,7 +12,7 @@ export const RemotionVideo = () => {
         width={1080}
         height={1920}
         defaultProps={{
-          templateName: "default",
+          templateName: "basic",
         }}
       />
     </>

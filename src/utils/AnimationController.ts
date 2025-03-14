@@ -1,13 +1,6 @@
 import p5 from "p5";
-import { animation, basicAnimation, gsapAnimation } from "../animations";
-
-// Define a specific type for animation functions
-export type AnimationFunction = (
-  p: p5,
-  normalizedTime: number,
-  frameNumber: number,
-  totalFrames: number
-) => void;
+import { animations, AnimationName, getAnimationByName } from "@/animations";
+import { AnimationFunction } from "@/types/animations";
 
 export class AnimationController {
   private p5Instance: p5 | null = null;
@@ -327,16 +320,9 @@ export class AnimationController {
     p.text("Loading sketch...", p.width / 2, p.height / 2);
   }
 
-  setAnimation(animationType: string = "basic"): void {
-    if (animationType === "basic") {
-      this.sketchFunction = basicAnimation;
-    } else if (animationType === "gsap") {
-      this.sketchFunction = gsapAnimation;
-    } else {
-      this.sketchFunction = (p, t, frame, totalFrames) =>
-        animation(p, t, frame, totalFrames, animationType);
-    }
-    this.redraw();
+  setAnimation(name: AnimationName = "basic"): void {
+    const animationFunction = getAnimationByName(name);
+    this.setAnimationFunction(animationFunction);
   }
 }
 
