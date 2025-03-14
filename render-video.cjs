@@ -91,7 +91,7 @@ async function renderVideo() {
       chromiumOptions: {
         disableWebSecurity: true,
         headless: true,
-        enableGPU: false,
+        enableGPU: true,
       },
       browserExecutable: undefined,
       envVariables: {

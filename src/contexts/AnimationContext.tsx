@@ -3,7 +3,6 @@ import {
   AnimationController,
   createAnimationController,
 } from "@/utils/AnimationController";
-import { defaultSketch } from "@/utils/templates";
 
 // Default animation settings
 const DEFAULT_DURATION = 10;
@@ -38,7 +37,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
     );
 
     // Set default sketch code
-    animationController.sketchCode = defaultSketch;
+    animationController.setAnimation("basic");
 
     setController(animationController);
 

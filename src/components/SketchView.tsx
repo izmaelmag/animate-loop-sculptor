@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import Timeline from "./Timeline";
-import { defaultSketch, gsapSequenceSketch } from "@/utils/templates";
 import { useAnimation } from "@/contexts/AnimationContext";
 
 const SketchView = () => {
@@ -19,10 +18,7 @@ const SketchView = () => {
   // Update sketch code when template changes
   useEffect(() => {
     if (!controller) return;
-
-    const newSketchCode =
-      selectedTemplate === "default" ? defaultSketch : gsapSequenceSketch;
-    controller.sketchCode = newSketchCode;
+    controller.setAnimation(selectedTemplate);
   }, [selectedTemplate, controller]);
 
   if (!controller) {
