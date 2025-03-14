@@ -1,6 +1,5 @@
-import React from 'react';
-import { registerRoot, Composition } from 'remotion';
-import { MyVideo } from './MyVideo';
+import { registerRoot, Composition } from "remotion";
+import { MyVideo } from "./MyVideo";
 
 export const RemotionVideo = () => {
   return (
@@ -13,11 +12,11 @@ export const RemotionVideo = () => {
         width={1080}
         height={1920}
         defaultProps={{
-          templateName: 'default'
+          templateName: "default",
         }}
       />
     </>
   );
 };
 
-registerRoot(RemotionVideo); 
+registerRoot(RemotionVideo);

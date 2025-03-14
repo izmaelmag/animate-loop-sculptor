@@ -1,6 +1,6 @@
 /**
  * Basic Animation Template
- * 
+ *
  * @param {object} p - p5 instance
  * @param {number} t - normalized time from 0 to 1
  * @param {number} frame - current frame number
@@ -10,6 +10,7 @@ export function animation(p, t, frame, totalFrames) {
   // Clear the canvas to prevent flickering
   p.background(0);
 
+  // Set the P5 pixel ratio to 3
   // Example: Create a pulsing circle with changing colors
   const centerX = p.width / 2;
   const centerY = p.height / 2;
@@ -21,16 +22,12 @@ export function animation(p, t, frame, totalFrames) {
   // Size oscillation based on frame position
   const minSize = p.width * 0.1;
   const maxSize = p.width * 0.4;
-  const size = p.map(
-    p.sin(progress * p.TWO_PI), 
-    -1, 1, 
-    minSize, maxSize
-  );
+  const size = p.map(p.sin(progress * p.TWO_PI), -1, 1, minSize, maxSize);
 
   // Color oscillation
   const r = p.map(p.sin(progress * p.TWO_PI), -1, 1, 0, 255);
-  const g = p.map(p.sin(progress * p.TWO_PI + p.PI/3), -1, 1, 0, 255);
-  const b = p.map(p.sin(progress * p.TWO_PI + 2*p.PI/3), -1, 1, 0, 255);
+  const g = p.map(p.sin(progress * p.TWO_PI + p.PI / 3), -1, 1, 0, 255);
+  const b = p.map(p.sin(progress * p.TWO_PI + (2 * p.PI) / 3), -1, 1, 0, 255);
 
   p.noStroke();
   p.fill(r, g, b, 200);
@@ -41,18 +38,18 @@ export function animation(p, t, frame, totalFrames) {
   // Orbiting elements
   const orbitCount = 5;
   for (let i = 0; i < orbitCount; i++) {
-    const angle = progress * p.TWO_PI + (i * p.TWO_PI / orbitCount);
+    const angle = progress * p.TWO_PI + (i * p.TWO_PI) / orbitCount;
     const orbitDistance = p.width * 0.3;
     const x = centerX + p.cos(angle) * orbitDistance;
     const y = centerY + p.sin(angle) * orbitDistance;
-    
+
     // Size for orbiting elements
     const orbitSize = p.width * 0.05;
-    
+
     // Color for orbiting elements (complementary to main circle)
     p.fill(255 - r, 255 - g, 255 - b, 200);
     p.circle(x, y, orbitSize);
-    
+
     // Connect with lines
     p.stroke(255, 100);
     p.strokeWeight(2);
@@ -64,6 +61,6 @@ export function animation(p, t, frame, totalFrames) {
   p.noStroke();
   p.textAlign(p.LEFT, p.TOP);
   p.textSize(16);
-  p.text('Frame: ' + frame + '/' + (totalFrames-1), 20, 20);
-  p.text('Normalized Time: ' + t.toFixed(3), 20, 50);
-} 
+  p.text("Frame: " + frame + "/" + (totalFrames - 1), 20, 20);
+  p.text("Normalized Time: " + t.toFixed(3), 20, 50);
+}

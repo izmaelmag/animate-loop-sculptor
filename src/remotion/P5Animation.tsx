@@ -18,7 +18,9 @@ declare global {
   }
 }
 
-export const P5Animation: React.FC<P5AnimationProps> = ({ templateName = "default" }) => {
+export const P5Animation: React.FC<P5AnimationProps> = ({
+  templateName = "default",
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Ref = useRef<p5>();
   const frame = useCurrentFrame();
@@ -55,10 +57,12 @@ export const P5Animation: React.FC<P5AnimationProps> = ({ templateName = "defaul
       const totalFrames = durationInFrames;
 
       // Select the animation function based on template name - SAME LOGIC AS IN SKETCHVIEW
-      const animationFunction = 
-        templateName === "basic" ? basicAnimation :
-        templateName === "gsap" ? gsapAnimation :
-        defaultAnimation;
+      const animationFunction =
+        templateName === "basic"
+          ? basicAnimation
+          : templateName === "gsap"
+          ? gsapAnimation
+          : defaultAnimation;
 
       // If we already have a p5 instance, work with it
       if (p5Ref.current) {
