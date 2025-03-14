@@ -1,10 +1,9 @@
-
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, RotateCcw } from "lucide-react";
-import { cn } from '@/lib/utils';
-import { useAnimation } from '@/contexts/AnimationContext';
+import { Play, Pause, RotateCcw, StepForward, StepBack } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAnimation } from "@/contexts/AnimationContext";
 
 interface TimelineProps {
   onTimeUpdate?: (time: number, normalizedTime: number) => void;
@@ -13,108 +12,138 @@ interface TimelineProps {
 
 const Timeline: React.FC<TimelineProps> = ({
   onTimeUpdate,
-  isPlayable = true
+  isPlayable = true,
 }) => {
   const { controller } = useAnimation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [totalFrames, setTotalFrames] = useState(0);
   const [fps, setFps] = useState(0);
-  
+
   // Initialize state from controller
   useEffect(() => {
     if (!controller) return;
-    
+
     setCurrentFrame(controller.currentFrame);
     setIsPlaying(controller.isPlaying);
     setTotalFrames(controller.totalFrames);
     setFps(controller.fps);
-    
+
     // Subscribe to frame changes
-    const unsubscribeFrame = controller.onFrameChanged((frame, normalizedTime) => {
-      setCurrentFrame(frame);
-      
-      // Call external callback if provided
-      if (onTimeUpdate) {
-        const time = frame / controller.fps;
-        onTimeUpdate(time, normalizedTime);
+    const unsubscribeFrame = controller.onFrameChanged(
+      (frame, normalizedTime) => {
+        setCurrentFrame(frame);
+
+        // Call external callback if provided
+        if (onTimeUpdate) {
+          const time = frame / controller.fps;
+          onTimeUpdate(time, normalizedTime);
+        }
       }
-    });
-    
+    );
+
     // Subscribe to play state changes
     const unsubscribePlayState = controller.onPlayStateChanged((playing) => {
       setIsPlaying(playing);
     });
-    
+
     return () => {
       unsubscribeFrame();
       unsubscribePlayState();
     };
   }, [controller, onTimeUpdate]);
-  
+
   const handleSliderChange = (value: number[]) => {
     if (!controller) return;
-    
+
     const newFrame = Math.round(value[0]);
     controller.currentFrame = newFrame;
   };
-  
+
   const togglePlayback = () => {
     if (!controller) return;
     controller.isPlaying = !controller.isPlaying;
   };
-  
+
   const resetTimeline = () => {
     if (!controller) return;
     controller.reset();
   };
-  
+
   const formatFrameInfo = (frame: number) => {
     if (!fps) return "00:00:00";
-    
+
     const mins = Math.floor(frame / (fps * 60));
     const secs = Math.floor((frame % (fps * 60)) / fps);
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${(frame % fps).toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}:${(frame % fps).toString().padStart(2, "0")}`;
   };
-  
+
   if (!controller || totalFrames === 0) {
     return <div>Loading timeline...</div>;
   }
-  
+
   return (
-    <div className={cn(
-      "p-4 rounded-md glass-panel",
-      "flex flex-col gap-2",
-      !isPlayable && "opacity-70 pointer-events-none"
-    )}>
-      <div className="flex items-center justify-between">
+    <div
+      className={cn(
+        "p-4 rounded-md glass-panel",
+        "flex flex-col gap-2",
+        !isPlayable && "opacity-70 pointer-events-none"
+      )}
+    >
+      <div className="flex items-end justify-between">
         <div className="flex gap-2">
-          <Button 
-            size="sm" 
-            variant="outline" 
+          <Button
+            size="sm"
+            variant="default"
             onClick={togglePlayback}
             disabled={!isPlayable}
           >
             {isPlaying ? <Pause size={16} /> : <Play size={16} />}
           </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
+          <Button
+            size="sm"
+            variant="default"
             onClick={resetTimeline}
             disabled={!isPlayable}
           >
             <RotateCcw size={16} />
           </Button>
+          {/* Frame Backwards */}
+          <Button
+            size="sm"
+            variant="default"
+            onClick={() => {
+              if (!controller) return;
+              controller.currentFrame -= 1;
+              controller.redraw();
+            }}
+            disabled={isPlaying || !isPlayable || currentFrame === 0}
+          >
+            <StepBack size={16} />
+          </Button>
+          {/* Frame Forwards */}
+          <Button
+            size="sm"
+            variant="default"
+            onClick={() => {
+              if (!controller) return;
+              controller.currentFrame += 1;
+              controller.redraw();
+            }}
+            disabled={
+              isPlaying || !isPlayable || currentFrame === totalFrames - 1
+            }
+          >
+            <StepForward size={16} />
+          </Button>
         </div>
-        <div className="text-sm font-mono">
+        <div className="text-xs font-mono">
           {formatFrameInfo(currentFrame)} / {formatFrameInfo(totalFrames - 1)}
         </div>
-        <div className="flex gap-2 text-sm">
-          <span>{fps} fps</span>
-          <span>{totalFrames} frames</span>
-        </div>
       </div>
-      
+
       <Slider
         disabled={!isPlayable}
         value={[currentFrame]}
@@ -124,10 +153,16 @@ const Timeline: React.FC<TimelineProps> = ({
         onValueChange={handleSliderChange}
         className="my-2"
       />
-      
-      <div className="text-xs text-muted-foreground">
-        <span>Frame: {currentFrame}/{totalFrames-1}</span>
-        <span className="ml-4">Normalized position: {controller.normalizedTime.toFixed(4)}</span>
+
+      <div className="text-xs text-muted-foreground font-mono">
+        <span>
+          <span className="font-bold">Frame:</span> {currentFrame}/
+          {totalFrames - 1}
+        </span>
+        <span className="ml-4">
+          <span className="font-bold">Progress:</span>{" "}
+          {(controller.normalizedTime * 100).toFixed(2)}%
+        </span>
       </div>
     </div>
   );
