@@ -10,6 +10,10 @@ const WIDTH = 1080;
 const HEIGHT = 1920;
 const QUALITY = 'high'; // 'high', 'medium', 'low'
 
+// MEMORY MANAGEMENT SETTINGS
+const CONCURRENCY = 4; // Количество параллельных процессов рендеринга
+const MEMORY_LIMIT = 4096; // Ограничение памяти в МБ (4GB)
+
 // OUTPUT FILE PATH
 const OUTPUT_DIR = path.join(__dirname, 'output');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, `animation-${Date.now()}.mp4`);
@@ -17,6 +21,14 @@ const OUTPUT_FILE = path.join(OUTPUT_DIR, `animation-${Date.now()}.mp4`);
 // CREATE OUTPUT DIRECTORY IF IT DOESN'T EXIST
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+}
+
+// Функция для управления памятью
+function forceGarbageCollection() {
+  if (global.gc) {
+    global.gc();
+    console.log('Forced garbage collection');
+  }
 }
 
 async function renderVideo() {
@@ -27,6 +39,9 @@ async function renderVideo() {
   
   // Start Remotion rendering
   try {
+    // Запускаем сборщик мусора перед началом рендеринга
+    forceGarbageCollection();
+    
     // Bundle the composition
     console.log('Bundling the composition...');
     const bundleLocation = await bundle(path.join(__dirname, 'src/remotion/index.tsx'));
@@ -50,6 +65,11 @@ async function renderVideo() {
     console.log(`Rendering ${durationInFrames} frames at ${FPS} FPS...`);
     console.log(`Video dimensions: ${WIDTH}x${HEIGHT}`);
     console.log(`Quality: ${QUALITY} (CRF: ${crf})`);
+    console.log(`Concurrency: ${CONCURRENCY}, Memory limit: ${MEMORY_LIMIT}MB`);
+    
+    // Инициализируем счетчики для отслеживания памяти
+    let completedFrames = 0;
+    let lastGcFrame = 0;
     
     // Render video
     await renderMedia({
@@ -64,11 +84,37 @@ async function renderVideo() {
       fps: FPS,
       durationInFrames,
       crf,
-      onProgress: ({ progress }) => {
+      concurrency: CONCURRENCY,
+      frameRange: undefined,
+      chromiumOptions: {
+        disableWebSecurity: true,
+        headless: true,
+        enableGPU: false
+      },
+      browserExecutable: undefined,
+      envVariables: {
+        MEMORY_LIMIT: MEMORY_LIMIT.toString()
+      },
+      onProgress: ({ progress, renderedFrames }) => {
         const percent = Math.round(progress * 100);
         process.stdout.write(`\rProgress: ${percent}%`);
+        
+        // Прогресс рендеринга для отслеживания использования памяти
+        if (renderedFrames) {
+          const currentFrame = renderedFrames.length;
+          completedFrames = currentFrame;
+          
+          // Каждые 100 кадров запускаем принудительную сборку мусора
+          if (currentFrame - lastGcFrame >= 100) {
+            forceGarbageCollection();
+            lastGcFrame = currentFrame;
+          }
+        }
       }
     });
+    
+    // Последний запуск сборщика мусора после завершения
+    forceGarbageCollection();
     
     console.log('\nRendering complete!');
     console.log(`Video saved to: ${OUTPUT_FILE}`);
@@ -78,4 +124,19 @@ async function renderVideo() {
   }
 }
 
-renderVideo(); 
+// Подготавливаем аргументы для Node.js, чтобы включить сборку мусора
+if (process.argv.indexOf('--enable-gc') === -1) {
+  const nodeArgs = ['--expose-gc', '--max-old-space-size=' + MEMORY_LIMIT];
+  const scriptArgs = process.argv.slice(2);
+  
+  const spawn = require('child_process').spawn;
+  const child = spawn(process.execPath, [...nodeArgs, __filename, ...scriptArgs], {
+    stdio: 'inherit'
+  });
+  
+  child.on('exit', code => {
+    process.exit(code);
+  });
+} else {
+  renderVideo();
+} 

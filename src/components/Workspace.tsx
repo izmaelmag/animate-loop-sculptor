@@ -1,10 +1,8 @@
-import Header from './Header';
 import SketchView from './SketchView';
 
 const Workspace = () => {
   return (
     <div className="workspace">
-      <Header />
       <main className="flex-1 overflow-hidden">
         <SketchView />
       </main>
