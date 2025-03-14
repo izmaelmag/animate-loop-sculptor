@@ -14,9 +14,6 @@ const QUALITY = 'high'; // 'high', 'medium', 'low'
 const OUTPUT_DIR = path.join(__dirname, 'output');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, `animation-${Date.now()}.mp4`);
 
-// PATH TO SKETCH FILE (create this file with your P5 code)
-const SKETCH_FILE = path.join(__dirname, 'sketch.js');
-
 // CREATE OUTPUT DIRECTORY IF IT DOESN'T EXIST
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -25,33 +22,22 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 async function renderVideo() {
   console.log('Starting video rendering...');
   
-  // Read P5.js code from file
-  console.log(`Reading code from file: ${SKETCH_FILE}`);
-  if (!fs.existsSync(SKETCH_FILE)) {
-    console.error(`Error: File ${SKETCH_FILE} not found`);
-    console.log('Create a sketch.js file with your P5.js code');
-    return;
-  }
-  
-  const sketchCode = fs.readFileSync(SKETCH_FILE, 'utf-8');
-  console.log(`Code successfully read, length: ${sketchCode.length} characters`);
-  
-  // Set quality
+  // Setup quality
   const crf = QUALITY === 'high' ? 18 : QUALITY === 'medium' ? 23 : 28;
   
   // Start Remotion rendering
   try {
-    // Build bundle
-    console.log('Building bundle...');
+    // Bundle the composition
+    console.log('Bundling the composition...');
     const bundleLocation = await bundle(path.join(__dirname, 'src/remotion/index.tsx'));
     
     // Get compositions
-    console.log('Getting compositions...');
+    console.log('Getting composition list...');
     const compositions = await getCompositions(bundleLocation, {
-      inputProps: { sketchCode }
+      inputProps: { sketchCode: '' }
     });
     
-    // Find needed composition
+    // Find the target composition
     const composition = compositions.find(c => c.id === 'MyVideo');
     
     if (!composition) {
@@ -61,18 +47,18 @@ async function renderVideo() {
     // Rendering settings
     const durationInFrames = FPS * DURATION_IN_SECONDS;
     
-    console.log(`Starting rendering ${durationInFrames} frames at ${FPS} FPS...`);
-    console.log(`Video size: ${WIDTH}x${HEIGHT}`);
+    console.log(`Rendering ${durationInFrames} frames at ${FPS} FPS...`);
+    console.log(`Video dimensions: ${WIDTH}x${HEIGHT}`);
     console.log(`Quality: ${QUALITY} (CRF: ${crf})`);
     
-    // Rendering video
+    // Render video
     await renderMedia({
       composition,
       serveUrl: bundleLocation,
       codec: 'h264',
       outputLocation: OUTPUT_FILE,
       inputProps: {
-        sketchCode
+        sketchCode: ''
       },
       imageFormat: 'jpeg',
       fps: FPS,
@@ -84,7 +70,7 @@ async function renderVideo() {
       }
     });
     
-    console.log('\nRendering completed!');
+    console.log('\nRendering complete!');
     console.log(`Video saved to: ${OUTPUT_FILE}`);
     
   } catch (error) {

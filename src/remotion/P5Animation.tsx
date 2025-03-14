@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useCurrentFrame, useVideoConfig } from 'remotion';
 import p5 from 'p5';
+import { animation as defaultAnimation } from '../animation';
 
 interface P5AnimationProps {
   sketch?: string;
@@ -10,60 +11,64 @@ export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = '' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Ref = useRef<p5>();
   const frame = useCurrentFrame();
-  const { durationInFrames, fps } = useVideoConfig();
+  const { durationInFrames, fps, width, height } = useVideoConfig();
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Проверяем, не был ли уже создан экземпляр p5
+    // Check if p5 instance already exists
     if (p5Ref.current) {
       p5Ref.current.remove();
     }
 
-    // Рассчитываем переменные для скетча
+    // Calculate animation variables
     const t = frame / durationInFrames;
     const frameNumber = frame;
     const totalFrames = durationInFrames;
 
-    // Функция скетча, которая будет передана в p5
+    // Create sketch function to pass to p5
     const sketchFunc = (p: p5) => {
       p.setup = () => {
-        const { width, height } = containerRef.current!.getBoundingClientRect();
         p.createCanvas(width, height);
       };
 
       p.draw = () => {
         try {
-          // Выполняем код, переданный как строка, с передачей необходимых переменных
-          const sketchFunction = new Function('p', 'frame', 'frameNumber', 'totalFrames', 't', sketch);
-          sketchFunction(p, frame, frameNumber, totalFrames, t);
+          if (sketch && sketch.trim().length > 0) {
+            // If sketch string is provided, use it
+            const sketchFunction = new Function('p', 'frame', 'frameNumber', 'totalFrames', 't', sketch);
+            sketchFunction(p, frame, frameNumber, totalFrames, t);
+          } else {
+            // Otherwise use the imported animation
+            defaultAnimation(p, t, frameNumber, totalFrames);
+          }
         } catch (error) {
-          console.error('Ошибка выполнения скетча:', error);
+          console.error('Animation error:', error);
           p.background(0);
           p.fill(255, 0, 0);
           p.textSize(20);
-          p.text('Ошибка скетча: ' + error, 20, 50);
+          p.text('Animation error: ' + error, 20, 50);
         }
       };
     };
 
-    // Создаем новый экземпляр p5
+    // Create new p5 instance
     p5Ref.current = new p5(sketchFunc, containerRef.current);
 
     return () => {
-      // Удаляем p5 при размонтировании компонента
+      // Clean up p5 on unmount
       if (p5Ref.current) {
         p5Ref.current.remove();
       }
     };
-  }, [frame, sketch, durationInFrames]);
+  }, [frame, sketch, durationInFrames, width, height, fps]);
 
   return (
     <div
       ref={containerRef}
       style={{
         width: '100%',
-        height: '100%',
+        height: '100%'
       }}
     />
   );
