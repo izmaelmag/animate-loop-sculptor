@@ -87,7 +87,7 @@ const Timeline: React.FC<TimelineProps> = ({
   return (
     <div
       className={cn(
-        "p-4 rounded-md glass-panel",
+        "p-4 rounded-md glass-panel w-[550px]",
         "flex flex-col gap-2",
         !isPlayable && "opacity-70 pointer-events-none"
       )}
@@ -96,7 +96,7 @@ const Timeline: React.FC<TimelineProps> = ({
         <div className="flex gap-2">
           <Button
             size="sm"
-            variant="default"
+            variant={isPlaying ? "secondary" : "default"}
             onClick={togglePlayback}
             disabled={!isPlayable}
           >

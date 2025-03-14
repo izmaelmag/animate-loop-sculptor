@@ -1,17 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Card } from "@/components/ui/card";
 import Timeline from "./Timeline";
-import { Button } from "@/components/ui/button";
 import { defaultSketch, gsapSequenceSketch } from "@/utils/templates";
-import { useNavigate } from "react-router-dom";
 import { useAnimation } from "@/contexts/AnimationContext";
 
 const SketchView = () => {
-  const navigate = useNavigate();
   const { controller } = useAnimation();
   const sketchRef = useRef<HTMLDivElement>(null);
-  const [currentFrame, setCurrentFrame] = useState(0);
-  const [normalizedTime, setNormalizedTime] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState("default");
 
   // Initialize P5 instance when component mounts
@@ -22,10 +16,7 @@ const SketchView = () => {
     controller.initializeP5(sketchRef.current);
 
     // Subscribe to frame changes
-    return controller.onFrameChanged((frame, normalized) => {
-      setCurrentFrame(frame);
-      setNormalizedTime(normalized);
-    });
+    return controller.onFrameChanged((frame, normalized) => {});
   }, [controller]);
 
   // Update sketch code when template changes
@@ -50,26 +41,17 @@ const SketchView = () => {
   }
 
   return (
-    <div className="flex h-full">
-      <div className="w-2/3 content-area flex flex-col items-center justify-center p-6">
-        <div className="aspect-[9/16] w-full max-h-[80vh] flex items-center justify-center">
-          <div
-            className="w-full h-full flex items-center justify-center"
-            ref={sketchRef}
-          />
-        </div>
+    <div className="flex flex-col justify-start items-center h-full p-6 relative gap-2">
+      <div className="w-full content-area flex h-[100%] min-h-[0px] flex-shrink-1 flex-col">
+        <div
+          className="w-full h-full flex items-center justify-center"
+          ref={sketchRef}
+        />
       </div>
 
-      <div className="w-1/3 content-area p-4">
+      <div className="w-full flex justify-center">
+        <div className="flex flex-col gap-2">{selectedTemplate}</div>
         <Timeline onTimeUpdate={handleTimeUpdate} />
-
-        <div className="mt-4 p-3 bg-muted rounded-md text-xs">
-          <p className="font-semibold">Frame-by-Frame Mode</p>
-          <p>
-            Current frame: {currentFrame}/{controller.totalFrames - 1}
-          </p>
-          <p>Each frame is rendered independently to prevent flickering</p>
-        </div>
       </div>
     </div>
   );

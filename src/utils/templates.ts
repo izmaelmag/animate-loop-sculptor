@@ -1,7 +1,7 @@
 // Helper to ensure template strings are properly escaped in code
 const safeTemplateString = (text: string) => {
   // Use actual backticks for the outer template, but careful with inner ones
-  return text.replace(/`/g, '\'').replace(/\${/g, '{');
+  return text.replace(/`/g, "'").replace(/\${/g, "{");
 };
 
 // Default template with basic animation using frames and normalized time
@@ -215,5 +215,5 @@ p.text('Frame: ' + frameNumber + '/' + (totalFrames-1), 20, 80);
 
 // Safe export of templates for both server and client environments
 export default {
-  defaultSketch
+  defaultSketch,
 };
