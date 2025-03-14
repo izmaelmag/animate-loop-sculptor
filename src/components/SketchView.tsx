@@ -14,9 +14,6 @@ const SketchView = () => {
 
     // Initialize the controller with the sketch container
     controller.initializeP5(sketchRef.current);
-
-    // Subscribe to frame changes
-    return controller.onFrameChanged((frame, normalized) => {});
   }, [controller]);
 
   // Update sketch code when template changes
@@ -24,17 +21,9 @@ const SketchView = () => {
     if (!controller) return;
 
     const newSketchCode =
-      selectedTemplate === "default" ? defaultSketch : gsapSequenceSketch;
+      selectedTemplate === "default" ? gsapSequenceSketch : gsapSequenceSketch;
     controller.sketchCode = newSketchCode;
   }, [selectedTemplate, controller]);
-
-  const handleTimeUpdate = (_time: number, normalized: number) => {
-    // This is now handled by the controller
-  };
-
-  const handleTemplateChange = (template: string) => {
-    setSelectedTemplate(template);
-  };
 
   if (!controller) {
     return <div>Loading sketch view...</div>;
@@ -50,7 +39,7 @@ const SketchView = () => {
       </div>
 
       <div className="w-full flex justify-center">
-        <Timeline onTimeUpdate={handleTimeUpdate} />
+        <Timeline />
       </div>
     </div>
   );

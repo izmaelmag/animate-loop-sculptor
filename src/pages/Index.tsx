@@ -1,4 +1,3 @@
-
 import Workspace from "@/components/Workspace";
 
 const Index = () => {
