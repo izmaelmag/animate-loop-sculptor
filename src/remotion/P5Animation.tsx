@@ -1,10 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import p5 from "p5";
+// Import animations directly from src/animations - this ensures both Remotion and the React app use the same source
+import { animation as basicAnimation } from "../animations/basic-template.js";
+import { animation as gsapAnimation } from "../animations/gsap-sequence.js";
+// Keep defaultAnimation for backward compatibility
 import { animation as defaultAnimation } from "../animation";
 
 interface P5AnimationProps {
-  sketch?: string;
+  templateName?: string; // Use template name instead of sketch string
 }
 
 // Extend global to include gc
@@ -14,7 +18,7 @@ declare global {
   }
 }
 
-export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = "" }) => {
+export const P5Animation: React.FC<P5AnimationProps> = ({ templateName = "default" }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Ref = useRef<p5>();
   const frame = useCurrentFrame();
@@ -50,6 +54,12 @@ export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = "" }) => {
       const frameNumber = frame;
       const totalFrames = durationInFrames;
 
+      // Select the animation function based on template name - SAME LOGIC AS IN SKETCHVIEW
+      const animationFunction = 
+        templateName === "basic" ? basicAnimation :
+        templateName === "gsap" ? gsapAnimation :
+        defaultAnimation;
+
       // If we already have a p5 instance, work with it
       if (p5Ref.current) {
         try {
@@ -57,21 +67,8 @@ export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = "" }) => {
           p5Ref.current.clear();
           p5Ref.current.background(0);
 
-          if (sketch && sketch.trim().length > 0) {
-            // If sketch string is provided, use it
-            const sketchFunction = new Function(
-              "p",
-              "frame",
-              "frameNumber",
-              "totalFrames",
-              "t",
-              sketch
-            );
-            sketchFunction(p5Ref.current, frame, frameNumber, totalFrames, t);
-          } else {
-            // Otherwise use imported animation
-            defaultAnimation(p5Ref.current, t, frameNumber, totalFrames);
-          }
+          // Use the selected animation function directly
+          animationFunction(p5Ref.current, t, frameNumber, totalFrames);
         } catch (error) {
           console.error("Animation error:", error);
           p5Ref.current.background(0);
@@ -90,19 +87,8 @@ export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = "" }) => {
           // Draw first frame immediately
           p.background(0);
           try {
-            if (sketch && sketch.trim().length > 0) {
-              const sketchFunction = new Function(
-                "p",
-                "frame",
-                "frameNumber",
-                "totalFrames",
-                "t",
-                sketch
-              );
-              sketchFunction(p, frame, frameNumber, totalFrames, t);
-            } else {
-              defaultAnimation(p, t, frameNumber, totalFrames);
-            }
+            // Use the selected animation function
+            animationFunction(p, t, frameNumber, totalFrames);
           } catch (error) {
             console.error("Animation error:", error);
             p.background(0);
@@ -129,7 +115,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = "" }) => {
     if (frame % 100 === 0 && typeof global.gc === "function") {
       global.gc();
     }
-  }, [frame, sketch, durationInFrames, width, height]);
+  }, [frame, templateName, durationInFrames, width, height]);
 
   return (
     <div

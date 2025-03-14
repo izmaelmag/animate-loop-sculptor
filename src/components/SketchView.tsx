@@ -50,7 +50,6 @@ const SketchView = () => {
       </div>
 
       <div className="w-full flex justify-center">
-        <div className="flex flex-col gap-2">{selectedTemplate}</div>
         <Timeline onTimeUpdate={handleTimeUpdate} />
       </div>
     </div>

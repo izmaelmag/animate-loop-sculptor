@@ -13,7 +13,7 @@ export const RemotionVideo = () => {
         width={1080}
         height={1920}
         defaultProps={{
-          sketchCode: ''
+          templateName: 'default'
         }}
       />
     </>

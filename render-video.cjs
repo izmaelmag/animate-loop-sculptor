@@ -49,7 +49,7 @@ async function renderVideo() {
     // Get compositions
     console.log('Getting composition list...');
     const compositions = await getCompositions(bundleLocation, {
-      inputProps: { sketchCode: '' }
+      inputProps: { templateName: 'default' }
     });
     
     // Find the target composition
@@ -78,7 +78,7 @@ async function renderVideo() {
       codec: 'h264',
       outputLocation: OUTPUT_FILE,
       inputProps: {
-        sketchCode: ''
+        templateName: 'default'
       },
       imageFormat: 'jpeg',
       fps: FPS,
