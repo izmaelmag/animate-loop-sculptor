@@ -1,4 +1,5 @@
 import p5 from "p5";
+import { animation, basicAnimation, gsapAnimation } from "../animations";
 
 // Define a specific type for animation functions
 export type AnimationFunction = (
@@ -39,9 +40,13 @@ export class AnimationController {
 
   // Getter for normalized time (0-1)
   get normalizedTime(): number {
-    return this.totalFrames > 1
-      ? this._currentFrame / (this.totalFrames - 1)
-      : 0;
+    const isManyFrames = this.totalFrames > 1;
+
+    if (!isManyFrames) {
+      return 0;
+    }
+
+    return this._currentFrame / (this.totalFrames - 1);
   }
 
   // Frame getter and setter
@@ -320,6 +325,18 @@ export class AnimationController {
     p.textSize(24);
     p.textAlign(p.CENTER, p.CENTER);
     p.text("Loading sketch...", p.width / 2, p.height / 2);
+  }
+
+  setAnimation(animationType: string = "basic"): void {
+    if (animationType === "basic") {
+      this.sketchFunction = basicAnimation;
+    } else if (animationType === "gsap") {
+      this.sketchFunction = gsapAnimation;
+    } else {
+      this.sketchFunction = (p, t, frame, totalFrames) =>
+        animation(p, t, frame, totalFrames, animationType);
+    }
+    this.redraw();
   }
 }
 
