@@ -1,6 +1,5 @@
-
-import { useRef, useEffect } from 'react';
-import { useCurrentFrame, useVideoConfig, delayRender, continueRender } from 'remotion';
+import React, { useEffect, useRef } from 'react';
+import { useCurrentFrame, useVideoConfig } from 'remotion';
 import p5 from 'p5';
 
 interface P5AnimationProps {
@@ -8,120 +7,64 @@ interface P5AnimationProps {
 }
 
 export const P5Animation: React.FC<P5AnimationProps> = ({ sketch = '' }) => {
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const p5InstanceRef = useRef<p5 | null>(null);
-  const handleRef = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const p5Ref = useRef<p5>();
   const frame = useCurrentFrame();
-  const { fps, durationInFrames, width, height } = useVideoConfig();
-  
-  // Calculate the normalized time based on current frame
-  const normalizedTime = frame / Math.max(durationInFrames - 1, 1);
-  
+  const { durationInFrames, fps } = useVideoConfig();
+
   useEffect(() => {
-    // Only delay render once
-    if (handleRef.current === null) {
-      handleRef.current = delayRender("Creating P5 instance");
+    if (!containerRef.current) return;
+
+    // Проверяем, не был ли уже создан экземпляр p5
+    if (p5Ref.current) {
+      p5Ref.current.remove();
     }
 
-    // Skip rendering if we're in a Node.js environment for SSR
-    if (typeof window === 'undefined') {
-      if (handleRef.current !== null) {
-        continueRender(handleRef.current);
-        handleRef.current = null;
-      }
-      return;
-    }
-    
-    if (!canvasRef.current) {
-      return;
-    }
-    
-    // Clean up previous instance
-    if (p5InstanceRef.current) {
-      p5InstanceRef.current.remove();
-      p5InstanceRef.current = null;
-    }
-    
-    try {
-      const sketchFn = (p: p5) => {
-        p.setup = () => {
-          p.createCanvas(width, height);
-          p.frameRate(fps);
-          p.background(0);
-        };
-        
-        p.draw = () => {
-          try {
-            p.clear();
-            p.background(0);
-            
-            if (sketch) {
-              // Use simple eval for the sketch code with proper scope
-              const safeEval = new Function(
-                'p', 
-                'normalizedTime', 
-                'frame', 
-                'totalFrames',
-                `
-                const t = normalizedTime || 0;
-                ${sketch}
-                `
-              );
-              
-              safeEval(p, normalizedTime, frame, durationInFrames);
-            } else {
-              // Fallback
-              p.background(0);
-              p.fill(255);
-              p.textSize(32);
-              p.textAlign(p.CENTER, p.CENTER);
-              p.text('No sketch code provided', p.width/2, p.height/2);
-            }
-          } catch (error) {
-            console.error('Error in sketch execution:', error);
-            p.background(255, 0, 0);
-            p.fill(255);
-            p.textSize(24);
-            p.textAlign(p.CENTER, p.CENTER);
-            p.text(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, p.width/2, p.height/2);
-          }
-        };
+    // Рассчитываем переменные для скетча
+    const t = frame / durationInFrames;
+    const frameNumber = frame;
+    const totalFrames = durationInFrames;
+
+    // Функция скетча, которая будет передана в p5
+    const sketchFunc = (p: p5) => {
+      p.setup = () => {
+        const { width, height } = containerRef.current!.getBoundingClientRect();
+        p.createCanvas(width, height);
       };
-      
-      p5InstanceRef.current = new p5(sketchFn, canvasRef.current);
-      
-      // Continue rendering after p5 is initialized
-      if (handleRef.current !== null) {
-        continueRender(handleRef.current);
-        handleRef.current = null;
-      }
-    } catch (error) {
-      console.error('Error creating P5 instance:', error);
-      if (handleRef.current !== null) {
-        continueRender(handleRef.current);
-        handleRef.current = null;
-      }
-    }
-    
+
+      p.draw = () => {
+        try {
+          // Выполняем код, переданный как строка, с передачей необходимых переменных
+          const sketchFunction = new Function('p', 'frame', 'frameNumber', 'totalFrames', 't', sketch);
+          sketchFunction(p, frame, frameNumber, totalFrames, t);
+        } catch (error) {
+          console.error('Ошибка выполнения скетча:', error);
+          p.background(0);
+          p.fill(255, 0, 0);
+          p.textSize(20);
+          p.text('Ошибка скетча: ' + error, 20, 50);
+        }
+      };
+    };
+
+    // Создаем новый экземпляр p5
+    p5Ref.current = new p5(sketchFunc, containerRef.current);
+
     return () => {
-      if (p5InstanceRef.current) {
-        p5InstanceRef.current.remove();
-        p5InstanceRef.current = null;
+      // Удаляем p5 при размонтировании компонента
+      if (p5Ref.current) {
+        p5Ref.current.remove();
       }
     };
-  }, [sketch, frame, durationInFrames, fps, width, height, normalizedTime]);
-  
+  }, [frame, sketch, durationInFrames]);
+
   return (
-    <div 
-      ref={canvasRef} 
-      style={{ 
-        width: '100%', 
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
         height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000',
-      }} 
+      }}
     />
   );
-};
+}; 

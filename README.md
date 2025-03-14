@@ -1,80 +1,66 @@
+# Animator - Простой рендеринг P5.js анимаций в видео
 
-# P5.js Animation Renderer
+Этот проект позволяет легко создавать видео из анимаций P5.js без необходимости настройки серверов или прокси.
 
-This application allows you to create, preview, and render videos from P5.js sketches.
+## Быстрый старт
 
-## Requirements
+1. Отредактируйте анимацию в файле `sketch.js`
+2. Запустите рендеринг командой: `node render-video.cjs`
+3. Получите готовое видео в папке `output`
 
-- Node.js (v14 or later)
-- npm or yarn
+## Структура проекта
 
-## Setup and Installation
+- `render-video.cjs` - основной скрипт для рендеринга видео
+- `sketch.js` - код P5.js анимации, который будет преобразован в видео
+- `src/remotion/` - компоненты Remotion для рендеринга
 
-1. Clone the repository
-   ```
-   git clone <repository-url>
-   cd <repository-name>
-   ```
+## Настройка видео
 
-2. Install dependencies
-   ```
-   npm install
-   # or
-   yarn
-   ```
+В файле `render-video.cjs` вы можете изменить следующие параметры:
 
-3. Install server dependencies
-   ```
-   cd server
-   npm install
-   # or
-   yarn
-   ```
+```javascript
+const FPS = 60;                    // Кадров в секунду
+const DURATION_IN_SECONDS = 10;    // Длительность видео в секундах
+const WIDTH = 1080;                // Ширина видео в пикселях
+const HEIGHT = 1920;               // Высота видео в пикселях
+const QUALITY = 'high';            // Качество видео ('high', 'medium', 'low')
+```
 
-## Running the Application
+## Как писать анимации
 
-1. Start the frontend application
-   ```
-   npm run dev
-   # or
-   yarn dev
-   ```
+Файл `sketch.js` содержит код P5.js анимации. В вашей анимации доступны следующие переменные:
 
-2. Start the rendering server (in a separate terminal)
-   ```
-   cd server
-   npm start
-   # or
-   yarn start
-   ```
+- `t` - нормализованное время от 0 до 1 (текущий кадр / всего кадров)
+- `frame` или `frameNumber` - номер текущего кадра
+- `totalFrames` - общее количество кадров в видео
+- `p` - объект с функциями P5.js (`background`, `fill`, `rect`, `ellipse`, и т.д.)
 
-3. Open your browser and navigate to `http://localhost:8080`
+Пример:
 
-## How to Use
+```javascript
+// Устанавливаем фон
+p.background(0);
 
-1. Create your animation in the Sketch Editor tab
-2. Preview and adjust your animation as needed
-3. Navigate to the Render tab
-4. Configure export settings (duration, FPS, quality)
-5. Click "Export Video" to render your animation
-6. Download the rendered video when complete
+// Рисуем круг, который изменяет размер с течением времени
+const size = p.map(p.sin(t * p.TWO_PI), -1, 1, 100, 300);
+p.fill(255, 0, 100);
+p.ellipse(p.width / 2, p.height / 2, size, size);
+```
 
-## Troubleshooting
+## Поддерживаемые функции P5.js
 
-- If the render server status shows "offline", make sure you've started the server with `cd server && npm start`
-- For rendering issues, check the server console for detailed error messages
-- Large or complex animations may take longer to render - be patient!
+- `background(color)`
+- `fill(r, g, b)`
+- `noStroke()`
+- `ellipse(x, y, width, height)`
+- `rect(x, y, width, height, radius)`
+- `text(text, x, y)`
+- `textSize(size)`
+- `textAlign(horizontal, vertical)`
+- `map(value, start1, stop1, start2, stop2)`
+- `sin(angle)`, `cos(angle)`
 
-## Project Structure
+## Требования
 
-- `src/` - Frontend application code
-  - `components/` - React components
-  - `remotion/` - Video rendering components
-  - `utils/` - Utility functions
-- `server/` - Backend rendering server
-
-## Known Limitations
-
-- For performance reasons, animations with heavy computations may render slower
-- The P5 instance is recreated for each frame during rendering to ensure frame-perfect output
-- The maximum rendering duration is limited to 5 minutes (can be adjusted in the server code)
+- Node.js
+- Пакеты из `package.json` (`@remotion/bundler`, `@remotion/renderer` и др.)
