@@ -21,7 +21,7 @@ const SketchView = () => {
     if (!controller) return;
 
     const newSketchCode =
-      selectedTemplate === "default" ? gsapSequenceSketch : gsapSequenceSketch;
+      selectedTemplate === "default" ? defaultSketch : gsapSequenceSketch;
     controller.sketchCode = newSketchCode;
   }, [selectedTemplate, controller]);
 
