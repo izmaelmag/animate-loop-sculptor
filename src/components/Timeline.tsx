@@ -95,7 +95,7 @@ const Timeline: React.FC<TimelineProps> = ({
   return (
     <div
       className={cn(
-        "p-4 rounded-md glass-panel w-[550px]",
+        "p-4 rounded-md glass-panel max-w-[550px]",
         "flex flex-col gap-2",
         !isPlayable && "opacity-70 pointer-events-none"
       )}
