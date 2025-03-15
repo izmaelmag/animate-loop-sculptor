@@ -95,8 +95,8 @@ const Timeline: React.FC<TimelineProps> = ({
   return (
     <div
       className={cn(
-        "p-4 rounded-md glass-panel max-w-[550px]",
-        "flex flex-col gap-2",
+        "rounded-md glass-panel w-auto max-w-[550px]",
+        "flex flex-col gap-2 p-3 md:p-4 border-box m-2 md:m-0",
         !isPlayable && "opacity-70 pointer-events-none"
       )}
     >
@@ -159,18 +159,23 @@ const Timeline: React.FC<TimelineProps> = ({
         max={totalFrames - 1}
         step={1}
         onValueChange={handleSliderChange}
-        className="my-2"
+        className="mt-2 mb-1"
       />
 
-      <div className="text-xs text-muted-foreground font-mono">
-        <span>
-          <span className="font-bold">Frame:</span> {currentFrame}/
-          {totalFrames - 1}
-        </span>
-        <span className="ml-4">
-          <span className="font-bold">Progress:</span>{" "}
-          {(controller.normalizedTime * 100).toFixed(2)}%
-        </span>
+      <div className="text-xs text-muted-foreground flex justify-between font-mono">
+        <div>
+          <span>Timeline</span>
+        </div>
+
+        <div>
+          <span>
+            <span className="font-bold">Frame:</span> {currentFrame}/
+            {totalFrames - 1}
+          </span>
+          <span className="ml-2">
+            ({(controller.normalizedTime * 100).toFixed(1)}%)
+          </span>
+        </div>
       </div>
     </div>
   );
