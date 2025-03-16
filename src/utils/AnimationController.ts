@@ -1,12 +1,24 @@
 import p5 from "p5";
 import { animations, AnimationName, getAnimationByName } from "@/animations";
 import { AnimationFunction } from "@/types/animations";
+import { settings as basic } from "../animations/basic-template";
+import { settings as gsap } from "../animations/gsap-sequence";
+import { settings as gridOrbit } from "../animations/grid-orbit";
+
+// Map of animation settings by name
+const animationSettings = {
+  basic,
+  gsap,
+  gridOrbit,
+};
 
 export class AnimationController {
   private p5Instance: p5 | null = null;
   private sketchFunction: AnimationFunction | null = null;
   private animationFrameRef: number | null = null;
   private lastUpdateTimeRef: number = 0;
+  private currentAnimationName: AnimationName = "basic";
+  private containerElement: HTMLElement | null = null;
 
   // Animation settings
   public readonly duration: number;
@@ -98,30 +110,28 @@ export class AnimationController {
       this.p5Instance.remove();
     }
 
+    this.containerElement = container;
+
     const sketch = (p: p5) => {
       p.setup = () => {
-        // Create canvas with 9:16 aspect ratio for Instagram Reels
-        // Fix: Calculate dimensions based on container height to maintain aspect ratio
-        const containerHeight = container.clientHeight;
-        const containerWidth = container.clientWidth;
+        // Get animation settings for current animation
+        const currentSettings =
+          animationSettings[
+            this.currentAnimationName as keyof typeof animationSettings
+          ] || basic;
 
-        // Determine dimensions that fit within the container while preserving 9:16 ratio
-        let canvasWidth, canvasHeight;
+        // Get EXACT dimensions from animation settings
+        const width = currentSettings.width || 1080;
+        const height = currentSettings.height || 1920;
 
-        // If container is wider than tall (accounting for ratio)
-        if (containerWidth / containerHeight > 9 / 16) {
-          // Height limited, width calculated
-          canvasHeight = containerHeight;
-          canvasWidth = (canvasHeight * 9) / 16;
-        } else {
-          // Width limited, height calculated
-          canvasWidth = containerWidth;
-          canvasHeight = (canvasWidth * 16) / 9;
-        }
-
-        p.createCanvas(canvasWidth, canvasHeight);
+        // Create canvas with EXACT dimensions
+        p.createCanvas(width, height);
         p.frameRate(this.fps);
         p.background(0);
+
+        // Force pixel density to 1 for exact pixel matching
+        p.pixelDensity(1);
+        console.log(`Canvas created with EXACT dimensions ${width}x${height}`);
 
         // We don't want P5's automatic animation loop - we'll control it
         p.noLoop();
@@ -151,28 +161,10 @@ export class AnimationController {
         }
       };
 
-      // Resize canvas when window resizes
+      // Resize canvas when window resizes - NOT NEEDED since we use exact dimensions
       p.windowResized = () => {
-        if (container) {
-          // Same logic as setup for consistent resizing
-          const containerHeight = container.clientHeight;
-          const containerWidth = container.clientWidth;
-
-          let canvasWidth, canvasHeight;
-
-          if (containerWidth / containerHeight > 9 / 16) {
-            // Height limited
-            canvasHeight = containerHeight;
-            canvasWidth = (canvasHeight * 9) / 16;
-          } else {
-            // Width limited
-            canvasWidth = containerWidth;
-            canvasHeight = (canvasWidth * 16) / 9;
-          }
-
-          p.resizeCanvas(canvasWidth, canvasHeight);
-          this.redraw();
-        }
+        // Do nothing - we want to keep the exact dimensions
+        console.log("Window resize ignored - keeping exact canvas dimensions");
       };
     };
 
@@ -321,8 +313,16 @@ export class AnimationController {
   }
 
   setAnimation(name: AnimationName = "basic"): void {
+    this.currentAnimationName = name;
     const animationFunction = getAnimationByName(name);
     this.setAnimationFunction(animationFunction);
+
+    // If p5 instance exists, recreate it to match the new animation dimensions
+    if (this.p5Instance && this.containerElement) {
+      this.p5Instance.remove();
+      this.p5Instance = null;
+      this.initializeP5(this.containerElement);
+    }
   }
 }
 

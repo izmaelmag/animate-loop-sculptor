@@ -132,3 +132,10 @@ body,
 .content-area {
   @apply p-6 overflow-auto h-full;
 }
+
+/* Fits canvas element to parent container */
+.canvas-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}

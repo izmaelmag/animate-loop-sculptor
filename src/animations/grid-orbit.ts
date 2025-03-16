@@ -8,6 +8,8 @@ export const settings: AnimationSettings = {
   duration: 10,
   fps: 60,
   totalFrames: 600,
+  width: 1080,
+  height: 1920,
   sequential: false,
   function: animation,
   onSetup: setupAnimation,
@@ -18,17 +20,20 @@ let cachedGridImage: p5.Image | null = null;
 let unitSize: number = 0;
 const SCALE = 2.5;
 
-// DPI scaling factor for consistent rendering between browser and video
-const DPI_SCALE = 2;
-
 /**
  * Setup function that runs once before the animation starts
  */
-export function setupAnimation(p: p5) {
+export function setupAnimation(p: p5, normalizedTime: number, frameNumber: number, totalFrames: number) {
   console.log("Setting up grid-orbit animation");
+  console.log(`Setup at frame ${frameNumber}/${totalFrames}, time: ${normalizedTime}`);
+  
+  // Force pixel density to 1 for exact pixel matching
+  p.pixelDensity(1);
+  console.log("Forced pixel density to 1 for exact pixel matching");
   
   // Calculate unit size based on scale
   unitSize = p.width / (2 * SCALE);
+  console.log("Unit size calculated:", unitSize);
   
   // Render the grid once
   cachedGridImage = renderGrid({
@@ -37,16 +42,18 @@ export function setupAnimation(p: p5) {
     showMain: true,
     showSecondary: true,
     showUnits: true,
-    invertY: false,
+    invertY: true,
     invertX: false,
     mainColor: "#ffffff",
     secondaryColor: "#ffffff",
-    mainOpacity: 1,
+    mainOpacity: 0.5,
     secondaryOpacity: 0.1,
-    mainWidth: 1 * DPI_SCALE,
-    secondaryWidth: 1,
-    textSize: 11 * DPI_SCALE,
+    mainWidth: 2, // Increased line width for better visibility
+    secondaryWidth: 2,
+    textSize: 32, // Increased text size for better visibility
   });
+  
+  p.background(0);
 }
 
 /*
@@ -67,7 +74,7 @@ export function animation(p: p5, t: number, frame: number, totalFrames: number) 
   // If grid image hasn't been created yet (first frame or after resize), create it
   if (!cachedGridImage) {
     console.log("Creating grid image in animation function");
-    setupAnimation(p);
+    setupAnimation(p, t, frame, totalFrames);
   }
 
   // Draw the cached grid
@@ -85,7 +92,7 @@ export function animation(p: p5, t: number, frame: number, totalFrames: number) 
   // Draw a circle with radius of 2 units
   p.noFill();
   p.stroke(255, 100, 100);
-  p.strokeWeight(2 * DPI_SCALE);
+  p.strokeWeight(4); // Increased stroke weight for better visibility
   p.circle(centerX, centerY, unitSize * 4); // Diameter = 4 units
 
   // Calculate position of orbiting circle
@@ -98,19 +105,25 @@ export function animation(p: p5, t: number, frame: number, totalFrames: number) 
 
   // Draw line connecting center to orbiting circle
   p.stroke(100, 200, 255);
-  p.strokeWeight(1 * DPI_SCALE);
+  p.strokeWeight(2); // Increased stroke weight for better visibility
   p.line(centerX, centerY, orbitX, orbitY);
 
   // Draw orbiting circle
   p.fill(100, 200, 255);
   p.noStroke();
-  p.circle(orbitX, orbitY, unitSize * 0.2 * DPI_SCALE); // Small circle
+  p.circle(orbitX, orbitY, 24); // Increased size for better visibility
 
   // Add frame information with scaled text
   p.fill(255);
   p.noStroke();
   p.textAlign(p.LEFT, p.TOP);
-  p.textSize(16 * DPI_SCALE);
-  p.text("Frame: " + frame + "/" + (totalFrames - 1), 20 * DPI_SCALE, 20 * DPI_SCALE);
-  p.text("Normalized Time: " + t.toFixed(3), 20 * DPI_SCALE, 50 * DPI_SCALE);
+  p.textSize(32); // Increased text size for better visibility
+  p.text("Frame: " + frame + "/" + (totalFrames - 1), 40, 40);
+  p.text("Normalized Time: " + t.toFixed(3), 40, 100);
+  
+  // Debug info
+  if (frame === 0) {
+    console.log("First frame rendering with dimensions:", p.width, "x", p.height);
+    console.log("Pixel density:", p.pixelDensity());
+  }
 }

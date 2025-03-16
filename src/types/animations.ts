@@ -28,6 +28,8 @@ export interface AnimationSettings {
   duration: number;
   fps: number;
   totalFrames: number;
+  width?: number;
+  height?: number;
   sequential: boolean;
   function: AnimationFunction;
   onSetup?: AnimationFunction;

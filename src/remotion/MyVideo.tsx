@@ -2,21 +2,33 @@ import React from "react";
 import { P5Animation } from "./P5Animation";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { AnimationName } from "../animations";
+import { settings as basic } from "../animations/basic-template";
+import { settings as gsap } from "../animations/gsap-sequence";
+import { settings as gridOrbit } from "../animations/grid-orbit";
+
+// Map of animation settings by name
+const animationSettings = {
+  basic,
+  gsap,
+  gridOrbit,
+};
 
 interface MyVideoProps {
   templateName?: AnimationName;
-  dpiScale?: number;
 }
 
 export const MyVideo: React.FC<MyVideoProps> = ({
   templateName = "gridOrbit",
-  dpiScale = 2,
 }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
   console.log("MyVideo rendering with template:", templateName);
-  console.log("Using DPI scale:", dpiScale);
+
+  // Get the current animation settings
+  const currentSettings =
+    animationSettings[templateName as keyof typeof animationSettings] ||
+    basic;
 
   return (
     <div
@@ -26,9 +38,11 @@ export const MyVideo: React.FC<MyVideoProps> = ({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "black",
+        width: "100%",
+        height: "100%",
       }}
     >
-      <P5Animation templateName={templateName} dpiScale={dpiScale} />
+      <P5Animation templateName={templateName} />
     </div>
   );
 };

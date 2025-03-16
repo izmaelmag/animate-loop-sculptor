@@ -9,7 +9,6 @@ const parseArgs = () => {
   const options = {
     template: "gridOrbit", // Default template
     quality: "high", // Default quality
-    dpiScale: 2, // Default DPI scaling factor
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -24,14 +23,6 @@ const parseArgs = () => {
         console.warn(`Invalid quality: ${quality}. Using default: high`);
       }
       i++;
-    } else if (args[i] === "--dpi-scale" || args[i] === "-d") {
-      const scale = parseFloat(args[i + 1]);
-      if (!isNaN(scale) && scale > 0) {
-        options.dpiScale = scale;
-      } else {
-        console.warn(`Invalid DPI scale: ${args[i + 1]}. Using default: 2`);
-      }
-      i++;
     }
   }
 
@@ -44,11 +35,8 @@ const options = parseArgs();
 // VIDEO SETTINGS
 const FPS = 60;
 const DURATION_IN_SECONDS = 10;
-const WIDTH = 1080;
-const HEIGHT = 1920;
 const QUALITY = options.quality; // 'high', 'medium', 'low'
 const TEMPLATE = options.template;
-const DPI_SCALE = options.dpiScale;
 
 // MEMORY MANAGEMENT SETTINGS
 const CONCURRENCY = 4;
@@ -71,10 +59,56 @@ function forceGarbageCollection() {
   }
 }
 
+// Import animation settings to get dimensions
+const getAnimationSettings = (templateName) => {
+  try {
+    // Try to dynamically require the animation settings
+    const settingsPath = path.join(__dirname, `src/animations/${templateName}.ts`);
+    if (fs.existsSync(settingsPath)) {
+      console.log(`Found animation settings at ${settingsPath}`);
+      // For TypeScript files, we can't directly require them in Node.js
+      // So we'll use default dimensions
+      return {
+        width: 1080,
+        height: 1920
+      };
+    }
+    
+    // Try JavaScript version
+    const jsSettingsPath = path.join(__dirname, `src/animations/${templateName}.js`);
+    if (fs.existsSync(jsSettingsPath)) {
+      console.log(`Found animation settings at ${jsSettingsPath}`);
+      const settings = require(jsSettingsPath).settings;
+      return {
+        width: settings.width || 1080,
+        height: settings.height || 1920
+      };
+    }
+    
+    console.log(`Animation settings not found for ${templateName}, using defaults`);
+    return {
+      width: 1080,
+      height: 1920
+    };
+  } catch (error) {
+    console.warn(`Error loading animation settings: ${error.message}`);
+    return {
+      width: 1080,
+      height: 1920
+    };
+  }
+};
+
 async function renderVideo() {
   console.log(`Starting video rendering with template: ${TEMPLATE}`);
   console.log(`Quality setting: ${QUALITY}`);
-  console.log(`DPI scaling factor: ${DPI_SCALE}`);
+  
+  // Get animation dimensions
+  const animationSettings = getAnimationSettings(TEMPLATE);
+  const WIDTH = animationSettings.width;
+  const HEIGHT = animationSettings.height;
+  
+  console.log(`Video dimensions: ${WIDTH}x${HEIGHT}`);
 
   // Setup quality
   const crf = QUALITY === "high" ? 18 : QUALITY === "medium" ? 23 : 28;
@@ -94,8 +128,7 @@ async function renderVideo() {
     console.log("Getting composition list...");
     const compositions = await getCompositions(bundleLocation, {
       inputProps: { 
-        templateName: TEMPLATE,
-        dpiScale: DPI_SCALE
+        templateName: TEMPLATE
       },
     });
 
@@ -110,7 +143,6 @@ async function renderVideo() {
     const durationInFrames = FPS * DURATION_IN_SECONDS;
 
     console.log(`Rendering ${durationInFrames} frames at ${FPS} FPS...`);
-    console.log(`Video dimensions: ${WIDTH}x${HEIGHT}`);
     console.log(`Quality: ${QUALITY} (CRF: ${crf})`);
     console.log(`Concurrency: ${CONCURRENCY}, Memory limit: ${MEMORY_LIMIT}MB`);
 
@@ -125,8 +157,7 @@ async function renderVideo() {
       codec: "h264",
       outputLocation: OUTPUT_FILE,
       inputProps: {
-        templateName: TEMPLATE,
-        dpiScale: DPI_SCALE
+        templateName: TEMPLATE
       },
       imageFormat: "jpeg",
       fps: FPS,
@@ -166,7 +197,7 @@ async function renderVideo() {
 
     console.log("\nRendering complete!");
     console.log(`Video saved to: ${OUTPUT_FILE}`);
-    console.log(`Template: ${TEMPLATE}, Quality: ${QUALITY}, DPI Scale: ${DPI_SCALE}`);
+    console.log(`Template: ${TEMPLATE}, Quality: ${QUALITY}, Dimensions: ${WIDTH}x${HEIGHT}`);
   } catch (error) {
     console.error("Error during rendering:", error);
   }
@@ -178,14 +209,13 @@ if (process.argv.includes("--help") || process.argv.includes("-h")) {
 Render Video Script - Help
 --------------------------
 Options:
-  --template, -t <name>    Animation template to use (default: gridOrbit)
-  --quality, -q <level>    Video quality: high, medium, or low (default: high)
-  --dpi-scale, -d <factor> DPI scaling factor for text and graphics (default: 2)
-  --help, -h               Show this help message
+  --template, -t <name>      Animation template to use (default: gridOrbit)
+  --quality, -q <level>      Video quality: high, medium, or low (default: high)
+  --help, -h                 Show this help message
 
 Examples:
   node render-video.cjs --template basic --quality medium
-  node render-video.cjs -t gridOrbit -q high -d 2.5
+  node render-video.cjs -t gridOrbit -q high
   `);
   process.exit(0);
 }
@@ -196,16 +226,15 @@ if (process.argv.indexOf("--enable-gc") === -1) {
   
   // Filter out our custom arguments to avoid passing them twice
   const scriptArgs = process.argv.slice(2).filter(arg => {
-    return !["--template", "-t", "--quality", "-q", "--dpi-scale", "-d"].includes(arg) && 
-           !["high", "medium", "low", "basic", "gsap", "gridOrbit"].includes(arg) &&
-           !isNaN(parseFloat(arg));
+    return !["--template", "-t", "--quality", "-q"].includes(arg) && 
+           !["high", "medium", "low", "basic", "gsap", "gridOrbit"].includes(arg);
   });
 
   const spawn = require("child_process").spawn;
   const child = spawn(
     process.execPath,
     [...nodeArgs, __filename, ...scriptArgs, "--enable-gc", 
-     "--template", TEMPLATE, "--quality", QUALITY, "--dpi-scale", DPI_SCALE],
+     "--template", TEMPLATE, "--quality", QUALITY],
     {
       stdio: "inherit",
     }
