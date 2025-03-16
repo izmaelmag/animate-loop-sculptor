@@ -13,9 +13,7 @@ interface SettingsPanelProps {
   isEnabled?: boolean;
 }
 
-const SettingsPanel: React.FC<SettingsPanelProps> = ({
-  isEnabled = true,
-}) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ isEnabled = true }) => {
   const { currentAnimation, setCurrentAnimation } = useAnimation();
 
   const handleAnimationChange = (value: string) => {
@@ -24,26 +22,22 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
   return (
     <Panel disabled={!isEnabled}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Settings</h2>
-      </div>
-      
       <div className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="animation-select" className="text-sm font-medium">
-            Animation
-          </label>
+        <div className="space-y-1">
           <Select
             value={currentAnimation}
             onValueChange={handleAnimationChange}
             disabled={!isEnabled}
           >
-            <SelectTrigger id="animation-select" className="w-full">
+            <SelectTrigger
+              id="animation-select"
+              className="w-full bg-black border-gray-700 cursor-pointer"
+            >
               <SelectValue placeholder="Select animation" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-black border-gray-700 text-white">
               {animationNames.map((name) => (
-                <SelectItem key={name} value={name}>
+                <SelectItem key={name} value={name} className="cursor-pointer">
                   {name.charAt(0).toUpperCase() + name.slice(1)}
                 </SelectItem>
               ))}
@@ -55,4 +49,4 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   );
 };
 
-export default SettingsPanel; 
+export default SettingsPanel;
