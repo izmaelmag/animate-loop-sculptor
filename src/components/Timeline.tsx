@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw, StepForward, StepBack } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAnimation } from "@/contexts/AnimationContext";
+import Panel from "@/components/ui/panel";
 
 interface TimelineProps {
   onTimeUpdate?: (time: number, normalizedTime: number) => void;
@@ -93,13 +94,7 @@ const Timeline: React.FC<TimelineProps> = ({
   }
 
   return (
-    <div
-      className={cn(
-        "rounded-md glass-panel w-auto max-w-[550px]",
-        "flex flex-col gap-2 p-3 md:p-4 border-box m-2 md:m-0",
-        !isPlayable && "opacity-70 pointer-events-none"
-      )}
-    >
+    <Panel>
       <div className="flex items-end justify-between">
         <div className="flex gap-2">
           <Button
@@ -177,7 +172,7 @@ const Timeline: React.FC<TimelineProps> = ({
           </span>
         </div>
       </div>
-    </div>
+    </Panel>
   );
 };
 

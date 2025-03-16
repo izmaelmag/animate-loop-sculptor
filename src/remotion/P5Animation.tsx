@@ -1,25 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import p5 from "p5";
-// Import animations directly from src/animations - this ensures both Remotion and the React app use the same source
-import { animation as basicAnimation } from "../animations/basic-template.js";
-import { animation as gsapAnimation } from "../animations/gsap-sequence.js";
-// Keep defaultAnimation for backward compatibility
-import { animation as defaultAnimation } from "../animation";
+import { animations, AnimationName, getAnimationByName } from "../animations";
 
-interface P5AnimationProps {
-  templateName?: string; // Use template name instead of sketch string
-}
-
-// Extend global to include gc
 declare global {
   interface Global {
     gc?: () => void;
   }
 }
 
-export const P5Animation: React.FC<P5AnimationProps> = ({
-  templateName = "default",
+export const P5Animation = ({
+  templateName = "basic",
+}: {
+  templateName?: AnimationName;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Ref = useRef<p5>();
@@ -35,6 +28,7 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
     // Cleanup on unmount
     return () => {
       isMountedRef.current = false;
+
       if (p5Ref.current) {
         p5Ref.current.remove();
         p5Ref.current = undefined;
@@ -57,30 +51,15 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
       const totalFrames = durationInFrames;
 
       // Select the animation function based on template name - SAME LOGIC AS IN SKETCHVIEW
-      const animationFunction =
-        templateName === "basic"
-          ? basicAnimation
-          : templateName === "gsap"
-          ? gsapAnimation
-          : defaultAnimation;
+      const animationFunction = getAnimationByName(templateName);
 
       // If we already have a p5 instance, work with it
-      if (p5Ref.current) {
-        try {
-          // Clean canvas using p5 methods instead of direct canvas access
-          p5Ref.current.clear();
-          p5Ref.current.background(0);
+      if (p5Ref.current && animationFunction) {
+        p5Ref.current.clear();
+        p5Ref.current.background(0);
 
-          // Use the selected animation function directly
-          animationFunction(p5Ref.current, t, frameNumber, totalFrames);
-        } catch (error) {
-          console.error("Animation error:", error);
-          p5Ref.current.background(0);
-          p5Ref.current.fill(255, 0, 0);
-          p5Ref.current.textSize(20);
-          p5Ref.current.text("Animation error: " + error, 20, 50);
-        }
-        return;
+        // Use the selected animation function directly
+        animationFunction(p5Ref.current, t, frameNumber, totalFrames);
       }
 
       // If p5 instance doesn't exist, create it
@@ -90,16 +69,9 @@ export const P5Animation: React.FC<P5AnimationProps> = ({
 
           // Draw first frame immediately
           p.background(0);
-          try {
-            // Use the selected animation function
-            animationFunction(p, t, frameNumber, totalFrames);
-          } catch (error) {
-            console.error("Animation error:", error);
-            p.background(0);
-            p.fill(255, 0, 0);
-            p.textSize(20);
-            p.text("Animation error: " + error, 20, 50);
-          }
+
+          // Use the selected animation function
+          animationFunction(p, t, frameNumber, totalFrames);
         };
 
         // Disable built-in p5.js loop, since we're rendering each frame separately

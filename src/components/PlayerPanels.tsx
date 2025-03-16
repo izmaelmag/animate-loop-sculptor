@@ -69,23 +69,19 @@ const PlayerPanels: React.FC<PlayerPanelsProps> = ({
                 <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
               </CarouselItem>
               <CarouselItem>
-                <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
-              </CarouselItem>
-              <CarouselItem>
                 <SettingsPanel isEnabled={isPlayable} />
               </CarouselItem>
             </CarouselContent>
           </Carousel>
         </div>
       ) : (
-        <>
-          <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
+        <div className="flex w-full flex-row gap-2 items-stretch justify-center">
           <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
           <SettingsPanel isEnabled={isPlayable} />
-        </>
+        </div>
       )}
     </div>
   );
 };
 
-export default PlayerPanels; 
+export default PlayerPanels;

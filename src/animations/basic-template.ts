@@ -1,10 +1,20 @@
-export const name = "basic";
+import { AnimationSettings } from "@/types/animations";
 
-/**
+export const settings: AnimationSettings = {
+  name: "Basic",
+  id: "basic",
+  duration: 10,
+  fps: 60,
+  totalFrames: 600,
+  sequential: false,
+  function: animation,
+};
+
+/*
  * Basic Animation Template
  *
  * @param {object} p - p5 instance
- * @param {number} t - normalized time from 0 to 1
+ * @param {number} t - normalized total time from 0 to 1
  * @param {number} frame - current frame number
  * @param {number} totalFrames - total number of frames in the video
  */
@@ -39,9 +49,11 @@ export function animation(p, t, frame, totalFrames) {
 
   // Orbiting elements
   const orbitCount = 5;
+
   for (let i = 0; i < orbitCount; i++) {
     const angle = progress * p.TWO_PI + (i * p.TWO_PI) / orbitCount;
     const orbitDistance = p.width * 0.3;
+
     const x = centerX + p.cos(angle) * orbitDistance;
     const y = centerY + p.sin(angle) * orbitDistance;
 

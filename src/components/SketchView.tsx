@@ -27,7 +27,7 @@ const SketchView = () => {
   const handleTimeUpdate = (time: number, normalized: number) => {
     setCurrentTime(time);
     setNormalizedTime(normalized);
-    
+
     // Additional logic for time updates can be added here
     // For example, updating other components or triggering events
   };
@@ -38,17 +38,15 @@ const SketchView = () => {
 
   return (
     <div className="flex flex-col justify-start items-center h-full p-0 md:p-6 pt-4 md:pt-6 relative gap-0 md:gap-2">
-      <div className="w-full content-area flex h-[100%] min-h-[0px] flex-shrink-1 flex-col">
+      <div className="mx-auto flex aspect-[9/16] h-[100%] min-h-[0px] flex-shrink-1 flex-col relative">
         <div
-          className="w-full h-full flex items-center justify-center"
+          className="w-full h-full flex items-center justify-center relative"
           ref={sketchRef}
         />
+        <div className="absolute top-1/2 left-0 w-full -translate-y-1/2 aspect-[4/5] border-t border-b border-red-500" />
       </div>
 
-      <PlayerPanels 
-        onTimeUpdate={handleTimeUpdate}
-        isPlayable={true}
-      />
+      <PlayerPanels onTimeUpdate={handleTimeUpdate} isPlayable={true} />
     </div>
   );
 };

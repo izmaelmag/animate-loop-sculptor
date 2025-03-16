@@ -22,3 +22,14 @@ export interface AnimationInstance {
   isPlaying: boolean;
   normalizedTime: number;
 }
+export interface AnimationSettings {
+  name: string;
+  id: string;
+  duration: number;
+  fps: number;
+  totalFrames: number;
+  sequential: boolean;
+  function: AnimationFunction;
+  onSetup?: AnimationFunction;
+  onUpdate?: AnimationFunction;
+}
