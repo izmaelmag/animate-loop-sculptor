@@ -10,7 +10,6 @@ import { useState, useEffect, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw, StepForward, StepBack } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useAnimation } from "@/contexts/AnimationContext";
 import Panel from "@/components/ui/panel";
 
