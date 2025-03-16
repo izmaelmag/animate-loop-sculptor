@@ -1,5 +1,6 @@
 import { registerRoot, Composition } from "remotion";
 import { MyVideo } from "./MyVideo";
+import { animationSettings } from "../animations";
 
 export const RemotionVideo = () => {
   return (
@@ -12,7 +13,7 @@ export const RemotionVideo = () => {
         width={1080}
         height={1920}
         defaultProps={{
-          templateName: "basic",
+          templateName: "gridOrbit",
         }}
       />
     </>

@@ -15,6 +15,7 @@ interface GridOptions {
   invertX?: boolean;
   mainWidth?: number;
   secondaryWidth?: number;
+  textSize?: number;
 }
 
 /**
@@ -36,8 +37,9 @@ export const renderGrid = (options: GridOptions): p5.Image => {
     showUnits = false,
     invertY = false,
     invertX = false,
-    mainWidth = 2,
+    mainWidth = 1,
     secondaryWidth = 1,
+    textSize = 11,
   } = options;
 
   // Calculate center if not provided
@@ -112,36 +114,73 @@ export const renderGrid = (options: GridOptions): p5.Image => {
     
     // Draw units on axes if needed
     if (showUnits) {
-      gridGraphics.fill(mainColor);
-      gridGraphics.textAlign(gridGraphics.CENTER, gridGraphics.CENTER);
-      gridGraphics.textSize(12);
+      // Use a lighter opacity for text (50% of the main opacity)
+      const textAlpha = Math.floor(mainOpacity * 0.5 * 255);
+      gridGraphics.fill(
+        parseInt(mainColor.slice(1, 3), 16),
+        parseInt(mainColor.slice(3, 5), 16),
+        parseInt(mainColor.slice(5, 7), 16),
+        textAlpha
+      );
       
-      // X axis units
+      gridGraphics.textAlign(gridGraphics.CENTER, gridGraphics.CENTER);
+      gridGraphics.textSize(textSize);
+      // Set monospaced font with lighter weight
+      gridGraphics.textFont('Courier New');
+      gridGraphics.textStyle(gridGraphics.NORMAL);
+      
+      // Calculate how many units fit in the canvas
+      const maxUnitsX = Math.ceil(p.width / unitSize) + 1;
+      const maxUnitsY = Math.ceil(p.height / unitSize) + 1;
+      
+      // Calculate the unit value at the left edge of the canvas
+      const leftEdgeUnit = -Math.ceil((centerX) / unitSize);
+      // Calculate the unit value at the top edge of the canvas
+      const topEdgeUnit = invertY ? 
+        Math.ceil((centerY) / unitSize) : 
+        -Math.ceil((centerY) / unitSize);
+      
+      // Define tick size
+      const tickSize = 6 * (textSize / 11); // Scale tick size proportionally to text size
+      
+      // X axis units and ticks
       const xDirection = invertX ? -1 : 1;
-      for (let i = 1; i <= scale; i++) {
-        // Positive X
-        const xPos = centerX + i * unitSize * xDirection;
-        gridGraphics.text(i.toString(), xPos, centerY + 20);
+      for (let i = 0; i <= maxUnitsX; i++) {
+        const unitValue = leftEdgeUnit + i;
+        if (unitValue === 0) continue; // Skip zero (drawn separately)
         
-        // Negative X
-        const xNeg = centerX - i * unitSize * xDirection;
-        gridGraphics.text((-i).toString(), xNeg, centerY + 20);
+        const xPos = centerX + unitValue * unitSize * xDirection;
+        // Only draw if within canvas bounds
+        if (xPos >= 0 && xPos <= p.width) {
+          // Draw tick mark
+          gridGraphics.strokeWeight(1);
+          gridGraphics.line(xPos, centerY - tickSize, xPos, centerY + tickSize);
+          
+          // Draw label
+          gridGraphics.text(unitValue.toString(), xPos, centerY + tickSize * 3);
+        }
       }
       
-      // Y axis units
+      // Y axis units and ticks
       const yDirection = invertY ? 1 : -1;
-      for (let i = 1; i <= scale; i++) {
-        // Positive Y (up in standard coordinates, down if inverted)
-        const yPos = centerY + i * unitSize * yDirection;
-        gridGraphics.text(i.toString(), centerX + 20, yPos);
+      for (let i = 0; i <= maxUnitsY; i++) {
+        const unitValue = topEdgeUnit + i * (invertY ? -1 : 1);
+        if (unitValue === 0) continue; // Skip zero (drawn separately)
         
-        // Negative Y (down in standard coordinates, up if inverted)
-        const yNeg = centerY - i * unitSize * yDirection;
-        gridGraphics.text((-i).toString(), centerX + 20, yNeg);
+        const yPos = centerY + unitValue * unitSize * yDirection;
+        // Only draw if within canvas bounds
+        if (yPos >= 0 && yPos <= p.height) {
+          // Draw tick mark
+          gridGraphics.strokeWeight(1);
+          gridGraphics.line(centerX - tickSize, yPos, centerX + tickSize, yPos);
+          
+          // Draw label
+          gridGraphics.text(unitValue.toString(), centerX + tickSize * 3, yPos);
+        }
       }
       
       // Draw 0 at origin
-      gridGraphics.text("0", centerX + 20, centerY + 20);
+      gridGraphics.text("0", centerX + tickSize * 3, centerY + tickSize * 3);
     }
   }
   

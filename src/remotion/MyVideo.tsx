@@ -1,16 +1,22 @@
 import React from "react";
 import { P5Animation } from "./P5Animation";
 import { useCurrentFrame, useVideoConfig } from "remotion";
+import { AnimationName } from "../animations";
 
 interface MyVideoProps {
-  templateName?: string;
+  templateName?: AnimationName;
+  dpiScale?: number;
 }
 
 export const MyVideo: React.FC<MyVideoProps> = ({
-  templateName = "default",
+  templateName = "gridOrbit",
+  dpiScale = 2,
 }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
+
+  console.log("MyVideo rendering with template:", templateName);
+  console.log("Using DPI scale:", dpiScale);
 
   return (
     <div
@@ -22,7 +28,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({
         backgroundColor: "black",
       }}
     >
-      <P5Animation templateName={templateName} />
+      <P5Animation templateName={templateName} dpiScale={dpiScale} />
     </div>
   );
 };
