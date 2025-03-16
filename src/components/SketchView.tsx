@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useAnimation } from "@/contexts/AnimationContext";
-import { animations } from "@/animations";
 import PlayerPanels from "./PlayerPanels";
 
 const SketchView = () => {
-  const { controller } = useAnimation();
+  const { controller, currentAnimation } = useAnimation();
   const sketchRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [normalizedTime, setNormalizedTime] = useState(0);
@@ -15,12 +14,6 @@ const SketchView = () => {
 
     // Initialize the controller with the sketch container
     controller.initializeP5(sketchRef.current);
-  }, [controller]);
-
-  // Update sketch code when template changes
-  useEffect(() => {
-    if (!controller) return;
-    controller.setAnimationFunction(animations.basic);
   }, [controller]);
 
   // Handle time updates from the Timeline
