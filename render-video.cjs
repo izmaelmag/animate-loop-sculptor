@@ -33,8 +33,6 @@ const parseArgs = () => {
 const options = parseArgs();
 
 // VIDEO SETTINGS
-let FPS = 60; // Default fallback
-let DURATION_IN_SECONDS = 10; // Default fallback
 const QUALITY = options.quality; // 'high', 'medium', 'low'
 const TEMPLATE = options.template;
 
@@ -59,88 +57,9 @@ function forceGarbageCollection() {
   }
 }
 
-// Import animation settings to get dimensions
-const getAnimationSettings = (templateName) => {
-  try {
-    // Try to dynamically require the animation settings
-    const settingsPath = path.join(__dirname, `src/animations/${templateName}.ts`);
-    if (fs.existsSync(settingsPath)) {
-      console.log(`Found animation settings at ${settingsPath}`);
-      // For TypeScript files, we can't directly require them in Node.js
-      // Try to read the file contents to extract values
-      const content = fs.readFileSync(settingsPath, 'utf8');
-      
-      // Simple regex to extract fps and duration values
-      const fpsMatch = content.match(/fps:\s*(\d+)/);
-      const durationMatch = content.match(/duration:\s*(\d+)/);
-      
-      const fps = fpsMatch ? parseInt(fpsMatch[1]) : 60;
-      const duration = durationMatch ? parseInt(durationMatch[1]) : 10;
-      
-      // Update global settings
-      FPS = fps;
-      DURATION_IN_SECONDS = duration;
-      
-      console.log(`Using settings from file: fps=${fps}, duration=${duration}s`);
-      
-      return {
-        width: content.match(/width:\s*(\d+)/) ? parseInt(content.match(/width:\s*(\d+)/)[1]) : 1080,
-        height: content.match(/height:\s*(\d+)/) ? parseInt(content.match(/height:\s*(\d+)/)[1]) : 1920,
-        fps,
-        duration
-      };
-    }
-    
-    // Try JavaScript version
-    const jsSettingsPath = path.join(__dirname, `src/animations/${templateName}.js`);
-    if (fs.existsSync(jsSettingsPath)) {
-      console.log(`Found animation settings at ${jsSettingsPath}`);
-      const settings = require(jsSettingsPath).settings;
-      
-      // Update global settings
-      FPS = settings.fps || 60;
-      DURATION_IN_SECONDS = settings.duration || 10;
-      
-      console.log(`Using settings from JS file: fps=${FPS}, duration=${DURATION_IN_SECONDS}s`);
-      
-      return {
-        width: settings.width || 1080,
-        height: settings.height || 1920,
-        fps: settings.fps || 60,
-        duration: settings.duration || 10
-      };
-    }
-    
-    console.log(`Animation settings not found for ${templateName}, using defaults: fps=${FPS}, duration=${DURATION_IN_SECONDS}s`);
-    return {
-      width: 1080,
-      height: 1920,
-      fps: FPS,
-      duration: DURATION_IN_SECONDS
-    };
-  } catch (error) {
-    console.warn(`Error loading animation settings: ${error.message}`);
-    return {
-      width: 1080,
-      height: 1920,
-      fps: FPS,
-      duration: DURATION_IN_SECONDS
-    };
-  }
-};
-
 async function renderVideo() {
   console.log(`Starting video rendering with template: ${TEMPLATE}`);
   console.log(`Quality setting: ${QUALITY}`);
-  
-  // Get animation dimensions and timing settings
-  const animationSettings = getAnimationSettings(TEMPLATE);
-  const WIDTH = animationSettings.width;
-  const HEIGHT = animationSettings.height;
-  
-  // Use settings from animation file (they've already updated the global FPS and DURATION_IN_SECONDS)
-  console.log(`Video dimensions: ${WIDTH}x${HEIGHT}`);
-  console.log(`Animation timing: ${FPS}fps, ${DURATION_IN_SECONDS}s duration`);
 
   // Setup quality
   const crf = QUALITY === "high" ? 18 : QUALITY === "medium" ? 23 : 28;
@@ -171,10 +90,11 @@ async function renderVideo() {
       throw new Error('Composition "MyVideo" not found');
     }
 
-    // Rendering settings
-    const durationInFrames = FPS * DURATION_IN_SECONDS;
+    // Get fps and durationInFrames from the composition
+    const { fps, durationInFrames } = composition;
 
-    console.log(`Rendering ${durationInFrames} frames at ${FPS} FPS...`);
+    console.log(`Starting render...`);
+    console.log(`Using composition settings: ${fps}fps, ${durationInFrames} frames`);
     console.log(`Quality: ${QUALITY} (CRF: ${crf})`);
     console.log(`Concurrency: ${CONCURRENCY}, Memory limit: ${MEMORY_LIMIT}MB`);
 
@@ -192,7 +112,7 @@ async function renderVideo() {
         templateName: TEMPLATE
       },
       imageFormat: "jpeg",
-      fps: FPS,
+      fps,
       durationInFrames,
       crf,
       concurrency: CONCURRENCY,
@@ -229,7 +149,7 @@ async function renderVideo() {
 
     console.log("\nRendering complete!");
     console.log(`Video saved to: ${OUTPUT_FILE}`);
-    console.log(`Template: ${TEMPLATE}, Quality: ${QUALITY}, Dimensions: ${WIDTH}x${HEIGHT}`);
+    console.log(`Template: ${TEMPLATE}, Quality: ${QUALITY}`);
   } catch (error) {
     console.error("Error during rendering:", error);
   }
@@ -255,18 +175,28 @@ Examples:
 // Prepare arguments for Node.js to enable garbage collection
 if (process.argv.indexOf("--enable-gc") === -1) {
   const nodeArgs = ["--expose-gc", "--max-old-space-size=" + MEMORY_LIMIT];
-  
+
   // Filter out our custom arguments to avoid passing them twice
-  const scriptArgs = process.argv.slice(2).filter(arg => {
-    return !["--template", "-t", "--quality", "-q"].includes(arg) && 
-           !["high", "medium", "low", "basic", "gsap", "gridOrbit"].includes(arg);
+  const scriptArgs = process.argv.slice(2).filter((arg) => {
+    return (
+      !["--template", "-t", "--quality", "-q"].includes(arg) &&
+      !["high", "medium", "low", "basic", "gsap", "gridOrbit"].includes(arg)
+    );
   });
 
   const spawn = require("child_process").spawn;
   const child = spawn(
     process.execPath,
-    [...nodeArgs, __filename, ...scriptArgs, "--enable-gc", 
-     "--template", TEMPLATE, "--quality", QUALITY],
+    [
+      ...nodeArgs,
+      __filename,
+      ...scriptArgs,
+      "--enable-gc",
+      "--template",
+      TEMPLATE,
+      "--quality",
+      QUALITY,
+    ],
     {
       stdio: "inherit",
     }

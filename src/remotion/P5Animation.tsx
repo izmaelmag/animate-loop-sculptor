@@ -1,53 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import p5 from "p5";
-import { animations, AnimationName, getAnimationByName } from "../animations";
-import { settings as basic } from "../animations/basic-template";
-import { settings as gsap } from "../animations/gsap-sequence";
-import { settings as gridOrbit } from "../animations/grid-orbit";
-import { settings as multilayered } from "../animations/multilayered";
-import { settings as waitExample } from "../animations/wait-example";
-
-// Map of animation settings by name - include all animations
-const animationSettings = {
-  basic,
-  gsap,
-  gridOrbit,
-  multilayered,
-  waitExample
-};
+import { animationSettings } from "../animations";
+import { AnimationName } from "../animations";
 
 declare global {
   interface Global {
     gc?: () => void;
   }
 }
-
-// Helper function to get pixel ratio from environment
-const getPixelRatio = (): number => {
-  if (
-    typeof process !== "undefined" &&
-    process.env &&
-    process.env.DEVICE_PIXEL_RATIO
-  ) {
-    const ratio = parseFloat(process.env.DEVICE_PIXEL_RATIO);
-    if (!isNaN(ratio) && ratio > 0) {
-      console.log("P5Animation: Using pixel ratio from environment:", ratio);
-      return ratio;
-    }
-  }
-
-  if (typeof window !== "undefined" && window.devicePixelRatio) {
-    console.log(
-      "P5Animation: Using window.devicePixelRatio:",
-      window.devicePixelRatio
-    );
-    return window.devicePixelRatio;
-  }
-
-  console.log("P5Animation: Using default pixel ratio: 2");
-  return 2;
-};
 
 export const P5Animation = ({
   templateName = "basic",
@@ -58,14 +19,26 @@ export const P5Animation = ({
   const p5Ref = useRef<p5>();
   const setupDoneRef = useRef<boolean>(false);
   const frame = useCurrentFrame();
-  const { durationInFrames, fps } = useVideoConfig();
+  const { durationInFrames, fps: remotionFps } = useVideoConfig();
   const isMountedRef = useRef<boolean>(true);
 
   console.log("Animation template:", templateName);
 
-  // Get the current animation settings
+  // Get the current animation settings with fallback to basic
   const currentSettings =
-    animationSettings[templateName as keyof typeof animationSettings] || basic;
+    animationSettings[templateName] || animationSettings.basic;
+
+  if (!currentSettings) {
+    console.error(`Animation not found: ${templateName}, using default`);
+  }
+
+  // Get timing directly from animation settings
+  const animationFps = currentSettings.fps || remotionFps;
+  const totalFrames = currentSettings.totalFrames || durationInFrames;
+
+  console.log(
+    `P5Animation using settings: FPS: ${animationFps}, Total Frames: ${totalFrames}`
+  );
 
   // Main hook for setting up and cleaning up p5 instance
   // Runs only when mounting/unmounting
@@ -94,7 +67,6 @@ export const P5Animation = ({
       if (!isMountedRef.current) return;
 
       // Animation parameters
-      const totalFrames = currentSettings.totalFrames || durationInFrames;
       const t = frame / totalFrames;
       const frameNumber = frame;
 
@@ -154,7 +126,7 @@ export const P5Animation = ({
     if (frame % 100 === 0 && typeof global.gc === "function") {
       global.gc();
     }
-  }, [frame, templateName, durationInFrames, fps, currentSettings]);
+  }, [frame, templateName, totalFrames, currentSettings]);
 
   // Get animation dimensions from settings
   const width = currentSettings.width || 1080;

@@ -10,9 +10,8 @@ const DEFAULT_ANIMATION = "basic";
 
 // Get default settings from animation
 const defaultSettings = animationSettings[DEFAULT_ANIMATION] || {
-  duration: 10,
   fps: 60,
-  totalFrames: 600
+  totalFrames: 600,
 };
 
 interface AnimationContextType {
@@ -39,16 +38,17 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   const [controller, setController] = useState<AnimationController | null>(
     null
   );
-  const [currentAnimation, setCurrentAnimation] = useState<string>(DEFAULT_ANIMATION);
+  const [currentAnimation, setCurrentAnimation] =
+    useState<string>(DEFAULT_ANIMATION);
 
   useEffect(() => {
     // Create the controller with default animation settings
     const animationController = createAnimationController(
-      defaultSettings.duration,
-      defaultSettings.fps
+      defaultSettings.fps,
+      defaultSettings.totalFrames
     );
 
-    // Set default animation - this will now update the controller with the animation settings
+    // Set default animation
     animationController.setAnimation(DEFAULT_ANIMATION);
 
     setController(animationController);
@@ -66,11 +66,11 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   }, [controller, currentAnimation]);
 
   return (
-    <AnimationContext.Provider 
-      value={{ 
-        controller, 
+    <AnimationContext.Provider
+      value={{
+        controller,
         currentAnimation,
-        setCurrentAnimation
+        setCurrentAnimation,
       }}
     >
       {children}

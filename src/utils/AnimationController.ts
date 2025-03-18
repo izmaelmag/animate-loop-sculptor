@@ -13,7 +13,7 @@ const animationSettings = {
   gsap,
   gridOrbit,
   multilayered,
-  waitExample
+  waitExample,
 };
 
 export class AnimationController {
@@ -24,8 +24,7 @@ export class AnimationController {
   private currentAnimationName: AnimationName = "basic";
   private containerElement: HTMLElement | null = null;
 
-  // Animation settings - now writable
-  public duration: number;
+  // Animation settings - just fps and totalFrames
   public fps: number;
   public totalFrames: number;
 
@@ -41,10 +40,9 @@ export class AnimationController {
   ) => void)[] = [];
   private onPlayStateChangedCallbacks: ((isPlaying: boolean) => void)[] = [];
 
-  constructor(duration: number, fps: number) {
-    this.duration = duration;
+  constructor(fps: number, totalFrames: number) {
     this.fps = fps;
-    this.totalFrames = duration * fps;
+    this.totalFrames = totalFrames;
   }
 
   // Getter for normalized time (0-1)
@@ -62,17 +60,20 @@ export class AnimationController {
   setFps(fps: number): void {
     if (fps > 0 && this.fps !== fps) {
       this.fps = fps;
-      this.updateTotalFrames();
-      console.log(`FPS updated to ${fps}, totalFrames now ${this.totalFrames}`);
+      console.log(`FPS updated to ${fps}`);
     }
   }
 
-  // Duration setter
-  setDuration(duration: number): void {
-    if (duration > 0 && this.duration !== duration) {
-      this.duration = duration;
-      this.updateTotalFrames();
-      console.log(`Duration updated to ${duration}s, totalFrames now ${this.totalFrames}`);
+  // totalFrames setter
+  setTotalFrames(totalFrames: number): void {
+    if (totalFrames > 0 && this.totalFrames !== totalFrames) {
+      this.totalFrames = totalFrames;
+      // Ensure current frame is within bounds after totalFrames change
+      if (this._currentFrame >= this.totalFrames) {
+        this._currentFrame = this.totalFrames - 1;
+        this.notifyFrameChanged();
+      }
+      console.log(`Total frames updated to ${totalFrames}`);
     }
   }
 
@@ -243,19 +244,6 @@ export class AnimationController {
     }
   };
 
-  // Private method to update totalFrames based on duration and fps
-  private updateTotalFrames(): void {
-    const newTotalFrames = Math.round(this.duration * this.fps);
-    if (this.totalFrames !== newTotalFrames) {
-      this.totalFrames = newTotalFrames;
-      // Ensure current frame is within bounds after totalFrames change
-      if (this._currentFrame >= this.totalFrames) {
-        this._currentFrame = this.totalFrames - 1;
-        this.notifyFrameChanged();
-      }
-    }
-  }
-
   // Redraw the P5 canvas
   redraw(): void {
     if (this.p5Instance) {
@@ -357,19 +345,11 @@ export class AnimationController {
 
     if (settings) {
       // Update controller with animation settings
-      // Create writable properties that can be properly updated
-      this.duration = settings.duration;
       this.fps = settings.fps;
-      
-      // Instead of directly setting totalFrames, update it based on duration and fps
-      // to ensure consistency
-      if (settings.totalFrames !== this.duration * this.fps) {
-        console.log(`Warning: totalFrames (${settings.totalFrames}) doesn't match duration*fps (${this.duration * this.fps}). Using duration*fps.`);
-      }
-      this.updateTotalFrames();
+      this.totalFrames = settings.totalFrames;
 
       console.log(
-        `Using animation settings: fps=${this.fps}, duration=${this.duration}s, totalFrames=${this.totalFrames}`
+        `Using animation settings: fps=${this.fps}, totalFrames=${this.totalFrames}`
       );
     }
 
@@ -391,8 +371,8 @@ export class AnimationController {
 
 // Create a global singleton instance
 export const createAnimationController = (
-  duration: number,
-  fps: number
+  fps: number,
+  totalFrames: number
 ): AnimationController => {
-  return new AnimationController(duration, fps);
+  return new AnimationController(fps, totalFrames);
 };
