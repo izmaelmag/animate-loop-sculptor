@@ -9,12 +9,34 @@ const animation: AnimationFunction = (
   frameNumber: number,
   totalFrames: number
 ): void => {
+  p.background(0);
+  p.fill(255);
+  p.textAlign(p.CENTER, p.CENTER);
+  p.textSize(96);
+  
+  if (waitUntilFrame(0, frameNumber)) {
+    p.background(0);
+    p.text("0", p.width / 2, p.height / 2);
+  }
+
+  if (waitUntilFrame(60, frameNumber)) {
+    p.background(0);
+    p.text("1", p.width / 2, p.height / 2);
+  }
+
   if (waitUntilFrame(120, frameNumber)) {
-    p.circle(p.width / 2, p.height / 2, 100);
+    p.background(0);
+    p.text("2", p.width / 2, p.height / 2);
+  }
+
+  if (waitUntilFrame(180, frameNumber)) {
+    p.background(0);
+    p.text("3", p.width / 2, p.height / 2);
   }
 
   if (waitUntilFrame(240, frameNumber)) {
-    p.circle(p.width / 2, p.height / 2, 200);
+    p.background(0);
+    p.text("4", p.width / 2, p.height / 2);
   }
 };
 

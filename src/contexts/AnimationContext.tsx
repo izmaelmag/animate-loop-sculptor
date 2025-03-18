@@ -6,7 +6,7 @@ import {
 import { animationSettings } from "@/animations";
 
 // Default animation template
-const DEFAULT_ANIMATION = "basic";
+const DEFAULT_ANIMATION = "waitExample";
 
 // Get default settings from animation
 const defaultSettings = animationSettings[DEFAULT_ANIMATION] || {
