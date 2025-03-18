@@ -5,12 +5,16 @@ import { animations, AnimationName, getAnimationByName } from "../animations";
 import { settings as basic } from "../animations/basic-template";
 import { settings as gsap } from "../animations/gsap-sequence";
 import { settings as gridOrbit } from "../animations/grid-orbit";
+import { settings as multilayered } from "../animations/multilayered";
+import { settings as waitExample } from "../animations/wait-example";
 
-// Map of animation settings by name
+// Map of animation settings by name - include all animations
 const animationSettings = {
   basic,
   gsap,
   gridOrbit,
+  multilayered,
+  waitExample
 };
 
 declare global {
@@ -21,19 +25,26 @@ declare global {
 
 // Helper function to get pixel ratio from environment
 const getPixelRatio = (): number => {
-  if (typeof process !== "undefined" && process.env && process.env.DEVICE_PIXEL_RATIO) {
+  if (
+    typeof process !== "undefined" &&
+    process.env &&
+    process.env.DEVICE_PIXEL_RATIO
+  ) {
     const ratio = parseFloat(process.env.DEVICE_PIXEL_RATIO);
     if (!isNaN(ratio) && ratio > 0) {
       console.log("P5Animation: Using pixel ratio from environment:", ratio);
       return ratio;
     }
   }
-  
+
   if (typeof window !== "undefined" && window.devicePixelRatio) {
-    console.log("P5Animation: Using window.devicePixelRatio:", window.devicePixelRatio);
+    console.log(
+      "P5Animation: Using window.devicePixelRatio:",
+      window.devicePixelRatio
+    );
     return window.devicePixelRatio;
   }
-  
+
   console.log("P5Animation: Using default pixel ratio: 2");
   return 2;
 };
@@ -54,8 +65,7 @@ export const P5Animation = ({
 
   // Get the current animation settings
   const currentSettings =
-    animationSettings[templateName as keyof typeof animationSettings] ||
-    basic;
+    animationSettings[templateName as keyof typeof animationSettings] || basic;
 
   // Main hook for setting up and cleaning up p5 instance
   // Runs only when mounting/unmounting
@@ -84,9 +94,9 @@ export const P5Animation = ({
       if (!isMountedRef.current) return;
 
       // Animation parameters
-      const t = frame / durationInFrames;
+      const totalFrames = currentSettings.totalFrames || durationInFrames;
+      const t = frame / totalFrames;
       const frameNumber = frame;
-      const totalFrames = durationInFrames;
 
       // Get animation dimensions from settings - use exact dimensions
       const width = currentSettings.width || 1080;
@@ -108,10 +118,12 @@ export const P5Animation = ({
             // Create canvas with EXACT dimensions from animation settings
             p.createCanvas(width, height);
             p.background(0);
-            
+
             // Force pixel density to 1 for exact pixel matching
             p.pixelDensity(1);
-            console.log(`P5Animation: Created canvas with EXACT dimensions ${width}x${height}`);
+            console.log(
+              `P5Animation: Created canvas with EXACT dimensions ${width}x${height}`
+            );
 
             // Run onSetup function if it exists
             if (currentSettings.onSetup && !setupDoneRef.current) {

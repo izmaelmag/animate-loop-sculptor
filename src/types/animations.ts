@@ -4,7 +4,9 @@ export type AnimationFunction = (
   p: p5,
   normalizedTime: number,
   frameNumber: number,
-  totalFrames: number
+  totalFrames: number,
+  startTime?: number,
+  endTime?: number
 ) => void;
 
 export interface AnimationTemplate {

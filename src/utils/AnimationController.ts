@@ -4,12 +4,16 @@ import { AnimationFunction } from "@/types/animations";
 import { settings as basic } from "../animations/basic-template";
 import { settings as gsap } from "../animations/gsap-sequence";
 import { settings as gridOrbit } from "../animations/grid-orbit";
+import { settings as multilayered } from "../animations/multilayered";
+import { settings as waitExample } from "../animations/wait-example";
 
-// Map of animation settings by name
+// Map of animation settings by name - include all animations
 const animationSettings = {
   basic,
   gsap,
   gridOrbit,
+  multilayered,
+  waitExample
 };
 
 export class AnimationController {
@@ -20,10 +24,10 @@ export class AnimationController {
   private currentAnimationName: AnimationName = "basic";
   private containerElement: HTMLElement | null = null;
 
-  // Animation settings
-  public readonly duration: number;
-  public readonly fps: number;
-  public readonly totalFrames: number;
+  // Animation settings - now writable
+  public duration: number;
+  public fps: number;
+  public totalFrames: number;
 
   // Animation state
   private _currentFrame: number = 0;
@@ -52,6 +56,24 @@ export class AnimationController {
     }
 
     return this._currentFrame / (this.totalFrames - 1);
+  }
+
+  // FPS setter
+  setFps(fps: number): void {
+    if (fps > 0 && this.fps !== fps) {
+      this.fps = fps;
+      this.updateTotalFrames();
+      console.log(`FPS updated to ${fps}, totalFrames now ${this.totalFrames}`);
+    }
+  }
+
+  // Duration setter
+  setDuration(duration: number): void {
+    if (duration > 0 && this.duration !== duration) {
+      this.duration = duration;
+      this.updateTotalFrames();
+      console.log(`Duration updated to ${duration}s, totalFrames now ${this.totalFrames}`);
+    }
   }
 
   // Frame getter and setter
@@ -221,6 +243,19 @@ export class AnimationController {
     }
   };
 
+  // Private method to update totalFrames based on duration and fps
+  private updateTotalFrames(): void {
+    const newTotalFrames = Math.round(this.duration * this.fps);
+    if (this.totalFrames !== newTotalFrames) {
+      this.totalFrames = newTotalFrames;
+      // Ensure current frame is within bounds after totalFrames change
+      if (this._currentFrame >= this.totalFrames) {
+        this._currentFrame = this.totalFrames - 1;
+        this.notifyFrameChanged();
+      }
+    }
+  }
+
   // Redraw the P5 canvas
   redraw(): void {
     if (this.p5Instance) {
@@ -312,10 +347,35 @@ export class AnimationController {
     p.text("Loading sketch...", p.width / 2, p.height / 2);
   }
 
+  // Set animation and update settings
   setAnimation(name: AnimationName = "basic"): void {
     this.currentAnimationName = name;
-    const animationFunction = getAnimationByName(name);
-    this.setAnimationFunction(animationFunction);
+    const animation = getAnimationByName(name);
+
+    // Get the animation settings
+    const settings = animationSettings[name as keyof typeof animationSettings];
+
+    if (settings) {
+      // Update controller with animation settings
+      // Create writable properties that can be properly updated
+      this.duration = settings.duration;
+      this.fps = settings.fps;
+      
+      // Instead of directly setting totalFrames, update it based on duration and fps
+      // to ensure consistency
+      if (settings.totalFrames !== this.duration * this.fps) {
+        console.log(`Warning: totalFrames (${settings.totalFrames}) doesn't match duration*fps (${this.duration * this.fps}). Using duration*fps.`);
+      }
+      this.updateTotalFrames();
+
+      console.log(
+        `Using animation settings: fps=${this.fps}, duration=${this.duration}s, totalFrames=${this.totalFrames}`
+      );
+    }
+
+    if (animation) {
+      this.setAnimationFunction(animation);
+    }
 
     // If p5 instance exists, recreate it to match the new animation dimensions
     if (this.p5Instance && this.containerElement) {
@@ -323,6 +383,9 @@ export class AnimationController {
       this.p5Instance = null;
       this.initializeP5(this.containerElement);
     }
+
+    // Reset animation state
+    this.reset();
   }
 }
 

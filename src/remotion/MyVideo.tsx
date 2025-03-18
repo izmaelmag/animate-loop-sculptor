@@ -5,12 +5,16 @@ import { AnimationName } from "../animations";
 import { settings as basic } from "../animations/basic-template";
 import { settings as gsap } from "../animations/gsap-sequence";
 import { settings as gridOrbit } from "../animations/grid-orbit";
+import { settings as multilayered } from "../animations/multilayered";
+import { settings as waitExample } from "../animations/wait-example";
 
-// Map of animation settings by name
+// Map of animation settings by name - include all animations
 const animationSettings = {
   basic,
   gsap,
   gridOrbit,
+  multilayered,
+  waitExample
 };
 
 interface MyVideoProps {
@@ -27,8 +31,12 @@ export const MyVideo: React.FC<MyVideoProps> = ({
 
   // Get the current animation settings
   const currentSettings =
-    animationSettings[templateName as keyof typeof animationSettings] ||
-    basic;
+    animationSettings[templateName as keyof typeof animationSettings] || basic;
+
+  // Log actual animation settings being used
+  console.log(
+    `Using animation settings: ${currentSettings.name}, FPS: ${currentSettings.fps}, Duration: ${currentSettings.duration}s, Frames: ${currentSettings.totalFrames}`
+  );
 
   return (
     <div
