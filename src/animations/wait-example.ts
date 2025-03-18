@@ -1,6 +1,12 @@
 import { AnimationSettings, AnimationFunction } from "@/types/animations";
 import p5 from "p5";
-import { waitUntilFrame } from "../utils/timing";
+import {
+  RenderCallbackParams,
+  renderTimelineLayer,
+} from "../utils/renderTimelineLayer";
+import { easeOutBounce } from "../utils/easing";
+
+// let layer1: p5.Graphics;
 
 // Define the animation function first, before it's referenced
 const animation: AnimationFunction = (
@@ -10,34 +16,36 @@ const animation: AnimationFunction = (
   totalFrames: number
 ): void => {
   p.background(0);
-  p.fill(255);
-  p.textAlign(p.CENTER, p.CENTER);
-  p.textSize(96);
-  
-  if (waitUntilFrame(0, frameNumber)) {
-    p.background(0);
-    p.text("0", p.width / 2, p.height / 2);
-  }
 
-  if (waitUntilFrame(60, frameNumber)) {
-    p.background(0);
-    p.text("1", p.width / 2, p.height / 2);
-  }
+  const layer1 = renderTimelineLayer(
+    {
+      p,
+      frames: [0, 20],
+      globalCurrentFrame: frameNumber,
+      transparent: true,
+    },
+    ({ graphics, progress }) => {
+      const circleRadius = 400 * easeOutBounce(progress);
+      graphics.ellipse(p.width / 2, p.height / 2, circleRadius, circleRadius);
+    }
+  );
 
-  if (waitUntilFrame(120, frameNumber)) {
-    p.background(0);
-    p.text("2", p.width / 2, p.height / 2);
-  }
+  // Reverse the circle to zero radius
+  const layer2 = renderTimelineLayer(
+    {
+      p,
+      frames: [20, 100],
+      globalCurrentFrame: frameNumber,
+      transparent: true,
+    },
+    ({ graphics, progress }) => {
+      const circleRadius = 400 * easeOutBounce(1 - progress);
+      graphics.ellipse(p.width / 2, p.height / 2, circleRadius, circleRadius);
+    }
+  );
 
-  if (waitUntilFrame(180, frameNumber)) {
-    p.background(0);
-    p.text("3", p.width / 2, p.height / 2);
-  }
-
-  if (waitUntilFrame(240, frameNumber)) {
-    p.background(0);
-    p.text("4", p.width / 2, p.height / 2);
-  }
+  p.image(layer1, 0, 0, p.width, p.height);
+  p.image(layer2, 0, 0, p.width, p.height);
 };
 
 function setupAnimation(p: p5): void {
