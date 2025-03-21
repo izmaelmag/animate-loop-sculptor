@@ -1,5 +1,5 @@
 import { AnimationSettings, AnimationFunction } from "@/types/animations";
-import { renderGrid } from "@/utils/renderGrid";
+import { renderGrid } from "../../utils/renderGrid";
 import p5 from "p5";
 
 let gridGraphics: p5.Image;
@@ -20,8 +20,8 @@ function updateGrid(p: p5, currentFrame: number): void {
     secondaryColor: "#444444",
     mainOpacity: 1,
     secondaryOpacity: 1,
-    mainWidth: 2, // Increased line width for better visibility
-    secondaryWidth: 2,
+    mainWidth: 3, // Increased line width for better visibility
+    secondaryWidth: 3,
     textSize: 32, // Increased text size for better visibility
     // animation
     animated: true,
@@ -59,7 +59,7 @@ export const lerpMoveIntro: AnimationSettings = {
   name: "LERP Move Intro",
   id: "lerpMoveIntro",
   fps: 60,
-  totalFrames: 60 * 5,
+  totalFrames: 60 * 3,
   width: 1080,
   height: 1920,
   sequential: true,

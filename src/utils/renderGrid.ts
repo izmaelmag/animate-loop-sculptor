@@ -11,6 +11,7 @@ interface GridOptions {
   mainOpacity?: number;
   secondaryOpacity?: number;
   showUnits?: boolean;
+  showTicks?: boolean;
   invertY?: boolean;
   invertX?: boolean;
   mainWidth?: number;
@@ -44,6 +45,7 @@ export const renderGrid = (options: GridOptions): p5.Image => {
     mainOpacity = 1,
     secondaryOpacity = 0.25,
     showUnits = false,
+    showTicks = false,
     invertY = false,
     invertX = false,
     mainWidth = 1,
@@ -294,13 +296,15 @@ export const renderGrid = (options: GridOptions): p5.Image => {
 
           const xPos = centerX + unitValue * unitSize * xDirection;
           if (xPos >= 0 && xPos <= p.width) {
-            // Draw tick mark
-            gridGraphics.line(
-              xPos,
-              centerY - tickSize,
-              xPos,
-              centerY + tickSize
-            );
+            if (showTicks) {
+              // Draw tick mark
+              gridGraphics.line(
+                xPos,
+                centerY - tickSize,
+                xPos,
+                centerY + tickSize
+              );
+            }
 
             // Draw number
             gridGraphics.text(
@@ -320,12 +324,14 @@ export const renderGrid = (options: GridOptions): p5.Image => {
           const yPos = centerY + unitValue * unitSize * yDirection;
           if (yPos >= 0 && yPos <= p.height) {
             // Draw tick mark
-            gridGraphics.line(
-              centerX - tickSize,
-              yPos,
-              centerX + tickSize,
-              yPos
-            );
+            if (showTicks) {
+              gridGraphics.line(
+                centerX - tickSize,
+                yPos,
+                centerX + tickSize,
+                yPos
+              );
+            }
 
             // Draw number
             gridGraphics.text(
