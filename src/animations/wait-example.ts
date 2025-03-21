@@ -59,7 +59,6 @@ function setupAnimation(p: p5): void {
 export const settings: AnimationSettings = {
   name: "Wait Example",
   id: "waitExample",
-  duration: 20,
   fps: 60,
   totalFrames: 1200,
   width: 1080,

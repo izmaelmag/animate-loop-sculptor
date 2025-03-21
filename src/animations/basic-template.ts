@@ -3,7 +3,6 @@ import { AnimationSettings } from "@/types/animations";
 export const settings: AnimationSettings = {
   name: "Basic",
   id: "basic",
-  duration: 10,
   fps: 60,
   totalFrames: 600,
   sequential: false,

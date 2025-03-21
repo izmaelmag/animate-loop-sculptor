@@ -27,7 +27,6 @@ export interface AnimationInstance {
 export interface AnimationSettings {
   name: string;
   id: string;
-  duration: number;
   fps: number;
   totalFrames: number;
   width?: number;

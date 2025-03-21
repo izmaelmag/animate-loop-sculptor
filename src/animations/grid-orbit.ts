@@ -5,7 +5,6 @@ import p5 from "p5";
 export const settings: AnimationSettings = {
   name: "Grid Orbit",
   id: "gridOrbit",
-  duration: 10,
   fps: 60,
   totalFrames: 600,
   width: 1080,
