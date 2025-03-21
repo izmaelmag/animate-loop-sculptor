@@ -1,3 +1,4 @@
+import { parseMedia } from "@remotion/media-parser";
 import { registerRoot, Composition } from "remotion";
 import { MyVideo } from "./MyVideo";
 import { animationSettings } from "../animations";
@@ -17,6 +18,12 @@ export const RemotionVideo = () => {
         height={1920} // Default height
         defaultProps={{
           templateName: DEFAULT_TEMPLATE,
+        }}
+        calculateMetadata={async ({ props }) => {
+          return {
+            durationInFrames:
+              animationSettings[props.templateName as string].totalFrames,
+          };
         }}
       />
     </>
