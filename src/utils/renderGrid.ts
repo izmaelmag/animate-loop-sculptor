@@ -67,6 +67,17 @@ export const renderGrid = (options: GridOptions): p5.Image => {
   // Create graphics buffer to draw the grid
   const gridGraphics = p.createGraphics(p.width, p.height);
 
+  // Function to get text opacity (0-255) based on animation state
+  const getTextAlpha = (): number => {
+    if (!animated) return 255; // Half opacity for non-animated
+    if (currentGlobalFrame < delay) return 0; // No text before delay
+
+    // Simple linear fade from 0 to 128 (half opacity)
+    const fadeProgress =
+      ((currentGlobalFrame - delay) * 2) / animationFramesLength;
+    return Math.min(1, fadeProgress) * 255;
+  };
+
   // Set background to transparent
   gridGraphics.clear();
 
@@ -86,8 +97,8 @@ export const renderGrid = (options: GridOptions): p5.Image => {
     animated && currentGlobalFrame < delay + animationFramesLength;
 
   // Ease-out-quart function for smooth animation with stronger deceleration
-  const easeOutQuart = (t: number): number => {
-    return 1 - Math.pow(1 - t, 4);
+  const easeOutQuart = (x: number): number => {
+    return x === 1 ? 1 : 1 - Math.pow(1 - x, 4);
   };
 
   const shouldDrawLine = (index: number, isVertical: boolean) => {
@@ -113,20 +124,6 @@ export const renderGrid = (options: GridOptions): p5.Image => {
       (animFrame - lineDelay) / (animationFramesLength - lineDelay);
     // Apply easeOutQuart to make the animation smoother with stronger deceleration
     return Math.min(1, easeOutQuart(Math.min(1, linearProgress)));
-  };
-
-  // Calculate text opacity based on animation progress
-  const getTextOpacity = () => {
-    if (!animated) return 1;
-    if (currentGlobalFrame < delay + animationFramesLength / 2) return 0;
-
-    // Start fading in at the middle of the animation
-    const fadeStart = delay + animationFramesLength / 2;
-    const fadeProgress =
-      (currentGlobalFrame - fadeStart) / (animationFramesLength / 2);
-
-    // Apply easeOutQuart for the fade
-    return Math.min(1, easeOutQuart(Math.min(1, fadeProgress)));
   };
 
   // Draw subgrid if enabled
@@ -256,84 +253,96 @@ export const renderGrid = (options: GridOptions): p5.Image => {
       }
     }
 
-    // Draw units on axes if needed (only when animation started fade-in or is complete or disabled)
-    if (
-      showUnits &&
-      (!animated || currentGlobalFrame >= delay + animationFramesLength / 2)
-    ) {
-      // Calculate text opacity for fade-in
-      const textOpacityMultiplier = getTextOpacity();
+    // Draw units on axes if needed
+    if (showUnits) {
+      // Get text alpha for this frame
+      const textAlpha = getTextAlpha();
 
-      // Use a lighter opacity for text (50% of the main opacity * current fade progress)
-      const textAlpha = Math.floor(
-        mainOpacity * 0.5 * 255 * textOpacityMultiplier
-      );
+      // Only render text if there's at least some opacity
+      if (textAlpha > 0) {
+        // Text color components
+        const r = parseInt(mainColor.slice(1, 3), 16);
+        const g = parseInt(mainColor.slice(3, 5), 16);
+        const b = parseInt(mainColor.slice(5, 7), 16);
 
-      gridGraphics.fill(
-        parseInt(mainColor.slice(1, 3), 16),
-        parseInt(mainColor.slice(3, 5), 16),
-        parseInt(mainColor.slice(5, 7), 16),
-        textAlpha
-      );
+        // Configure text appearance
+        gridGraphics.textAlign(gridGraphics.CENTER, gridGraphics.CENTER);
+        gridGraphics.textSize(textSize);
+        gridGraphics.textFont("Courier New");
 
-      gridGraphics.textAlign(gridGraphics.CENTER, gridGraphics.CENTER);
-      gridGraphics.textSize(textSize);
-      // Set monospaced font with lighter weight
-      gridGraphics.textFont("Courier New");
-      gridGraphics.textStyle(gridGraphics.NORMAL);
+        // Set text color with calculated alpha
+        gridGraphics.fill(r, g, b, textAlpha);
 
-      // Calculate how many units fit in the canvas
-      const maxUnitsX = Math.ceil(p.width / unitSize) + 1;
-      const maxUnitsY = Math.ceil(p.height / unitSize) + 1;
+        // Set stroke color for tick marks with same alpha
+        gridGraphics.strokeWeight(1);
+        gridGraphics.stroke(r, g, b, textAlpha);
 
-      // Calculate the unit value at the left edge of the canvas
-      const leftEdgeUnit = -Math.ceil(centerX / unitSize);
-      // Calculate the unit value at the top edge of the canvas
-      const topEdgeUnit = invertY
-        ? Math.ceil(centerY / unitSize)
-        : -Math.ceil(centerY / unitSize);
+        // Calculate grid details
+        const maxUnitsX = Math.ceil(p.width / unitSize) + 1;
+        const maxUnitsY = Math.ceil(p.height / unitSize) + 1;
+        const leftEdgeUnit = -Math.ceil(centerX / unitSize);
+        const topEdgeUnit = invertY
+          ? Math.ceil(centerY / unitSize)
+          : -Math.ceil(centerY / unitSize);
+        const tickSize = 6 * (textSize / 11);
 
-      // Define tick size
-      const tickSize = 6 * (textSize / 11); // Scale tick size proportionally to text size
+        // X axis units and ticks
+        const xDirection = invertX ? -1 : 1;
+        for (let i = 0; i <= maxUnitsX; i++) {
+          const unitValue = leftEdgeUnit + i;
+          if (unitValue === 0) continue; // Skip zero (drawn separately)
 
-      // X axis units and ticks
-      const xDirection = invertX ? -1 : 1;
-      for (let i = 0; i <= maxUnitsX; i++) {
-        const unitValue = leftEdgeUnit + i;
-        if (unitValue === 0) continue; // Skip zero (drawn separately)
+          const xPos = centerX + unitValue * unitSize * xDirection;
+          if (xPos >= 0 && xPos <= p.width) {
+            // Draw tick mark
+            gridGraphics.line(
+              xPos,
+              centerY - tickSize,
+              xPos,
+              centerY + tickSize
+            );
 
-        const xPos = centerX + unitValue * unitSize * xDirection;
-        // Only draw if within canvas bounds
-        if (xPos >= 0 && xPos <= p.width) {
-          // Draw tick mark
-          gridGraphics.strokeWeight(1);
-          gridGraphics.line(xPos, centerY - tickSize, xPos, centerY + tickSize);
-
-          // Draw label
-          gridGraphics.text(unitValue.toString(), xPos, centerY + tickSize * 3);
+            // Draw number
+            gridGraphics.text(
+              unitValue.toString(),
+              xPos,
+              centerY + tickSize * 3
+            );
+          }
         }
-      }
 
-      // Y axis units and ticks
-      const yDirection = invertY ? 1 : -1;
-      for (let i = 0; i <= maxUnitsY; i++) {
-        const unitValue = topEdgeUnit + i * (invertY ? -1 : 1);
-        if (unitValue === 0) continue; // Skip zero (drawn separately)
+        // Y axis units and ticks
+        const yDirection = invertY ? 1 : -1;
+        for (let i = 0; i <= maxUnitsY; i++) {
+          const unitValue = topEdgeUnit + i * (invertY ? -1 : 1);
+          if (unitValue === 0) continue; // Skip zero (drawn separately)
 
-        const yPos = centerY + unitValue * unitSize * yDirection;
-        // Only draw if within canvas bounds
-        if (yPos >= 0 && yPos <= p.height) {
-          // Draw tick mark
-          gridGraphics.strokeWeight(1);
-          gridGraphics.line(centerX - tickSize, yPos, centerX + tickSize, yPos);
+          const yPos = centerY + unitValue * unitSize * yDirection;
+          if (yPos >= 0 && yPos <= p.height) {
+            // Draw tick mark
+            gridGraphics.line(
+              centerX - tickSize,
+              yPos,
+              centerX + tickSize,
+              yPos
+            );
 
-          // Draw label
-          gridGraphics.text(unitValue.toString(), centerX + tickSize * 3, yPos);
+            // Draw number
+            gridGraphics.text(
+              unitValue.toString(),
+              centerX + tickSize * 3,
+              yPos
+            );
+          }
         }
-      }
 
-      // Draw 0 at origin
-      gridGraphics.text("0", centerX + tickSize * 3, centerY + tickSize * 3);
+        // Draw 0 at origin
+        gridGraphics.text("0", centerX + tickSize * 3, centerY + tickSize * 3);
+
+        // Restore main line style
+        gridGraphics.strokeWeight(mainWidth);
+        gridGraphics.stroke(r, g, b, mainAlpha);
+      }
     }
   }
 

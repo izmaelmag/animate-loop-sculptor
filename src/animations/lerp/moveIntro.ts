@@ -16,8 +16,8 @@ function updateGrid(p: p5, currentFrame: number): void {
     showUnits: true,
     invertY: true,
     invertX: false,
-    mainColor: "#aaa",
-    secondaryColor: "#444",
+    mainColor: "#aaaaaa",
+    secondaryColor: "#444444",
     mainOpacity: 1,
     secondaryOpacity: 1,
     mainWidth: 2, // Increased line width for better visibility
@@ -28,7 +28,7 @@ function updateGrid(p: p5, currentFrame: number): void {
     animationFramesLength: 60,
     currentGlobalFrame: currentFrame,
     stagger: 2,
-    delay: 0,
+    delay: 30,
   });
 }
 
