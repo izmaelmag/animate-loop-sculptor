@@ -4,7 +4,6 @@ import p5 from "p5";
 export const settings: AnimationSettings = {
   name: "Multilayered",
   id: "multilayered",
-  duration: 10,
   fps: 60,
   totalFrames: 600,
   width: 1080,

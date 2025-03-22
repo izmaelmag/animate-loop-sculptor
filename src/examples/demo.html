@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KF Animation Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    canvas {
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .controls {
+      margin-top: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>KF Animation Demo</h1>
+  <canvas id="animationCanvas" width="600" height="400"></canvas>
+  
+  <div class="controls">
+    <button id="startBtn">Start Animation</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <script type="module">
+    // Import the KF class and easing functions
+    import { KF } from '../utils/kf.js';
+    import { easeInOutSine, easeOutSine } from '../utils/easing.js';
+
+    // Get the canvas element and context
+    const canvas = document.getElementById('animationCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Circle object to be animated
+    const circle = {
+      x: 50,
+      y: 200,
+      radius: 30,
+      color: '#3498db'
+    };
+    
+    // Create KF instances for each property
+    const xAnimator = new KF(circle, 'x');
+    const yAnimator = new KF(circle, 'y');
+    const radiusAnimator = new KF(circle, 'radius');
+    
+    // Define animation sequences
+    let xSequence, ySequence, radiusSequence;
+    
+    function createSequences() {
+      xSequence = xAnimator
+        .startAt(0)
+        .next(550, easeInOutSine, { delay: 30, length: 120 })
+        .next(300, easeInOutSine, { delay: 10, length: 60 })
+        .next(400, easeOutSine, { delay: 0, length: 90 });
+    
+      ySequence = yAnimator
+        .startAt(30)
+        .next(100, easeInOutSine, { length: 100 })
+        .next(300, easeOutSine, { delay: 20, length: 80 });
+        
+      radiusSequence = radiusAnimator
+        .startAt(60)
+        .next(50, easeInOutSine, { length: 40 })
+        .next(20, easeOutSine, { delay: 100, length: 60 })
+        .next(60, easeInOutSine, { length: 120 });
+    }
+    
+    // Animation variables
+    let currentFrame = 0;
+    let animationId = null;
+    
+    // Draw the circle on the canvas
+    function drawCircle() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+      ctx.fillStyle = circle.color;
+      ctx.fill();
+      ctx.closePath();
+      
+      // Show current values
+      ctx.fillStyle = '#333';
+      ctx.font = '14px Arial';
+      ctx.fillText(`Frame: ${currentFrame}`, 10, 20);
+      ctx.fillText(`x: ${Math.round(circle.x)}`, 10, 40);
+      ctx.fillText(`y: ${Math.round(circle.y)}`, 10, 60);
+      ctx.fillText(`radius: ${Math.round(circle.radius)}`, 10, 80);
+    }
+    
+    // Animation loop
+    function animate() {
+      // Animate all properties for the current frame
+      xAnimator.animate(xSequence, currentFrame);
+      yAnimator.animate(ySequence, currentFrame);
+      radiusAnimator.animate(radiusSequence, currentFrame);
+      
+      // Draw the updated circle
+      drawCircle();
+      
+      // Increment frame counter
+      currentFrame++;
+      
+      // Continue animation loop
+      if (currentFrame < 400) {
+        animationId = requestAnimationFrame(animate);
+      }
+    }
+    
+    // Button event listeners
+    document.getElementById('startBtn').addEventListener('click', () => {
+      // Cancel any running animation
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      
+      // Create animation sequences
+      createSequences();
+      
+      // Start animation
+      currentFrame = 0;
+      animate();
+    });
+    
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      // Cancel any running animation
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      
+      // Reset circle to initial state
+      circle.x = 50;
+      circle.y = 200;
+      circle.radius = 30;
+      currentFrame = 0;
+      
+      // Draw the reset circle
+      drawCircle();
+    });
+    
+    // Initialize by drawing the circle in its starting position
+    drawCircle();
+  </script>
+</body>
+</html> 

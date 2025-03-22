@@ -3,16 +3,13 @@ import {
   AnimationController,
   createAnimationController,
 } from "@/utils/AnimationController";
-import { animationSettings } from "@/animations";
+import { getAnimationSettingsByName } from "@/animations";
 
 // Default animation template
 const DEFAULT_ANIMATION = "lerpMoveIntro";
 
 // Get default settings from animation
-const defaultSettings = animationSettings[DEFAULT_ANIMATION] || {
-  fps: 60,
-  totalFrames: 600,
-};
+const defaultSettings = getAnimationSettingsByName(DEFAULT_ANIMATION);
 
 interface AnimationContextType {
   controller: AnimationController | null;
@@ -45,7 +42,9 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
     // Create the controller with default animation settings
     const animationController = createAnimationController(
       defaultSettings.fps,
-      defaultSettings.totalFrames
+      defaultSettings.totalFrames,
+      defaultSettings.width,
+      defaultSettings.height
     );
 
     // Set default animation

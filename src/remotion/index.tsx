@@ -1,10 +1,20 @@
-import { parseMedia } from "@remotion/media-parser";
 import { registerRoot, Composition } from "remotion";
 import { MyVideo } from "./MyVideo";
-import { animationSettings } from "../animations";
+import { getAnimationSettingsByName } from "../animations";
 
 // Default animation template if none specified
 const DEFAULT_TEMPLATE = "gridOrbit";
+
+const calculateMetaData = async (props: Record<string, unknown>) => {
+  const settings = getAnimationSettingsByName(props.templateName as string);
+
+  return {
+    durationInFrames: settings.totalFrames,
+    fps: settings.fps,
+    width: settings.width,
+    height: settings.height,
+  };
+};
 
 export const RemotionVideo = () => {
   return (
@@ -20,10 +30,7 @@ export const RemotionVideo = () => {
           templateName: DEFAULT_TEMPLATE,
         }}
         calculateMetadata={async ({ props }) => {
-          return {
-            durationInFrames:
-              animationSettings[props.templateName as string].totalFrames,
-          };
+          return await calculateMetaData(props);
         }}
       />
     </>

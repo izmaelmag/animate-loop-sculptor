@@ -27,6 +27,8 @@ export class AnimationController {
   // Animation settings - just fps and totalFrames
   public fps: number;
   public totalFrames: number;
+  public width: number;
+  public height: number;
 
   // Animation state
   private _currentFrame: number = 0;
@@ -40,9 +42,11 @@ export class AnimationController {
   ) => void)[] = [];
   private onPlayStateChangedCallbacks: ((isPlaying: boolean) => void)[] = [];
 
-  constructor(fps: number, totalFrames: number) {
+  constructor(fps: number, totalFrames: number, width: number, height: number) {
     this.fps = fps;
     this.totalFrames = totalFrames;
+    this.width = width;
+    this.height = height;
   }
 
   // Getter for normalized time (0-1)
@@ -143,18 +147,24 @@ export class AnimationController {
             this.currentAnimationName as keyof typeof animationSettings
           ] || basic;
 
-        // Get EXACT dimensions from animation settings
-        const width = currentSettings.width || 1080;
-        const height = currentSettings.height || 1920;
+        console.log("Current animation name", this.currentAnimationName);
+        console.log("Current settings", currentSettings);
+        console.log(
+          "Creating canvas with EXACT dimensions",
+          this.width,
+          this.height
+        );
 
         // Create canvas with EXACT dimensions
-        p.createCanvas(width, height);
+        p.createCanvas(this.width, this.height);
         p.frameRate(this.fps);
         p.background(0);
 
         // Force pixel density to 1 for exact pixel matching
         p.pixelDensity(1);
-        console.log(`Canvas created with EXACT dimensions ${width}x${height}`);
+        console.log(
+          `Canvas created with EXACT dimensions ${this.width}x${this.height}`
+        );
 
         // We don't want P5's automatic animation loop - we'll control it
         p.noLoop();
@@ -340,6 +350,8 @@ export class AnimationController {
     this.currentAnimationName = name;
     const animation = getAnimationByName(name);
 
+    console.log(name);
+
     // Get the animation settings
     const settings = animationSettings[name as keyof typeof animationSettings];
 
@@ -347,6 +359,8 @@ export class AnimationController {
       // Update controller with animation settings
       this.fps = settings.fps;
       this.totalFrames = settings.totalFrames;
+      this.width = settings.width;
+      this.height = settings.height;
 
       console.log(
         `Using animation settings: fps=${this.fps}, totalFrames=${this.totalFrames}`
@@ -372,7 +386,9 @@ export class AnimationController {
 // Create a global singleton instance
 export const createAnimationController = (
   fps: number,
-  totalFrames: number
+  totalFrames: number,
+  width: number,
+  height: number
 ): AnimationController => {
-  return new AnimationController(fps, totalFrames);
+  return new AnimationController(fps, totalFrames, width, height);
 };

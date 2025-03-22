@@ -31,7 +31,7 @@ const SketchView = () => {
 
   return (
     <div className="flex flex-col justify-start items-center h-full p-0 md:p-6 pt-4 md:pt-6 relative gap-0 md:gap-2">
-      <div className="mx-auto flex aspect-[9/16] py-12 md:py-4 h-[100%] min-h-[0px] flex-shrink-1 flex-col relative">
+      <div className="mx-auto flex py-12 md:py-4 h-[100%] min-h-[0px] flex-shrink-1 flex-col relative">
         <div
           className="canvas-wrapper w-full h-full flex items-center justify-center relative"
           ref={sketchRef}
