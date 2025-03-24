@@ -21,29 +21,87 @@ interface SequenceParams {
   easingFn?: (t: number) => number;
 }
 
-class KFManager<T extends Record<string, number>> {
+// Helper type for nested objects with numeric leaf values
+type NestedNumberRecord = {
+  [key: string]: number | NestedNumberRecord;
+};
+
+// Path string type for accessing nested properties
+type PropertyPath = string;
+
+class KFManager<T extends NestedNumberRecord> {
   // Local store for the values as a SSoT
   private _store: T;
 
   // Sequences for each key
-  private _sequences: Record<keyof T, SequenceParams[]>;
+  private _sequences: Record<PropertyPath, SequenceParams[]>;
 
   // Initial store and associated sequences
   constructor(store: T) {
     // Set initial store
     this._store = { ...store };
 
-    // Create sequential arrays for each key to avoid mutating the original store
-    this._sequences = Object.keys(store).reduce((acc, key) => {
-      acc[key as keyof T] = [];
-      return acc;
-    }, {} as Record<keyof T, SequenceParams[]>);
+    // Create sequences object for flat paths
+    this._sequences = {} as Record<PropertyPath, SequenceParams[]>;
+  }
+
+  /**
+   * Gets a value from a nested object using a dot-notation path
+   * @param obj The object to get the value from
+   * @param path The path to the value (e.g. "point.x")
+   * @returns The value at the path
+   */
+  private getValueByPath(obj: T | NestedNumberRecord, path: PropertyPath): number {
+    const keys = path.split(".");
+    let current: T | NestedNumberRecord | number = obj;
+
+    for (const key of keys) {
+      if (current === undefined || current === null || typeof current === 'number') {
+        return 0; // Default value if path is invalid
+      }
+      current = current[key];
+    }
+
+    return typeof current === "number" ? current : 0;
+  }
+
+  /**
+   * Sets a value in a nested object using a dot-notation path
+   * @param obj The object to set the value in
+   * @param path The path to set the value at (e.g. "point.x")
+   * @param value The value to set
+   * @returns A new object with the updated value
+   */
+  private setValueByPath(obj: T, path: PropertyPath, value: number): T {
+    const keys = path.split(".");
+    const lastKey = keys.pop()!;
+
+    // Create a deep copy of the object
+    const result = JSON.parse(JSON.stringify(obj)) as T;
+
+    // Navigate to the right nesting level
+    let current: NestedNumberRecord = result;
+    for (const key of keys) {
+      if (current[key] === undefined) {
+        current[key] = {};
+      }
+      if (typeof current[key] === 'number') {
+        // If we encounter a number where we expect an object, replace it with an empty object
+        current[key] = {};
+      }
+      current = current[key] as NestedNumberRecord;
+    }
+
+    // Set the value
+    current[lastKey] = value;
+
+    return result;
   }
 
   // Creates a sequence for a key
   // Should not be used in a drawing loop
   // Only for declarative usage
-  public createSequence(key: keyof T, frames: SequenceParams[]): void {
+  public createSequence(path: PropertyPath, frames: SequenceParams[]): void {
     // Process frames to handle wait periods
     const processedFrames: SequenceParams[] = [];
     let waitAccumulator = 0;
@@ -63,18 +121,18 @@ class KFManager<T extends Record<string, number>> {
       }
     }
 
-    this._sequences[key] = processedFrames;
+    this._sequences[path] = processedFrames;
   }
 
   // This function runs in a drawing loop and uses
   // internal sequences to change values
   public animate(currentFrame: number): T {
-    // Create a copy of the store to update
-    const updatedStore = { ...this._store };
+    // Start with a copy of the store
+    let updatedStore = JSON.parse(JSON.stringify(this._store));
 
     // Update each value based on its sequence
-    for (const key of Object.keys(this._sequences) as Array<keyof T>) {
-      const sequence = this._sequences[key];
+    for (const path of Object.keys(this._sequences)) {
+      const sequence = this._sequences[path];
 
       // Filter only frame/value keyframes (not wait periods)
       const keyframes = sequence.filter(
@@ -90,44 +148,46 @@ class KFManager<T extends Record<string, number>> {
       // Sort keyframes by frame
       keyframes.sort((a, b) => a.frame - b.frame);
 
+      let newValue: number;
+
       // Handle before first keyframe
       if (currentFrame <= keyframes[0].frame) {
-        updatedStore[key] = keyframes[0].value as T[keyof T];
-        continue;
+        newValue = keyframes[0].value;
       }
-
       // Handle after last keyframe
-      if (currentFrame >= keyframes[keyframes.length - 1].frame) {
-        updatedStore[key] = keyframes[keyframes.length - 1].value as T[keyof T];
-        continue;
+      else if (currentFrame >= keyframes[keyframes.length - 1].frame) {
+        newValue = keyframes[keyframes.length - 1].value;
       }
+      // Handle in-between keyframes
+      else {
+        // Find surrounding keyframes
+        let startKeyframe = keyframes[0];
+        let endKeyframe = keyframes[1];
 
-      // Find surrounding keyframes
-      let startKeyframe = keyframes[0];
-      let endKeyframe = keyframes[1];
-
-      for (let i = 1; i < keyframes.length; i++) {
-        if (currentFrame <= keyframes[i].frame) {
-          startKeyframe = keyframes[i - 1];
-          endKeyframe = keyframes[i];
-          break;
+        for (let i = 1; i < keyframes.length; i++) {
+          if (currentFrame <= keyframes[i].frame) {
+            startKeyframe = keyframes[i - 1];
+            endKeyframe = keyframes[i];
+            break;
+          }
         }
+
+        // Calculate progress between keyframes (0 to 1)
+        const duration = endKeyframe.frame - startKeyframe.frame;
+        const progress = (currentFrame - startKeyframe.frame) / duration;
+
+        // Apply easing function if available
+        const easingFn = endKeyframe.easingFn || linear;
+        const easedProgress = easingFn(progress);
+
+        // Interpolate value
+        newValue =
+          startKeyframe.value +
+          (endKeyframe.value - startKeyframe.value) * easedProgress;
       }
 
-      // Calculate progress between keyframes (0 to 1)
-      const duration = endKeyframe.frame - startKeyframe.frame;
-      const progress = (currentFrame - startKeyframe.frame) / duration;
-
-      // Apply easing function if available
-      const easingFn = endKeyframe.easingFn || linear;
-      const easedProgress = easingFn(progress);
-
-      // Interpolate value
-      const newValue =
-        startKeyframe.value +
-        (endKeyframe.value - startKeyframe.value) * easedProgress;
-
-      updatedStore[key] = newValue as T[keyof T];
+      // Update the store with the new value
+      updatedStore = this.setValueByPath(updatedStore, path, newValue);
     }
 
     // Update the internal store
@@ -138,14 +198,14 @@ class KFManager<T extends Record<string, number>> {
 
   // Returns the current store for any usage
   get store(): T {
-    return { ...this._store };
+    return JSON.parse(JSON.stringify(this._store));
   }
 
   // Overwrites a value for manual control
   // It will be used to set a value directly without animation
   // Should be used in the drawing loop after the animate method
-  overwrite(key: keyof T, value: T[keyof T]): void {
-    this._store[key] = value;
+  overwrite(path: PropertyPath, value: number): void {
+    this._store = this.setValueByPath(this._store, path, value);
   }
 }
 
@@ -154,47 +214,28 @@ class KFManager<T extends Record<string, number>> {
 // Usage updates allow ONLY if class implementation can not be done in a declared way
 // ===============================================================================================
 
-// Creating a global state for animated values
-// Store is flat for simplicity
-// Maybe it's better to use a nested store for more complex animations
-// But flatten it in a way that is easy to manage
-// Like this: { p1: { x: 0, y: 0 } }
-// Turns into: { p1x: 0, p1y: 0 }
-// Or into: { "p1.x": 0, "p1.y": 0 }
-// Flat store allows to use the same key for different properties
-// And it's easier to update values in the drawing loop
-// Boolean – maybe??? IDK
+// Example usage with nested objects
+// Create a store with nested values
 const STORE = {
-  p1x: 0,
-  p1y: 0,
-  p2x: 0,
-  p2y: 0,
-  p3x: 0,
-  p3y: 0,
+  p1: { x: 0, y: 0 },
+  p2: { x: 0, y: 0 },
+  p3: { x: 0, y: 0 },
+  radius: 10,
 };
 
 // Creating a manager for the store
-// Maybe we need to pass more options?
-// But less is better
 const kf = new KFManager(STORE);
 
-// Creating a sequence for p1x
-// It will be animated from 0 to 100 in 100 frames [0, 100]
-// Then it will wait for 100 frames [100, 200]
-// Then it will animate from 100 to 0 in 100 frames [200, 300]
-kf.createSequence("p1x", [
+// Creating a sequence for p1.x using dot notation
+kf.createSequence("p1.x", [
   { frame: 0, value: 0 },
   { wait: 100 },
   { frame: 100, value: 100 },
   { frame: 200, value: 0 },
 ]);
 
-// Creating a sequence for p1y
-// It will wait for 100 frames [0, 100]
-// Then it will animate from 0 to 100 in 100 frames [100, 200]
-// Then it will wait for 100 frames [200, 300]
-// Then it will animate from 100 to 0 in 100 frames [300, 400]
-kf.createSequence("p1y", [
+// Creating a sequence for p1.y
+kf.createSequence("p1.y", [
   { wait: 100 },
   { frame: 0, value: 0 },
   { wait: 100 },
@@ -202,21 +243,32 @@ kf.createSequence("p1y", [
   { frame: 200, value: 0 },
 ]);
 
-// Drawing loop
-// It's not important for the example
-// No need to implement it
-// Just an example of the usage
+// Creating a sequence for the flat property "radius"
+kf.createSequence("radius", [
+  { frame: 0, value: 10 },
+  { frame: 100, value: 30 },
+  { frame: 200, value: 10 },
+]);
+
+// Drawing loop example
 const drawingLoop = (currentFrame: number) => {
-  const { p1x, p1y, p2x, p2y } = kf.animate(currentFrame);
+  const values = kf.animate(currentFrame);
 
-  drawShape(p1x, p1y, p2x, p2y);
+  // Access nested properties
+  const { p1, p2, radius } = values;
+
+  drawShape(p1.x, p1.y, p2.x, p2.y, radius);
 };
 
 // Some drawing function
-// It's not important for the example
-// No need to implement it
-const drawShape = (p1x: number, p1y: number, p2x: number, p2y: number) => {
-  console.log(p1x, p1y, p2x, p2y);
+const drawShape = (
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  radius: number
+) => {
+  console.log(p1x, p1y, p2x, p2y, radius);
   // ...
 };
 

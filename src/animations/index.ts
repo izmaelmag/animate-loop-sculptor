@@ -1,6 +1,7 @@
 import { AnimationFunction, AnimationSettings } from "@/types/animations";
 import { settings as basic } from "./basic-template";
 import { lerpMoveIntro } from "./lerp";
+import { demo } from "./demo";
 
 // import { settings as gsap } from "./gsap-sequence";
 // import { settings as gridOrbit } from "./grid-orbit";
@@ -15,6 +16,7 @@ export const animations: Record<string, AnimationFunction> = {
   // multilayered: multilayered.function,
   // waitExample: waitExample.function,
   lerpMoveIntro: lerpMoveIntro.function,
+  demo: demo.function,
 };
 
 export const animationSettings: Record<string, AnimationSettings> = {
@@ -24,6 +26,7 @@ export const animationSettings: Record<string, AnimationSettings> = {
   // multilayered,
   // waitExample,
   lerpMoveIntro,
+  demo,
 };
 
 export type AnimationName = keyof typeof animations;

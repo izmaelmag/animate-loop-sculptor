@@ -114,4 +114,97 @@ describe("KFManager", () => {
       expect(kfManager.store.x).toBe(75);
     });
   });
+
+  describe("nested objects", () => {
+    // Test store with nested objects
+    type NestedTestStore = {
+      point: {
+        x: number;
+        y: number;
+        r: number;
+      };
+      options: {
+        speed: number;
+        delay: number;
+      };
+      value: number;
+    };
+
+    let nestedKfManager: KFManager<NestedTestStore>;
+
+    beforeEach(() => {
+      // Fresh instance with nested objects for each test
+      nestedKfManager = new KFManager<NestedTestStore>({
+        point: {
+          x: 0,
+          y: 0,
+          r: 10,
+        },
+        options: {
+          speed: 1,
+          delay: 0,
+        },
+        value: 0,
+      });
+    });
+
+    it("should animate nested properties with dot notation", () => {
+      nestedKfManager.createSequence("point.x", [
+        { frame: 0, value: 0 },
+        { frame: 10, value: 100 },
+      ]);
+
+      nestedKfManager.createSequence("point.r", [
+        { frame: 0, value: 10 },
+        { frame: 10, value: 30 },
+      ]);
+
+      const result = nestedKfManager.animate(5);
+
+      expect(result.point.x).toBe(50); // Linear interpolation by default
+      expect(result.point.y).toBe(0); // Unchanged
+      expect(result.point.r).toBe(20); // Linear interpolation
+    });
+
+    it("should handle deeply nested properties", () => {
+      nestedKfManager.createSequence("options.speed", [
+        { frame: 0, value: 1 },
+        { frame: 10, value: 5 },
+      ]);
+
+      const result = nestedKfManager.animate(5);
+
+      expect(result.options.speed).toBe(3); // Linear interpolation
+      expect(result.options.delay).toBe(0); // Unchanged
+    });
+
+    it("should allow mixing top-level and nested properties", () => {
+      nestedKfManager.createSequence("value", [
+        { frame: 0, value: 0 },
+        { frame: 10, value: 100 },
+      ]);
+
+      nestedKfManager.createSequence("point.r", [
+        { frame: 0, value: 10 },
+        { frame: 10, value: 30 },
+      ]);
+
+      const result = nestedKfManager.animate(5);
+
+      expect(result.value).toBe(50); // Linear interpolation
+      expect(result.point.r).toBe(20); // Linear interpolation
+    });
+
+    it("should handle overwrite with nested properties", () => {
+      nestedKfManager.createSequence("point.r", [
+        { frame: 0, value: 10 },
+        { frame: 10, value: 30 },
+      ]);
+
+      nestedKfManager.animate(5); // point.r should be 20
+      nestedKfManager.overwrite("point.r", 15);
+
+      expect(nestedKfManager.store.point.r).toBe(15); // Direct overwrite
+    });
+  });
 });

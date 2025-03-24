@@ -13,10 +13,17 @@ let gridGraphics: p5.Image;
 
 const SCALE = 3.5;
 
+// Define the coordinate system center
 const CENTER = {
   x: WIDTH / 2,
   y: HEIGHT / 2,
 };
+
+const GRID_UNIT_SIZE = WIDTH / (2 * SCALE);
+
+// Define the grid's center (where 0,0 will be in the coordinate system)
+// To place origin at top-left, use [0, 0]
+const GRID_CENTER: [number, number] = [GRID_UNIT_SIZE, HEIGHT / 2];
 
 function createGrid(
   p: p5,
@@ -28,6 +35,7 @@ function createGrid(
     scale: SCALE,
     invertY: false,
     invertX: false,
+    center: GRID_CENTER,
 
     showMain: true,
     mainColor: "#aaaaaa",
@@ -48,7 +56,7 @@ function createGrid(
     subgridOpacity: 0.7,
     subgridWidth: 1,
 
-    animated: false,
+    animated: true,
     animationFramesLength: 60,
     currentGlobalFrame: currentFrame,
     stagger: 1,
@@ -58,34 +66,41 @@ function createGrid(
   });
 }
 
+// Convert from grid coordinates to screen coordinates
+// Helper function to translate between coordinate systems
+function gridToScreen(x: number, y: number): [number, number] {
+  const unitSize = WIDTH / (2 * SCALE);
+  return [GRID_CENTER[0] + x * unitSize, GRID_CENTER[1] + y * unitSize];
+}
+
 const kfManager = new KFManager({
-  p1x: CENTER.x,
-  p1y: CENTER.y,
-  p2x: CENTER.x,
-  p2y: CENTER.y,
+  p1x: 1,
+  p1y: -1,
+  p2x: -1,
+  p2y: 1,
   scale: 4.5,
 });
 
 let UNIT_SIZE = WIDTH / (2 * SCALE);
 
 kfManager.createSequence("p1x", [
-  { frame: 0, value: CENTER.x + UNIT_SIZE, easingFn: easeInOutCubic },
-  { frame: 120, value: CENTER.x - UNIT_SIZE, easingFn: easeInOutCubic },
+  { frame: 0, value: 1, easingFn: easeInOutCubic },
+  { frame: 120, value: -1, easingFn: easeInOutCubic },
 ]);
 
 kfManager.createSequence("p1y", [
-  { frame: 0, value: CENTER.y + UNIT_SIZE, easingFn: easeInOutCubic },
-  { frame: 120, value: CENTER.y - UNIT_SIZE, easingFn: easeInOutCubic },
+  { frame: 0, value: -1, easingFn: easeInOutCubic },
+  { frame: 120, value: 1, easingFn: easeInOutCubic },
 ]);
 
 kfManager.createSequence("p2x", [
-  { frame: 0, value: CENTER.x - UNIT_SIZE, easingFn: easeInOutCubic },
-  { frame: 120, value: CENTER.x + UNIT_SIZE, easingFn: easeInOutCubic },
+  { frame: 0, value: -1, easingFn: easeInOutCubic },
+  { frame: 120, value: 1, easingFn: easeInOutCubic },
 ]);
 
 kfManager.createSequence("p2y", [
-  { frame: 0, value: CENTER.y - UNIT_SIZE, easingFn: easeInOutCubic },
-  { frame: 120, value: CENTER.y + UNIT_SIZE, easingFn: easeInOutCubic },
+  { frame: 0, value: 1, easingFn: easeInOutCubic },
+  { frame: 120, value: -1, easingFn: easeInOutCubic },
 ]);
 
 kfManager.createSequence("scale", [
@@ -112,13 +127,18 @@ const animation: AnimationFunction = (
 
   p.image(createGrid(p, frameNumber), 0, 0, p.width, p.height);
 
+  // Convert from grid coordinates to screen coordinates
+  const [screen_p1x, screen_p1y] = gridToScreen(p1x, p1y);
+  const [screen_p2x, screen_p2y] = gridToScreen(p2x, p2y);
+  const [screen_cx, screen_cy] = gridToScreen(0, 0);
+
   p.push();
   p.stroke(0, 0, 0);
   p.strokeWeight(12);
-  p.line(p1x, p1y, p2x, p2y);
+  p.line(screen_p1x, screen_p1y, screen_p2x, screen_p2y);
   p.stroke(120, 255, 200);
   p.strokeWeight(4);
-  p.line(p1x, p1y, p2x, p2y);
+  p.line(screen_p1x, screen_p1y, screen_p2x, screen_p2y);
   p.pop();
 
   // white dashed line from point A to X projections
@@ -127,28 +147,28 @@ const animation: AnimationFunction = (
   p.strokeWeight(2);
   p.strokeCap(p.PROJECT);
   p.drawingContext.setLineDash([10, 10]);
-  p.line(p1x, p1y, p1x, CENTER.y);
-  p.line(p1x, p1y, CENTER.x, p1y);
-  p.line(p2x, p2y, p2x, CENTER.y);
-  p.line(p2x, p2y, CENTER.x, p2y);
+  p.line(screen_p1x, screen_p1y, screen_p1x, screen_cy);
+  p.line(screen_p1x, screen_p1y, screen_cx, screen_p1y);
+  p.line(screen_p2x, screen_p2y, screen_p2x, screen_cy);
+  p.line(screen_p2x, screen_p2y, screen_cx, screen_p2y);
   p.pop();
 
   p.push();
   p.stroke(0, 0, 0);
   p.strokeWeight(8);
   p.fill(255, 255, 255);
-  p.circle(p1x, p1y, 32);
-  p.circle(p2x, p2y, 32);
+  p.circle(screen_p1x, screen_p1y, 32);
+  p.circle(screen_p2x, screen_p2y, 32);
   p.pop();
 
   p.push();
   p.stroke(0, 0, 0);
   p.strokeWeight(4);
   p.fill(255, 120, 255);
-  p.circle(p1x, CENTER.y, 12);
-  p.circle(CENTER.x, p1y, 12);
-  p.circle(p2x, CENTER.y, 12);
-  p.circle(CENTER.x, p2y, 12);
+  p.circle(screen_p1x, screen_cy, 12);
+  p.circle(screen_cx, screen_p1y, 12);
+  p.circle(screen_p2x, screen_cy, 12);
+  p.circle(screen_cx, screen_p2y, 12);
   p.pop();
 };
 
@@ -157,7 +177,7 @@ function setupAnimation(p: p5): void {
 }
 
 // Now declare the settings after animation is defined
-export const lerpMoveIntro: AnimationSettings = {
+export const demo: AnimationSettings = {
   name: "Demo",
   id: "demo",
   fps: 60,

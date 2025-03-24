@@ -1,5 +1,10 @@
 import p5 from "p5";
-import { parseColorToRGBA, transparentize, darken, lighten } from "./colorUtils";
+import {
+  parseColorToRGBA,
+  transparentize,
+  darken,
+  lighten,
+} from "./colorUtils";
 
 /**
  * Default values for grid rendering
@@ -28,8 +33,8 @@ const DEFAULT_VALUES = {
 export interface GridOptions {
   /** p5 instance */
   p: p5;
-  /** Center position of the grid */
-  center?: { x: number; y: number };
+  /** Center position of the grid (can be [x,y] array or {x,y} object) */
+  center?: { x: number; y: number } | [number, number];
   /** Scale factor for grid size */
   scale?: number;
   /** Whether to show secondary grid lines */
@@ -213,18 +218,22 @@ const drawGridLines = (
   const totalLines = numLines * subgridFactor;
   const actualUnitSize = unitSize / subgridFactor;
 
-  for (let i = 0; i < totalLines; i++) {
+  // Calculate starting index to ensure we draw lines from before the visible area
+  const startingIndexH = Math.floor(-offset / actualUnitSize);
+  const startingIndexV = Math.floor(-offset / actualUnitSize);
+
+  for (let i = startingIndexH; i < startingIndexH + totalLines; i++) {
     // Skip main grid lines if drawing subgrid
     if (skipMain && i % subgridFactor === 0) continue;
 
     if (isHorizontal) {
       const y = i * actualUnitSize + offset;
       // Skip center line if required
-      if (skipCenter && y === centerY) continue;
+      if (skipCenter && Math.abs(y - centerY) < 0.5) continue;
 
-      if (shouldDrawLine(i, currentFrame, delay, stagger, animated)) {
+      if (shouldDrawLine(i - startingIndexH, currentFrame, delay, stagger, animated)) {
         const progress = getLineProgress(
-          i,
+          i - startingIndexH,
           currentFrame,
           delay,
           stagger,
@@ -239,11 +248,11 @@ const drawGridLines = (
     } else {
       const x = i * actualUnitSize + offset;
       // Skip center line if required
-      if (skipCenter && x === centerX) continue;
+      if (skipCenter && Math.abs(x - centerX) < 0.5) continue;
 
-      if (shouldDrawLine(i, currentFrame, delay, stagger, animated)) {
+      if (shouldDrawLine(i - startingIndexV, currentFrame, delay, stagger, animated)) {
         const progress = getLineProgress(
-          i,
+          i - startingIndexV,
           currentFrame,
           delay,
           stagger,
@@ -300,22 +309,23 @@ const drawUnitLabels = (
   graphics.strokeWeight(1);
   graphics.stroke(color[0], color[1], color[2], textAlpha);
 
-  // Calculate grid details
-  const maxUnitsX = Math.ceil(width / unitSize) + 1;
-  const maxUnitsY = Math.ceil(height / unitSize) + 1;
-  const leftEdgeUnit = -Math.ceil(centerX / unitSize);
-  const topEdgeUnit = invertY
-    ? Math.ceil(centerY / unitSize)
-    : -Math.ceil(centerY / unitSize);
+  // Calculate grid details - needs to work for any center position
+  const unitsFromCenterToLeftEdge = Math.ceil(centerX / unitSize);
+  const unitsFromCenterToRightEdge = Math.ceil((width - centerX) / unitSize);
+  const unitsFromCenterToTopEdge = Math.ceil(centerY / unitSize);
+  const unitsFromCenterToBottomEdge = Math.ceil((height - centerY) / unitSize);
+  
+  const totalUnitsX = unitsFromCenterToLeftEdge + unitsFromCenterToRightEdge;
+  const totalUnitsY = unitsFromCenterToTopEdge + unitsFromCenterToBottomEdge;
+  
   const tickSize = 6 * (textSize / 11);
 
   // X axis units and ticks
   const xDirection = invertX ? -1 : 1;
-  for (let i = 0; i <= maxUnitsX; i++) {
-    const unitValue = leftEdgeUnit + i;
-    if (unitValue === 0) continue; // Skip zero (drawn separately)
+  for (let i = -unitsFromCenterToLeftEdge; i <= unitsFromCenterToRightEdge; i++) {
+    if (i === 0) continue; // Skip zero (drawn separately)
 
-    const xPos = centerX + unitValue * unitSize * xDirection;
+    const xPos = centerX + i * unitSize * xDirection;
     if (xPos >= 0 && xPos <= width) {
       if (showTicks) {
         // Draw tick mark
@@ -323,24 +333,23 @@ const drawUnitLabels = (
       }
 
       // Draw number
-      graphics.text(unitValue.toString(), xPos, centerY + tickSize * 3);
+      graphics.text(i.toString(), xPos, centerY + tickSize * 3);
     }
   }
 
   // Y axis units and ticks
   const yDirection = invertY ? 1 : -1;
-  for (let i = 0; i <= maxUnitsY; i++) {
-    const unitValue = topEdgeUnit + i * (invertY ? -1 : 1);
-    if (unitValue === 0) continue; // Skip zero (drawn separately)
+  for (let i = -unitsFromCenterToTopEdge; i <= unitsFromCenterToBottomEdge; i++) {
+    if (i === 0) continue; // Skip zero (drawn separately)
 
-    const yPos = centerY + unitValue * unitSize * yDirection;
+    const yPos = centerY + i * unitSize * yDirection;
     if (yPos >= 0 && yPos <= height) {
       if (showTicks) {
         graphics.line(centerX - tickSize, yPos, centerX + tickSize, yPos);
       }
 
-      // Draw number
-      graphics.text(unitValue.toString(), centerX + tickSize * 3, yPos);
+      // Draw number - we negate i for Y axis to match mathematical convention
+      graphics.text((-i).toString(), centerX + tickSize * 3, yPos);
     }
   }
 
@@ -350,6 +359,32 @@ const drawUnitLabels = (
   // Restore main line style
   graphics.strokeWeight(mainWidth);
   graphics.stroke(color[0], color[1], color[2], color[3]);
+};
+
+/**
+ * Parses center value from either object or array format
+ * @param center - Center value in either {x,y} or [x,y] format
+ * @param defaultX - Default X value if no center provided
+ * @param defaultY - Default Y value if no center provided
+ * @returns [centerX, centerY] coordinates
+ */
+const parseCenter = (
+  center: { x: number; y: number } | [number, number] | undefined,
+  defaultX: number,
+  defaultY: number
+): [number, number] => {
+  if (!center) {
+    return [defaultX, defaultY];
+  }
+
+  if (Array.isArray(center)) {
+    return [center[0], center[1]];
+  }
+
+  return [
+    center.x !== undefined ? center.x : defaultX,
+    center.y !== undefined ? center.y : defaultY,
+  ];
 };
 
 /**
@@ -387,31 +422,48 @@ export const renderGrid = (options: GridOptions): p5.Image => {
     delay = DEFAULT_VALUES.DELAY,
   } = options;
 
-  // Calculate center if not provided
-  const centerX = center?.x !== undefined ? center.x : p.width / 2;
-  const centerY = center?.y !== undefined ? center.y : p.height / 2;
+  // Get canvas dimensions from p5 instance
+  const canvasWidth = p.width;
+  const canvasHeight = p.height;
+
+  // Parse center coordinates from either format - this is where the (0,0) origin will be placed
+  const [centerX, centerY] = parseCenter(
+    center,
+    canvasWidth / 2,
+    canvasHeight / 2
+  );
 
   // Create graphics buffer to draw the grid
-  const gridGraphics = p.createGraphics(p.width, p.height);
+  const gridGraphics = p.createGraphics(canvasWidth, canvasHeight);
 
   // Set background to transparent
   gridGraphics.clear();
 
   // Calculate grid spacing based on scale
-  const unitSize = p.width / (2 * scale);
+  const unitSize = Math.min(canvasWidth, canvasHeight) / (2 * scale);
 
-  // Calculate number of grid lines needed
-  const numLinesX = Math.ceil(p.width / unitSize) + 1;
-  const numLinesY = Math.ceil(p.height / unitSize) + 1;
+  // Calculate grid coverage - ensure we extend past the canvas edges
+  const numLinesX = Math.ceil(canvasWidth / unitSize) + 4;
+  const numLinesY = Math.ceil(canvasHeight / unitSize) + 4;
 
-  // Calculate offsets to position grid lines
-  const offsetX = centerX % unitSize;
-  const offsetY = centerY % unitSize;
+  // Calculate offsets for proper grid positioning
+  // These offsets ensure grid lines are properly aligned with the center point
+  const offsetX = centerX - Math.floor(centerX / unitSize) * unitSize;
+  const offsetY = centerY - Math.floor(centerY / unitSize) * unitSize;
 
   // Parse colors using colord
-  const mainColorRGBA = parseColorToRGBA(mainColor, Math.floor(mainOpacity * 255));
-  const secondaryColorRGBA = parseColorToRGBA(secondaryColor, Math.floor(secondaryOpacity * 255));
-  const subgridColorRGBA = parseColorToRGBA(subgridColor, Math.floor(subgridOpacity * 255));
+  const mainColorRGBA = parseColorToRGBA(
+    mainColor,
+    Math.floor(mainOpacity * 255)
+  );
+  const secondaryColorRGBA = parseColorToRGBA(
+    secondaryColor,
+    Math.floor(secondaryOpacity * 255)
+  );
+  const subgridColorRGBA = parseColorToRGBA(
+    subgridColor,
+    Math.floor(subgridOpacity * 255)
+  );
 
   // Draw subgrid if enabled
   if (subgrid > 0) {
@@ -423,8 +475,8 @@ export const renderGrid = (options: GridOptions): p5.Image => {
       offsetX,
       centerX,
       centerY,
-      p.width,
-      p.height,
+      canvasWidth,
+      canvasHeight,
       subgridWidth,
       subgridColorRGBA,
       false,
@@ -445,8 +497,8 @@ export const renderGrid = (options: GridOptions): p5.Image => {
       offsetY,
       centerX,
       centerY,
-      p.width,
-      p.height,
+      canvasWidth,
+      canvasHeight,
       subgridWidth,
       subgridColorRGBA,
       false,
@@ -470,8 +522,8 @@ export const renderGrid = (options: GridOptions): p5.Image => {
       offsetX,
       centerX,
       centerY,
-      p.width,
-      p.height,
+      canvasWidth,
+      canvasHeight,
       secondaryWidth,
       secondaryColorRGBA,
       true, // skip center line
@@ -490,8 +542,8 @@ export const renderGrid = (options: GridOptions): p5.Image => {
       offsetY,
       centerX,
       centerY,
-      p.width,
-      p.height,
+      canvasWidth,
+      canvasHeight,
       secondaryWidth,
       secondaryColorRGBA,
       true, // skip center line
@@ -505,7 +557,7 @@ export const renderGrid = (options: GridOptions): p5.Image => {
 
   // Draw main axes
   if (showMain) {
-    // Draw X axis
+    // Draw X axis (horizontal line at centerY)
     if (shouldDrawLine(0, currentGlobalFrame, delay, stagger, animated)) {
       const progress = getLineProgress(
         0,
@@ -523,11 +575,11 @@ export const renderGrid = (options: GridOptions): p5.Image => {
           mainColorRGBA[2],
           mainColorRGBA[3]
         );
-        gridGraphics.line(0, centerY, p.width * progress, centerY);
+        gridGraphics.line(0, centerY, canvasWidth * progress, centerY);
       }
     }
 
-    // Draw Y axis
+    // Draw Y axis (vertical line at centerX)
     if (shouldDrawLine(0, currentGlobalFrame, delay, stagger, animated)) {
       const progress = getLineProgress(
         0,
@@ -545,7 +597,7 @@ export const renderGrid = (options: GridOptions): p5.Image => {
           mainColorRGBA[2],
           mainColorRGBA[3]
         );
-        gridGraphics.line(centerX, 0, centerX, p.height * progress);
+        gridGraphics.line(centerX, 0, centerX, canvasHeight * progress);
       }
     }
 
@@ -566,8 +618,8 @@ export const renderGrid = (options: GridOptions): p5.Image => {
           centerX,
           centerY,
           unitSize,
-          p.width,
-          p.height,
+          canvasWidth,
+          canvasHeight,
           textSize,
           showTicks,
           invertX,
