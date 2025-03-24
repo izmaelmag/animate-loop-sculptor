@@ -4,7 +4,9 @@ import { AnimationSettings, AnimationFunction } from "@/types/animations";
 // Relative path required for remotion node environment
 import { renderGrid, GridOptions } from "../../utils/renderGrid";
 import { KFManager } from "../../blueprints/KeyframeManager";
-import { easeInOutCubic, easeOutElastic } from "../../utils/easing";
+import { easeInOutCirc, easeOutElastic } from "../../utils/easing";
+
+import { Line } from "../../utils/Line";
 
 const WIDTH = 1080;
 const HEIGHT = 1920;
@@ -12,18 +14,17 @@ const HEIGHT = 1920;
 let gridGraphics: p5.Image;
 
 const SCALE = 3.5;
+const GRID_UNIT_SIZE = WIDTH / (2 * SCALE);
 
 // Define the coordinate system center
 const CENTER = {
-  x: WIDTH / 2,
+  x: GRID_UNIT_SIZE,
   y: HEIGHT / 2,
 };
 
-const GRID_UNIT_SIZE = WIDTH / (2 * SCALE);
-
 // Define the grid's center (where 0,0 will be in the coordinate system)
 // To place origin at top-left, use [0, 0]
-const GRID_CENTER: [number, number] = [GRID_UNIT_SIZE, HEIGHT / 2];
+const GRID_CENTER: [number, number] = [CENTER.x, CENTER.y];
 
 function createGrid(
   p: p5,
@@ -33,7 +34,7 @@ function createGrid(
   return renderGrid({
     p,
     scale: SCALE,
-    invertY: false,
+    invertY: true,
     invertX: false,
     center: GRID_CENTER,
 
@@ -48,7 +49,7 @@ function createGrid(
     secondaryWidth: 3,
 
     showTicks: false,
-    showUnits: true,
+    showUnits: false,
     textSize: 24, // Increased text size for better visibility
 
     subgrid: 2,
@@ -66,49 +67,41 @@ function createGrid(
   });
 }
 
-// Convert from grid coordinates to screen coordinates
-// Helper function to translate between coordinate systems
-function gridToScreen(x: number, y: number): [number, number] {
-  const unitSize = WIDTH / (2 * SCALE);
-  return [GRID_CENTER[0] + x * unitSize, GRID_CENTER[1] + y * unitSize];
-}
-
-const kfManager = new KFManager({
-  p1x: 1,
-  p1y: -1,
-  p2x: -1,
-  p2y: 1,
+const startManagerState = {
+  a: {
+    x: CENTER.x,
+    y: CENTER.y,
+    r: 0,
+  },
+  b: {
+    x: CENTER.x + GRID_UNIT_SIZE * 5,
+    y: CENTER.y,
+    r: 0,
+  },
   scale: 4.5,
-});
+};
+
+const kfManager = new KFManager(startManagerState);
+
+const line = new Line(
+  [startManagerState.a.x, startManagerState.a.y],
+  [startManagerState.b.x, startManagerState.b.y]
+);
+
+kfManager.createSequence("a.r", [
+  { frame: 30, value: 0, easingFn: easeOutElastic },
+  { frame: 60, value: 42, easingFn: easeOutElastic },
+]);
+
+kfManager.createSequence("b.r", [
+  { frame: 50, value: 0, easingFn: easeOutElastic },
+  { frame: 80, value: 42, easingFn: easeOutElastic },
+]);
+
+line.setEasing(easeInOutCirc);
+line.connection(80, 100);
 
 let UNIT_SIZE = WIDTH / (2 * SCALE);
-
-kfManager.createSequence("p1x", [
-  { frame: 0, value: 1, easingFn: easeInOutCubic },
-  { frame: 120, value: -1, easingFn: easeInOutCubic },
-]);
-
-kfManager.createSequence("p1y", [
-  { frame: 0, value: -1, easingFn: easeInOutCubic },
-  { frame: 120, value: 1, easingFn: easeInOutCubic },
-]);
-
-kfManager.createSequence("p2x", [
-  { frame: 0, value: -1, easingFn: easeInOutCubic },
-  { frame: 120, value: 1, easingFn: easeInOutCubic },
-]);
-
-kfManager.createSequence("p2y", [
-  { frame: 0, value: 1, easingFn: easeInOutCubic },
-  { frame: 120, value: -1, easingFn: easeInOutCubic },
-]);
-
-kfManager.createSequence("scale", [
-  { frame: 0, value: 4.5, easingFn: easeOutElastic },
-  { frame: 120, value: 2, easingFn: easeOutElastic },
-  { frame: 320, value: 4.5, easingFn: easeOutElastic },
-]);
-
 // Define the animation function first, before it's referenced
 const animation: AnimationFunction = (
   p: p5,
@@ -117,58 +110,32 @@ const animation: AnimationFunction = (
   totalFrames: number
 ): void => {
   // Update animation values based on current frame
-  const { p1x, p1y, p2x, p2y, scale } = kfManager.animate(frameNumber);
+  const { a, b } = kfManager.animate(frameNumber);
 
   p.frameRate(24);
 
-  UNIT_SIZE = WIDTH / (2 * scale);
+  UNIT_SIZE = WIDTH / (2 * SCALE);
 
   p.background(0);
 
+  line.step(frameNumber);
+
   p.image(createGrid(p, frameNumber), 0, 0, p.width, p.height);
 
-  // Convert from grid coordinates to screen coordinates
-  const [screen_p1x, screen_p1y] = gridToScreen(p1x, p1y);
-  const [screen_p2x, screen_p2y] = gridToScreen(p2x, p2y);
-  const [screen_cx, screen_cy] = gridToScreen(0, 0);
+  console.log(a, b);
 
   p.push();
-  p.stroke(0, 0, 0);
-  p.strokeWeight(12);
-  p.line(screen_p1x, screen_p1y, screen_p2x, screen_p2y);
-  p.stroke(120, 255, 200);
-  p.strokeWeight(4);
-  p.line(screen_p1x, screen_p1y, screen_p2x, screen_p2y);
-  p.pop();
-
-  // white dashed line from point A to X projections
-  p.push();
-  p.stroke(255, 120, 255);
-  p.strokeWeight(2);
-  p.strokeCap(p.PROJECT);
-  p.drawingContext.setLineDash([10, 10]);
-  p.line(screen_p1x, screen_p1y, screen_p1x, screen_cy);
-  p.line(screen_p1x, screen_p1y, screen_cx, screen_p1y);
-  p.line(screen_p2x, screen_p2y, screen_p2x, screen_cy);
-  p.line(screen_p2x, screen_p2y, screen_cx, screen_p2y);
-  p.pop();
-
-  p.push();
-  p.stroke(0, 0, 0);
+  p.stroke(255, 255, 255);
   p.strokeWeight(8);
-  p.fill(255, 255, 255);
-  p.circle(screen_p1x, screen_p1y, 32);
-  p.circle(screen_p2x, screen_p2y, 32);
+  p.line(line.a[0], line.a[1], line.current[0], line.current[1]);
   p.pop();
 
   p.push();
   p.stroke(0, 0, 0);
-  p.strokeWeight(4);
-  p.fill(255, 120, 255);
-  p.circle(screen_p1x, screen_cy, 12);
-  p.circle(screen_cx, screen_p1y, 12);
-  p.circle(screen_p2x, screen_cy, 12);
-  p.circle(screen_cx, screen_p2y, 12);
+  p.fill(255, 120, 120);
+  p.strokeWeight(8);
+  p.circle(a.x, a.y, a.r);
+  p.circle(b.x, b.y, b.r);
   p.pop();
 };
 
