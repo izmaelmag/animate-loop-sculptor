@@ -6,7 +6,7 @@ import {
 import { getAnimationSettingsByName } from "@/animations";
 
 // Default animation template
-const DEFAULT_ANIMATION = "lerpMoveIntro";
+const DEFAULT_ANIMATION = "decksDark";
 
 // Get default settings from animation
 const defaultSettings = getAnimationSettingsByName(DEFAULT_ANIMATION);

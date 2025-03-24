@@ -42,7 +42,10 @@ const MEMORY_LIMIT = 4096;
 
 // OUTPUT FILE PATH
 const OUTPUT_DIR = path.join(__dirname, "output");
-const OUTPUT_FILE = path.join(OUTPUT_DIR, `animation-${Date.now()}.mp4`);
+const OUTPUT_FILE = path.join(
+  OUTPUT_DIR,
+  `animation--${options.template}-${options.quality}-${Date.now()}.mp4`
+);
 
 // CREATE OUTPUT DIRECTORY IF IT DOESN'T EXIST
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -78,8 +81,8 @@ async function renderVideo() {
     // Get compositions
     console.log("Getting composition list...");
     const compositions = await getCompositions(bundleLocation, {
-      inputProps: { 
-        templateName: TEMPLATE
+      inputProps: {
+        templateName: TEMPLATE,
       },
     });
 
@@ -94,7 +97,9 @@ async function renderVideo() {
     const { fps, durationInFrames } = composition;
 
     console.log(`Starting render...`);
-    console.log(`Using composition settings: ${fps}fps, ${durationInFrames} frames`);
+    console.log(
+      `Using composition settings: ${fps}fps, ${durationInFrames} frames`
+    );
     console.log(`Quality: ${QUALITY} (CRF: ${crf})`);
     console.log(`Concurrency: ${CONCURRENCY}, Memory limit: ${MEMORY_LIMIT}MB`);
 
@@ -109,7 +114,7 @@ async function renderVideo() {
       codec: "h264",
       outputLocation: OUTPUT_FILE,
       inputProps: {
-        templateName: TEMPLATE
+        templateName: TEMPLATE,
       },
       imageFormat: "jpeg",
       fps,

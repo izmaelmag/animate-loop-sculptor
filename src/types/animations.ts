@@ -31,7 +31,7 @@ export interface AnimationSettings {
   totalFrames: number;
   width?: number;
   height?: number;
-  sequential: boolean;
+  sequential?: boolean;
   function: AnimationFunction;
   onSetup?: AnimationFunction;
   onUpdate?: AnimationFunction;

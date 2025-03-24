@@ -6,6 +6,7 @@ import { settings as gsap } from "../animations/gsap-sequence";
 import { settings as gridOrbit } from "../animations/grid-orbit";
 import { settings as multilayered } from "../animations/multilayered";
 import { settings as waitExample } from "../animations/wait-example";
+import { settings as decksDark } from "../animations/decks-dark/animation";
 
 // Map of animation settings by name - include all animations
 const animationSettings = {
@@ -14,6 +15,7 @@ const animationSettings = {
   gridOrbit,
   multilayered,
   waitExample,
+  decksDark,
 };
 
 export class AnimationController {
@@ -166,6 +168,20 @@ export class AnimationController {
           `Canvas created with EXACT dimensions ${this.width}x${this.height}`
         );
 
+        console.log("Current animation name", this.currentAnimationName);
+        console.log("Current settings", currentSettings);
+
+        // Call onSetup function if it exists in the animation settings
+        if (currentSettings.onSetup) {
+          console.log(`Running onSetup for ${this.currentAnimationName}`);
+          currentSettings.onSetup(
+            p,
+            this.normalizedTime,
+            this._currentFrame,
+            this.totalFrames
+          );
+        }
+
         // We don't want P5's automatic animation loop - we'll control it
         p.noLoop();
       };
@@ -175,8 +191,8 @@ export class AnimationController {
         if (this.sketchFunction) {
           try {
             // Clear canvas
-            p.clear();
-            p.background(0);
+            // p.clear();
+            // p.background(0);
 
             // Execute sketch function with current animation state
             this.sketchFunction(
