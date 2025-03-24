@@ -13,12 +13,12 @@ const HEIGHT = 1920;
 
 let gridGraphics: p5.Image;
 
-const SCALE = 3.5;
+const SCALE = 1.5;
 const GRID_UNIT_SIZE = WIDTH / (2 * SCALE);
 
 // Define the coordinate system center
 const CENTER = {
-  x: GRID_UNIT_SIZE,
+  x: GRID_UNIT_SIZE / 2,
   y: HEIGHT / 2,
 };
 
@@ -74,7 +74,7 @@ const startManagerState = {
     r: 0,
   },
   b: {
-    x: CENTER.x + GRID_UNIT_SIZE * 5,
+    x: CENTER.x + GRID_UNIT_SIZE * 2,
     y: CENTER.y,
     r: 0,
   },
@@ -99,7 +99,7 @@ kfManager.createSequence("b.r", [
 ]);
 
 line.setEasing(easeInOutCirc);
-line.connection(80, 100);
+line.connection(80, 20);
 
 let UNIT_SIZE = WIDTH / (2 * SCALE);
 // Define the animation function first, before it's referenced
