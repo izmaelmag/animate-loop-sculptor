@@ -3,6 +3,9 @@
  * Based on https://easings.net/
  */
 
+// Linear
+export const linear = (x: number): number => x;
+
 // Sine
 export const easeInSine = (x: number): number => {
   return 1 - Math.cos((x * Math.PI) / 2);

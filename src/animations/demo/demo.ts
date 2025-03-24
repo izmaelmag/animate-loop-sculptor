@@ -5,7 +5,6 @@ import { AnimationSettings, AnimationFunction } from "@/types/animations";
 import { renderGrid, GridOptions } from "../../utils/renderGrid";
 import { KFManager } from "../../blueprints/KeyframeManager";
 import { easeInOutCubic, easeOutElastic } from "../../utils/easing";
-import { Line } from "../../utils/Line";
 
 const WIDTH = 1080;
 const HEIGHT = 1920;
@@ -95,22 +94,6 @@ kfManager.createSequence("scale", [
   { frame: 320, value: 4.5, easingFn: easeOutElastic },
 ]);
 
-const line = new Line(
-  [CENTER.x, CENTER.y],
-  [CENTER.x + UNIT_SIZE, CENTER.y - UNIT_SIZE]
-);
-
-const line2 = new Line(
-  [CENTER.x, CENTER.y],
-  [CENTER.x + UNIT_SIZE, CENTER.y - UNIT_SIZE / 2]
-);
-
-line.connection(0, 15);
-line.disconnection(60, 75);
-
-line2.connection(5, 20);
-line2.disconnection(65, 70);
-
 // Define the animation function first, before it's referenced
 const animation: AnimationFunction = (
   p: p5,
@@ -121,10 +104,7 @@ const animation: AnimationFunction = (
   // Update animation values based on current frame
   const { p1x, p1y, p2x, p2y, scale } = kfManager.animate(frameNumber);
 
-  p.frameRate(60);
-
-  line.step(frameNumber);
-  line2.step(frameNumber);
+  p.frameRate(24);
 
   UNIT_SIZE = WIDTH / (2 * scale);
 
@@ -178,10 +158,10 @@ function setupAnimation(p: p5): void {
 
 // Now declare the settings after animation is defined
 export const lerpMoveIntro: AnimationSettings = {
-  name: "LERP Move Intro",
-  id: "lerpMoveIntro",
+  name: "Demo",
+  id: "demo",
   fps: 60,
-  totalFrames: 60 * 6,
+  totalFrames: 60 * 20,
   width: WIDTH,
   height: HEIGHT,
   sequential: false,
