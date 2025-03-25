@@ -1,4 +1,5 @@
 import p5 from "p5";
+import { createNoise3D } from "simplex-noise";
 
 interface LinkConstructor {
   p: p5;
@@ -23,9 +24,13 @@ export class Link {
 
   public isDebug: boolean = false;
 
+  public noise: ReturnType<typeof createNoise3D>;
+  public noiseValue: number = 0;
+
   // Chain rotary motion
-  private rotationFrequency: number = 4; // Complete 10 oscillations when dt goes from 0 to 1
-  private rotationAmplitude: number = (Math.PI / 180) * 45; // 30 Degrees to rad conversion
+  private rotationFrequency: number = 5; // Complete 10 oscillations when dt goes from 0 to 1
+  private rotationAmplitude: number = 0.5; // 30 Degrees to rad conversion
+  private maxRotation: number = Math.PI / 3; // 60 degrees
 
   // Chain "breathing" oscillation (radius)
   private breathingFrequency: number = 1;
@@ -49,21 +54,41 @@ export class Link {
     this.originalSize = settings.size;
     this.phase = settings.phase || 0;
     this.isDebug = settings.debug !== undefined ? settings.debug : false;
+
+    this.noise = createNoise3D();
+  }
+
+  private clampRotation(rotation: number) {
+    return Math.max(-this.maxRotation, Math.min(this.maxRotation, rotation));
   }
 
   // Oscillates chain rotation between -30 and 30 degrees using vectors and radians
   update(dt: number = 0) {
+    this.updateNoise(dt);
     this.rotate(dt);
     this.breathe(dt);
   }
 
-  private rotate(dt: number = 0) {
-    const rotation =
-      this.rotationAmplitude *
-      Math.sin(2 * Math.PI * this.rotationFrequency * dt + this.phase);
+  updateNoise(dt: number = 0) {
+    this.noiseValue = this.noise(
+      this.center.x / 2000,
+      this.center.y / 2000,
+      dt
+    );
+  }
 
-    // Reset direction to original and then apply the rotation
-    this.direction = this.originalDirection.copy().rotate(rotation);
+  private rotate(dt: number = 0) {
+    const twoPi = Math.PI * 2;
+
+    const currentAngle = twoPi * this.rotationFrequency * dt + this.phase;
+
+    // Calculate the raw rotation value as before
+    const rawRotation = this.rotationAmplitude * Math.sin(currentAngle);
+
+    const clampedRotation = this.clampRotation(rawRotation);
+
+    // Apply the clamped rotation
+    this.direction = this.originalDirection.copy().rotate(clampedRotation);
   }
 
   private breathe(dt: number = 0) {
@@ -138,15 +163,15 @@ export class Link {
   draw() {
     if (this.isDebug) {
       this.drawConnectionTriangle();
-      this.drawCircumference();
+      // this.drawCircumference();
 
       this.drawDirectionPoint();
       this.drawLeftSidePoint();
       this.drawRightSidePoint();
       this.drawCenterPoint();
+    } else {
+      this.fillBody();
     }
-
-    this.fillBody();
   }
 
   fillBody() {

@@ -1,5 +1,6 @@
 import p5 from "p5";
 import { Link } from "./Link";
+import { easeOutCubic, easeInCubic, easeInExpo, easeOutQuint } from "../../utils/easing";
 
 type Point = {
   x: number;
@@ -39,12 +40,12 @@ export class Chain {
 
   // Returns new link's radius by its index
   // Radius must evenly decrease from chain max to chain min
+  // We use easeOutCubic to make the radius decrease more smoothly
   getRadiusByIndex(index: number): number {
+    const t = easeInCubic(index / this.settings.chain.amount);
     return (
-      this.settings.chain.maxRadius -
-      (index *
-        (this.settings.chain.maxRadius - this.settings.chain.minRadius)) /
-        this.settings.chain.amount
+      this.settings.chain.maxRadius * (1 - t) +
+      this.settings.chain.minRadius * t
     );
   }
 
@@ -68,6 +69,9 @@ export class Chain {
       const previousLink = this.links[i - 1] || initialLink;
       const newCenter = previousLink.getDirectionPoint();
 
+      // Normalized phase where 0 is for the first link and 1 is for the last
+      const phase = i / this.settings.chain.amount;
+
       const link = new Link({
         p: this.p,
         center: newCenter,
@@ -75,7 +79,7 @@ export class Chain {
         size: this.getRadiusByIndex(i),
         parentLink: previousLink,
         childLink: undefined,
-        phase: i * -(Math.PI / this.settings.chain.amount),
+        phase: phase,
         debug: this.debug,
       });
 
@@ -216,7 +220,7 @@ export class Chain {
       }
 
       // Draw shape with specified color
-      this.drawShapeWithColor(color);
+      // this.drawShapeWithColor(color);
 
       // Restore original positions
       for (let i = 0; i < this.links.length; i++) {
