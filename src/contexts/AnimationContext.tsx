@@ -4,12 +4,10 @@ import {
   createAnimationController,
 } from "@/utils/AnimationController";
 import { getAnimationSettingsByName } from "@/animations";
-
-// Default animation template
-const DEFAULT_ANIMATION = "decksDark";
+import { useAnimationStore } from "@/stores/animationStore";
 
 // Get default settings from animation
-const defaultSettings = getAnimationSettingsByName(DEFAULT_ANIMATION);
+const defaultSettings = getAnimationSettingsByName("decksDark");
 
 interface AnimationContextType {
   controller: AnimationController | null;
@@ -19,24 +17,22 @@ interface AnimationContextType {
 
 const AnimationContext = createContext<AnimationContextType>({
   controller: null,
-  currentAnimation: DEFAULT_ANIMATION,
+  currentAnimation: "decksDark",
   setCurrentAnimation: () => {},
 });
-
-export const useAnimation = () => useContext(AnimationContext);
 
 interface AnimationProviderProps {
   children: React.ReactNode;
 }
 
+export const useAnimation = () => useContext(AnimationContext);
+
 export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   children,
 }) => {
-  const [controller, setController] = useState<AnimationController | null>(
-    null
-  );
-  const [currentAnimation, setCurrentAnimation] =
-    useState<string>(DEFAULT_ANIMATION);
+  const [controller, setController] = useState<AnimationController | null>(null);
+  const [currentAnimation, setCurrentAnimation] = useState<string>("decksDark");
+  const { selectedAnimation } = useAnimationStore();
 
   useEffect(() => {
     // Create the controller with default animation settings
@@ -47,8 +43,9 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
       defaultSettings.height
     );
 
-    // Set default animation
-    animationController.setAnimation(DEFAULT_ANIMATION);
+    // Set the persisted animation
+    animationController.setAnimation(selectedAnimation);
+    setCurrentAnimation(selectedAnimation);
 
     setController(animationController);
 
@@ -56,7 +53,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
     return () => {
       animationController.destroy();
     };
-  }, []);
+  }, [selectedAnimation]);
 
   // Update animation when currentAnimation changes
   useEffect(() => {

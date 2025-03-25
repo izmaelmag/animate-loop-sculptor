@@ -1,5 +1,4 @@
 import p5 from "p5";
-import { NonUndefined } from "react-hook-form";
 
 interface LinkConstructor {
   p: p5;
@@ -8,6 +7,8 @@ interface LinkConstructor {
   center: p5.Vector;
   direction: p5.Vector;
   size: number;
+  phase?: number;
+  debug?: boolean;
 }
 
 export class Link {
@@ -18,35 +19,64 @@ export class Link {
   private direction: p5.Vector;
   private originalDirection: p5.Vector; // Store the original direction
   private size: number;
+  private phase: number = 0;
 
-  public isDebug: boolean = true;
+  public isDebug: boolean = false;
 
   // Chain rotary motion
-  private rotationFrequency: number = 2; // Complete 10 oscillations when dt goes from 0 to 1
-  private rotationAmplitude: number = (Math.PI / 180) * 30; // 30 Degrees to rad conversion
+  private rotationFrequency: number = 4; // Complete 10 oscillations when dt goes from 0 to 1
+  private rotationAmplitude: number = (Math.PI / 180) * 45; // 30 Degrees to rad conversion
+
+  // Chain "breathing" oscillation (radius)
+  private breathingFrequency: number = 1;
+
+  private originalSize: number;
+
+  get breathingAmplitude() {
+    return this.originalSize * 0;
+  }
 
   constructor(settings: LinkConstructor) {
     this.p = settings.p;
     this.parentLink = settings.parentLink;
     this.childLink = settings.childLink;
-    this.center = settings.center;
+    this.center = settings.parentLink
+      ? settings.parentLink.getDirectionPoint()
+      : settings.center;
     this.direction = settings.direction;
     this.originalDirection = settings.direction.copy(); // Save a copy of the original direction
     this.size = settings.size;
+    this.originalSize = settings.size;
+    this.phase = settings.phase || 0;
+    this.isDebug = settings.debug !== undefined ? settings.debug : false;
   }
 
   // Oscillates chain rotation between -30 and 30 degrees using vectors and radians
   update(dt: number = 0) {
     this.rotate(dt);
+    this.breathe(dt);
   }
 
   private rotate(dt: number = 0) {
     const rotation =
       this.rotationAmplitude *
-      Math.sin(2 * Math.PI * this.rotationFrequency * dt);
+      Math.sin(2 * Math.PI * this.rotationFrequency * dt + this.phase);
 
     // Reset direction to original and then apply the rotation
     this.direction = this.originalDirection.copy().rotate(rotation);
+  }
+
+  private breathe(dt: number = 0) {
+    const breathing =
+      this.breathingAmplitude *
+      Math.sin(2 * Math.PI * this.breathingFrequency * dt + this.phase);
+
+    this.size = this.originalSize + breathing;
+  }
+
+  // Method to update the center position (used when parent link moves)
+  updateCenter(newCenter: p5.Vector) {
+    this.center = newCenter;
   }
 
   addChild(childLink: Link) {
@@ -55,6 +85,26 @@ export class Link {
 
   addParent(parentLink: Link) {
     this.parentLink = parentLink;
+  }
+
+  // Getter for the center vector
+  getCenter(): p5.Vector {
+    return this.center;
+  }
+
+  // Setter for the center vector
+  setCenter(newCenter: p5.Vector) {
+    this.center = newCenter;
+  }
+
+  // Getter for the direction vector
+  getDirection(): p5.Vector {
+    return this.direction;
+  }
+
+  // Setter for the direction vector
+  setDirection(newDirection: p5.Vector) {
+    this.direction = newDirection;
   }
 
   // Calculates position from center towards angle on distance of size
@@ -95,6 +145,16 @@ export class Link {
       this.drawRightSidePoint();
       this.drawCenterPoint();
     }
+
+    this.fillBody();
+  }
+
+  fillBody() {
+    this.p.push();
+    this.p.noStroke();
+    this.p.fill(255);
+    this.p.circle(this.center.x, this.center.y, this.size * 2);
+    this.p.pop();
   }
 
   drawDirectionPoint() {

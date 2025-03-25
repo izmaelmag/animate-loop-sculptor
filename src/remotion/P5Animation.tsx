@@ -78,8 +78,8 @@ export const P5Animation = ({
 
       // If we already have a p5 instance, work with it
       if (p5Ref.current && animationFunction) {
-        p5Ref.current.clear();
-        p5Ref.current.background(0);
+        // p5Ref.current.clear();
+        // p5Ref.current.background(0);
 
         // Use the selected animation function directly
         animationFunction(p5Ref.current, t, frameNumber, totalFrames);

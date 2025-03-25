@@ -1,5 +1,4 @@
 import Panel from "@/components/ui/panel";
-import { useAnimation } from "@/contexts/AnimationContext";
 import { animationNames } from "@/animations";
 import {
   Select,
@@ -8,44 +7,77 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAnimationStore } from "@/stores/animationStore";
+import { useAnimation } from "@/contexts/AnimationContext";
 
 interface SettingsPanelProps {
   isEnabled?: boolean;
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ isEnabled = true }) => {
-  const { currentAnimation, setCurrentAnimation } = useAnimation();
+  const { setCurrentAnimation } = useAnimation();
+  const { selectedAnimation, setSelectedAnimation } = useAnimationStore();
 
   const handleAnimationChange = (value: string) => {
+    setSelectedAnimation(value);
     setCurrentAnimation(value);
   };
 
   return (
-    <Panel disabled={!isEnabled}>
-      <div className="space-y-4">
-        <div className="space-y-1">
-          <Select
-            value={currentAnimation}
-            onValueChange={handleAnimationChange}
-            disabled={!isEnabled}
-          >
-            <SelectTrigger
-              id="animation-select"
-              className="w-full bg-black border-gray-700 cursor-pointer"
+    <div className="flex flex-col gap-4">
+      <Panel disabled={!isEnabled}>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium text-white/70">Animation</h3>
+            <Select
+              value={selectedAnimation}
+              onValueChange={handleAnimationChange}
+              disabled={!isEnabled}
             >
-              <SelectValue placeholder="Select animation" />
-            </SelectTrigger>
-            <SelectContent className="bg-black border-gray-700 text-white">
-              {animationNames.map((name) => (
-                <SelectItem key={name} value={name} className="cursor-pointer">
-                  {name.charAt(0).toUpperCase() + name.slice(1)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <SelectTrigger
+                id="animation-select"
+                className="w-full bg-black border-gray-700 cursor-pointer"
+              >
+                <SelectValue placeholder="Select animation" />
+              </SelectTrigger>
+              <SelectContent className="bg-black border-gray-700 text-white">
+                {animationNames.map((name) => (
+                  <SelectItem
+                    key={name}
+                    value={name}
+                    className="cursor-pointer"
+                  >
+                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
-    </Panel>
+      </Panel>
+
+      <Panel disabled={!isEnabled}>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium text-white/70">
+              Chain Settings
+            </h3>
+            {/* Add chain-specific settings here */}
+          </div>
+        </div>
+      </Panel>
+
+      <Panel disabled={!isEnabled}>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium text-white/70">
+              Visual Effects
+            </h3>
+            {/* Add visual effects settings here */}
+          </div>
+        </div>
+      </Panel>
+    </div>
   );
 };
 

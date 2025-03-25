@@ -14,6 +14,11 @@ const SketchView = () => {
 
     // Initialize the controller with the sketch container
     controller.initializeP5(sketchRef.current);
+    
+    // Cleanup function to ensure the p5 instance is properly removed when unmounting
+    return () => {
+      controller.destroy();
+    };
   }, [controller]);
 
   // Handle time updates from the Timeline

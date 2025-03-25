@@ -41,7 +41,7 @@ const PlayerPanels: React.FC<PlayerPanelsProps> = ({
   const renderPaginationDots = () => {
     return (
       <div className="flex justify-center gap-2 mb-2">
-        {[0, 1, 2].map((index) => (
+        {[0, 1].map((index) => (
           <button
             key={index}
             className={cn(
@@ -58,28 +58,28 @@ const PlayerPanels: React.FC<PlayerPanelsProps> = ({
     );
   };
 
+  if (isMobile) {
+    return (
+      <div className="w-full">
+        <Carousel setApi={setCarouselApi} className="w-full">
+          {renderPaginationDots()}
+          <CarouselContent>
+            <CarouselItem>
+              <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
+            </CarouselItem>
+            <CarouselItem>
+              <SettingsPanel isEnabled={isPlayable} />
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full flex justify-center">
-      {isMobile ? (
-        <div className="w-full">
-          <Carousel setApi={setCarouselApi} className="w-full">
-            {renderPaginationDots()}
-            <CarouselContent>
-              <CarouselItem>
-                <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
-              </CarouselItem>
-              <CarouselItem>
-                <SettingsPanel isEnabled={isPlayable} />
-              </CarouselItem>
-            </CarouselContent>
-          </Carousel>
-        </div>
-      ) : (
-        <div className="flex w-full flex-row gap-2 items-stretch justify-center">
-          <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
-          <SettingsPanel isEnabled={isPlayable} />
-        </div>
-      )}
+    <div className="fixed right-4 top-4 flex flex-col gap-4 w-[480px]">
+      <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
+      <SettingsPanel isEnabled={isPlayable} />
     </div>
   );
 };
