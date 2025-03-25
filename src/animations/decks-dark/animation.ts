@@ -58,11 +58,11 @@ class SceneController {
         center: new p5.Vector(this.center.x, this.settings.height),
         angle: angleToTop + ((Math.PI * 2) / chainsAmount) * i,
         chain: {
-          minRadius: 5,
-          maxRadius: 100,
-          amount: 20,
+          minRadius: 10,
+          maxRadius: 150,
+          amount: 30,
         },
-        debug: true, // Set to true to see the underlying link structure
+        debug: true,
       });
 
       this.chains.push(initialChain);

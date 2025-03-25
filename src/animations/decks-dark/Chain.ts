@@ -42,7 +42,7 @@ export class Chain {
   // Radius must evenly decrease from chain max to chain min
   // We use easeOutCubic to make the radius decrease more smoothly
   getRadiusByIndex(index: number): number {
-    const t = easeInCubic(index / this.settings.chain.amount);
+    const t = easeOutCubic(index / this.settings.chain.amount);
     return (
       this.settings.chain.maxRadius * (1 - t) +
       this.settings.chain.minRadius * t
@@ -70,7 +70,7 @@ export class Chain {
       const newCenter = previousLink.getDirectionPoint();
 
       // Normalized phase where 0 is for the first link and 1 is for the last
-      const phase = i / this.settings.chain.amount;
+      const phase = i / this.settings.chain.amount * -1;
 
       const link = new Link({
         p: this.p,

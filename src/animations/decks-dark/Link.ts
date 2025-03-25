@@ -1,5 +1,6 @@
 import p5 from "p5";
 import { createNoise3D } from "simplex-noise";
+import { LinkRenderer } from "./LinkRenderer";
 
 interface LinkConstructor {
   p: p5;
@@ -13,7 +14,7 @@ interface LinkConstructor {
 }
 
 export class Link {
-  private p: p5;
+  protected p: p5;
   private parentLink: Link | undefined;
   private childLink: Link | undefined;
   private center: p5.Vector;
@@ -21,19 +22,14 @@ export class Link {
   private originalDirection: p5.Vector; // Store the original direction
   private size: number;
   private phase: number = 0;
+  private renderer: LinkRenderer;
+  private positionFactor: number = 0;
+  private noise: ReturnType<typeof createNoise3D>;
 
   public isDebug: boolean = false;
-
-  public noise: ReturnType<typeof createNoise3D>;
-  public noiseValue: number = 0;
-
   // Chain rotary motion
-  private rotationFrequency: number = 5; // Complete 10 oscillations when dt goes from 0 to 1
-  private rotationAmplitude: number = 0.5; // 30 Degrees to rad conversion
-  private maxRotation: number = Math.PI / 3; // 60 degrees
-
-  // Chain "breathing" oscillation (radius)
-  private breathingFrequency: number = 1;
+  private rotationFrequency: number = 3;
+  private baseRotationAmplitude: number = Math.PI * 0.1; // 54 degrees max rotation
 
   private originalSize: number;
 
@@ -43,60 +39,36 @@ export class Link {
 
   constructor(settings: LinkConstructor) {
     this.p = settings.p;
+    this.renderer = new LinkRenderer(settings.p);
     this.parentLink = settings.parentLink;
     this.childLink = settings.childLink;
     this.center = settings.parentLink
       ? settings.parentLink.getDirectionPoint()
       : settings.center;
     this.direction = settings.direction;
-    this.originalDirection = settings.direction.copy(); // Save a copy of the original direction
+    this.originalDirection = settings.direction.copy();
     this.size = settings.size;
     this.originalSize = settings.size;
     this.phase = settings.phase || 0;
     this.isDebug = settings.debug !== undefined ? settings.debug : false;
-
+    this.positionFactor = settings.phase || 0;
     this.noise = createNoise3D();
-  }
-
-  private clampRotation(rotation: number) {
-    return Math.max(-this.maxRotation, Math.min(this.maxRotation, rotation));
   }
 
   // Oscillates chain rotation between -30 and 30 degrees using vectors and radians
   update(dt: number = 0) {
-    this.updateNoise(dt);
     this.rotate(dt);
-    this.breathe(dt);
-  }
-
-  updateNoise(dt: number = 0) {
-    this.noiseValue = this.noise(
-      this.center.x / 2000,
-      this.center.y / 2000,
-      dt
-    );
   }
 
   private rotate(dt: number = 0) {
-    const twoPi = Math.PI * 2;
+    // Simple sine wave with phase offset for propagation
+    const wave = Math.sin(
+      dt * this.rotationFrequency * Math.PI * 2 + this.phase * 3
+    );
+    const rotation = wave * this.baseRotationAmplitude;
 
-    const currentAngle = twoPi * this.rotationFrequency * dt + this.phase;
-
-    // Calculate the raw rotation value as before
-    const rawRotation = this.rotationAmplitude * Math.sin(currentAngle);
-
-    const clampedRotation = this.clampRotation(rawRotation);
-
-    // Apply the clamped rotation
-    this.direction = this.originalDirection.copy().rotate(clampedRotation);
-  }
-
-  private breathe(dt: number = 0) {
-    const breathing =
-      this.breathingAmplitude *
-      Math.sin(2 * Math.PI * this.breathingFrequency * dt + this.phase);
-
-    this.size = this.originalSize + breathing;
+    // Just rotate the direction
+    this.direction = this.originalDirection.copy().rotate(rotation);
   }
 
   // Method to update the center position (used when parent link moves)
@@ -158,96 +130,29 @@ export class Link {
         .rotate(Math.PI * 0.5)
     );
   }
-  // Draw methods
 
   draw() {
     if (this.isDebug) {
-      this.drawConnectionTriangle();
-      // this.drawCircumference();
-
-      this.drawDirectionPoint();
-      this.drawLeftSidePoint();
-      this.drawRightSidePoint();
-      this.drawCenterPoint();
+      this.renderer.drawConnectionTriangle(
+        this.getDirectionPoint(),
+        this.getLeftSidePoint(),
+        this.getRightSidePoint()
+      );
+      this.renderer.drawDirectionPoint(
+        this.getDirectionPoint(),
+        this.size * 0.2
+      );
+      this.renderer.drawLeftSidePoint(
+        this.getLeftSidePoint(),
+        this.size * 0.15
+      );
+      this.renderer.drawRightSidePoint(
+        this.getRightSidePoint(),
+        this.size * 0.15
+      );
+      this.renderer.drawCenterPoint(this.center, this.size * 0.25);
     } else {
-      this.fillBody();
+      this.renderer.fillBody(this.center, this.size * 2);
     }
-  }
-
-  fillBody() {
-    this.p.push();
-    this.p.noStroke();
-    this.p.fill(255);
-    this.p.circle(this.center.x, this.center.y, this.size * 2);
-    this.p.pop();
-  }
-
-  drawDirectionPoint() {
-    this.p.push();
-    this.p.noStroke();
-    this.p.fill(0);
-    this.p.circle(
-      this.getDirectionPoint().x,
-      this.getDirectionPoint().y,
-      this.size * 0.2
-    );
-    this.p.pop();
-  }
-
-  drawLeftSidePoint() {
-    this.p.push();
-    this.p.noStroke();
-    this.p.fill(0, 0, 255);
-    this.p.circle(
-      this.getLeftSidePoint().x,
-      this.getLeftSidePoint().y,
-      this.size * 0.15
-    );
-    this.p.pop();
-  }
-
-  drawRightSidePoint() {
-    this.p.push();
-    this.p.noStroke();
-    this.p.fill(0, 0, 255);
-    this.p.circle(
-      this.getRightSidePoint().x,
-      this.getRightSidePoint().y,
-      this.size * 0.15
-    );
-    this.p.pop();
-  }
-
-  drawCenterPoint() {
-    this.p.push();
-    this.p.noStroke();
-    this.p.fill(255, 0, 0);
-    this.p.circle(this.center.x, this.center.y, this.size * 0.25);
-    this.p.pop();
-  }
-
-  drawConnectionTriangle() {
-    this.p.push();
-    this.p.stroke(0, 255, 0);
-    this.p.strokeWeight(4);
-    this.p.noFill();
-    this.p.triangle(
-      this.getDirectionPoint().x,
-      this.getDirectionPoint().y,
-      this.getLeftSidePoint().x,
-      this.getLeftSidePoint().y,
-      this.getRightSidePoint().x,
-      this.getRightSidePoint().y
-    );
-    this.p.pop();
-  }
-
-  drawCircumference() {
-    this.p.push();
-    this.p.stroke(0);
-    this.p.strokeWeight(4);
-    this.p.noFill();
-    this.p.circle(this.center.x, this.center.y, this.size * 2);
-    this.p.pop();
   }
 }
