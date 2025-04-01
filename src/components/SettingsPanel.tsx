@@ -55,28 +55,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isEnabled = true }) => {
           </div>
         </div>
       </Panel>
-
-      <Panel disabled={!isEnabled}>
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-sm font-medium text-white/70">
-              Chain Settings
-            </h3>
-            {/* Add chain-specific settings here */}
-          </div>
-        </div>
-      </Panel>
-
-      <Panel disabled={!isEnabled}>
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-sm font-medium text-white/70">
-              Visual Effects
-            </h3>
-            {/* Add visual effects settings here */}
-          </div>
-        </div>
-      </Panel>
     </div>
   );
 };

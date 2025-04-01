@@ -7,7 +7,7 @@ import { getAnimationSettingsByName } from "@/animations";
 import { useAnimationStore } from "@/stores/animationStore";
 
 // Get default settings from animation
-const defaultSettings = getAnimationSettingsByName("decksDark");
+const defaultSettings = getAnimationSettingsByName("lerpMoveIntro");
 
 interface AnimationContextType {
   controller: AnimationController | null;
@@ -17,7 +17,7 @@ interface AnimationContextType {
 
 const AnimationContext = createContext<AnimationContextType>({
   controller: null,
-  currentAnimation: "decksDark",
+  currentAnimation: "lerpMoveIntro",
   setCurrentAnimation: () => {},
 });
 
@@ -31,7 +31,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   children,
 }) => {
   const [controller, setController] = useState<AnimationController | null>(null);
-  const [currentAnimation, setCurrentAnimation] = useState<string>("decksDark");
+  const [currentAnimation, setCurrentAnimation] = useState<string>("lerpMoveIntro");
   const { selectedAnimation } = useAnimationStore();
 
   useEffect(() => {

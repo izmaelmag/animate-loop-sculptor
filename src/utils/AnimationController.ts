@@ -379,7 +379,7 @@ export class AnimationController {
       this.height = settings.height;
 
       console.log(
-        `Using animation settings: fps=${this.fps}, totalFrames=${this.totalFrames}`
+        `Using animation settings: fps=${this.fps}, totalFrames=${this.totalFrames}, width=${this.width}, height=${this.height}`
       );
     }
 

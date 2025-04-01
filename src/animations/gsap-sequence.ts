@@ -3,7 +3,6 @@ import { AnimationSettings, AnimationFunction } from "@/types/animations";
 export const settings: AnimationSettings = {
   name: "GSAP Sequence",
   id: "gsap-sequence",
-  duration: 10,
   fps: 60,
   totalFrames: 600,
   sequential: true,

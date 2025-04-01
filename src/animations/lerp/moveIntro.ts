@@ -174,6 +174,8 @@ const animation: AnimationFunction = (
 
 function setupAnimation(p: p5): void {
   p.background(0);
+
+  p.createCanvas(WIDTH, HEIGHT);
 }
 
 // Now declare the settings after animation is defined
@@ -182,8 +184,8 @@ export const lerpMoveIntro: AnimationSettings = {
   id: "lerpMoveIntro",
   fps: 60,
   totalFrames: 60 * 6,
-  width: WIDTH,
-  height: HEIGHT,
+  width: 1080,
+  height: 1920,
   sequential: false,
   function: animation,
   onSetup: setupAnimation,

@@ -10,7 +10,7 @@ interface AnimationStore {
 export const useAnimationStore = create<AnimationStore>()(
   persist(
     (set) => ({
-      selectedAnimation: 'decksDark',
+      selectedAnimation: 'lerpMoveIntro',
       setSelectedAnimation: (animation) => set({ selectedAnimation: animation }),
     }),
     {
