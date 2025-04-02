@@ -3,7 +3,7 @@ import {
   AnimationController,
   createAnimationController,
 } from "@/utils/AnimationController";
-import { getAnimationSettingsByName } from "@/animations";
+import { getAnimationSettingsByName, animationSettings } from "@/animations";
 import { useAnimationStore } from "@/stores/animationStore";
 
 // Get default settings from animation
@@ -30,8 +30,11 @@ export const useAnimation = () => useContext(AnimationContext);
 export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   children,
 }) => {
-  const [controller, setController] = useState<AnimationController | null>(null);
-  const [currentAnimation, setCurrentAnimation] = useState<string>("lerpMoveIntro");
+  const [controller, setController] = useState<AnimationController | null>(
+    null
+  );
+  const [currentAnimation, setCurrentAnimation] =
+    useState<string>("lerpMoveIntro");
   const { selectedAnimation } = useAnimationStore();
 
   useEffect(() => {

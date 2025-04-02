@@ -1,7 +1,7 @@
 import { AnimationFunction, AnimationSettings } from "@/types/animations";
 import { settings as basic } from "./basic-template";
 import { lerpMoveIntro } from "./lerp";
-import { demo } from "./demo";
+import { settings as demo } from "./demo";
 import { settings as decksDark } from "./decks-dark/animation";
 // import { settings as gsap } from "./gsap-sequence";
 // import { settings as gridOrbit } from "./grid-orbit";

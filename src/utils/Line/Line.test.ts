@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { Line } from "./Line";
-import { easeInOutCubic, linear } from "./easing";
+import { linear } from "../easing";
 
 describe("Line", () => {
   let line: Line;

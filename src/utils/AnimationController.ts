@@ -1,22 +1,12 @@
 import p5 from "p5";
-import { animations, AnimationName, getAnimationByName } from "@/animations";
+import {
+  animations,
+  AnimationName,
+  getAnimationByName,
+  animationSettings,
+} from "@/animations";
 import { AnimationFunction } from "@/types/animations";
 import { settings as basic } from "../animations/basic-template";
-import { settings as gsap } from "../animations/gsap-sequence";
-import { settings as gridOrbit } from "../animations/grid-orbit";
-import { settings as multilayered } from "../animations/multilayered";
-import { settings as waitExample } from "../animations/wait-example";
-import { settings as decksDark } from "../animations/decks-dark/animation";
-
-// Map of animation settings by name - include all animations
-const animationSettings = {
-  basic,
-  gsap,
-  gridOrbit,
-  multilayered,
-  waitExample,
-  decksDark,
-};
 
 export class AnimationController {
   private p5Instance: p5 | null = null;
@@ -370,6 +360,8 @@ export class AnimationController {
 
     // Get the animation settings
     const settings = animationSettings[name as keyof typeof animationSettings];
+
+    console.log(animationSettings);
 
     if (settings) {
       // Update controller with animation settings
