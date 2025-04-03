@@ -69,7 +69,7 @@ function setupAnimation(p: p5): void {
 }
 
 // Now declare the settings after animation is defined
-export const lerpMoveIntro: AnimationSettings = {
+export const settings: AnimationSettings = {
   name: "LERP Move Intro",
   id: "lerpMoveIntro",
   fps: 60,

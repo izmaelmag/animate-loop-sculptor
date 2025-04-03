@@ -1,1 +1,1 @@
-export { lerpMoveIntro } from "./moveIntro";
+export * from "./moveIntro";
