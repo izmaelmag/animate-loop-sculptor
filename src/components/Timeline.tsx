@@ -17,10 +17,8 @@ interface TimelineProps {
   isPlayable?: boolean;
 }
 
-const Timeline: React.FC<TimelineProps> = ({
-  isPlayable = true,
-}) => {
-  const { controller } = useAnimation();
+const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
+  const { controller, currentAnimationId } = useAnimation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [totalFrames, setTotalFrames] = useState(0);
@@ -30,6 +28,7 @@ const Timeline: React.FC<TimelineProps> = ({
   useEffect(() => {
     if (!controller) return;
 
+    // Explicitly update all state values from controller when animation changes
     setCurrentFrame(controller.currentFrame);
     setIsPlaying(controller.isPlaying);
     setTotalFrames(controller.totalFrames);
@@ -47,17 +46,27 @@ const Timeline: React.FC<TimelineProps> = ({
       setIsPlaying(playing);
     });
 
+    // Subscribe to settings changes (fps, totalFrames, etc.)
+    const unsubscribeSettings = controller.onSettingsChanged(
+      (fps, totalFrames) => {
+        setFps(fps);
+        setTotalFrames(totalFrames);
+      }
+    );
+
     return () => {
       unsubscribeFrame();
       unsubscribePlayState();
+      unsubscribeSettings();
     };
-  }, [controller]);
+  }, [controller, currentAnimationId]);
 
   const handleSliderChange = (value: number[]) => {
     if (!controller) return;
 
     const newFrame = Math.round(value[0]);
     controller.currentFrame = newFrame;
+    controller.redraw();
   };
 
   const togglePlayback = () => {
@@ -70,23 +79,13 @@ const Timeline: React.FC<TimelineProps> = ({
     controller.reset();
   };
 
-  const formatFrameInfo = (frame: number) => {
-    if (!fps) return "00:00:00";
-
-    const mins = Math.floor(frame / (fps * 60));
-    const secs = Math.floor((frame % (fps * 60)) / fps);
-    return `${mins.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}:${(frame % fps).toString().padStart(2, "0")}`;
-  };
-
   if (!controller || totalFrames === 0) {
     return <div>Loading timeline...</div>;
   }
 
   return (
     <Panel>
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between mb-2">
         <div className="flex gap-2">
           <Button
             size="sm"
@@ -104,6 +103,7 @@ const Timeline: React.FC<TimelineProps> = ({
           >
             <RotateCcw size={16} />
           </Button>
+
           {/* Frame Backwards */}
           <Button
             size="sm"
@@ -117,6 +117,7 @@ const Timeline: React.FC<TimelineProps> = ({
           >
             <StepBack size={16} />
           </Button>
+
           {/* Frame Forwards */}
           <Button
             size="sm"
@@ -134,7 +135,14 @@ const Timeline: React.FC<TimelineProps> = ({
           </Button>
         </div>
         <div className="text-xs font-mono">
-          {formatFrameInfo(currentFrame)} / {formatFrameInfo(totalFrames - 1)}
+          <span>
+            <span className="font-bold">Frame:</span> {currentFrame}/
+            {totalFrames - 1}
+          </span>
+
+          <span className="ml-2">
+            ({(controller.normalizedTime * 100).toFixed(1)}%)
+          </span>
         </div>
       </div>
 
@@ -142,27 +150,11 @@ const Timeline: React.FC<TimelineProps> = ({
         disabled={!isPlayable}
         value={[currentFrame]}
         min={0}
-        max={totalFrames - 1}
         step={1}
+        max={totalFrames - 1}
         onValueChange={handleSliderChange}
-        className="mt-2 mb-1"
+        className="mt-2 mb-6"
       />
-
-      <div className="text-xs text-muted-foreground flex justify-between font-mono">
-        <div>
-          <span>Timeline</span>
-        </div>
-
-        <div>
-          <span>
-            <span className="font-bold">Frame:</span> {currentFrame}/
-            {totalFrames - 1}
-          </span>
-          <span className="ml-2">
-            ({(controller.normalizedTime * 100).toFixed(1)}%)
-          </span>
-        </div>
-      </div>
     </Panel>
   );
 };

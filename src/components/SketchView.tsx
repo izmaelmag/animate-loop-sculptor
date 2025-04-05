@@ -12,18 +12,24 @@ const SketchView = () => {
     if (!sketchRef.current || !controller) return;
 
     console.log(`Initializing P5 for animation: ${currentAnimationId}`);
-
+    
     // Initialize the controller with the sketch container
     controller.initializeP5(sketchRef.current);
 
     // Set initial state
     setCurrentFrame(controller.currentFrame);
+    
+    // Subscribe to frame changes to update local state
+    const unsubscribe = controller.onFrameChanged((frame) => {
+      setCurrentFrame(frame);
+    });
 
     // Cleanup function to ensure the p5 instance is properly removed when unmounting
     return () => {
+      unsubscribe();
       controller.destroy();
     };
-  }, [controller, currentAnimationId]); // Add currentAnimationId to dependencies
+  }, [controller, currentAnimationId]);
 
   if (!controller) {
     return <div>Loading sketch view...</div>;

@@ -32,6 +32,12 @@ export class AnimationController {
     normalizedTime: number
   ) => void)[] = [];
   private onPlayStateChangedCallbacks: ((isPlaying: boolean) => void)[] = [];
+  private onSettingsChangedCallbacks: ((
+    fps: number, 
+    totalFrames: number, 
+    width: number, 
+    height: number
+  ) => void)[] = [];
 
   constructor(fps: number, totalFrames: number, width: number, height: number) {
     this.fps = fps;
@@ -284,8 +290,23 @@ export class AnimationController {
 
   // Reset animation to first frame
   reset(): void {
-    this.isPlaying = false;
-    this.currentFrame = 0;
+    // Stop playback first
+    const wasPlaying = this._isPlaying;
+    if (wasPlaying) {
+      this._isPlaying = false;
+      this.notifyPlayStateChanged();
+    }
+
+    // Reset frame to 0
+    const currentFrameChanged = this._currentFrame !== 0;
+    this._currentFrame = 0;
+    
+    // Only notify if the frame actually changed
+    if (currentFrameChanged) {
+      this.notifyFrameChanged();
+    }
+    
+    // Redraw with the new frame
     this.redraw();
   }
 
@@ -314,6 +335,23 @@ export class AnimationController {
     };
   }
 
+  // Register for settings change notifications
+  onSettingsChanged(callback: (
+    fps: number, 
+    totalFrames: number, 
+    width: number, 
+    height: number
+  ) => void): () => void {
+    this.onSettingsChangedCallbacks.push(callback);
+
+    // Return unsubscribe function
+    return () => {
+      this.onSettingsChangedCallbacks = this.onSettingsChangedCallbacks.filter(
+        (cb) => cb !== callback
+      );
+    };
+  }
+
   // Notify all subscribers of frame change
   private notifyFrameChanged(): void {
     for (const callback of this.onFrameChangedCallbacks) {
@@ -325,6 +363,13 @@ export class AnimationController {
   private notifyPlayStateChanged(): void {
     for (const callback of this.onPlayStateChangedCallbacks) {
       callback(this._isPlaying);
+    }
+  }
+
+  // Notify all subscribers of settings change
+  private notifySettingsChanged(): void {
+    for (const callback of this.onSettingsChangedCallbacks) {
+      callback(this.fps, this.totalFrames, this.width, this.height);
     }
   }
 
@@ -353,11 +398,23 @@ export class AnimationController {
   // Set animation and update settings
   setAnimation(id: AnimationName = defaultAnimation.id): void {
     console.log(`Setting animation to: ${id}`);
+    
+    const previousId = this.currentAnimationId;
     this.currentAnimationId = id;
+    
     const animation = animations[id] || defaultAnimation.function;
-
-    // Get the animation settings
     const settings = animationSettings[id] || defaultAnimation;
+    
+    // Store old values to detect changes
+    const oldFps = this.fps;
+    const oldTotalFrames = this.totalFrames;
+    const oldFrame = this._currentFrame;
+    const wasPlaying = this._isPlaying;
+
+    // Stop playback when changing animations to avoid unexpected behavior
+    if (previousId !== id && this._isPlaying) {
+      this._isPlaying = false;
+    }
 
     if (settings) {
       // Update controller with animation settings
@@ -369,6 +426,15 @@ export class AnimationController {
       console.log(
         `Using animation settings: fps=${this.fps}, totalFrames=${this.totalFrames}, width=${this.width}, height=${this.height}`
       );
+      
+      // When changing animation, always reset to frame 0
+      if (previousId !== id) {
+        this._currentFrame = 0;
+      } 
+      // Otherwise just ensure it's within bounds
+      else if (this._currentFrame >= this.totalFrames) {
+        this._currentFrame = 0;
+      }
     }
 
     if (animation) {
@@ -389,8 +455,20 @@ export class AnimationController {
       console.warn("No container element available to reinitialize P5");
     }
 
-    // Reset animation state
-    this.reset();
+    // Always notify listeners of any state changes
+    if (wasPlaying !== this._isPlaying) {
+      this.notifyPlayStateChanged();
+    }
+    
+    if (oldFrame !== this._currentFrame || previousId !== id) {
+      this.notifyFrameChanged();
+    }
+
+    // Force a redraw after animation changes
+    this.redraw();
+
+    // Notify settings change listeners
+    this.notifySettingsChanged();
   }
 }
 
