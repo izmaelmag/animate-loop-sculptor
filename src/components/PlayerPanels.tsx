@@ -12,12 +12,10 @@ import Timeline from "./Timeline";
 import SettingsPanel from "./SettingsPanel";
 
 interface PlayerPanelsProps {
-  onFrameUpdate?: (frame: number, normalizedTime: number) => void;
   isPlayable?: boolean;
 }
 
 export default function PlayerPanels({
-  onFrameUpdate,
   isPlayable = true,
 }: PlayerPanelsProps) {
   const isMobile = useIsMobile();
@@ -68,7 +66,7 @@ export default function PlayerPanels({
           {renderPaginationDots()}
           <CarouselContent>
             <CarouselItem>
-              <Timeline onFrameUpdate={onFrameUpdate} isPlayable={isPlayable} />
+              <Timeline isPlayable={isPlayable} />
             </CarouselItem>
 
             <CarouselItem>
@@ -82,7 +80,7 @@ export default function PlayerPanels({
 
   return (
     <div className="fixed right-4 top-4 flex flex-col gap-4 w-[480px]">
-      <Timeline onFrameUpdate={onFrameUpdate} isPlayable={isPlayable} />
+      <Timeline isPlayable={isPlayable} />
       <SettingsPanel isEnabled={isPlayable} />
     </div>
   );

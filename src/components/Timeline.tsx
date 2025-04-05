@@ -14,12 +14,10 @@ import { useAnimation } from "@/contexts";
 import Panel from "@/components/ui/panel";
 
 interface TimelineProps {
-  onFrameUpdate?: (frame: number, normalizedTime: number) => void;
   isPlayable?: boolean;
 }
 
 const Timeline: React.FC<TimelineProps> = ({
-  onFrameUpdate,
   isPlayable = true,
 }) => {
   const { controller } = useAnimation();
@@ -41,11 +39,6 @@ const Timeline: React.FC<TimelineProps> = ({
     const unsubscribeFrame = controller.onFrameChanged(
       (frame, normalizedTime) => {
         setCurrentFrame(frame);
-
-        // Call external callback if provided
-        if (onFrameUpdate) {
-          onFrameUpdate(frame, normalizedTime);
-        }
       }
     );
 
@@ -58,7 +51,7 @@ const Timeline: React.FC<TimelineProps> = ({
       unsubscribeFrame();
       unsubscribePlayState();
     };
-  }, [controller, onFrameUpdate]);
+  }, [controller]);
 
   const handleSliderChange = (value: number[]) => {
     if (!controller) return;

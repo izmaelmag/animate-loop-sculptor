@@ -6,7 +6,6 @@ const SketchView = () => {
   const { controller, currentAnimationId } = useAnimation();
   const sketchRef = useRef<HTMLDivElement>(null);
   const [currentFrame, setCurrentFrame] = useState(0);
-  const [normalizedTime, setNormalizedTime] = useState(0);
 
   // Initialize P5 instance when component mounts or animation changes
   useEffect(() => {
@@ -19,22 +18,12 @@ const SketchView = () => {
 
     // Set initial state
     setCurrentFrame(controller.currentFrame);
-    setNormalizedTime(controller.normalizedTime);
 
     // Cleanup function to ensure the p5 instance is properly removed when unmounting
     return () => {
       controller.destroy();
     };
   }, [controller, currentAnimationId]); // Add currentAnimationId to dependencies
-
-  // Handle frame updates from the Timeline
-  const handleFrameUpdate = (frame: number, normalized: number) => {
-    setCurrentFrame(frame);
-    setNormalizedTime(normalized);
-
-    // Additional logic for frame updates can be added here
-    // For example, updating other components or triggering events
-  };
 
   if (!controller) {
     return <div>Loading sketch view...</div>;
@@ -49,7 +38,7 @@ const SketchView = () => {
         />
       </div>
 
-      <PlayerPanels onFrameUpdate={handleFrameUpdate} isPlayable={true} />
+      <PlayerPanels isPlayable={true} />
     </div>
   );
 };
