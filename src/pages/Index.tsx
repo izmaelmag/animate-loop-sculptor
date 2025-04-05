@@ -1,7 +1,5 @@
 import Workspace from "@/components/Workspace";
 
-const Index = () => {
+export default function Index() {
   return <Workspace />;
-};
-
-export default Index;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import p5 from "p5";
-import { animationSettings } from "../animations";
+import { animationSettings, defaultAnimation } from "../animations";
 import { AnimationName } from "../animations";
 
 declare global {
@@ -11,9 +11,9 @@ declare global {
 }
 
 export const P5Animation = ({
-  templateName = "basic",
+  templateId = defaultAnimation.id,
 }: {
-  templateName?: AnimationName;
+  templateId?: AnimationName;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Ref = useRef<p5>();
@@ -22,14 +22,14 @@ export const P5Animation = ({
   const { durationInFrames, fps: remotionFps } = useVideoConfig();
   const isMountedRef = useRef<boolean>(true);
 
-  console.log("Animation template:", templateName);
+  console.log("Animation template ID:", templateId);
 
-  // Get the current animation settings with fallback to basic
+  // Get the current animation settings with fallback to default
   const currentSettings =
-    animationSettings[templateName] || animationSettings.basic;
+    animationSettings[templateId] || defaultAnimation;
 
   if (!currentSettings) {
-    console.error(`Animation not found: ${templateName}, using default`);
+    console.error(`Animation not found: ${templateId}, using default`);
   }
 
   // Get timing directly from animation settings
@@ -55,7 +55,7 @@ export const P5Animation = ({
         p5Ref.current = undefined;
       }
     };
-  }, [templateName]); // Reset when template changes
+  }, [templateId]); // Reset when template changes
 
   // Effect for updating and rendering each frame
   useEffect(() => {
@@ -99,7 +99,7 @@ export const P5Animation = ({
 
             // Run onSetup function if it exists
             if (currentSettings.onSetup && !setupDoneRef.current) {
-              console.log(`Running onSetup for ${templateName}`);
+              console.log(`Running onSetup for ${templateId}`);
               currentSettings.onSetup(p, t, frameNumber, totalFrames);
               setupDoneRef.current = true;
             }
@@ -126,7 +126,7 @@ export const P5Animation = ({
     if (frame % 100 === 0 && typeof global.gc === "function") {
       global.gc();
     }
-  }, [frame, templateName, totalFrames, currentSettings]);
+  }, [frame, templateId, totalFrames, currentSettings]);
 
   // Get animation dimensions from settings
   const width = currentSettings.width || 1080;

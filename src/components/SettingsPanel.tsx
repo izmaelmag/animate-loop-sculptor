@@ -1,5 +1,6 @@
 import Panel from "@/components/ui/panel";
-import { animationNames } from "@/animations";
+import { animationSettings } from "@/animations";
+import { useAnimationStore } from "@/stores/animationStore";
 import {
   Select,
   SelectContent,
@@ -7,21 +8,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAnimationStore } from "@/stores/animationStore";
-import { useAnimation } from "@/contexts/AnimationContext";
+import { useCallback, useMemo } from "react";
 
 interface SettingsPanelProps {
   isEnabled?: boolean;
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ isEnabled = true }) => {
-  const { setCurrentAnimation } = useAnimation();
-  const { selectedAnimation, setSelectedAnimation } = useAnimationStore();
+  const { selectedAnimation: selectedAnimationId, setSelectedAnimation: setSelectedAnimationId } = useAnimationStore();
 
-  const handleAnimationChange = (value: string) => {
-    setSelectedAnimation(value);
-    setCurrentAnimation(value);
-  };
+  const animationOptions = useMemo(() => {
+    return Object.entries(animationSettings).map(([key, settings]) => ({
+      id: settings.id,
+      name: settings.name,
+      key
+    }));
+  }, []);
+
+  const handleAnimationChange = useCallback(
+    (animationId: string) => setSelectedAnimationId(animationId),
+    [setSelectedAnimationId]
+  );
+
+  // Find the display name for the selected animation
+  const selectedName = useMemo(() => {
+    const animation = Object.values(animationSettings).find(
+      settings => settings.id === selectedAnimationId
+    );
+    return animation?.name || selectedAnimationId;
+  }, [selectedAnimationId]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -29,8 +44,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isEnabled = true }) => {
         <div className="space-y-4">
           <div className="space-y-1">
             <h3 className="text-sm font-medium text-white/70">Animation</h3>
+
             <Select
-              value={selectedAnimation}
+              value={selectedAnimationId}
               onValueChange={handleAnimationChange}
               disabled={!isEnabled}
             >
@@ -38,16 +54,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isEnabled = true }) => {
                 id="animation-select"
                 className="w-full bg-black border-gray-700 cursor-pointer"
               >
-                <SelectValue placeholder="Select animation" />
+                <SelectValue placeholder="Select animation">{selectedName}</SelectValue>
               </SelectTrigger>
+
               <SelectContent className="bg-black border-gray-700 text-white">
-                {animationNames.map((name) => (
+                {animationOptions.map((animation) => (
                   <SelectItem
-                    key={name}
-                    value={name}
+                    key={animation.key}
+                    value={animation.id}
                     className="cursor-pointer"
                   >
-                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                    {animation.name}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -1,12 +1,12 @@
 import { registerRoot, Composition } from "remotion";
 import { MyVideo } from "./MyVideo";
-import { getAnimationSettingsByName } from "../animations";
+import { animationSettings, defaultAnimation } from "../animations";
 
 // Default animation template if none specified
-const DEFAULT_TEMPLATE = "gridOrbit";
+const DEFAULT_TEMPLATE_ID = defaultAnimation.id;
 
 const calculateMetaData = async (props: Record<string, unknown>) => {
-  const settings = getAnimationSettingsByName(props.templateName as string);
+  const settings = animationSettings[props.templateId as string] || defaultAnimation;
 
   return {
     durationInFrames: settings.totalFrames,
@@ -27,7 +27,7 @@ export const RemotionVideo = () => {
         width={1080} // Default width
         height={1920} // Default height
         defaultProps={{
-          templateName: DEFAULT_TEMPLATE,
+          templateId: DEFAULT_TEMPLATE_ID,
         }}
         calculateMetadata={async ({ props }) => {
           return await calculateMetaData(props);

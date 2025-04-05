@@ -7,7 +7,6 @@ export const settings: AnimationSettings = {
   id: NAME.toLowerCase().replace(/ /g, "-"),
   fps: FPS,
   totalFrames: TOTAL_FRAMES,
-  sequential: false,
   width: WIDTH,
   height: HEIGHT,
   function: animation,

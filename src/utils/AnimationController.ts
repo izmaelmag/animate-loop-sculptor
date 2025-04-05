@@ -1,19 +1,18 @@
 import p5 from "p5";
 import {
   animations,
-  AnimationName,
-  getAnimationByName,
   animationSettings,
+  defaultAnimation,
+  AnimationName,
 } from "@/animations";
 import { AnimationFunction } from "@/types/animations";
-import { settings as basic } from "../animations/basic-template";
 
 export class AnimationController {
   private p5Instance: p5 | null = null;
   private sketchFunction: AnimationFunction | null = null;
   private animationFrameRef: number | null = null;
   private lastUpdateTimeRef: number = 0;
-  private currentAnimationName: AnimationName = "basic";
+  private currentAnimationId: AnimationName = defaultAnimation.id;
   private containerElement: HTMLElement | null = null;
 
   // Animation settings - just fps and totalFrames
@@ -136,10 +135,10 @@ export class AnimationController {
         // Get animation settings for current animation
         const currentSettings =
           animationSettings[
-            this.currentAnimationName as keyof typeof animationSettings
-          ] || basic;
+            this.currentAnimationId as keyof typeof animationSettings
+          ] || defaultAnimation;
 
-        console.log("Current animation name", this.currentAnimationName);
+        console.log("Current animation ID", this.currentAnimationId);
         console.log("Current settings", currentSettings);
         console.log(
           "Creating canvas with EXACT dimensions",
@@ -158,12 +157,12 @@ export class AnimationController {
           `Canvas created with EXACT dimensions ${this.width}x${this.height}`
         );
 
-        console.log("Current animation name", this.currentAnimationName);
+        console.log("Current animation ID", this.currentAnimationId);
         console.log("Current settings", currentSettings);
 
         // Call onSetup function if it exists in the animation settings
         if (currentSettings.onSetup) {
-          console.log(`Running onSetup for ${this.currentAnimationName}`);
+          console.log(`Running onSetup for ${this.currentAnimationId}`);
           currentSettings.onSetup(
             p,
             this.normalizedTime,
@@ -352,16 +351,13 @@ export class AnimationController {
   }
 
   // Set animation and update settings
-  setAnimation(name: AnimationName = "basic"): void {
-    this.currentAnimationName = name;
-    const animation = getAnimationByName(name);
-
-    console.log(name);
+  setAnimation(id: AnimationName = defaultAnimation.id): void {
+    console.log(`Setting animation to: ${id}`);
+    this.currentAnimationId = id;
+    const animation = animations[id] || defaultAnimation.function;
 
     // Get the animation settings
-    const settings = animationSettings[name as keyof typeof animationSettings];
-
-    console.log(animationSettings);
+    const settings = animationSettings[id] || defaultAnimation;
 
     if (settings) {
       // Update controller with animation settings
@@ -379,11 +375,18 @@ export class AnimationController {
       this.setAnimationFunction(animation);
     }
 
-    // If p5 instance exists, recreate it to match the new animation dimensions
-    if (this.p5Instance && this.containerElement) {
-      this.p5Instance.remove();
-      this.p5Instance = null;
+    // If p5 instance exists, properly destroy and recreate it with the new animation
+    if (this.containerElement) {
+      if (this.p5Instance) {
+        console.log("Removing existing P5 instance");
+        this.p5Instance.remove();
+        this.p5Instance = null;
+      }
+      
+      console.log("Reinitializing P5 instance with new animation");
       this.initializeP5(this.containerElement);
+    } else {
+      console.warn("No container element available to reinitialize P5");
     }
 
     // Reset animation state

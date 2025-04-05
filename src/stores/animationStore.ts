@@ -1,20 +1,20 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { AnimationName } from '@/animations';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { DEFAULT_ANIMATION } from "@/contexts";
 
 interface AnimationStore {
-  selectedAnimation: AnimationName;
-  setSelectedAnimation: (animation: AnimationName) => void;
+  selectedAnimation: string;
+  setSelectedAnimation: (animationId: string) => void;
 }
 
 export const useAnimationStore = create<AnimationStore>()(
   persist(
     (set) => ({
-      selectedAnimation: 'lerpMoveIntro',
-      setSelectedAnimation: (animation) => set({ selectedAnimation: animation }),
+      selectedAnimation: DEFAULT_ANIMATION,
+      setSelectedAnimation: (selectedAnimation) => set({ selectedAnimation }),
     }),
     {
-      name: 'animation-storage',
+      name: "animation-storage",
     }
   )
-); 
+);

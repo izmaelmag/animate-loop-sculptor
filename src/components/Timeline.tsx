@@ -10,16 +10,16 @@ import { useState, useEffect, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw, StepForward, StepBack } from "lucide-react";
-import { useAnimation } from "@/contexts/AnimationContext";
+import { useAnimation } from "@/contexts";
 import Panel from "@/components/ui/panel";
 
 interface TimelineProps {
-  onTimeUpdate?: (time: number, normalizedTime: number) => void;
+  onFrameUpdate?: (frame: number, normalizedTime: number) => void;
   isPlayable?: boolean;
 }
 
 const Timeline: React.FC<TimelineProps> = ({
-  onTimeUpdate,
+  onFrameUpdate,
   isPlayable = true,
 }) => {
   const { controller } = useAnimation();
@@ -43,9 +43,8 @@ const Timeline: React.FC<TimelineProps> = ({
         setCurrentFrame(frame);
 
         // Call external callback if provided
-        if (onTimeUpdate) {
-          const time = frame / controller.fps;
-          onTimeUpdate(time, normalizedTime);
+        if (onFrameUpdate) {
+          onFrameUpdate(frame, normalizedTime);
         }
       }
     );
@@ -59,7 +58,7 @@ const Timeline: React.FC<TimelineProps> = ({
       unsubscribeFrame();
       unsubscribePlayState();
     };
-  }, [controller, onTimeUpdate]);
+  }, [controller, onFrameUpdate]);
 
   const handleSliderChange = (value: number[]) => {
     if (!controller) return;

@@ -1,25 +1,27 @@
 import { useState, useEffect } from "react";
-import Timeline from "./Timeline";
-import SettingsPanel from "./SettingsPanel";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+import Timeline from "./Timeline";
+import SettingsPanel from "./SettingsPanel";
 
 interface PlayerPanelsProps {
-  onTimeUpdate?: (time: number, normalizedTime: number) => void;
+  onFrameUpdate?: (frame: number, normalizedTime: number) => void;
   isPlayable?: boolean;
 }
 
-const PlayerPanels: React.FC<PlayerPanelsProps> = ({
-  onTimeUpdate,
+export default function PlayerPanels({
+  onFrameUpdate,
   isPlayable = true,
-}) => {
+}: PlayerPanelsProps) {
   const isMobile = useIsMobile();
+
   const [activeSlide, setActiveSlide] = useState(0);
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
 
@@ -32,6 +34,7 @@ const PlayerPanels: React.FC<PlayerPanelsProps> = ({
     };
 
     carouselApi.on("select", onSelect);
+
     return () => {
       carouselApi.off("select", onSelect);
     };
@@ -65,8 +68,9 @@ const PlayerPanels: React.FC<PlayerPanelsProps> = ({
           {renderPaginationDots()}
           <CarouselContent>
             <CarouselItem>
-              <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
+              <Timeline onFrameUpdate={onFrameUpdate} isPlayable={isPlayable} />
             </CarouselItem>
+
             <CarouselItem>
               <SettingsPanel isEnabled={isPlayable} />
             </CarouselItem>
@@ -78,10 +82,8 @@ const PlayerPanels: React.FC<PlayerPanelsProps> = ({
 
   return (
     <div className="fixed right-4 top-4 flex flex-col gap-4 w-[480px]">
-      <Timeline onTimeUpdate={onTimeUpdate} isPlayable={isPlayable} />
+      <Timeline onFrameUpdate={onFrameUpdate} isPlayable={isPlayable} />
       <SettingsPanel isEnabled={isPlayable} />
     </div>
   );
-};
-
-export default PlayerPanels;
+}

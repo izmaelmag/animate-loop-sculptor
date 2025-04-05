@@ -1,32 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import { useAnimation } from "@/contexts/AnimationContext";
+import { useAnimation } from "@/contexts";
 import PlayerPanels from "./PlayerPanels";
 
 const SketchView = () => {
-  const { controller, currentAnimation } = useAnimation();
+  const { controller, currentAnimationId } = useAnimation();
   const sketchRef = useRef<HTMLDivElement>(null);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const [normalizedTime, setNormalizedTime] = useState(0);
 
-  // Initialize P5 instance when component mounts
+  // Initialize P5 instance when component mounts or animation changes
   useEffect(() => {
     if (!sketchRef.current || !controller) return;
 
+    console.log(`Initializing P5 for animation: ${currentAnimationId}`);
+
     // Initialize the controller with the sketch container
     controller.initializeP5(sketchRef.current);
-    
+
+    // Set initial state
+    setCurrentFrame(controller.currentFrame);
+    setNormalizedTime(controller.normalizedTime);
+
     // Cleanup function to ensure the p5 instance is properly removed when unmounting
     return () => {
       controller.destroy();
     };
-  }, [controller]);
+  }, [controller, currentAnimationId]); // Add currentAnimationId to dependencies
 
-  // Handle time updates from the Timeline
-  const handleTimeUpdate = (time: number, normalized: number) => {
-    setCurrentTime(time);
+  // Handle frame updates from the Timeline
+  const handleFrameUpdate = (frame: number, normalized: number) => {
+    setCurrentFrame(frame);
     setNormalizedTime(normalized);
 
-    // Additional logic for time updates can be added here
+    // Additional logic for frame updates can be added here
     // For example, updating other components or triggering events
   };
 
@@ -43,7 +49,7 @@ const SketchView = () => {
         />
       </div>
 
-      <PlayerPanels onTimeUpdate={handleTimeUpdate} isPlayable={true} />
+      <PlayerPanels onFrameUpdate={handleFrameUpdate} isPlayable={true} />
     </div>
   );
 };
