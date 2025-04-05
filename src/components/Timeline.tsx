@@ -136,12 +136,21 @@ const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
         </div>
         <div className="text-xs font-mono">
           <span>
-            <span className="font-bold">Frame:</span> {currentFrame}/
-            {totalFrames - 1}
+            <span>Frame:</span>{" "}
+            {(currentFrame + 1)
+              .toString()
+              .padStart(totalFrames.toString().length, "0")}
+            /
+            {totalFrames
+              .toString()
+              .padStart(totalFrames.toString().length, "0")}
           </span>
 
-          <span className="ml-2">
-            ({(controller.normalizedTime * 100).toFixed(1)}%)
+          <span className="ml-2 text-white/50">
+            <span>
+              ({(controller.normalizedTime * 100).toFixed(2).padStart(6, "0")}%
+            </span>
+            <span>&nbsp;at {fps} fps)</span>
           </span>
         </div>
       </div>
