@@ -8,23 +8,18 @@ import {
 import { AnimationFunction } from "@/types/animations";
 
 export class AnimationController {
+  //-------------------------------------
+  // Private properties
+  //-------------------------------------
   private p5Instance: p5 | null = null;
   private sketchFunction: AnimationFunction | null = null;
   private animationFrameRef: number | null = null;
-  private lastUpdateTimeRef: number = 0;
   private currentAnimationId: AnimationName = defaultAnimation.id;
   private containerElement: HTMLElement | null = null;
-
-  // Animation settings - just fps and totalFrames
-  public fps: number;
-  public totalFrames: number;
-  public width: number;
-  public height: number;
 
   // Animation state
   private _currentFrame: number = 0;
   private _isPlaying: boolean = false;
-  private _sketchCode: string = "";
 
   // Callbacks
   private onFrameChangedCallbacks: ((
@@ -33,20 +28,40 @@ export class AnimationController {
   ) => void)[] = [];
   private onPlayStateChangedCallbacks: ((isPlaying: boolean) => void)[] = [];
   private onSettingsChangedCallbacks: ((
-    fps: number, 
-    totalFrames: number, 
-    width: number, 
+    fps: number,
+    totalFrames: number,
+    width: number,
     height: number
   ) => void)[] = [];
 
-  constructor(fps: number, totalFrames: number, width: number, height: number) {
-    this.fps = fps;
-    this.totalFrames = totalFrames;
-    this.width = width;
-    this.height = height;
+  //-------------------------------------
+  // Public properties
+  //-------------------------------------
+  public fps: number;
+  public totalFrames: number;
+  public width: number;
+  public height: number;
+
+  //-------------------------------------
+  // Constructor
+  //-------------------------------------
+  constructor(animationId: AnimationName = defaultAnimation.id) {
+    // Set the initial animation ID
+    this.currentAnimationId = animationId;
+
+    // Get animation settings
+    const settings = animationSettings[animationId] || defaultAnimation;
+
+    // Initialize with animation settings
+    this.fps = settings.fps;
+    this.totalFrames = settings.totalFrames;
+    this.width = settings.width || 1080; // Default width if not specified
+    this.height = settings.height || 1920; // Default height if not specified
   }
 
-  // Getter for normalized time (0-1)
+  //-------------------------------------
+  // Animation state getters/setters
+  //-------------------------------------
   get normalizedTime(): number {
     const isManyFrames = this.totalFrames > 1;
 
@@ -57,41 +72,19 @@ export class AnimationController {
     return this._currentFrame / (this.totalFrames - 1);
   }
 
-  // FPS setter
-  setFps(fps: number): void {
-    if (fps > 0 && this.fps !== fps) {
-      this.fps = fps;
-      console.log(`FPS updated to ${fps}`);
-    }
-  }
-
-  // totalFrames setter
-  setTotalFrames(totalFrames: number): void {
-    if (totalFrames > 0 && this.totalFrames !== totalFrames) {
-      this.totalFrames = totalFrames;
-      // Ensure current frame is within bounds after totalFrames change
-      if (this._currentFrame >= this.totalFrames) {
-        this._currentFrame = this.totalFrames - 1;
-        this.notifyFrameChanged();
-      }
-      console.log(`Total frames updated to ${totalFrames}`);
-    }
-  }
-
-  // Frame getter and setter
   get currentFrame(): number {
     return this._currentFrame;
   }
 
   set currentFrame(frame: number) {
     const newFrame = Math.max(0, Math.min(this.totalFrames - 1, frame));
+
     if (this._currentFrame !== newFrame) {
       this._currentFrame = newFrame;
       this.notifyFrameChanged();
     }
   }
 
-  // Playback control
   get isPlaying(): boolean {
     return this._isPlaying;
   }
@@ -109,26 +102,93 @@ export class AnimationController {
     }
   }
 
-  // Sketch code getter and setter
-  get sketchCode(): string {
-    return this._sketchCode;
-  }
+  //-------------------------------------
+  // Animation settings methods
+  //-------------------------------------
+  setTotalFrames(totalFrames: number): void {
+    if (totalFrames > 0 && this.totalFrames !== totalFrames) {
+      this.totalFrames = totalFrames;
+      this._currentFrame = 0;
 
-  set sketchCode(code: string) {
-    if (this._sketchCode !== code) {
-      this._sketchCode = code;
-      this.compileSketchFunction();
-      this.redraw();
+      this.notifyFrameChanged();
+      this.notifySettingsChanged();
     }
   }
 
-  // Add direct animation function setter
   setAnimationFunction(animationFn: AnimationFunction): void {
     this.sketchFunction = animationFn;
     this.redraw();
   }
 
-  // Initialize P5 instance with a container element
+  setAnimation(id: AnimationName = defaultAnimation.id): void {
+    const previousId = this.currentAnimationId;
+    this.currentAnimationId = id;
+
+    const animation = animations[id] || defaultAnimation.function;
+    const settings = animationSettings[id] || defaultAnimation;
+
+    // Stop playback when changing animations
+    if (previousId !== id && this._isPlaying) {
+      this._isPlaying = false;
+    }
+
+    // Update controller with animation settings
+    this.fps = settings.fps;
+    this.totalFrames = settings.totalFrames;
+    this.width = settings.width || 1080;
+    this.height = settings.height || 1920;
+
+    // Reset to frame 0 if animation changed or current frame exceeds bounds
+    if (previousId !== id || this._currentFrame >= this.totalFrames) {
+      this._currentFrame = 0;
+    }
+
+    // Set the animation function
+    this.setAnimationFunction(animation);
+
+    // Reinitialize P5 instance if container exists
+    if (this.containerElement) {
+      if (this.p5Instance) {
+        this.p5Instance.remove();
+        this.p5Instance = null;
+      }
+      this.initializeP5(this.containerElement);
+    }
+
+    // Notify all listeners of state changes
+    this.notifyPlayStateChanged();
+    this.notifyFrameChanged();
+    this.notifySettingsChanged();
+
+    // Force a redraw
+    this.redraw();
+  }
+
+  //-------------------------------------
+  // Animation control methods
+  //-------------------------------------
+  reset(): void {
+    // Always stop playback and reset to frame 0
+    this._isPlaying = false;
+    this._currentFrame = 0;
+
+    // Notify all listeners
+    this.notifyPlayStateChanged();
+    this.notifyFrameChanged();
+
+    // Redraw the canvas
+    this.redraw();
+  }
+
+  redraw(): void {
+    if (this.p5Instance) {
+      this.p5Instance.redraw();
+    }
+  }
+
+  //-------------------------------------
+  // P5.js lifecycle methods
+  //-------------------------------------
   initializeP5(container: HTMLElement): void {
     if (this.p5Instance) {
       this.p5Instance.remove();
@@ -144,31 +204,16 @@ export class AnimationController {
             this.currentAnimationId as keyof typeof animationSettings
           ] || defaultAnimation;
 
-        console.log("Current animation ID", this.currentAnimationId);
-        console.log("Current settings", currentSettings);
-        console.log(
-          "Creating canvas with EXACT dimensions",
-          this.width,
-          this.height
-        );
-
-        // Create canvas with EXACT dimensions
+        // Create canvas with exact dimensions
         p.createCanvas(this.width, this.height);
         p.frameRate(this.fps);
         p.background(0);
 
         // Force pixel density to 1 for exact pixel matching
         p.pixelDensity(1);
-        console.log(
-          `Canvas created with EXACT dimensions ${this.width}x${this.height}`
-        );
-
-        console.log("Current animation ID", this.currentAnimationId);
-        console.log("Current settings", currentSettings);
 
         // Call onSetup function if it exists in the animation settings
         if (currentSettings.onSetup) {
-          console.log(`Running onSetup for ${this.currentAnimationId}`);
           currentSettings.onSetup(
             p,
             this.normalizedTime,
@@ -185,10 +230,6 @@ export class AnimationController {
         // Only redraw if we have a sketch function
         if (this.sketchFunction) {
           try {
-            // Clear canvas
-            // p.clear();
-            // p.background(0);
-
             // Execute sketch function with current animation state
             this.sketchFunction(
               p,
@@ -204,34 +245,34 @@ export class AnimationController {
           this.drawLoadingState(p);
         }
       };
-
-      // Resize canvas when window resizes - NOT NEEDED since we use exact dimensions
-      p.windowResized = () => {
-        // Do nothing - we want to keep the exact dimensions
-        console.log("Window resize ignored - keeping exact canvas dimensions");
-      };
     };
 
     this.p5Instance = new p5(sketch, container);
   }
 
-  // Clean up resources
   destroy(): void {
     this.stopAnimationLoop();
+
     if (this.p5Instance) {
       this.p5Instance.remove();
       this.p5Instance = null;
     }
 
+    // Clear all callbacks
     this.onFrameChangedCallbacks = [];
     this.onPlayStateChangedCallbacks = [];
+    this.onSettingsChangedCallbacks = [];
+
+    // Clear the container element
+    this.containerElement = null;
   }
 
-  // Animation loop control
+  //-------------------------------------
+  // Animation frame loop methods
+  //-------------------------------------
   private startAnimationLoop(): void {
     this.stopAnimationLoop();
-    this.lastUpdateTimeRef = 0;
-    this.animationFrameRef = requestAnimationFrame(this.updateFrame);
+    this.updateFrame();
   }
 
   private stopAnimationLoop(): void {
@@ -241,76 +282,50 @@ export class AnimationController {
     }
   }
 
-  // Frame update logic using requestAnimationFrame
-  private updateFrame = (timestamp: number): void => {
-    if (!this.lastUpdateTimeRef) {
-      this.lastUpdateTimeRef = timestamp;
-    }
+  private updateFrame = (): void => {
+    // Simply advance to the next frame
+    this.currentFrame =
+      this._currentFrame + 1 >= this.totalFrames ? 0 : this._currentFrame + 1;
 
-    const deltaTime = timestamp - this.lastUpdateTimeRef;
-    const frameTime = 1000 / this.fps; // Time per frame in ms
+    // Redraw P5 canvas with new frame
+    this.redraw();
 
-    // Only update if enough time has passed for a frame
-    if (deltaTime >= frameTime) {
-      this.currentFrame =
-        this._currentFrame + 1 >= this.totalFrames ? 0 : this._currentFrame + 1;
-      this.lastUpdateTimeRef = timestamp;
-
-      // Redraw P5 canvas with new frame
-      this.redraw();
-    }
-
+    // Continue the animation loop if still playing using setTimeout
+    // to control frame rate instead of relying on requestAnimationFrame timing
     if (this._isPlaying) {
-      this.animationFrameRef = requestAnimationFrame(this.updateFrame);
+      const frameDelay = 1000 / this.fps; // Time between frames in ms
+      setTimeout(() => {
+        this.animationFrameRef = requestAnimationFrame(this.updateFrame);
+      }, frameDelay);
     }
   };
 
-  // Redraw the P5 canvas
-  redraw(): void {
-    if (this.p5Instance) {
-      this.p5Instance.redraw();
-    }
+  //-------------------------------------
+  // P5 helper methods
+  //-------------------------------------
+  private drawErrorState(p: p5, error: unknown): void {
+    p.background(255, 0, 0);
+    p.fill(255);
+    p.textSize(24);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text(
+      `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      p.width / 2,
+      p.height / 2
+    );
   }
 
-  // Compile sketch code to function
-  private compileSketchFunction(): void {
-    try {
-      this.sketchFunction = new Function(
-        "p",
-        "normalizedTime",
-        "frameNumber",
-        "totalFrames",
-        this._sketchCode
-      ) as AnimationFunction;
-    } catch (error) {
-      console.error("Error compiling sketch code:", error);
-      this.sketchFunction = null;
-    }
+  private drawLoadingState(p: p5): void {
+    p.background(0);
+    p.fill(255);
+    p.textSize(24);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text("Loading sketch...", p.width / 2, p.height / 2);
   }
 
-  // Reset animation to first frame
-  reset(): void {
-    // Stop playback first
-    const wasPlaying = this._isPlaying;
-    if (wasPlaying) {
-      this._isPlaying = false;
-      this.notifyPlayStateChanged();
-    }
-
-    // Reset frame to 0
-    const currentFrameChanged = this._currentFrame !== 0;
-    this._currentFrame = 0;
-    
-    // Only notify if the frame actually changed
-    if (currentFrameChanged) {
-      this.notifyFrameChanged();
-    }
-    
-    // Redraw with the new frame
-    this.redraw();
-  }
-
-  // Register for frame change notifications
+  //-------------------------------------
+  // Observer pattern methods
+  //-------------------------------------
   onFrameChanged(
     callback: (frame: number, normalizedTime: number) => void
   ): () => void {
@@ -324,7 +339,6 @@ export class AnimationController {
     };
   }
 
-  // Register for play state change notifications
   onPlayStateChanged(callback: (isPlaying: boolean) => void): () => void {
     this.onPlayStateChangedCallbacks.push(callback);
 
@@ -335,13 +349,14 @@ export class AnimationController {
     };
   }
 
-  // Register for settings change notifications
-  onSettingsChanged(callback: (
-    fps: number, 
-    totalFrames: number, 
-    width: number, 
-    height: number
-  ) => void): () => void {
+  onSettingsChanged(
+    callback: (
+      fps: number,
+      totalFrames: number,
+      width: number,
+      height: number
+    ) => void
+  ): () => void {
     this.onSettingsChangedCallbacks.push(callback);
 
     // Return unsubscribe function
@@ -352,132 +367,21 @@ export class AnimationController {
     };
   }
 
-  // Notify all subscribers of frame change
   private notifyFrameChanged(): void {
     for (const callback of this.onFrameChangedCallbacks) {
       callback(this._currentFrame, this.normalizedTime);
     }
   }
 
-  // Notify all subscribers of play state change
   private notifyPlayStateChanged(): void {
     for (const callback of this.onPlayStateChangedCallbacks) {
       callback(this._isPlaying);
     }
   }
 
-  // Notify all subscribers of settings change
   private notifySettingsChanged(): void {
     for (const callback of this.onSettingsChangedCallbacks) {
       callback(this.fps, this.totalFrames, this.width, this.height);
     }
   }
-
-  // Helper method to display error state
-  private drawErrorState(p: p5, error: unknown): void {
-    p.background(255, 0, 0);
-    p.fill(255);
-    p.textSize(24);
-    p.textAlign(p.CENTER, p.CENTER);
-    p.text(
-      `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
-      p.width / 2,
-      p.height / 2
-    );
-  }
-
-  // Helper method to display loading state
-  private drawLoadingState(p: p5): void {
-    p.background(0);
-    p.fill(255);
-    p.textSize(24);
-    p.textAlign(p.CENTER, p.CENTER);
-    p.text("Loading sketch...", p.width / 2, p.height / 2);
-  }
-
-  // Set animation and update settings
-  setAnimation(id: AnimationName = defaultAnimation.id): void {
-    console.log(`Setting animation to: ${id}`);
-    
-    const previousId = this.currentAnimationId;
-    this.currentAnimationId = id;
-    
-    const animation = animations[id] || defaultAnimation.function;
-    const settings = animationSettings[id] || defaultAnimation;
-    
-    // Store old values to detect changes
-    const oldFps = this.fps;
-    const oldTotalFrames = this.totalFrames;
-    const oldFrame = this._currentFrame;
-    const wasPlaying = this._isPlaying;
-
-    // Stop playback when changing animations to avoid unexpected behavior
-    if (previousId !== id && this._isPlaying) {
-      this._isPlaying = false;
-    }
-
-    if (settings) {
-      // Update controller with animation settings
-      this.fps = settings.fps;
-      this.totalFrames = settings.totalFrames;
-      this.width = settings.width;
-      this.height = settings.height;
-
-      console.log(
-        `Using animation settings: fps=${this.fps}, totalFrames=${this.totalFrames}, width=${this.width}, height=${this.height}`
-      );
-      
-      // When changing animation, always reset to frame 0
-      if (previousId !== id) {
-        this._currentFrame = 0;
-      } 
-      // Otherwise just ensure it's within bounds
-      else if (this._currentFrame >= this.totalFrames) {
-        this._currentFrame = 0;
-      }
-    }
-
-    if (animation) {
-      this.setAnimationFunction(animation);
-    }
-
-    // If p5 instance exists, properly destroy and recreate it with the new animation
-    if (this.containerElement) {
-      if (this.p5Instance) {
-        console.log("Removing existing P5 instance");
-        this.p5Instance.remove();
-        this.p5Instance = null;
-      }
-      
-      console.log("Reinitializing P5 instance with new animation");
-      this.initializeP5(this.containerElement);
-    } else {
-      console.warn("No container element available to reinitialize P5");
-    }
-
-    // Always notify listeners of any state changes
-    if (wasPlaying !== this._isPlaying) {
-      this.notifyPlayStateChanged();
-    }
-    
-    if (oldFrame !== this._currentFrame || previousId !== id) {
-      this.notifyFrameChanged();
-    }
-
-    // Force a redraw after animation changes
-    this.redraw();
-
-    // Notify settings change listeners
-    this.notifySettingsChanged();
-  }
 }
-
-// Create a global singleton instance
-export const createAnimationController = (
-  fps: number,
-  totalFrames: number,
-  width: number,
-  height: number
-): AnimationController => {
-  return new AnimationController(fps, totalFrames, width, height);
-};

@@ -11,12 +11,7 @@ export const AnimationProvider = ({ children }: AnimationProviderProps) => {
   const { selectedAnimation, setSelectedAnimation } = useAnimationStore();
 
   const [controller, setController] = useState<AnimationController>(() => {
-    const controller = new AnimationController(
-      DEFAULT_SETTINGS.fps,
-      DEFAULT_SETTINGS.totalFrames,
-      DEFAULT_SETTINGS.width,
-      DEFAULT_SETTINGS.height
-    );
+    const controller = new AnimationController(DEFAULT_SETTINGS.id);
 
     controller.setAnimation(DEFAULT_ANIMATION);
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 import {
   Carousel,
   CarouselContent,
@@ -45,7 +45,7 @@ export default function PlayerPanels({
         {[0, 1].map((index) => (
           <button
             key={index}
-            className={cn(
+            className={classNames(
               "rounded-full transition-all h-[4px]",
               activeSlide === index
                 ? "bg-white w-[12px]"
