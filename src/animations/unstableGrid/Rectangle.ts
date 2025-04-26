@@ -177,27 +177,26 @@ export const defaultRectangleRenderer: RectangleRenderFunction = (
 ) => {
   // Настройка параметров рендеринга
   p5Instance.noFill();
-
+  
   // Рисуем диагонали
   p5Instance.stroke(255, 255, 255, 80); // Диагонали белым цветом
   p5Instance.strokeWeight(0.5);
-
+  
   // Диагональ 1: верхний левый - нижний правый
   p5Instance.line(vertices[0].x, vertices[0].y, vertices[2].x, vertices[2].y);
-
+  
   // Диагональ 2: верхний правый - нижний левый
   p5Instance.line(vertices[1].x, vertices[1].y, vertices[3].x, vertices[3].y);
-
-  // Рисуем круг в точке пересечения диагоналей
+  
+  // Рисуем круги в вершинах четырехугольника
   p5Instance.fill(color.r, color.g, color.b);
   p5Instance.noStroke();
-
-  // Размер круга зависит от прогресса
-  const pulseSize = 3 + Math.sin(progress * 10) * 2;
-  p5Instance.ellipse(
-    intersectionPoint.x,
-    intersectionPoint.y,
-    pulseSize,
-    pulseSize
-  );
+  
+  // Радиус круга: 5 пикселей (половина от прошлого размера)
+  const circleRadius = 5;
+  
+  // Рисуем круг в каждой вершине
+  for (const vertex of vertices) {
+    p5Instance.ellipse(vertex.x, vertex.y, circleRadius * 2, circleRadius * 2);
+  }
 };
