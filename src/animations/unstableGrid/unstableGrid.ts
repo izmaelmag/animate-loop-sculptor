@@ -11,7 +11,7 @@ import {
   RectangleRenderFunction,
   RectangleMetadata,
 } from "./Rectangle";
-import { generateAlphabetTextures } from "@/utils/textureUtils"; // Import the texture generator
+import { generateAlphabetTextures } from "../../utils/textureUtils"; // Import the texture generator
 
 // Global variable to hold the generated textures
 let alphabetTextures: Record<string, p5.Graphics> = {};
@@ -22,13 +22,13 @@ const WIDTH = 1080;
 const HEIGHT = 1920;
 const DURATION = 60;
 
-const columnsCount = 6;
+const columnsCount = 12;
 // Number of cells in each column
-const cellsCount = 8;
+const cellsCount = 16;
 // Amplitude of cell y-movement
 const cellAmplitude = WIDTH / columnsCount;
 // Noise offset between columns (0 = synchronized, higher = more different)
-const columnNoiseOffset = 0.7;
+const columnNoiseOffset = 0.1;
 
 // Noise control parameters
 // Frequency for column positioning (lower = smoother transitions)
@@ -64,15 +64,17 @@ const rectangles: Rectangle[] = [];
 // --- New Textured Rectangle Renderer ---
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
-  _normalizedTime: number, // Not used directly here, but part of the signature
-  _lines: Line[], // Not used directly here
-  _intersection: Point | null, // Not used directly here
-  vertices: Point[], // We need the vertices
-  _color: Color, // Not used, we use the texture
-  metadata: RectangleMetadata | null,
-  rectIndex?: number // Pass rectangle index for texture selection
+  _normalizedTime: number,
+  _lines: Line[],
+  _intersection: Point | null,
+  vertices: Point[],
+  _color: Color,
+  metadata: RectangleMetadata | null
 ): void => {
-  if (vertices.length !== 4 || !rectIndex) {
+  // Get index from metadata
+  const rectIndex = metadata?.rectIndex as number | undefined; 
+
+  if (vertices.length !== 4 || rectIndex === undefined) { // Check rectIndex from metadata
     return; // Need 4 vertices and index to draw a quad
   }
 
@@ -84,7 +86,7 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   if (texture) {
     p.push();
     p.textureMode(p.NORMAL); // Use normalized UV coords (0 to 1)
-    p.texture(texture); 
+    p.texture(texture);
     p.noStroke();
 
     // Begin drawing the shape
@@ -456,15 +458,16 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
   rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     if (metadata) {
+      // Add index to metadata before calling
+      metadata.rectIndex = index; 
       renderRectangle(
-        p, // Инстанс p5
-        normalizedTime, // Прогресс анимации
-        rect.getLines(), // Линии четырехугольника
-        rect.getDiagonalIntersection(), // Точка пересечения диагоналей
-        rect.getVertices(), // Вершины четырехугольника
-        rect.getColor(), // Цвет четырехугольника (не используется в textured renderer)
-        metadata, // Метаданные с индексами
-        index // Передаем индекс для выбора текстуры
+        p, 
+        normalizedTime, 
+        rect.getLines(), 
+        rect.getDiagonalIntersection(), 
+        rect.getVertices(), 
+        rect.getColor(), 
+        metadata // Metadata now includes rectIndex
       );
     }
   });
@@ -480,7 +483,10 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
 
   setupLines(); // This now also calls setupRectangles internally
 
-  console.log("Setup complete. Textures generated:", Object.keys(alphabetTextures).length);
+  console.log(
+    "Setup complete. Textures generated:",
+    Object.keys(alphabetTextures).length
+  );
   console.log("Rectangles created:", rectangles.length);
 };
 

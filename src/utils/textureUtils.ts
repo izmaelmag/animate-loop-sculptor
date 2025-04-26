@@ -26,6 +26,7 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
     pg1.fill(255);
     pg1.textAlign(p.CENTER, p.CENTER);
     pg1.textSize(size * 0.85);
+    pg1.textFont('Courier New');
     pg1.textStyle(p.BOLD);
     pg1.text(letter, size / 2, size / 2);
 
