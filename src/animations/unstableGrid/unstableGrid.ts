@@ -134,14 +134,22 @@ const renderTexturedRectangle: RectangleRenderFunction = (
     }
 
     p.textureMode(p.NORMAL); 
+    p.textureWrap(p.CLAMP);
     p.texture(texture);
     p.noStroke();
 
+    // Adjust UVs slightly inward to avoid edge sampling issues
+    const UV_EPSILON = 0.01; // Increased inset value slightly
+
     p.beginShape();
-    p.vertex(vertices[0].x, vertices[0].y, 0, 0); 
-    p.vertex(vertices[1].x, vertices[1].y, 1, 0); 
-    p.vertex(vertices[2].x, vertices[2].y, 1, 1); 
-    p.vertex(vertices[3].x, vertices[3].y, 0, 1); 
+    // Top-Left vertex -> UV (epsilon, epsilon)
+    p.vertex(vertices[0].x, vertices[0].y, UV_EPSILON, UV_EPSILON);
+    // Top-Right vertex -> UV (1 - epsilon, epsilon)
+    p.vertex(vertices[1].x, vertices[1].y, 1 - UV_EPSILON, UV_EPSILON);
+    // Bottom-Right vertex -> UV (1 - epsilon, 1 - epsilon)
+    p.vertex(vertices[2].x, vertices[2].y, 1 - UV_EPSILON, 1 - UV_EPSILON);
+    // Bottom-Left vertex -> UV (epsilon, 1 - epsilon)
+    p.vertex(vertices[3].x, vertices[3].y, UV_EPSILON, 1 - UV_EPSILON);
     p.endShape(p.CLOSE);
     
     p.noTint(); // Reset tint
@@ -520,7 +528,7 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
   p.frameRate(FPS);
 
   // --- Calculate Optimal Texture Size ---
-  const BASE_TEXTURE_SIZE = 256; // Base size for 1x density
+  const BASE_TEXTURE_SIZE = 384; // Increased base size
   const displayDensity = p.pixelDensity();
   const finalTextureSize = BASE_TEXTURE_SIZE * displayDensity;
   console.log(`Display density: ${displayDensity}, Calculated texture size: ${finalTextureSize}x${finalTextureSize}`);

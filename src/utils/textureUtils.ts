@@ -22,7 +22,7 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
     }
 
     pg1.pixelDensity(1);
-    pg1.background(0, 0);
+    pg1.background(255, 0);
     pg1.fill(255);
     pg1.textAlign(p.CENTER, p.CENTER);
     pg1.textSize(size * 0.85);
@@ -83,7 +83,7 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
         return null;
     }
     pg3.pixelDensity(1);
-    pg3.background(0, 0); // Final texture needs transparent background
+    pg3.background(255, 0);
 
     // 4. Copy and Stretch the cropped letter directly onto the final buffer
     // Source rectangle (from pg1): (minX, minY, actualWidth, actualHeight)
