@@ -10,11 +10,21 @@ const DURATION = 60;
 
 const columnsCount = 6;
 // Number of cells in each column
-const cellsCount = 12;
+const cellsCount = 8;
 // Amplitude of cell y-movement
-const cellAmplitude = 40;
+const cellAmplitude = WIDTH / columnsCount;
 // Noise offset between columns (0 = synchronized, higher = more different)
 const columnNoiseOffset = 0.7;
+// Text size for cell labels
+const cellTextSize = 14;
+
+// Noise control parameters
+// Frequency for column positioning (lower = smoother transitions)
+const columnNoiseFrequency = 0.3;
+// Speed of column movement (lower = slower changes)
+const columnNoiseSpeed = 10;
+// Maximum displacement as a fraction of column width
+const columnDisplacementFactor = 0.2;
 
 // Create a single noise generator for consistent values
 const noise2D = createNoise2D();
@@ -52,6 +62,10 @@ function setupLines() {
     column.setCellAmplitude(cellAmplitude);
     column.setNoiseOffset(columnNoiseOffset);
 
+    // You can set additional cell noise parameters here
+    column.setCellNoiseFrequency(0.3);
+    column.setCellNoiseSpeed(10);
+
     columns.push(column);
   }
 }
@@ -67,13 +81,28 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
   for (let i = 1; i < linePositions.length - 1; i++) {
     if (isActive) {
       // Use noise to get a value between -1 and 1
-      const noiseValue = noise2D(i * 0.5, normalizedTime * 20) * 2 - 1;
+      const noiseValue =
+        noise2D(i * columnNoiseFrequency, normalizedTime * columnNoiseSpeed) *
+          2 -
+        1;
 
       // Maximum displacement amount (% of the original spacing)
-      const maxDisplacement = (WIDTH / columnsCount) * 0.4;
+      const maxDisplacement = (WIDTH / columnsCount) * columnDisplacementFactor;
 
       // Calculate new position with displacement
-      linePositions[i] = originalPositions[i] + noiseValue * maxDisplacement;
+      let newPosition = originalPositions[i] + noiseValue * maxDisplacement;
+
+      // Ensure minimum column width (16px)
+      const minLeftX = linePositions[i - 1] + 96; // minimum 96px from previous line
+      const maxRightX =
+        i < linePositions.length - 1
+          ? linePositions[i + 1] - 96 // minimum 96px from next line
+          : WIDTH; // or right edge
+
+      // Clamp the new position to maintain minimum width
+      newPosition = Math.max(minLeftX, Math.min(maxRightX, newPosition));
+
+      linePositions[i] = newPosition;
     } else {
       // Reset to original position for start of animation
       linePositions[i] = originalPositions[i];
@@ -98,28 +127,38 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
   for (let i = 0; i < columns.length; i++) {
     const column = columns[i];
 
-    // Draw vertical column boundaries
-    p.line(linePositions[i], 0, linePositions[i], HEIGHT);
+    // Draw vertical column boundaries (skip leftmost and rightmost)
+    if (i > 0 && i < columns.length) {
+      p.line(linePositions[i], 0, linePositions[i], HEIGHT);
+    }
 
     // Draw horizontal cell boundaries
     for (let j = 0; j < cellsCount; j++) {
       if (column.cells && column.cells[j]) {
         const cell = column.cells[j];
-        // Draw bottom boundary of each cell (except the last one which is at the bottom edge)
-        if (j < cellsCount - 1) {
+        // Draw bottom boundary of each cell (except the first and last ones)
+        if (j > 0 && j < cellsCount - 1) {
           p.line(cell.leftX, cell.bottomY, cell.rightX, cell.bottomY);
         }
+
+        // Draw cell dimensions
+        p.fill(255);
+        p.noStroke();
+        p.textSize(cellTextSize);
+        p.textAlign(p.CENTER, p.CENTER);
+
+        // Calculate cell dimensions for display
+        const cellWidth = Math.round(cell.width);
+        const cellHeight = Math.round(cell.height);
+
+        // Draw width on top line
+        p.text(`W: ${cellWidth}`, cell.centerX, cell.centerY - cellTextSize);
+
+        // Draw height on bottom line
+        p.text(`H: ${cellHeight}`, cell.centerX, cell.centerY + cellTextSize);
       }
     }
   }
-
-  // Draw the last vertical line (rightmost boundary)
-  p.line(
-    linePositions[linePositions.length - 1],
-    0,
-    linePositions[linePositions.length - 1],
-    HEIGHT
-  );
 };
 
 const setupAnimation: AnimationFunction = (p: p5): void => {

@@ -9,6 +9,10 @@ export class Column {
   private cellAmplitude: number = 40;
   // Offset for the noise function to make columns move differently
   private noiseOffset: number = 0;
+  // Controls the frequency of noise in vertical cell movement
+  private cellNoiseFrequency: number = 0.5;
+  // Controls the speed of noise in vertical cell movement
+  private cellNoiseSpeed: number = 20;
   private noise = createNoise2D();
 
   constructor(
@@ -47,6 +51,16 @@ export class Column {
   // Setter for noise offset
   public setNoiseOffset(offset: number) {
     this.noiseOffset = offset;
+  }
+  
+  // Setter for cell noise frequency
+  public setCellNoiseFrequency(frequency: number) {
+    this.cellNoiseFrequency = frequency;
+  }
+  
+  // Setter for cell noise speed
+  public setCellNoiseSpeed(speed: number) {
+    this.cellNoiseSpeed = speed;
   }
 
   private _createCells() {
@@ -88,8 +102,8 @@ export class Column {
         // Use column index to create different patterns across columns
         const noiseValue =
           this.noise(
-            i * 0.5 + this.noiseOffset * this.columnIndex,
-            this.globalProgress * 20
+            i * this.cellNoiseFrequency + this.noiseOffset * this.columnIndex,
+            this.globalProgress * this.cellNoiseSpeed
           ) *
             2 -
           1; // Range -1 to 1
@@ -98,7 +112,20 @@ export class Column {
         const originalBottomY = this.originalCellPositions[i * 2 + 1];
 
         // Apply noise to bottom Y position
-        const newBottomY = originalBottomY + noiseValue * this.cellAmplitude;
+        let newBottomY = originalBottomY + noiseValue * this.cellAmplitude;
+        
+        // Ensure minimum cell height (16px)
+        // Minimum position to maintain 16px height from top of current cell
+        const minBottomY = cell.topY + 96;
+        
+        // Maximum position to maintain 16px height for next cell
+        const maxBottomY =
+          i < this.cells.length - 2
+            ? this.cells[i + 2].topY - 96 // Next cell must have 96px height
+            : 1920 - 96; // For the last cell before bottom
+        
+        // Clamp the new bottom position
+        newBottomY = Math.max(minBottomY, Math.min(maxBottomY, newBottomY));
 
         // Update this cell's bottom and next cell's top
         cell.resize(this.leftX, this.rightX, cell.topY, newBottomY);
