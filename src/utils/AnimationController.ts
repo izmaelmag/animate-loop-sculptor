@@ -204,8 +204,8 @@ export class AnimationController {
             this.currentAnimationId as keyof typeof animationSettings
           ] || defaultAnimation;
 
-        // Create canvas with exact dimensions
-        p.createCanvas(this.width, this.height);
+        // Create canvas with exact dimensions and WEBGL renderer
+        p.createCanvas(this.width, this.height, p.WEBGL);
         p.frameRate(this.fps);
         p.background(0);
 

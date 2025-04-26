@@ -9,7 +9,13 @@ import {
   Color,
   defaultRectangleRenderer,
   RectangleRenderFunction,
+  RectangleMetadata,
 } from "./Rectangle";
+import { generateAlphabetTextures } from "@/utils/textureUtils"; // Import the texture generator
+
+// Global variable to hold the generated textures
+let alphabetTextures: Record<string, p5.Graphics> = {};
+const CHARS_FOR_TEXTURES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Same chars as in generator
 
 const FPS = 60;
 const WIDTH = 1080;
@@ -55,8 +61,62 @@ const columns: Column[] = [];
 // Store rectangles for inner grid
 const rectangles: Rectangle[] = [];
 
-// Функция для рендеринга четырехугольников
-const renderRectangle: RectangleRenderFunction = defaultRectangleRenderer;
+// --- New Textured Rectangle Renderer ---
+const renderTexturedRectangle: RectangleRenderFunction = (
+  p: p5,
+  _normalizedTime: number, // Not used directly here, but part of the signature
+  _lines: Line[], // Not used directly here
+  _intersection: Point | null, // Not used directly here
+  vertices: Point[], // We need the vertices
+  _color: Color, // Not used, we use the texture
+  metadata: RectangleMetadata | null,
+  rectIndex?: number // Pass rectangle index for texture selection
+): void => {
+  if (vertices.length !== 4 || !rectIndex) {
+    return; // Need 4 vertices and index to draw a quad
+  }
+
+  // Select texture based on rectangle index
+  const charIndex = rectIndex % CHARS_FOR_TEXTURES.length;
+  const letter = CHARS_FOR_TEXTURES[charIndex];
+  const texture = alphabetTextures[letter];
+
+  if (texture) {
+    p.push();
+    p.textureMode(p.NORMAL); // Use normalized UV coords (0 to 1)
+    p.texture(texture); 
+    p.noStroke();
+
+    // Begin drawing the shape
+    p.beginShape();
+
+    // Map vertices to UV coordinates (Counter-clockwise order)
+    // Top-Left vertex -> UV (0, 0)
+    p.vertex(vertices[0].x, vertices[0].y, 0, 0);
+    // Top-Right vertex -> UV (1, 0)
+    p.vertex(vertices[1].x, vertices[1].y, 1, 0);
+    // Bottom-Right vertex -> UV (1, 1)
+    p.vertex(vertices[2].x, vertices[2].y, 1, 1);
+    // Bottom-Left vertex -> UV (0, 1)
+    p.vertex(vertices[3].x, vertices[3].y, 0, 1);
+
+    p.endShape(p.CLOSE);
+    p.pop();
+  } else {
+    // Optional: Draw a placeholder if texture is missing
+    // p.fill(255, 0, 0); // Red placeholder
+    // p.noStroke();
+    // p.quad(
+    //   vertices[0].x, vertices[0].y,
+    //   vertices[1].x, vertices[1].y,
+    //   vertices[2].x, vertices[2].y,
+    //   vertices[3].x, vertices[3].y
+    // );
+  }
+};
+
+// Use the new textured renderer instead of the default one
+const renderRectangle: RectangleRenderFunction = renderTexturedRectangle;
 
 function setupLines() {
   // Clear any existing data
@@ -336,7 +396,12 @@ function updateRectangles() {
 }
 
 const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
-  p.background(0);
+  p.background(0); // Clear background each frame
+
+  // --- BEGIN WEBGL Coordinate System Adjustment ---
+  // Translate the coordinate system so (0,0) is the top-left corner
+  p.translate(-p.width / 2, -p.height / 2);
+  // --- END WEBGL Coordinate System Adjustment ---
 
   // Reduce delay to start animation almost immediately
   const isActive = normalizedTime > 0.001;
@@ -365,7 +430,7 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
           : WIDTH; // or right edge
 
       // Clamp the new position to maintain minimum width
-      newPosition = Math.max(minLeftX, Math.min(maxRightX, newPosition));
+      newPosition = p.max(minLeftX, p.min(maxRightX, newPosition)); // Use p.max/p.min
 
       linePositions[i] = newPosition;
     } else {
@@ -387,8 +452,8 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
   // Update rectangles based on current cell centers
   updateRectangles();
 
-  // Рендеринг всех четырехугольников
-  for (const rect of rectangles) {
+  // Рендеринг всех четырехугольников с использованием renderRectangle (который теперь renderTexturedRectangle)
+  rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     if (metadata) {
       renderRectangle(
@@ -397,18 +462,26 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
         rect.getLines(), // Линии четырехугольника
         rect.getDiagonalIntersection(), // Точка пересечения диагоналей
         rect.getVertices(), // Вершины четырехугольника
-        rect.getColor(), // Цвет четырехугольника
-        metadata // Метаданные с индексами
+        rect.getColor(), // Цвет четырехугольника (не используется в textured renderer)
+        metadata, // Метаданные с индексами
+        index // Передаем индекс для выбора текстуры
       );
     }
-  }
+  });
 };
 
 const setupAnimation: AnimationFunction = (p: p5): void => {
   p.background(0);
   p.frameRate(FPS);
 
-  setupLines();
+  // Generate alphabet textures ONCE during setup
+  // Assuming the p5 instance 'p' is already in WEBGL mode here
+  alphabetTextures = generateAlphabetTextures(p, 256); // Generate 256x256 textures
+
+  setupLines(); // This now also calls setupRectangles internally
+
+  console.log("Setup complete. Textures generated:", Object.keys(alphabetTextures).length);
+  console.log("Rectangles created:", rectangles.length);
 };
 
 // Now declare the settings after animation is defined
@@ -422,5 +495,5 @@ export const settings: AnimationSettings = {
   totalFrames: DURATION * FPS,
 
   function: animation,
-  onSetup: setupAnimation,
+  onSetup: setupAnimation, // Ensure this setup function is used
 };
