@@ -1,3 +1,5 @@
+import { findQuadDiagonalIntersection } from "./utils";
+
 // Структура для представления точки
 export interface Point {
   x: number;
@@ -27,6 +29,17 @@ export interface RectangleMetadata {
   isEdgeRect?: boolean; // Флаг, указывающий является ли прямоугольник краевым
   [key: string]: number | boolean | undefined; // Разрешенные типы для дополнительных свойств
 }
+
+// Тип рендер-функции для четырехугольника
+export type RectangleRenderFunction = (
+  p5Instance: any, // Инстанс p5.js (исправить на конкретный тип, когда будем использовать строгую типизацию)
+  progress: number, // Общий прогресс анимации
+  lines: Line[], // Линии четырехугольника
+  intersectionPoint: Point, // Точка пересечения диагоналей, вычисленная методом getDiagonalIntersection()
+  vertices: Point[], // Вершины четырехугольника
+  color: Color, // Цвет четырехугольника
+  metadata: RectangleMetadata // Метаданные четырехугольника
+) => void;
 
 export class Rectangle {
   // Четыре вершины четырехугольника
@@ -106,7 +119,7 @@ export class Rectangle {
     return this.metadata;
   }
 
-  // Получить центр четырехугольника
+  // Получить центр четырехугольника (среднее арифметическое всех вершин)
   public getCenter(): Point {
     const xSum = this.vertices.reduce((sum, point) => sum + point.x, 0);
     const ySum = this.vertices.reduce((sum, point) => sum + point.y, 0);
@@ -115,6 +128,30 @@ export class Rectangle {
       x: xSum / 4,
       y: ySum / 4,
     };
+  }
+
+  // Получить точку пересечения диагоналей четырехугольника
+  public getDiagonalIntersection(): Point {
+    // Используем точную функцию нахождения пересечения диагоналей
+    const intersection = findQuadDiagonalIntersection(this.vertices);
+
+    // Если пересечения нет (что маловероятно для обычных четырехугольников),
+    // используем запасной метод - центр четырехугольника
+    if (intersection === null) {
+      return this.getCenter();
+    }
+
+    return intersection;
+  }
+
+  // Получить диагонали четырехугольника
+  public getDiagonals(): Line[] {
+    return [
+      // Диагональ от верхнего левого до нижнего правого
+      { start: this.vertices[0], end: this.vertices[2] },
+      // Диагональ от верхнего правого до нижнего левого
+      { start: this.vertices[1], end: this.vertices[3] },
+    ];
   }
 
   // Генерировать случайный цвет
@@ -127,3 +164,40 @@ export class Rectangle {
     };
   }
 }
+
+// Стандартная функция рендеринга с диагоналями и центральным кругом
+export const defaultRectangleRenderer: RectangleRenderFunction = (
+  p5Instance,
+  progress,
+  lines,
+  intersectionPoint, // Точка пересечения диагоналей, вычисленная методом getDiagonalIntersection()
+  vertices,
+  color,
+  metadata
+) => {
+  // Настройка параметров рендеринга
+  p5Instance.noFill();
+
+  // Рисуем диагонали
+  p5Instance.stroke(255, 255, 255, 80); // Диагонали белым цветом
+  p5Instance.strokeWeight(0.5);
+
+  // Диагональ 1: верхний левый - нижний правый
+  p5Instance.line(vertices[0].x, vertices[0].y, vertices[2].x, vertices[2].y);
+
+  // Диагональ 2: верхний правый - нижний левый
+  p5Instance.line(vertices[1].x, vertices[1].y, vertices[3].x, vertices[3].y);
+
+  // Рисуем круг в точке пересечения диагоналей
+  p5Instance.fill(color.r, color.g, color.b);
+  p5Instance.noStroke();
+
+  // Размер круга зависит от прогресса
+  const pulseSize = 3 + Math.sin(progress * 10) * 2;
+  p5Instance.ellipse(
+    intersectionPoint.x,
+    intersectionPoint.y,
+    pulseSize,
+    pulseSize
+  );
+};
