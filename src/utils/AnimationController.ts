@@ -197,7 +197,12 @@ export class AnimationController {
     this.containerElement = container;
 
     const sketch = (p: p5) => {
+      // --- PRELOAD PHASE (Removed) ---
+      // p.preload = () => { ... };
+
+      // --- SETUP PHASE ---
       p.setup = () => {
+        console.log("p5 setup phase starting...");
         // Get animation settings for current animation
         const currentSettings =
           animationSettings[
@@ -207,23 +212,27 @@ export class AnimationController {
         // Create canvas with exact dimensions and WEBGL renderer
         p.createCanvas(this.width, this.height, p.WEBGL);
         p.frameRate(this.fps);
-        p.background(0);
+        // p.background(0); // Background is set in draw
 
         // Force pixel density to 1 for exact pixel matching
         p.pixelDensity(1);
 
         // Call onSetup function if it exists in the animation settings
         if (currentSettings.onSetup) {
+          console.log(`Calling onSetup for animation: ${this.currentAnimationId}`);
           currentSettings.onSetup(
             p,
             this.normalizedTime,
             this._currentFrame,
             this.totalFrames
           );
+        } else {
+            console.log(`No onSetup function for animation: ${this.currentAnimationId}`);
         }
 
         // We don't want P5's automatic animation loop - we'll control it
         p.noLoop();
+        console.log("p5 setup phase finished.");
       };
 
       p.draw = () => {

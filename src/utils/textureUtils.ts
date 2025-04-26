@@ -26,8 +26,7 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
     pg1.fill(255);
     pg1.textAlign(p.CENTER, p.CENTER);
     pg1.textSize(size * 0.85);
-    pg1.textFont('Courier New');
-    pg1.textStyle(p.BOLD);
+    pg1.textFont('Cascadia Code');
     pg1.text(letter, size / 2, size / 2);
 
     // 2. Find Bounding Box (without extra padding)
@@ -111,7 +110,6 @@ export function generateAlphabetTextures(p: p5, textureSize: number = 256): Reco
     const startTime = p.millis();
 
     for (const char of chars) {
-        // console.log(`Generating: ${char}`);
         const texture = createLetterTexture(p, char, textureSize);
         if (texture) {
             textures[char] = texture;

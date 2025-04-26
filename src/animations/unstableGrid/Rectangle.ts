@@ -1,4 +1,5 @@
 import { findQuadDiagonalIntersection } from "./utils";
+import p5 from 'p5'; // Import p5 type
 
 // Структура для представления точки
 export interface Point {
@@ -27,12 +28,15 @@ export interface RectangleMetadata {
   colBottomRight: number;
   rowBottomRight: number;
   isEdgeRect?: boolean; // Флаг, указывающий является ли прямоугольник краевым
-  [key: string]: number | boolean | undefined; // Разрешенные типы для дополнительных свойств
+  assignedColor?: string; // Explicitly allow assignedColor as string
+  rectIndex?: number; // Add rectIndex explicitly as well
+  // Allow other potential properties (string, number, boolean)
+  [key: string]: number | boolean | string | undefined; // Разрешенные типы для дополнительных свойств
 }
 
 // Тип рендер-функции для четырехугольника
 export type RectangleRenderFunction = (
-  p5Instance: any, // Инстанс p5.js (исправить на конкретный тип, когда будем использовать строгую типизацию)
+  p5Instance: p5, // Use specific p5 type instead of any
   progress: number, // Общий прогресс анимации
   lines: Line[], // Линии четырехугольника
   intersectionPoint: Point, // Точка пересечения диагоналей, вычисленная методом getDiagonalIntersection()

@@ -17,6 +17,7 @@ export interface AnimationSettings {
   width?: number;
   height?: number;
   function: AnimationFunction;
+  preload?: AnimationFunction;
   onSetup?: AnimationFunction;
   onUpdate?: AnimationFunction;
 }

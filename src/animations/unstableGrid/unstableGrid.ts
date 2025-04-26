@@ -11,7 +11,18 @@ import {
   RectangleRenderFunction,
   RectangleMetadata,
 } from "./Rectangle";
-import { generateAlphabetTextures } from "../../utils/textureUtils"; // Import the texture generator
+import { generateAlphabetTextures } from "../../utils/textureUtils"; // Corrected path
+
+// --- Font Loading ---
+// Remove preload logic - rely on CSS loading via index.html
+// let cascadiaFont: p5.Font;
+// const CASCADIA_CODE_URL = '...'; 
+// function preloadAnimation(p: p5) { ... }
+
+// --- Color Definitions ---
+const DARK_PURPLE = "#6A0DAD";
+const LIME_GREEN = "#32CD32";
+const COLOR_PALETTE: string[] = [DARK_PURPLE, LIME_GREEN];
 
 // Global variable to hold the generated textures
 let alphabetTextures: Record<string, p5.Graphics> = {};
@@ -20,23 +31,23 @@ const CHARS_FOR_TEXTURES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Same chars
 const FPS = 60;
 const WIDTH = 1080;
 const HEIGHT = 1920;
-const DURATION = 60;
+const DURATION = 30;
 
-const columnsCount = 12;
+const columnsCount = 8; // 8 columns -> 9 column lines -> 9 quads horizontally
 // Number of cells in each column
-const cellsCount = 16;
-// Amplitude of cell y-movement
-const cellAmplitude = WIDTH / columnsCount;
+const cellsCount = 8;   // 8 cells -> 9 row lines -> 9 quads vertically
+// Amplitude of cell y-movement - Recalculate based on new columnsCount
+const cellAmplitude = HEIGHT / cellsCount * 1.5; // Adjust amplitude based on cell height now
 // Noise offset between columns (0 = synchronized, higher = more different)
-const columnNoiseOffset = 0.1;
+const columnNoiseOffset = 1;
 
 // Noise control parameters
 // Frequency for column positioning (lower = smoother transitions)
-const columnNoiseFrequency = 0.3;
+const columnNoiseFrequency = 2;
 // Speed of column movement (lower = slower changes)
-const columnNoiseSpeed = 10;
+const columnNoiseSpeed = 30;
 // Maximum displacement as a fraction of column width
-const columnDisplacementFactor = 0.2;
+const columnDisplacementFactor = 0.6;
 
 // Inner grid settings
 // Inset from edges in columns
@@ -62,6 +73,9 @@ const columns: Column[] = [];
 const rectangles: Rectangle[] = [];
 
 // --- New Textured Rectangle Renderer ---
+const TARGET_WORD = "PARADOX";
+// const TARGET_COL = 1; // No longer needed
+
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
@@ -71,49 +85,70 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   _color: Color,
   metadata: RectangleMetadata | null
 ): void => {
-  // Get index from metadata
-  const rectIndex = metadata?.rectIndex as number | undefined; 
+  // Extract necessary data from metadata
+  const rectIndex = metadata?.rectIndex as number | undefined;
+  const isBorder = metadata?.isBorder as boolean | undefined;
+  const isWordArea = metadata?.isWordArea as boolean | undefined;
+  const col = metadata?.colTopLeft; // 0-based column index (0-8)
+  const row = metadata?.rowTopLeft; // 0-based row index (0-8)
 
-  if (vertices.length !== 4 || rectIndex === undefined) { // Check rectIndex from metadata
-    return; // Need 4 vertices and index to draw a quad
+  if (vertices.length !== 4 || rectIndex === undefined || col === undefined || row === undefined || isBorder === undefined) {
+    return; // Need valid metadata
   }
 
-  // Select texture based on rectangle index
-  const charIndex = rectIndex % CHARS_FOR_TEXTURES.length;
-  const letter = CHARS_FOR_TEXTURES[charIndex];
+  let letter: string | null = null;
+  let assignedColorHex: string | null = null;
+
+  // --- Determine Letter and Color based on Area ---
+  if (isBorder) {
+    // Border area: Random character, Purple color
+    const charIndex = rectIndex % CHARS_FOR_TEXTURES.length;
+    letter = CHARS_FOR_TEXTURES[charIndex];
+    assignedColorHex = DARK_PURPLE;
+  } else if (isWordArea) {
+    // Word area: PARADOX with shift, Green color
+    // Use col/row directly as they are already 0-based for the word area (0-6)
+    const shift = row; // Shift amount equals the row number (0-6)
+    const charIndex = (col + shift) % TARGET_WORD.length; // Use col and row directly
+    letter = TARGET_WORD[charIndex];
+    assignedColorHex = LIME_GREEN;
+  }
+
+  // Proceed only if we determined a letter
+  if (letter === null) {
+      console.warn("Could not determine letter for quad at", col, row);
+      return;
+  }
+
+  // Fetch the texture for the determined letter
   const texture = alphabetTextures[letter];
 
   if (texture) {
     p.push();
-    p.textureMode(p.NORMAL); // Use normalized UV coords (0 to 1)
+    
+    // Apply tint (use determined color, default to white if somehow null)
+    if (assignedColorHex) {
+        p.tint(assignedColorHex); 
+    } else {
+        p.tint(255); // Default to white if color assignment failed
+    }
+
+    p.textureMode(p.NORMAL); 
     p.texture(texture);
     p.noStroke();
 
-    // Begin drawing the shape
     p.beginShape();
-
-    // Map vertices to UV coordinates (Counter-clockwise order)
-    // Top-Left vertex -> UV (0, 0)
-    p.vertex(vertices[0].x, vertices[0].y, 0, 0);
-    // Top-Right vertex -> UV (1, 0)
-    p.vertex(vertices[1].x, vertices[1].y, 1, 0);
-    // Bottom-Right vertex -> UV (1, 1)
-    p.vertex(vertices[2].x, vertices[2].y, 1, 1);
-    // Bottom-Left vertex -> UV (0, 1)
-    p.vertex(vertices[3].x, vertices[3].y, 0, 1);
-
+    p.vertex(vertices[0].x, vertices[0].y, 0, 0); 
+    p.vertex(vertices[1].x, vertices[1].y, 1, 0); 
+    p.vertex(vertices[2].x, vertices[2].y, 1, 1); 
+    p.vertex(vertices[3].x, vertices[3].y, 0, 1); 
     p.endShape(p.CLOSE);
+    
+    p.noTint(); // Reset tint
+    
     p.pop();
   } else {
-    // Optional: Draw a placeholder if texture is missing
-    // p.fill(255, 0, 0); // Red placeholder
-    // p.noStroke();
-    // p.quad(
-    //   vertices[0].x, vertices[0].y,
-    //   vertices[1].x, vertices[1].y,
-    //   vertices[2].x, vertices[2].y,
-    //   vertices[3].x, vertices[3].y
-    // );
+    console.warn(`Texture not found for letter: ${letter}`);
   }
 };
 
@@ -142,13 +177,19 @@ function setupLines() {
     const rightX = linePositions[i + 1];
     const column = new Column(leftX, rightX, cellsCount, i, 0);
 
-    // Set amplitude and noise offset for cells
-    column.setCellAmplitude(cellAmplitude);
-    column.setNoiseOffset(columnNoiseOffset);
+    // Set vertical noise parameters (using Y suffix)
+    column.setCellAmplitudeY(cellAmplitude); // Reuse vertical amplitude
+    column.setNoiseOffsetY(columnNoiseOffset); // Reuse noise offset
+    column.setCellNoiseFrequencyY(0.3); // Keep original freq/speed for Y
+    column.setCellNoiseSpeedY(10);
 
-    // You can set additional cell noise parameters here
-    column.setCellNoiseFrequency(0.3);
-    column.setCellNoiseSpeed(10);
+    // Set horizontal noise parameters (using X suffix)
+    // Let's start with slightly smaller amplitude and different freq/speed
+    const horizontalAmplitudeFactor = 0.5; // Horizontal movement is 50% of vertical
+    column.setCellAmplitudeX(cellAmplitude * horizontalAmplitudeFactor); 
+    column.setNoiseOffsetX(columnNoiseOffset + 0.5); // Use a different offset for X noise
+    column.setCellNoiseFrequencyX(0.4); // Slightly different frequency
+    column.setCellNoiseSpeedX(8); // Slightly different speed
 
     columns.push(column);
   }
@@ -161,16 +202,13 @@ function setupLines() {
 function setupRectangles() {
   rectangles.length = 0;
 
-  // Calculate limits with extra padding
   const minX = -outerEdgePadding;
   const maxX = WIDTH + outerEdgePadding;
   const minY = -outerEdgePadding;
   const maxY = HEIGHT + outerEdgePadding;
 
-  // Process all cells including edges
   for (let i = 0; i <= columnsCount; i++) {
     for (let j = 0; j <= cellsCount; j++) {
-      // Create virtual cell centers for outer edges if needed
       const createRect =
         includeOuterEdges || (i < columnsCount && j < cellsCount);
 
@@ -245,17 +283,21 @@ function setupRectangles() {
           bottomLeft = { x, y };
         }
 
-        // Only create rectangle if all points are valid and within screen bounds
         const rect = new Rectangle(topLeft, topRight, bottomRight, bottomLeft);
 
-        // Store cell indices for updating later
+        // --- Determine if border or word area ---
+        const isBorder = i === 0 || i === columnsCount || j === 0 || j === cellsCount;
+        const isWordArea = !isBorder;
+
+        // --- Set Metadata ---
         rect.setMetadata({
-          colTopLeft: i - 1,
-          rowTopLeft: j - 1,
+          colTopLeft: i - 1, // 0-based index for the actual cell/quad column
+          rowTopLeft: j - 1, // 0-based index for the actual cell/quad row
           colBottomRight: i,
           rowBottomRight: j,
-          isEdgeRect:
-            i === 0 || j === 0 || i === columnsCount || j === cellsCount,
+          isBorder: isBorder,
+          isWordArea: isWordArea
+          // Remove assignedColor - it will be determined in the renderer
         });
 
         rectangles.push(rect);
@@ -276,7 +318,7 @@ function updateRectangles() {
         rowTopLeft,
         colBottomRight,
         rowBottomRight,
-        isEdgeRect,
+        isBorder,
       } = metadata;
 
       // Получаем актуальные центры ячеек или виртуальные точки
@@ -477,9 +519,15 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
   p.background(0);
   p.frameRate(FPS);
 
-  // Generate alphabet textures ONCE during setup
-  // Assuming the p5 instance 'p' is already in WEBGL mode here
-  alphabetTextures = generateAlphabetTextures(p, 256); // Generate 256x256 textures
+  // --- Calculate Optimal Texture Size ---
+  const BASE_TEXTURE_SIZE = 256; // Base size for 1x density
+  const displayDensity = p.pixelDensity();
+  const finalTextureSize = BASE_TEXTURE_SIZE * displayDensity;
+  console.log(`Display density: ${displayDensity}, Calculated texture size: ${finalTextureSize}x${finalTextureSize}`);
+  // --- End Calculation ---
+
+  // Generate alphabet textures ONCE during setup using calculated size
+  alphabetTextures = generateAlphabetTextures(p, finalTextureSize);
 
   setupLines(); // This now also calls setupRectangles internally
 
@@ -500,6 +548,7 @@ export const settings: AnimationSettings = {
   height: HEIGHT,
   totalFrames: DURATION * FPS,
 
+  // preload: preloadAnimation, // Remove preload from settings
   function: animation,
   onSetup: setupAnimation, // Ensure this setup function is used
 };

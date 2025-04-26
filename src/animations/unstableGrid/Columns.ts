@@ -3,17 +3,24 @@ import { Cell } from "./Cell";
 
 export class Column {
   public cells: Cell[] = [];
-  // Store original Y positions of cells
-  private originalCellPositions: number[] = [];
-  // Control the amplitude of Y-axis movement
-  private cellAmplitude: number = 40;
-  // Offset for the noise function to make columns move differently
-  private noiseOffset: number = 0;
-  // Controls the frequency of noise in vertical cell movement
-  private cellNoiseFrequency: number = 0.5;
-  // Controls the speed of noise in vertical cell movement
-  private cellNoiseSpeed: number = 20;
-  private noise = createNoise2D();
+  // Store original Y positions and X centers of cells
+  private originalCellPositions: number[] = []; // Stores topY, bottomY pairs
+  private originalCellCenterX: number = 0; // Store original center X
+
+  // --- Vertical Noise Parameters ---
+  private cellAmplitudeY: number = 40;
+  private noiseOffsetY: number = 0;
+  private cellNoiseFrequencyY: number = 0.5;
+  private cellNoiseSpeedY: number = 20;
+
+  // --- Horizontal Noise Parameters ---
+  private cellAmplitudeX: number = 20; // Default horizontal amplitude
+  private noiseOffsetX: number = 0.5; // Offset for horizontal noise (can be different from vertical)
+  private cellNoiseFrequencyX: number = 0.4;
+  private cellNoiseSpeedX: number = 15;
+
+  private noiseY = createNoise2D(); // Noise generator for Y
+  private noiseX = createNoise2D(); // Separate noise generator for X
 
   constructor(
     public leftX: number,
@@ -22,6 +29,8 @@ export class Column {
     public columnIndex: number,
     public globalProgress: number
   ) {
+    // Store original center X based on initial column bounds
+    this.originalCellCenterX = this.leftX + (this.rightX - this.leftX) / 2;
     this._createCells();
   }
 
@@ -33,9 +42,14 @@ export class Column {
     this.leftX = leftX;
     this.rightX = rightX;
 
-    // Update X coordinates for all cells
+    // Update original center X when bounds change
+    this.originalCellCenterX = this.leftX + (this.rightX - this.leftX) / 2;
+
+    // Update X coordinates for all cells via resize (which should update centerX)
     for (const cell of this.cells) {
+      // Assuming resize updates the internal bounds used for centerX calculation
       cell.resize(this.leftX, this.rightX, cell.topY, cell.bottomY);
+      // We will apply noise *in addition* to this base centerX in update()
     }
   }
 
@@ -43,34 +57,42 @@ export class Column {
     this.globalProgress = globalProgress;
   }
 
-  // Setter for cell amplitude
-  public setCellAmplitude(amplitude: number) {
-    this.cellAmplitude = amplitude;
+  // --- Setters for Vertical Noise ---
+  public setCellAmplitudeY(amplitude: number) {
+    this.cellAmplitudeY = amplitude;
+  }
+  public setNoiseOffsetY(offset: number) {
+    this.noiseOffsetY = offset;
+  }
+  public setCellNoiseFrequencyY(frequency: number) {
+    this.cellNoiseFrequencyY = frequency;
+  }
+  public setCellNoiseSpeedY(speed: number) {
+    this.cellNoiseSpeedY = speed;
   }
 
-  // Setter for noise offset
-  public setNoiseOffset(offset: number) {
-    this.noiseOffset = offset;
+  // --- Setters for Horizontal Noise ---
+  public setCellAmplitudeX(amplitude: number) {
+    this.cellAmplitudeX = amplitude;
   }
-  
-  // Setter for cell noise frequency
-  public setCellNoiseFrequency(frequency: number) {
-    this.cellNoiseFrequency = frequency;
+  public setNoiseOffsetX(offset: number) {
+    this.noiseOffsetX = offset;
   }
-  
-  // Setter for cell noise speed
-  public setCellNoiseSpeed(speed: number) {
-    this.cellNoiseSpeed = speed;
+  public setCellNoiseFrequencyX(frequency: number) {
+    this.cellNoiseFrequencyX = frequency;
   }
+  public setCellNoiseSpeedX(speed: number) {
+    this.cellNoiseSpeedX = speed;
+  }
+
 
   private _createCells() {
     this.cells = [];
     this.originalCellPositions = [];
 
-    const totalHeight = 1920; // Same as HEIGHT from main file
+    const totalHeight = 1920; // TODO: Get this from settings?
     const cellHeight = totalHeight / this.cellsCount;
 
-    // Create cells with evenly spaced heights initially
     for (let i = 0; i < this.cellsCount; i++) {
       const topY = i * cellHeight;
       const bottomY = topY + cellHeight;
@@ -78,70 +100,88 @@ export class Column {
       const cell = new Cell(this.leftX, this.rightX, topY, bottomY);
       this.cells.push(cell);
 
-      // Store original positions for noise-based movement
+      // Store original vertical positions
       this.originalCellPositions.push(topY);
       this.originalCellPositions.push(bottomY);
     }
   }
 
   public update() {
-    // A small delay to start with even grid
     const isActive = this.globalProgress > 0.001;
+    const currentColumnWidth = this.rightX - this.leftX;
 
-    // For each cell except the last one, update its bottom boundary
-    // The last cell's bottom boundary remains at the bottom of the screen
-    for (let i = 0; i < this.cells.length - 1; i++) {
+    for (let i = 0; i < this.cells.length; i++) {
       const cell = this.cells[i];
-      const nextCell = this.cells[i + 1];
+      let currentTopY = cell.topY;
+      let currentBottomY = cell.bottomY;
 
-      // Update X coordinates based on column bounds
-      cell.resize(this.leftX, this.rightX, cell.topY, cell.bottomY);
+      // --- Vertical Noise Calculation (Boundaries) ---
+      // Only update boundaries for cells before the last one
+      if (i < this.cells.length - 1) {
+        const nextCell = this.cells[i+1];
+        if (isActive) {
+          const noiseValueY =
+            this.noiseY(
+              i * this.cellNoiseFrequencyY + this.noiseOffsetY * this.columnIndex,
+              this.globalProgress * this.cellNoiseSpeedY
+            ) * 2 - 1;
+          
+          const originalBottomY = this.originalCellPositions[i * 2 + 1];
+          let newBottomY = originalBottomY + noiseValueY * this.cellAmplitudeY;
 
-      if (isActive) {
-        // Calculate noise value for this cell's position
-        // Use column index to create different patterns across columns
-        const noiseValue =
-          this.noise(
-            i * this.cellNoiseFrequency + this.noiseOffset * this.columnIndex,
-            this.globalProgress * this.cellNoiseSpeed
-          ) *
-            2 -
-          1; // Range -1 to 1
-
-        // Get original position
-        const originalBottomY = this.originalCellPositions[i * 2 + 1];
-
-        // Apply noise to bottom Y position
-        let newBottomY = originalBottomY + noiseValue * this.cellAmplitude;
-        
-        // Ensure minimum cell height (16px)
-        // Minimum position to maintain 16px height from top of current cell
-        const minBottomY = cell.topY + 96;
-        
-        // Maximum position to maintain 16px height for next cell
-        const maxBottomY =
-          i < this.cells.length - 2
-            ? this.cells[i + 2].topY - 96 // Next cell must have 96px height
-            : 1920 - 96; // For the last cell before bottom
-        
-        // Clamp the new bottom position
-        newBottomY = Math.max(minBottomY, Math.min(maxBottomY, newBottomY));
-
-        // Update this cell's bottom and next cell's top
-        cell.resize(this.leftX, this.rightX, cell.topY, newBottomY);
-        nextCell.resize(this.leftX, this.rightX, newBottomY, nextCell.bottomY);
+          const minBottomY = cell.topY + 96; // Min height for current cell
+          const maxBottomY = 
+            i < this.cells.length - 2 
+            ? this.originalCellPositions[(i + 1) * 2 + 1] - 96 // Ensure next cell min height based on its original top
+            : 1920 - 96;
+          
+          newBottomY = Math.max(minBottomY, Math.min(maxBottomY, newBottomY));
+          currentBottomY = newBottomY; // Use calculated bottom Y
+          // Update next cell's top to match
+          nextCell.resize(this.leftX, this.rightX, currentBottomY, nextCell.bottomY); 
+        } else {
+           // Reset to original positions at start
+           currentTopY = this.originalCellPositions[i*2];
+           currentBottomY = this.originalCellPositions[i*2+1];
+        }
       } else {
-        // Reset to original positions at start
-        const originalTopY = this.originalCellPositions[i * 2];
-        const originalBottomY = this.originalCellPositions[i * 2 + 1];
-        cell.resize(this.leftX, this.rightX, originalTopY, originalBottomY);
+         // Ensure last cell goes to the bottom
+         currentBottomY = 1920;
       }
-    }
+       // Apply vertical bounds update
+       cell.resize(this.leftX, this.rightX, currentTopY, currentBottomY);
 
-    // Make sure last cell extends to bottom
-    if (this.cells.length > 0) {
-      const lastCell = this.cells[this.cells.length - 1];
-      lastCell.resize(this.leftX, this.rightX, lastCell.topY, 1920); // Match HEIGHT
+      // --- Horizontal Noise Calculation (Center X) ---
+      if (isActive) {
+        // Use a different noise offset/seed for X
+        const noiseValueX =
+          this.noiseX(
+            i * this.cellNoiseFrequencyX + this.noiseOffsetX * this.columnIndex,
+            this.globalProgress * this.cellNoiseSpeedX + 100 // Add offset to time/seed
+          ) * 2 - 1;
+
+        // Calculate displacement based on amplitude and current column width
+        // Allows smaller amplitude effect in narrower columns
+        const displacementX = noiseValueX * this.cellAmplitudeX * (currentColumnWidth / (1080 / 6)); // Normalize amplitude effect based on default column width
+        
+        // Apply noise to the original center X
+        let newCenterX = this.originalCellCenterX + displacementX;
+
+        // Clamp newCenterX to prevent excessive overlap with neighbors (e.g., keep within bounds + some padding)
+        const paddingX = 10; // Allow some overlap
+        newCenterX = Math.max(this.leftX + paddingX, Math.min(this.rightX - paddingX, newCenterX));
+
+        // Directly update the cell's center X coordinate
+        // Assuming Cell class allows direct modification or has a setter
+        cell.center.x = newCenterX; 
+      } else {
+        // Reset center X to original at start
+        cell.center.x = this.originalCellCenterX;
+      }
+      
+      // Recalculate Y center based on potentially updated topY/bottomY
+      // Assuming Cell class handles this, or do it here: 
+      cell.center.y = cell.topY + (cell.bottomY - cell.topY) / 2;
     }
   }
 }
