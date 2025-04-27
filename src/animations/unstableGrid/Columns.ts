@@ -30,6 +30,7 @@ export class Column {
   private config: UnstableGridConfig;
   private minCellHeight: number;
   private cellPaddingX: number;
+  private minColumnWidth: number; // Added this for clarity
 
   private p: p5; // Store p5 instance
 
@@ -51,6 +52,7 @@ export class Column {
     this.originalWidth = rightX - leftX;
     this.originalCellHeight = this.config.height / this.cellsCount;
     this.minCellHeight = this.config.minCellHeight;
+    this.minColumnWidth = this.config.minColumnWidth; // Store min width
     this.cellPaddingX = this.config.cellPaddingX;
     this.originalCellCenterX = leftX + this.originalWidth / 2;
 
@@ -163,12 +165,36 @@ export class Column {
         const target = this.targetCellBoundaries[i];
         const current = this.currentCellBoundaries[i]; // Get ref to current
 
+        // Interpolate all boundaries
         current.left = this.p.lerp(prev.left, target.left, lerpFactor);
         current.right = this.p.lerp(prev.right, target.right, lerpFactor);
         current.top = this.p.lerp(prev.top, target.top, lerpFactor);
         current.bottom = this.p.lerp(prev.bottom, target.bottom, lerpFactor);
 
-        // Apply the fully interpolated boundaries to the cell object
+        // --- Apply Minimum Size Constraints --- 
+        // Enforce minimum height
+        const currentHeight = current.bottom - current.top;
+        if (currentHeight < this.minCellHeight) {
+            const deficit = this.minCellHeight - currentHeight;
+            // Adjust top and bottom symmetrically around the center
+            current.top -= deficit / 2;
+            current.bottom += deficit / 2;
+            // TODO: Add clamping to ensure top/bottom don't go beyond overall canvas bounds if needed?
+        }
+
+        // Enforce minimum width
+        const currentWidth = current.right - current.left;
+        if (currentWidth < this.minColumnWidth) { // Use stored minColumnWidth
+            const deficit = this.minColumnWidth - currentWidth;
+            // Adjust left and right symmetrically
+            current.left -= deficit / 2;
+            current.right += deficit / 2;
+            // TODO: Add clamping to ensure left/right don't go beyond column bounds?
+            // (Maybe target calculation already handles this sufficiently)
+        }
+        // --- End Minimum Size Constraints --- 
+
+        // Apply the fully interpolated (and constrained) boundaries to the cell object
         this.cells[i].resize(
             current.left,
             current.right,
@@ -191,4 +217,5 @@ export class Column {
 
   // REMOVED: interpolateState, _updateCellGeometry, updateTargets, previous/target BoundaryYPositions, previous/target CellCenterX etc.
 }
+
 

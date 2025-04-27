@@ -12,7 +12,8 @@ import {
   RectangleMetadata,
 } from "./Rectangle";
 import { generateAlphabetTextures } from "../../utils/textureUtils"; // Corrected path
-import { config } from "./config"; // Import config
+import { config, getActiveColorScheme, ColorSchemeName, EasingFunctionName } from "./config"; // Import config and getActiveColorScheme
+import { easings } from "../../utils/easing"; // Импортируем объект easings
 
 // --- Font Loading ---
 // Remove preload logic - rely on CSS loading via index.html
@@ -53,12 +54,7 @@ export const columnsCount = config.columnsCount; // Keep export if needed elsewh
 export const cellsCount = config.cellsCount;     // Keep export if needed elsewhere
 let cellAmplitude: number; // Will be calculated in setupAnimation
 
-// --- Removed noise generator, line/column/rect arrays (will be initialized in setup) ---
-// const noise2D = createNoise2D();
-// const linePositions: number[] = [];
-// const originalPositions: number[] = [];
-// const columns: Column[] = [];
-// const rectangles: Rectangle[] = [];
+// --- State Variables ---
 let noise2D: ReturnType<typeof createNoise2D>;
 let linePositions: number[] = [];
 let originalPositions: number[] = [];
@@ -68,82 +64,177 @@ let columns: Column[] = [];
 let rectangles: Rectangle[] = [];
 let alphabetTextures: Record<string, p5.Graphics> = {};
 
-// --- Updated Textured Rectangle Renderer ---
+// --- Глобальная переменная для активной схемы ---
+let activeColorScheme = getActiveColorScheme(config.colorSchemeName);
+
+// --- Easing Functions ---
+// REMOVED inline definitions
+/*
+const easingFunctions: Record<EasingFunctionName, (t: number) => number> = {
+  linear: (t) => t,
+  easeInQuad: (t) => t * t,
+  easeOutQuad: (t) => t * (2 - t),
+  easeInOutQuad: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+  easeInCubic: (t) => t * t * t,
+  easeOutCubic: (t) => (--t) * t * t + 1,
+  easeInOutCubic: (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+};
+*/
+
+// Helper to get the active function from the imported object
+function getActiveEasingFunction(): (t: number) => number {
+    const functionName = config.easingFunctionName;
+    // Check if the functionName is a valid key in the imported easings object
+    if (Object.prototype.hasOwnProperty.call(easings, functionName)) {
+        return easings[functionName as keyof typeof easings];
+    }
+    // If not found, log a warning and fallback to linear
+    console.warn(`Easing function "${functionName}" not found in easings object. Falling back to linear.`);
+    // Assume 'linear' function exists in the easings object for fallback
+    // If 'linear' might be missing, add another check here.
+    return easings['linear' as keyof typeof easings] || ((t: number) => t); // Fallback to identity if even linear is missing
+}
+
+// Helper function for linear interpolation of points
+function lerpPoint(p: p5, p1: Point, p2: Point, t: number): Point {
+    return {
+        x: p.lerp(p1.x, p2.x, t),
+        y: p.lerp(p1.y, p2.y, t),
+    };
+}
+
+// --- Updated Textured Rectangle Renderer with Subdivision ---
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
   _lines: Line[],
   _intersection: Point | null,
-  vertices: Point[],
-  _color: Color,
+  vertices: Point[], // Should be [topLeft, topRight, bottomRight, bottomLeft]
+  _color: Color, 
   metadata: RectangleMetadata | null
 ): void => {
-  // Extract necessary data from metadata
-  const rectIndex = metadata?.rectIndex as number | undefined;
-  const isBorder = metadata?.isBorder as boolean | undefined;
-  const isWordArea = metadata?.isWordArea as boolean | undefined;
-  const col = metadata?.colTopLeft; // 0-based column index (0-8)
-  const row = metadata?.rowTopLeft; // 0-based row index (0-8)
+  // Extract cell coordinates and index
+  const col = metadata?.colTopLeft; 
+  const row = metadata?.rowTopLeft; 
+  const rectIndex = metadata?.rectIndex;
 
-  if (vertices.length !== 4 || rectIndex === undefined || col === undefined || row === undefined || isBorder === undefined) {
-    return; // Need valid metadata
-  }
+  if (col === undefined || row === undefined || vertices.length !== 4 || rectIndex === undefined) return;
 
   let letter: string | null = null;
   let assignedColorHex: string | null = null;
+  let isTextCell = false;
 
-  // --- Determine Letter and Color based on Area ---
-  if (isBorder) {
-    const charIndex = rectIndex % config.charsForTexture.length;
-    letter = config.charsForTexture[charIndex];
-    assignedColorHex = config.colorPalette.secondary; // Use secondary color for border
-  } else if (isWordArea) {
-    if (col >= 0 && col < config.targetWord.length) {
-      letter = config.targetWord[col]; 
-    } else {
-      letter = '?'; 
-    }
-    if (row % 2 === 0) { 
-      assignedColorHex = config.colorPalette.primary; // Use primary for even rows
-    } else { 
-      assignedColorHex = config.colorPalette.secondary; // Use secondary for odd rows
-    }
+  // Check if this cell corresponds to a character in the textLines
+  if (row >= 0 && row < config.textLines.length) {
+      const currentLine = config.textLines[row];
+      if (col >= 0 && col < currentLine.length) {
+          letter = currentLine[col];
+          // --- CHANGE: Alternate primary and primary_darker based on column index (col) --- 
+          assignedColorHex = (col % 2 === 0) 
+              ? activeColorScheme.primary 
+              : activeColorScheme.primary_darker;
+          isTextCell = true;
+      }
   }
 
-  if (letter === null) {
-      console.warn("Could not determine letter for quad at", col, row);
-      return;
+  // If it's not a text cell, treat it as a border/filler cell
+  if (!isTextCell) {
+      const charIndex = (rectIndex + col + row) % config.charsForTexture.length; 
+      letter = config.charsForTexture[charIndex];
+      assignedColorHex = activeColorScheme.secondary; // Use secondary color for filler
   }
 
-  const texture = alphabetTextures[letter];
+  // --- Rendering with Subdivision --- 
+  if (letter) {
+      const texture = alphabetTextures[letter];
+      if (texture) {
+          p.push();
+          if (assignedColorHex) {
+              p.tint(assignedColorHex);
+          } else {
+              p.tint(255); 
+          }
+          p.textureMode(p.NORMAL); 
+          p.textureWrap(p.CLAMP);
+          p.texture(texture);
+          p.noStroke();
+          
+          // --- Subdivision Calculations (2x2 grid) --- 
+          const v00 = vertices[0]; // Top Left
+          const v10 = vertices[1]; // Top Right
+          const v11 = vertices[2]; // Bottom Right
+          const v01 = vertices[3]; // Bottom Left
 
-  if (texture) {
-    p.push();
-    if (assignedColorHex) {
-        p.tint(assignedColorHex);
-    } else {
-        p.tint(255);
-    }
-    p.textureMode(p.NORMAL); 
-    p.textureWrap(p.CLAMP);
-    p.texture(texture);
-    p.noStroke();
-    
-    const UV_EPSILON = config.textureUvEpsilon; // Use config value
-    p.beginShape();
-    p.vertex(vertices[0].x, vertices[0].y, UV_EPSILON, UV_EPSILON);
-    p.vertex(vertices[1].x, vertices[1].y, 1 - UV_EPSILON, UV_EPSILON);
-    p.vertex(vertices[2].x, vertices[2].y, 1 - UV_EPSILON, 1 - UV_EPSILON);
-    p.vertex(vertices[3].x, vertices[3].y, UV_EPSILON, 1 - UV_EPSILON);
-    p.endShape(p.CLOSE);
-    p.noTint();
-    p.pop();
-  } else {
-    console.warn(`Texture not found for letter: ${letter}`);
+          // Interpolate midpoints of edges
+          const v05_0 = lerpPoint(p, v00, v10, 0.5); // Mid Top
+          const v1_05 = lerpPoint(p, v10, v11, 0.5); // Mid Right
+          const v05_1 = lerpPoint(p, v11, v01, 0.5); // Mid Bottom (swapped order for consistency)
+          const v0_05 = lerpPoint(p, v00, v01, 0.5); // Mid Left
+
+          // Interpolate center point
+          const v05_05 = lerpPoint(p, v0_05, v1_05, 0.5); // Center
+
+          // Define UV coordinates for the 9 points
+          const UV_EPSILON = config.textureUvEpsilon; 
+          const uv00 = { u: UV_EPSILON, v: UV_EPSILON };
+          const uv10 = { u: 1 - UV_EPSILON, v: UV_EPSILON };
+          const uv11 = { u: 1 - UV_EPSILON, v: 1 - UV_EPSILON };
+          const uv01 = { u: UV_EPSILON, v: 1 - UV_EPSILON };
+          const uv05_0 = { u: 0.5, v: UV_EPSILON };
+          const uv1_05 = { u: 1 - UV_EPSILON, v: 0.5 };
+          const uv05_1 = { u: 0.5, v: 1 - UV_EPSILON };
+          const uv0_05 = { u: UV_EPSILON, v: 0.5 };
+          const uv05_05 = { u: 0.5, v: 0.5 };
+
+          // Draw the 8 triangles forming the 2x2 grid
+          p.beginShape(p.TRIANGLES);
+
+          // Top-Left Quad
+          p.vertex(v00.x, v00.y, uv00.u, uv00.v);
+          p.vertex(v05_0.x, v05_0.y, uv05_0.u, uv05_0.v);
+          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
+
+          p.vertex(v00.x, v00.y, uv00.u, uv00.v);
+          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
+          p.vertex(v0_05.x, v0_05.y, uv0_05.u, uv0_05.v);
+
+          // Top-Right Quad
+          p.vertex(v05_0.x, v05_0.y, uv05_0.u, uv05_0.v);
+          p.vertex(v10.x, v10.y, uv10.u, uv10.v);
+          p.vertex(v1_05.x, v1_05.y, uv1_05.u, uv1_05.v);
+          
+          p.vertex(v05_0.x, v05_0.y, uv05_0.u, uv05_0.v);
+          p.vertex(v1_05.x, v1_05.y, uv1_05.u, uv1_05.v);
+          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
+
+          // Bottom-Left Quad
+          p.vertex(v0_05.x, v0_05.y, uv0_05.u, uv0_05.v);
+          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
+          p.vertex(v05_1.x, v05_1.y, uv05_1.u, uv05_1.v);
+
+          p.vertex(v0_05.x, v0_05.y, uv0_05.u, uv0_05.v);
+          p.vertex(v05_1.x, v05_1.y, uv05_1.u, uv05_1.v);
+          p.vertex(v01.x, v01.y, uv01.u, uv01.v);
+
+          // Bottom-Right Quad
+          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
+          p.vertex(v1_05.x, v1_05.y, uv1_05.u, uv1_05.v);
+          p.vertex(v11.x, v11.y, uv11.u, uv11.v);
+          
+          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
+          p.vertex(v11.x, v11.y, uv11.u, uv11.v);
+          p.vertex(v05_1.x, v05_1.y, uv05_1.u, uv05_1.v);
+
+          p.endShape(); // End TRIANGLES
+          
+          p.noTint();
+          p.pop();
+      } else {
+          console.warn(`Texture not found for letter: ${letter}`);
+      }
   }
 };
 
-// Use the new textured renderer instead of the default one
 const renderRectangle: RectangleRenderFunction = renderTexturedRectangle;
 
 // Easing function (easeInOut Quadratic)
@@ -159,34 +250,35 @@ function easeInOutPower(t: number, power: number): number {
     }
 }
 
-function setupLines(p: p5) { // Pass p for random
+function setupLines(p: p5) { 
   linePositions = [];
   originalPositions = [];
   targetLinePositions = [];
   previousLinePositions = [];
   columns = [];
   
-  const spacing = config.width / config.columnsCount;
+  // Use columnsCount directly from config (now calculated based on textLines)
+  const currentColumnsCount = config.columnsCount;
+  const spacing = config.width / currentColumnsCount;
 
-  for (let i = 0; i <= config.columnsCount; i++) {
+  for (let i = 0; i <= currentColumnsCount; i++) { // Use currentColumnsCount
     const xPos = i * spacing;
     linePositions.push(xPos);
     originalPositions.push(xPos);
-    targetLinePositions.push(xPos); // Initial target is the original position
-    previousLinePositions.push(xPos); // Initial previous is the original position
+    targetLinePositions.push(xPos); 
+    previousLinePositions.push(xPos); 
   }
 
-  // Initialize columns (pass p for random inside Column)
-  for (let i = 0; i < config.columnsCount; i++) {
+  // Initialize columns
+  for (let i = 0; i < currentColumnsCount; i++) { // Use currentColumnsCount
     const leftX = linePositions[i];
     const rightX = linePositions[i + 1];
     const column = new Column(leftX, rightX, config.cellsCount, i, 0, config, p);
-    // Use new amplitude factor setters
-    column.setCellAmplitudeYFactor(config.cellVerticalAmplitudeFactor); // Use Factor setter
-    column.setCellAmplitudeXFactor(config.cellHorizontalAmplitudeFactor); // Use Factor setter
+    column.setCellAmplitudeYFactor(config.cellVerticalAmplitudeFactor); 
+    column.setCellAmplitudeXFactor(config.cellHorizontalAmplitudeFactor); 
     columns.push(column);
   }
-  setupRectangles(); // This needs updated logic too if it depends on Columns directly
+  setupRectangles(); // Relies on columns being set up
 }
 
 // Create rectangles connecting cell centers
@@ -197,100 +289,59 @@ function setupRectangles() {
   const maxX = config.width + config.outerEdgePadding;
   const minY = -config.outerEdgePadding;
   const maxY = config.height + config.outerEdgePadding;
+  
+  const currentColumnsCount = config.columnsCount; // Use config value
+  const currentCellsCount = config.cellsCount;     // Use config value
 
-  for (let i = 0; i <= config.columnsCount; i++) {
-    for (let j = 0; j <= config.cellsCount; j++) {
+  for (let i = 0; i <= currentColumnsCount; i++) {
+    for (let j = 0; j <= currentCellsCount; j++) {
       const createRect =
-        config.includeOuterEdges || (i < config.columnsCount && j < config.cellsCount);
+        config.includeOuterEdges || (i < currentColumnsCount && j < currentCellsCount);
 
       if (createRect) {
-        // Get or create cell centers
-        let topLeft: Point;
-        let topRight: Point;
-        let bottomRight: Point;
-        let bottomLeft: Point;
+        let topLeft: Point, topRight: Point, bottomRight: Point, bottomLeft: Point;
 
         // Top-left point
         if (i > 0 && j > 0) {
           topLeft = columns[i - 1].cells[j - 1].center;
         } else {
-          // Create virtual point outside the grid
-          const x =
-            i === 0 ? minX : i > 0 ? columns[i - 1].cells[0].centerX : maxX;
-          const y =
-            j === 0 ? minY : j > 0 ? columns[0].cells[j - 1].centerY : maxY;
+          const x = i === 0 ? minX : columns[i - 1].cells[0].centerX;
+          const y = j === 0 ? minY : columns[0].cells[j - 1].centerY;
           topLeft = { x, y };
         }
-
         // Top-right point
-        if (i < config.columnsCount && j > 0) {
+        if (i < currentColumnsCount && j > 0) {
           topRight = columns[i].cells[j - 1].center;
         } else {
-          // Create virtual point
-          const x =
-            i >= config.columnsCount
-              ? maxX
-              : i < config.columnsCount
-              ? columns[i].cells[0].centerX
-              : minX;
-          const y =
-            j === 0 ? minY : j > 0 ? columns[0].cells[j - 1].centerY : maxY;
+          const x = i >= currentColumnsCount ? maxX : columns[i].cells[0].centerX;
+          const y = j === 0 ? minY : columns[0].cells[j - 1].centerY;
           topRight = { x, y };
         }
-
         // Bottom-right point
-        if (i < config.columnsCount && j < config.cellsCount) {
+        if (i < currentColumnsCount && j < currentCellsCount) {
           bottomRight = columns[i].cells[j].center;
         } else {
-          // Create virtual point
-          const x =
-            i >= config.columnsCount
-              ? maxX
-              : i < config.columnsCount
-              ? columns[i].cells[0].centerX
-              : minX;
-          const y =
-            j >= config.cellsCount
-              ? maxY
-              : j < config.cellsCount
-              ? columns[0].cells[j].centerY
-              : minY;
+          const x = i >= currentColumnsCount ? maxX : columns[i].cells[0].centerX;
+          const y = j >= currentCellsCount ? maxY : columns[0].cells[j].centerY;
           bottomRight = { x, y };
         }
-
         // Bottom-left point
-        if (i > 0 && j < config.cellsCount) {
+        if (i > 0 && j < currentCellsCount) {
           bottomLeft = columns[i - 1].cells[j].center;
         } else {
-          // Create virtual point
-          const x =
-            i === 0 ? minX : i > 0 ? columns[i - 1].cells[0].centerX : maxX;
-          const y =
-            j >= config.cellsCount
-              ? maxY
-              : j < config.cellsCount
-              ? columns[0].cells[j].centerY
-              : minY;
+          const x = i === 0 ? minX : columns[i - 1].cells[0].centerX;
+          const y = j >= currentCellsCount ? maxY : columns[0].cells[j].centerY;
           bottomLeft = { x, y };
         }
 
         const rect = new Rectangle(topLeft, topRight, bottomRight, bottomLeft);
-
-        // --- Determine if border or word area ---
-        const isBorder = i === 0 || i === config.columnsCount || j === 0 || j === config.cellsCount;
-        const isWordArea = !isBorder;
-
-        // --- Set Metadata ---
-        rect.setMetadata({
-          colTopLeft: i - 1, // 0-based index for the actual cell/quad column
-          rowTopLeft: j - 1, // 0-based index for the actual cell/quad row
+        rect.setMetadata({ // This metadata structure is fine
+          colTopLeft: i - 1, // 0-based grid cell col
+          rowTopLeft: j - 1, // 0-based grid cell row
           colBottomRight: i,
           rowBottomRight: j,
-          isBorder: isBorder,
-          isWordArea: isWordArea
-          // Remove assignedColor - it will be determined in the renderer
+          // isBorder/isWordArea removed as renderer now decides based on textLines
         });
-
         rectangles.push(rect);
       }
     }
@@ -299,131 +350,53 @@ function setupRectangles() {
 
 // Update rectangle vertices based on current cell centers
 function updateRectangles() {
-  // Обновляем существующие прямоугольники вместо пересоздания
+  // ... (logic seems okay, uses config.columnsCount/cellsCount and cell centers) ...
+  // Uses metadata col/row indices correctly
+  const currentColumnsCount = config.columnsCount;
+  const currentCellsCount = config.cellsCount;
+  const minX = -config.outerEdgePadding;
+  const maxX = config.width + config.outerEdgePadding;
+  const minY = -config.outerEdgePadding;
+  const maxY = config.height + config.outerEdgePadding;
+
   for (const rect of rectangles) {
     const metadata = rect.getMetadata();
-
     if (metadata) {
-      const {
-        colTopLeft,
-        rowTopLeft,
-        colBottomRight,
-        rowBottomRight,
-      } = metadata; // Removed isBorder from destructuring as it's not used here
-
-      // Получаем актуальные центры ячеек или виртуальные точки
-      let topLeft: Point;
-      let topRight: Point;
-      let bottomRight: Point;
-      let bottomLeft: Point;
-
-      // Обрабатываем случаи, когда нужны виртуальные точки за пределами сетки
-      const minX = -config.outerEdgePadding;
-      const maxX = config.width + config.outerEdgePadding;
-      const minY = -config.outerEdgePadding;
-      const maxY = config.height + config.outerEdgePadding;
+      const { colTopLeft, rowTopLeft, colBottomRight, rowBottomRight } = metadata;
+      let topLeft: Point, topRight: Point, bottomRight: Point, bottomLeft: Point;
 
       // Top-left point
-      if (
-        colTopLeft >= 0 &&
-        rowTopLeft >= 0 &&
-        colTopLeft < config.columnsCount &&
-        rowTopLeft < config.cellsCount
-      ) {
+      if (colTopLeft >= 0 && rowTopLeft >= 0 && colTopLeft < currentColumnsCount && rowTopLeft < currentCellsCount) {
         topLeft = columns[colTopLeft].cells[rowTopLeft].center;
       } else {
-        // Virtual point
-        const x =
-          colTopLeft < 0
-            ? minX
-            : colTopLeft >= config.columnsCount
-            ? maxX
-            : columns[colTopLeft].cells[0].centerX; // Use correct index
-        const y =
-          rowTopLeft < 0
-            ? minY
-            : rowTopLeft >= config.cellsCount
-            ? maxY
-            : columns[0].cells[rowTopLeft].centerY; // Use correct index
+        const x = colTopLeft < 0 ? minX : columns[colTopLeft >= currentColumnsCount ? currentColumnsCount - 1 : colTopLeft].cells[0].centerX; // Safe access
+        const y = rowTopLeft < 0 ? minY : columns[0].cells[rowTopLeft >= currentCellsCount ? currentCellsCount - 1 : rowTopLeft].centerY; // Safe access
         topLeft = { x, y };
       }
-
       // Top-right point
-      if (
-        colBottomRight >= 0 &&
-        rowTopLeft >= 0 &&
-        colBottomRight < config.columnsCount &&
-        rowTopLeft < config.cellsCount
-      ) {
+      if (colBottomRight >= 0 && rowTopLeft >= 0 && colBottomRight < currentColumnsCount && rowTopLeft < currentCellsCount) {
         topRight = columns[colBottomRight].cells[rowTopLeft].center;
       } else {
-        // Virtual point
-        const x =
-          colBottomRight < 0
-            ? minX
-            : colBottomRight >= config.columnsCount
-            ? maxX
-            : columns[colBottomRight].cells[0].centerX; // Use correct index
-        const y =
-          rowTopLeft < 0
-            ? minY
-            : rowTopLeft >= config.cellsCount
-            ? maxY
-            : columns[0].cells[rowTopLeft].centerY; // Use correct index
+        const x = colBottomRight >= currentColumnsCount ? maxX : columns[colBottomRight < 0 ? 0 : colBottomRight].cells[0].centerX; // Safe access
+        const y = rowTopLeft < 0 ? minY : columns[0].cells[rowTopLeft >= currentCellsCount ? currentCellsCount - 1 : rowTopLeft].centerY; // Safe access
         topRight = { x, y };
       }
-
       // Bottom-right point
-      if (
-        colBottomRight >= 0 &&
-        rowBottomRight >= 0 &&
-        colBottomRight < config.columnsCount &&
-        rowBottomRight < config.cellsCount
-      ) {
+      if (colBottomRight >= 0 && rowBottomRight >= 0 && colBottomRight < currentColumnsCount && rowBottomRight < currentCellsCount) {
         bottomRight = columns[colBottomRight].cells[rowBottomRight].center;
       } else {
-        // Virtual point
-        const x =
-          colBottomRight < 0
-            ? minX
-            : colBottomRight >= config.columnsCount
-            ? maxX
-            : columns[colBottomRight].cells[0].centerX; // Use correct index
-        const y =
-          rowBottomRight < 0
-            ? minY
-            : rowBottomRight >= config.cellsCount
-            ? maxY
-            : columns[0].cells[rowBottomRight].centerY; // Use correct index
+        const x = colBottomRight >= currentColumnsCount ? maxX : columns[colBottomRight < 0 ? 0 : colBottomRight].cells[0].centerX; // Safe access
+        const y = rowBottomRight >= currentCellsCount ? maxY : columns[0].cells[rowBottomRight < 0 ? 0 : rowBottomRight].centerY; // Safe access
         bottomRight = { x, y };
       }
-
       // Bottom-left point
-      if (
-        colTopLeft >= 0 &&
-        rowBottomRight >= 0 &&
-        colTopLeft < config.columnsCount &&
-        rowBottomRight < config.cellsCount
-      ) {
+      if (colTopLeft >= 0 && rowBottomRight >= 0 && colTopLeft < currentColumnsCount && rowBottomRight < currentCellsCount) {
         bottomLeft = columns[colTopLeft].cells[rowBottomRight].center;
       } else {
-        // Virtual point
-        const x =
-          colTopLeft < 0
-            ? minX
-            : colTopLeft >= config.columnsCount
-            ? maxX
-            : columns[colTopLeft].cells[0].centerX; // Use correct index
-        const y =
-          rowBottomRight < 0
-            ? minY
-            : rowBottomRight >= config.cellsCount
-            ? maxY
-            : columns[0].cells[rowBottomRight].centerY; // Use correct index
+        const x = colTopLeft < 0 ? minX : columns[colTopLeft >= currentColumnsCount ? currentColumnsCount - 1 : colTopLeft].cells[0].centerX; // Safe access
+        const y = rowBottomRight >= currentCellsCount ? maxY : columns[0].cells[rowBottomRight < 0 ? 0 : rowBottomRight].centerY; // Safe access
         bottomLeft = { x, y };
       }
-
-      // Обновляем только вершины, сохраняя тот же объект и его цвет
       rect.setVertices(topLeft, topRight, bottomRight, bottomLeft);
     }
   }
@@ -458,7 +431,8 @@ function calculateNewTargetLinePositions(p: p5) {
 }
 
 const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number): void => {
-  p.background(0);
+  // --- Используем цвет фона из активной схемы ---
+  p.background(activeColorScheme.background);
   p.translate(-config.width / 2, -config.height / 2);
 
   const updateInterval = config.updateIntervalFrames;
@@ -476,7 +450,9 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFram
 
   // Calculate lerp factor for the current interval
   const progressInInterval = (currentFrameNum % updateInterval) / updateInterval;
-  const lerpFactor = easeInOutPower(progressInInterval, config.easingFactor);
+  // Get and apply the selected easing function
+  const activeEase = getActiveEasingFunction();
+  const lerpFactor = activeEase(progressInInterval);
 
   // Interpolate column line positions
   for (let i = 0; i < linePositions.length; i++) {
@@ -498,13 +474,19 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFram
     const metadata = rect.getMetadata();
     if (metadata) {
       metadata.rectIndex = index;
+      // Pass the original color argument (now unused) from the Rectangle object
       renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata);
     }
   });
 };
 
 const setupAnimation: AnimationFunction = (p: p5): void => {
-  p.background(0);
+  // --- Устанавливаем активную схему в начале --- 
+  activeColorScheme = getActiveColorScheme(config.colorSchemeName);
+  console.log(`Using color scheme: ${config.colorSchemeName}`);
+
+  // --- Используем цвет фона из активной схемы --- 
+  p.background(activeColorScheme.background);
   p.frameRate(config.fps);
   noise2D = createNoise2D(); 
   // cellAmplitude = config.height / config.cellsCount; // This variable seems unused now

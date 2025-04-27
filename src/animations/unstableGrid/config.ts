@@ -1,7 +1,74 @@
 // Configuration for the unstableGrid animation
 
-export const WORD = "PARADOX";
+// Example Text Lines
+const defaultTextLines = [
+  "COLOR",
+  "SCHEMES",
+  "ARE",
+  "COOL"
+];
 
+// --- Цветовые Схемы ---
+interface ColorScheme {
+  background: string;
+  primary: string;    // Раньше colorPalette.primary
+  primary_darker: string; // Добавлено: Оттенок primary потемнее
+  secondary: string;  // Раньше colorPalette.secondary
+}
+
+// Определяем доступные имена схем
+export type ColorSchemeName = 'dark_purple_lime' | 'dark_blue_red' | 'bright_coral_aqua' | 'muted_gray_blue';
+
+// Коллекция схем
+const colorSchemes: Record<ColorSchemeName, ColorScheme> = {
+  dark_purple_lime: { // Оригинальная
+    background: "#000000", // Черный
+    primary: "#32CD32",    // Lime Green
+    primary_darker: "#228B22", // ForestGreen как более темный Lime
+    secondary: "#6A0DAD",   // Dark Purple
+  },
+  dark_blue_red: {
+    background: "#1A1A2E", // Очень темный сине-фиолетовый
+    primary: "#E94560",    // Яркий розово-красный
+    primary_darker: "#B3364E", // Более темный красно-розовый
+    secondary: "#0F3460",   // Темно-синий
+  },
+  bright_coral_aqua: {
+    background: "#F5F5F5", // Почти белый
+    primary: "#FF6B6B",    // Яркий коралл
+    primary_darker: "#CD5C5C", // IndianRed как более темный коралл
+    secondary: "#4ECDC4",   // Бирюзовый
+  },
+  muted_gray_blue: {
+    background: "#E0E0E0", // Светло-серый
+    primary: "#A0AEC0",    // Серо-голубой
+    primary_darker: "#718096", // SlateGray (тот же, что secondary) как темный серо-голубой
+    secondary: "#718096",   // Шиферно-серый
+  }
+};
+
+// Функция для получения текущей активной схемы
+export function getActiveColorScheme(name: ColorSchemeName): ColorScheme {
+    return colorSchemes[name] || colorSchemes.dark_purple_lime; // Возвращаем дефолтную, если имя некорректно
+}
+
+// --- Easing Function Types ---
+// Используем ключи из импортированного объекта easings (если бы могли импортировать типы)
+// Пока перечислим вручную основные или все.
+export type EasingFunctionName =
+  | 'linear'
+  | 'easeInSine' | 'easeOutSine' | 'easeInOutSine'
+  | 'easeInQuad' | 'easeOutQuad' | 'easeInOutQuad'
+  | 'easeInCubic' | 'easeOutCubic' | 'easeInOutCubic'
+  | 'easeInQuart' | 'easeOutQuart' | 'easeInOutQuart'
+  | 'easeInQuint' | 'easeOutQuint' | 'easeInOutQuint'
+  | 'easeInExpo' | 'easeOutExpo' | 'easeInOutExpo'
+  | 'easeInCirc' | 'easeOutCirc' | 'easeInOutCirc'
+  | 'easeInBack' | 'easeOutBack' | 'easeInOutBack'
+  | 'easeInElastic' | 'easeOutElastic' | 'easeInOutElastic'
+  | 'easeInBounce' | 'easeOutBounce' | 'easeInOutBounce';
+
+// --- Обновленный Интерфейс Конфигурации ---
 export interface UnstableGridConfig {
   // Canvas/Render Settings
   width: number;
@@ -10,21 +77,26 @@ export interface UnstableGridConfig {
   durationInSeconds: number;
 
   // Grid Structure
-  columnsCount: number;
-  cellsCount: number;
+  columnsCount: number; // Now calculated based on textLines
+  cellsCount: number;   // Number of rows (can be more/less than textLines.length)
   includeOuterEdges: boolean;
   outerEdgePadding: number;
   minColumnWidth: number;  
   minCellHeight: number;   
 
-  // Colors
+  // Colors (New Structure)
+  colorSchemeName: ColorSchemeName; // Имя выбранной схемы
+
+  // REMOVED: colorPalette
+  /*
   colorPalette: {
     primary: string;   // Used for word letters on odd rows
     secondary: string; // Used for word letters on even rows & border chars
   };
+  */
   
   // Text Content & Font
-  targetWord: string;
+  textLines: string[];       // Array of strings for vertical text
   fontFamily: string; 
   fontUrl: string;         // Path relative to project root for staticFile
   charsForTexture: string; // Characters for border textures
@@ -35,7 +107,7 @@ export interface UnstableGridConfig {
 
   // Animation Timing
   updateIntervalFrames: number; // How often to calculate new random targets
-  easingFactor: number;         // Controls the amount of ease-in-out (e.g., 1=linear, 2=quadratic)
+  easingFunctionName: EasingFunctionName; // Имя выбранной easing-функции
 
   // Column Movement Target Range
   columnDisplacementFactor: number; // Max displacement fraction relative to original width
@@ -48,41 +120,45 @@ export interface UnstableGridConfig {
   cellPaddingX: number;               // Min padding from column edges for cell center X (px)
 }
 
+// Helper to calculate column count based on text lines
+function calculateColumnsCount(lines: string[]): number {
+    if (!lines || lines.length === 0) return 2; // Default minimum
+    const maxLength = Math.max(...lines.map(line => line.length));
+    return Math.max(2, maxLength + 1); // Ensure at least 2 columns, add 1 for potential spacing
+}
+
 // --- Default Configuration Values ---
 export const config: UnstableGridConfig = {
   // Canvas/Render Settings
   width: 1080,
   height: 1920,
   fps: 60,
-  durationInSeconds: 5, // Increased duration
+  durationInSeconds: 30, // Increased duration
 
   // Grid Structure
-  columnsCount: WORD.length + 1,
-  cellsCount: Math.floor(1.6 * WORD.length) + 1,
+  columnsCount: calculateColumnsCount(defaultTextLines), // Calculate based on default lines
+  cellsCount: 12, // USER CHANGE - Keep user's change, can be adjusted
   includeOuterEdges: true,
   outerEdgePadding: 150,
-  minColumnWidth: 1, // Drastically reduced
-  minCellHeight: 1,   // Drastically reduced
+  minColumnWidth: 1, 
+  minCellHeight: 1,   
 
   // Colors
-  colorPalette: {
-    primary: "#32CD32",   // LIME_GREEN (for even rows of the word)
-    secondary: "#6A0DAD", // DARK_PURPLE (for odd rows of the word and borders)
-  },
+  colorSchemeName: 'dark_blue_red', // USER CHANGE
   
   // Text Content & Font
-  targetWord: WORD,
-  fontFamily: "Cascadia Code", // Should match CSS/FontFace setup
-  fontUrl: "/CascadiaCode.ttf", // Path used in MyVideo.tsx FontFace API
-  charsForTexture: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-  textureSizePreview: 64,  // Lower resolution for preview
-  textureSizeRender: 512,   // Higher resolution for render
-  useHighResTextures: false, // Default to preview quality
+  textLines: defaultTextLines, // Use the example lines
+  fontFamily: "Cascadia Code", 
+  fontUrl: "/CascadiaCode.ttf", 
+  charsForTexture: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*+-%", // Added some symbols
+  textureSizePreview: 256,  // USER CHANGE
+  textureSizeRender: 512,   
+  useHighResTextures: false, 
   textureUvEpsilon: 0.01, 
 
   // Animation Timing
   updateIntervalFrames: 60, // Update targets every second
-  easingFactor: 2, // Quadratic ease-in-out by default
+  easingFunctionName: 'easeInOutCubic', // Сменим дефолт для примера
 
   // Column Movement Target Range
   columnDisplacementFactor: 1.2, // Increased > 1 to allow wider range
