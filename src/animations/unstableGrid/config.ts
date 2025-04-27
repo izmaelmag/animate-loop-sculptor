@@ -1,6 +1,6 @@
 // Configuration for the unstableGrid animation
 
-export const WORD = "HI";
+export const WORD = "PARADOX";
 
 export interface UnstableGridConfig {
   // Canvas/Render Settings
@@ -62,8 +62,8 @@ export const config: UnstableGridConfig = {
   durationInSeconds: 30, // Increased duration
 
   // Grid Structure
-  columnsCount: WORD.length,
-  cellsCount: Math.floor(1.6 * WORD.length),
+  columnsCount: WORD.length + 1,
+  cellsCount: Math.floor(1.6 * WORD.length) + 1,
   includeOuterEdges: true,
   outerEdgePadding: 150,
   minColumnWidth: 32, // Previously hardcoded in unstableGrid.ts animation fn
@@ -80,7 +80,7 @@ export const config: UnstableGridConfig = {
   fontFamily: "Cascadia Code", // Should match CSS/FontFace setup
   fontUrl: "/CascadiaCode.ttf", // Path used in MyVideo.tsx FontFace API
   charsForTexture: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-  textureSizePreview: 128,  // Lower resolution for preview
+  textureSizePreview: 64,  // Lower resolution for preview
   textureSizeRender: 512,   // Higher resolution for render
   useHighResTextures: false, // Default to preview quality
   textureUvEpsilon: 0.01, 
