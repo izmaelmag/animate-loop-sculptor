@@ -37,7 +37,7 @@ const QUALITY = options.quality; // 'high', 'medium', 'low'
 const TEMPLATE = options.template;
 
 // MEMORY MANAGEMENT SETTINGS
-const CONCURRENCY = 4;
+const CONCURRENCY = 1;
 const MEMORY_LIMIT = 4096;
 
 // OUTPUT FILE PATH
@@ -126,6 +126,7 @@ async function renderVideo() {
         disableWebSecurity: true,
         headless: true,
         enableGPU: true,
+        gl: 'angle',
       },
       browserExecutable: undefined,
       envVariables: {

@@ -1,18 +1,23 @@
 import { registerRoot, Composition } from "remotion";
 import { MyVideo } from "./MyVideo";
-import { animationSettings, defaultAnimation } from "../animations";
+import { animationSettings, defaultAnimation, AnimationName } from "../animations";
 
 // Default animation template if none specified
 const DEFAULT_TEMPLATE_ID = defaultAnimation.id;
 
-const calculateMetaData = async (props: Record<string, unknown>) => {
-  const settings = animationSettings[props.templateId as string] || defaultAnimation;
+// Updated calculateMetadata to use props and provide fallbacks
+const calculateMetaData = async ({ props }: { props: Record<string, unknown> }) => {
+  // Use templateId/templateName from props (check both?), fall back to default if not provided
+  const templateId = (props.templateId || props.templateName || DEFAULT_TEMPLATE_ID) as AnimationName;
+  const settings = animationSettings[templateId] || defaultAnimation;
+
+  console.log(`calculateMetadata called with props: ${JSON.stringify(props)}, using templateId: ${templateId}`);
 
   return {
     durationInFrames: settings.totalFrames,
     fps: settings.fps,
-    width: settings.width,
-    height: settings.height,
+    width: settings.width || 1080, // Provide defaults here too
+    height: settings.height || 1920,
   };
 };
 
@@ -22,16 +27,20 @@ export const RemotionVideo = () => {
       <Composition
         id="MyVideo"
         component={MyVideo}
-        durationInFrames={1200} // Maximum possible duration, actual animation determines real duration
-        fps={60} // Default fps, actual animation can override this
-        width={1080} // Default width
-        height={1920} // Default height
-        defaultProps={{
-          templateId: DEFAULT_TEMPLATE_ID,
-        }}
-        calculateMetadata={async ({ props }) => {
-          return await calculateMetaData(props);
-        }}
+        // Set reasonable defaults for width/height/fps/duration
+        // calculateMetadata will override these based on props
+        durationInFrames={1200} 
+        fps={60} 
+        width={1080} 
+        height={1920} 
+        // Remove defaultProps
+        // defaultProps={{
+        //   templateId: DEFAULT_TEMPLATE_ID, // We get templateId from inputProps now
+        // }}
+        // calculateMetadata now correctly determines duration/fps/etc.
+        // based on the *actual* props received from the render command
+        calculateMetadata={calculateMetaData}
+        // Props passed to component will be the ones from inputProps
       />
     </>
   );

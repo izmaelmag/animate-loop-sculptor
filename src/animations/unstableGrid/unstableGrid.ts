@@ -33,21 +33,21 @@ const WIDTH = 1080;
 const HEIGHT = 1920;
 const DURATION = 30;
 
-const columnsCount = 8; // 8 columns -> 9 column lines -> 9 quads horizontally
+export const columnsCount = 8; // Export this constant
 // Number of cells in each column
-const cellsCount = 8;   // 8 cells -> 9 row lines -> 9 quads vertically
+export const cellsCount = 8;   // Export this constant
 // Amplitude of cell y-movement - Recalculate based on new columnsCount
-const cellAmplitude = HEIGHT / cellsCount * 1.5; // Adjust amplitude based on cell height now
+const cellAmplitude = HEIGHT / cellsCount * 1; // Adjust amplitude based on cell height now
 // Noise offset between columns (0 = synchronized, higher = more different)
-const columnNoiseOffset = 1;
+const columnNoiseOffset = -20;
 
 // Noise control parameters
 // Frequency for column positioning (lower = smoother transitions)
-const columnNoiseFrequency = 2;
+const columnNoiseFrequency = 1.5; // Increased frequency for more erratic column movement
 // Speed of column movement (lower = slower changes)
-const columnNoiseSpeed = 30;
+const columnNoiseSpeed = 25;     // Increased column speed
 // Maximum displacement as a fraction of column width
-const columnDisplacementFactor = 0.6;
+const columnDisplacementFactor = 0.8; // Increased displacement significantly
 
 // Inner grid settings
 // Inset from edges in columns
@@ -106,12 +106,23 @@ const renderTexturedRectangle: RectangleRenderFunction = (
     letter = CHARS_FOR_TEXTURES[charIndex];
     assignedColorHex = DARK_PURPLE;
   } else if (isWordArea) {
-    // Word area: PARADOX with shift, Green color
-    // Use col/row directly as they are already 0-based for the word area (0-6)
-    const shift = row; // Shift amount equals the row number (0-6)
-    const charIndex = (col + shift) % TARGET_WORD.length; // Use col and row directly
-    letter = TARGET_WORD[charIndex];
-    assignedColorHex = LIME_GREEN;
+    // Word area: PARADOX (no shift), Alternating row colors
+    
+    // --- Letter Selection (No Shift) ---
+    // Use col directly as the index into the word (0-6)
+    if (col >= 0 && col < TARGET_WORD.length) {
+      letter = TARGET_WORD[col]; 
+    } else {
+      // Fallback for safety, though col should be 0-6 here
+      letter = '?'; 
+    }
+    
+    // --- Color Selection (Alternating Rows) ---
+    if (row % 2 === 0) { // Even rows (0, 2, 4, 6 relative to word area)
+      assignedColorHex = LIME_GREEN;
+    } else { // Odd rows (1, 3, 5 relative to word area)
+      assignedColorHex = DARK_PURPLE;
+    }
   }
 
   // Proceed only if we determined a letter
@@ -185,19 +196,21 @@ function setupLines() {
     const rightX = linePositions[i + 1];
     const column = new Column(leftX, rightX, cellsCount, i, 0);
 
-    // Set vertical noise parameters (using Y suffix)
-    column.setCellAmplitudeY(cellAmplitude); // Reuse vertical amplitude
-    column.setNoiseOffsetY(columnNoiseOffset); // Reuse noise offset
-    column.setCellNoiseFrequencyY(0.3); // Keep original freq/speed for Y
-    column.setCellNoiseSpeedY(10);
+    // --- Set vertical noise parameters (Y) --- 
+    // Increase vertical amplitude, frequency, and speed
+    const verticalAmplitudeFactor = 0.6; // Increased vertical amplitude
+    column.setCellAmplitudeY(cellAmplitude * verticalAmplitudeFactor); 
+    column.setNoiseOffsetY(columnNoiseOffset); 
+    column.setCellNoiseFrequencyY(0.5); // Increased frequency Y
+    column.setCellNoiseSpeedY(15);   // Increased speed Y
 
-    // Set horizontal noise parameters (using X suffix)
-    // Let's start with slightly smaller amplitude and different freq/speed
-    const horizontalAmplitudeFactor = 0.5; // Horizontal movement is 50% of vertical
+    // --- Set horizontal noise parameters (X) --- 
+    // Increase horizontal amplitude, frequency, and speed
+    const horizontalAmplitudeFactor = 0.8; // Increased horizontal amplitude
     column.setCellAmplitudeX(cellAmplitude * horizontalAmplitudeFactor); 
-    column.setNoiseOffsetX(columnNoiseOffset + 0.5); // Use a different offset for X noise
-    column.setCellNoiseFrequencyX(0.4); // Slightly different frequency
-    column.setCellNoiseSpeedX(8); // Slightly different speed
+    column.setNoiseOffsetX(columnNoiseOffset + 0.5); // Keep separate offset
+    column.setCellNoiseFrequencyX(0.6); // Increased frequency X
+    column.setCellNoiseSpeedX(20);  // Increased speed X
 
     columns.push(column);
   }
@@ -527,14 +540,12 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
   p.background(0);
   p.frameRate(FPS);
 
-  // --- Calculate Optimal Texture Size ---
-  const BASE_TEXTURE_SIZE = 384; // Increased base size
-  const displayDensity = p.pixelDensity();
-  const finalTextureSize = BASE_TEXTURE_SIZE * displayDensity;
-  console.log(`Display density: ${displayDensity}, Calculated texture size: ${finalTextureSize}x${finalTextureSize}`);
+  // --- Removed dynamic texture size calculation --- 
+  const finalTextureSize = 256; // Set fixed texture size
+  console.log(`Using fixed texture size: ${finalTextureSize}x${finalTextureSize}`);
   // --- End Calculation ---
 
-  // Generate alphabet textures ONCE during setup using calculated size
+  // Generate alphabet textures ONCE during setup using fixed size
   alphabetTextures = generateAlphabetTextures(p, finalTextureSize);
 
   setupLines(); // This now also calls setupRectangles internally

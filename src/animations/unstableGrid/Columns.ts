@@ -1,5 +1,6 @@
 import { createNoise2D } from "simplex-noise";
 import { Cell } from "./Cell";
+import { columnsCount } from "./unstableGrid";
 
 export class Column {
   public cells: Cell[] = [];
@@ -109,6 +110,7 @@ export class Column {
   public update() {
     const isActive = this.globalProgress > 0.001;
     const currentColumnWidth = this.rightX - this.leftX;
+    const baseColumnWidth = 1080 / columnsCount;
 
     for (let i = 0; i < this.cells.length; i++) {
       const cell = this.cells[i];
@@ -129,11 +131,13 @@ export class Column {
           const originalBottomY = this.originalCellPositions[i * 2 + 1];
           let newBottomY = originalBottomY + noiseValueY * this.cellAmplitudeY;
 
-          const minBottomY = cell.topY + 96; // Min height for current cell
+          // Reduce minimum cell height constraint significantly
+          const MIN_CELL_HEIGHT = 5; 
+          const minBottomY = cell.topY + MIN_CELL_HEIGHT; 
           const maxBottomY = 
             i < this.cells.length - 2 
-            ? this.originalCellPositions[(i + 1) * 2 + 1] - 96 // Ensure next cell min height based on its original top
-            : 1920 - 96;
+            ? this.originalCellPositions[(i + 1) * 2 + 1] - MIN_CELL_HEIGHT // Ensure next cell min height
+            : 1920 - MIN_CELL_HEIGHT;
           
           newBottomY = Math.max(minBottomY, Math.min(maxBottomY, newBottomY));
           currentBottomY = newBottomY; // Use calculated bottom Y
@@ -153,34 +157,28 @@ export class Column {
 
       // --- Horizontal Noise Calculation (Center X) ---
       if (isActive) {
-        // Use a different noise offset/seed for X
         const noiseValueX =
           this.noiseX(
             i * this.cellNoiseFrequencyX + this.noiseOffsetX * this.columnIndex,
             this.globalProgress * this.cellNoiseSpeedX + 100 // Add offset to time/seed
           ) * 2 - 1;
 
-        // Calculate displacement based on amplitude and current column width
-        // Allows smaller amplitude effect in narrower columns
-        const displacementX = noiseValueX * this.cellAmplitudeX * (currentColumnWidth / (1080 / 6)); // Normalize amplitude effect based on default column width
+        // Normalize displacement based on current width relative to base width
+        const widthRatio = baseColumnWidth > 0 ? currentColumnWidth / baseColumnWidth : 1; // Avoid division by zero
+        const displacementX = noiseValueX * this.cellAmplitudeX * widthRatio;
         
         // Apply noise to the original center X
         let newCenterX = this.originalCellCenterX + displacementX;
 
-        // Clamp newCenterX to prevent excessive overlap with neighbors (e.g., keep within bounds + some padding)
-        const paddingX = 10; // Allow some overlap
+        // Clamp newCenterX 
+        const paddingX = 10; 
         newCenterX = Math.max(this.leftX + paddingX, Math.min(this.rightX - paddingX, newCenterX));
 
-        // Directly update the cell's center X coordinate
-        // Assuming Cell class allows direct modification or has a setter
         cell.center.x = newCenterX; 
       } else {
-        // Reset center X to original at start
         cell.center.x = this.originalCellCenterX;
       }
       
-      // Recalculate Y center based on potentially updated topY/bottomY
-      // Assuming Cell class handles this, or do it here: 
       cell.center.y = cell.topY + (cell.bottomY - cell.topY) / 2;
     }
   }

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import p5 from "p5";
-import { animationSettings, defaultAnimation } from "../animations";
-import { AnimationName } from "../animations";
+import { animationSettings, defaultAnimation, AnimationName } from "../animations";
 
 declare global {
   interface Global {
@@ -16,119 +15,105 @@ export const P5Animation = ({
   templateId?: AnimationName;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const p5Ref = useRef<p5>();
-  const setupDoneRef = useRef<boolean>(false);
+  const p5InstanceRef = useRef<p5>(); // Renamed for clarity
   const frame = useCurrentFrame();
   const { durationInFrames, fps: remotionFps } = useVideoConfig();
-  const isMountedRef = useRef<boolean>(true);
 
-  console.log("Animation template ID:", templateId);
-
-  // Get the current animation settings with fallback to default
-  const currentSettings =
-    animationSettings[templateId] || defaultAnimation;
-
-  if (!currentSettings) {
-    console.error(`Animation not found: ${templateId}, using default`);
-  }
-
-  // Get timing directly from animation settings
-  const animationFps = currentSettings.fps || remotionFps;
+  const currentSettings = animationSettings[templateId] || defaultAnimation;
+  const animationFunction = currentSettings.function;
+  const onSetupFunction = currentSettings.onSetup;
   const totalFrames = currentSettings.totalFrames || durationInFrames;
 
-  console.log(
-    `P5Animation using settings: FPS: ${animationFps}, Total Frames: ${totalFrames}`
-  );
-
-  // Main hook for setting up and cleaning up p5 instance
-  // Runs only when mounting/unmounting
+  // --- Effect for creating and cleaning up p5 instance based on templateId ---
   useEffect(() => {
-    isMountedRef.current = true;
-    setupDoneRef.current = false;
-
-    // Cleanup on unmount
-    return () => {
-      isMountedRef.current = false;
-
-      if (p5Ref.current) {
-        p5Ref.current.remove();
-        p5Ref.current = undefined;
+    console.log(`Effect for templateId: ${templateId} running.`);
+    if (!containerRef.current || !animationFunction) {
+        console.log("Skipping p5 instance creation: no container or animation function.");
+        return;
       }
-    };
-  }, [templateId]); // Reset when template changes
 
-  // Effect for updating and rendering each frame
-  useEffect(() => {
-    if (!containerRef.current || !isMountedRef.current) return;
-
-    // Function for rendering current frame
-    const renderCurrentFrame = () => {
-      // Prevent unnecessary actions if component is unmounted
-      if (!isMountedRef.current) return;
-
-      // Animation parameters
-      const t = frame / totalFrames;
-      const frameNumber = frame;
-
-      // Get animation dimensions from settings - use exact dimensions
+    // If an instance already exists, remove it first (ensures cleanup)
+    if (p5InstanceRef.current) {
+        console.log("Removing previous p5 instance before creating new one.");
+        p5InstanceRef.current.remove();
+        p5InstanceRef.current = undefined;
+    }
+    
+    console.log(`Creating new p5 instance for template: ${templateId}`);
+    const sketch = (p: p5) => {
+      p.setup = () => {
       const width = currentSettings.width || 1080;
       const height = currentSettings.height || 1920;
-
-      const animationFunction = currentSettings.function;
-
-      // If we already have a p5 instance, work with it
-      if (p5Ref.current && animationFunction) {
-        // p5Ref.current.clear();
-        // p5Ref.current.background(0);
-
-        // Use the selected animation function directly
-        animationFunction(p5Ref.current, t, frameNumber, totalFrames);
-      } else {
-        // If p5 instance doesn't exist, create it
-        const sketchFunc = (p: p5) => {
-          p.setup = () => {
-            // Create canvas with EXACT dimensions from animation settings
-            p.createCanvas(width, height);
-            p.background(0);
-
-            // Force pixel density to 1 for exact pixel matching
+        try {
+            p.createCanvas(width, height, p.WEBGL);
+        } catch(e) {
+            console.error("Error creating WebGL canvas:", e);
+            throw e; // Re-throw to make it visible in Remotion errors
+        }
             p.pixelDensity(1);
-            console.log(
-              `P5Animation: Created canvas with EXACT dimensions ${width}x${height}`
-            );
-
-            // Run onSetup function if it exists
-            if (currentSettings.onSetup && !setupDoneRef.current) {
-              console.log(`Running onSetup for ${templateId}`);
-              currentSettings.onSetup(p, t, frameNumber, totalFrames);
-              setupDoneRef.current = true;
-            }
-
-            // Draw first frame immediately
-            animationFunction(p, t, frameNumber, totalFrames);
-          };
-
-          // Disable built-in p5.js loop, since we're rendering each frame separately
-          p.draw = () => {};
+        console.log(`p5 setup running for ${templateId}`);
+        if (onSetupFunction) {
+          try {
+              onSetupFunction(p, 0, 0, totalFrames);
+          } catch(e) {
+              console.error("Error running onSetupFunction:", e);
+          }
+        }
           p.noLoop();
         };
 
-        // Create new p5 instance
-        if (isMountedRef.current && containerRef.current) {
-          p5Ref.current = new p5(sketchFunc, containerRef.current);
+      p.draw = () => {
+        if (!p5InstanceRef.current) return; // Safety check
+        const currentT = frame / totalFrames; // Use Remotion frame for time
+        const currentFrameNum = frame; // Use Remotion frame number
+        // console.log(`p5 draw triggered for frame ${currentFrameNum}, template ${templateId}`);
+        try {
+          p.background(0); 
+          // Apply coordinate fix every frame because origin is center in WebGL
+          p.translate(-p.width / 2, -p.height / 2); 
+          animationFunction(p, currentT, currentFrameNum, totalFrames);
+        } catch(e) {
+          console.error(`Error during p5 draw for frame ${currentFrameNum}:`, e);
         }
-      }
+      };
     };
 
-    renderCurrentFrame();
+    // Create the new instance
+    p5InstanceRef.current = new p5(sketch, containerRef.current);
+    console.log(`p5 instance created for ${templateId}`);
 
-    // Force garbage collection every 100 frames
-    if (frame % 100 === 0 && typeof global.gc === "function") {
-      global.gc();
+    // Cleanup function for when templateId changes OR component unmounts
+    return () => {
+      console.log(`Cleanup effect for templateId: ${templateId}. Removing instance.`);
+      if (p5InstanceRef.current) {
+        p5InstanceRef.current.remove();
+        p5InstanceRef.current = undefined;
+      }
+    };
+  }, [templateId, animationFunction, onSetupFunction, totalFrames, currentSettings]); // Dependencies that necessitate a *new* p5 instance
+
+  // --- Effect for redrawing the correct frame --- 
+  useEffect(() => {
+    if (p5InstanceRef.current) {
+      // Update p5's internal frameCount to match Remotion's frame
+      // This might be needed if animation logic relies on p.frameCount
+      // p5InstanceRef.current.frameCount = frame;
+      
+      // console.log(`Requesting redraw for frame ${frame}`);
+      p5InstanceRef.current.redraw(); // Tell p5 to execute the draw function once for the current frame
+    } else {
+      console.log(`Skipping redraw for frame ${frame}: p5 instance not available.`);
     }
-  }, [frame, templateId, totalFrames, currentSettings]);
+    
+    // Optional: Force GC periodically during render
+    if (frame % 100 === 0 && typeof global.gc === "function") {
+        // console.log(`Forcing GC at frame ${frame}`);
+        // global.gc();
+    }
 
-  // Get animation dimensions from settings
+  }, [frame]); // Only depends on the frame number
+
+  // Get dimensions for the container div
   const width = currentSettings.width || 1080;
   const height = currentSettings.height || 1920;
 
