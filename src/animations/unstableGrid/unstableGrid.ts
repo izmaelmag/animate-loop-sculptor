@@ -95,15 +95,7 @@ function getActiveEasingFunction(): (t: number) => number {
     return easings['linear' as keyof typeof easings] || ((t: number) => t); // Fallback to identity if even linear is missing
 }
 
-// Helper function for linear interpolation of points
-function lerpPoint(p: p5, p1: Point, p2: Point, t: number): Point {
-    return {
-        x: p.lerp(p1.x, p2.x, t),
-        y: p.lerp(p1.y, p2.y, t),
-    };
-}
-
-// --- Updated Textured Rectangle Renderer with Subdivision ---
+// --- Updated Textured Rectangle Renderer (Reverted Subdivision) ---
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
@@ -127,9 +119,8 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   // Check if this cell corresponds to a character in the textLines
   if (row >= 0 && row < config.textLines.length) {
       const currentLine = config.textLines[row];
-      if (col >= 0 && col < currentLine.length) {
+      if (currentLine !== "" && col >= 0 && col < currentLine.length) {
           letter = currentLine[col];
-          // --- CHANGE: Alternate primary and primary_darker based on column index (col) --- 
           assignedColorHex = (col % 2 === 0) 
               ? activeColorScheme.primary 
               : activeColorScheme.primary_darker;
@@ -144,7 +135,7 @@ const renderTexturedRectangle: RectangleRenderFunction = (
       assignedColorHex = activeColorScheme.secondary; // Use secondary color for filler
   }
 
-  // --- Rendering with Subdivision --- 
+  // --- Rendering (Single Quad) --- 
   if (letter) {
       const texture = alphabetTextures[letter];
       if (texture) {
@@ -159,73 +150,20 @@ const renderTexturedRectangle: RectangleRenderFunction = (
           p.texture(texture);
           p.noStroke();
           
-          // --- Subdivision Calculations (2x2 grid) --- 
-          const v00 = vertices[0]; // Top Left
-          const v10 = vertices[1]; // Top Right
-          const v11 = vertices[2]; // Bottom Right
-          const v01 = vertices[3]; // Bottom Left
-
-          // Interpolate midpoints of edges
-          const v05_0 = lerpPoint(p, v00, v10, 0.5); // Mid Top
-          const v1_05 = lerpPoint(p, v10, v11, 0.5); // Mid Right
-          const v05_1 = lerpPoint(p, v11, v01, 0.5); // Mid Bottom (swapped order for consistency)
-          const v0_05 = lerpPoint(p, v00, v01, 0.5); // Mid Left
-
-          // Interpolate center point
-          const v05_05 = lerpPoint(p, v0_05, v1_05, 0.5); // Center
-
-          // Define UV coordinates for the 9 points
+          // Define UV coordinates for the 4 corners
           const UV_EPSILON = config.textureUvEpsilon; 
-          const uv00 = { u: UV_EPSILON, v: UV_EPSILON };
-          const uv10 = { u: 1 - UV_EPSILON, v: UV_EPSILON };
-          const uv11 = { u: 1 - UV_EPSILON, v: 1 - UV_EPSILON };
-          const uv01 = { u: UV_EPSILON, v: 1 - UV_EPSILON };
-          const uv05_0 = { u: 0.5, v: UV_EPSILON };
-          const uv1_05 = { u: 1 - UV_EPSILON, v: 0.5 };
-          const uv05_1 = { u: 0.5, v: 1 - UV_EPSILON };
-          const uv0_05 = { u: UV_EPSILON, v: 0.5 };
-          const uv05_05 = { u: 0.5, v: 0.5 };
+          const uv00 = { u: UV_EPSILON, v: UV_EPSILON };         // Top Left
+          const uv10 = { u: 1 - UV_EPSILON, v: UV_EPSILON };      // Top Right
+          const uv11 = { u: 1 - UV_EPSILON, v: 1 - UV_EPSILON }; // Bottom Right
+          const uv01 = { u: UV_EPSILON, v: 1 - UV_EPSILON };    // Bottom Left
 
-          // Draw the 8 triangles forming the 2x2 grid
-          p.beginShape(p.TRIANGLES);
-
-          // Top-Left Quad
-          p.vertex(v00.x, v00.y, uv00.u, uv00.v);
-          p.vertex(v05_0.x, v05_0.y, uv05_0.u, uv05_0.v);
-          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
-
-          p.vertex(v00.x, v00.y, uv00.u, uv00.v);
-          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
-          p.vertex(v0_05.x, v0_05.y, uv0_05.u, uv0_05.v);
-
-          // Top-Right Quad
-          p.vertex(v05_0.x, v05_0.y, uv05_0.u, uv05_0.v);
-          p.vertex(v10.x, v10.y, uv10.u, uv10.v);
-          p.vertex(v1_05.x, v1_05.y, uv1_05.u, uv1_05.v);
-          
-          p.vertex(v05_0.x, v05_0.y, uv05_0.u, uv05_0.v);
-          p.vertex(v1_05.x, v1_05.y, uv1_05.u, uv1_05.v);
-          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
-
-          // Bottom-Left Quad
-          p.vertex(v0_05.x, v0_05.y, uv0_05.u, uv0_05.v);
-          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
-          p.vertex(v05_1.x, v05_1.y, uv05_1.u, uv05_1.v);
-
-          p.vertex(v0_05.x, v0_05.y, uv0_05.u, uv0_05.v);
-          p.vertex(v05_1.x, v05_1.y, uv05_1.u, uv05_1.v);
-          p.vertex(v01.x, v01.y, uv01.u, uv01.v);
-
-          // Bottom-Right Quad
-          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
-          p.vertex(v1_05.x, v1_05.y, uv1_05.u, uv1_05.v);
-          p.vertex(v11.x, v11.y, uv11.u, uv11.v);
-          
-          p.vertex(v05_05.x, v05_05.y, uv05_05.u, uv05_05.v);
-          p.vertex(v11.x, v11.y, uv11.u, uv11.v);
-          p.vertex(v05_1.x, v05_1.y, uv05_1.u, uv05_1.v);
-
-          p.endShape(); // End TRIANGLES
+          // Draw the original single quad (2 triangles implicitly)
+          p.beginShape();
+          p.vertex(vertices[0].x, vertices[0].y, uv00.u, uv00.v); // Top Left
+          p.vertex(vertices[1].x, vertices[1].y, uv10.u, uv10.v); // Top Right
+          p.vertex(vertices[2].x, vertices[2].y, uv11.u, uv11.v); // Bottom Right
+          p.vertex(vertices[3].x, vertices[3].y, uv01.u, uv01.v); // Bottom Left
+          p.endShape(p.CLOSE);
           
           p.noTint();
           p.pop();

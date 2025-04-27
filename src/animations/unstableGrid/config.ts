@@ -4,6 +4,7 @@
 const defaultTextLines = [
   "COLOR",
   "SCHEMES",
+  "", // Добавляем пустую строку для отступа
   "ARE",
   "COOL"
 ];
@@ -139,9 +140,9 @@ export const config: UnstableGridConfig = {
   columnsCount: calculateColumnsCount(defaultTextLines), // Calculate based on default lines
   cellsCount: 12, // USER CHANGE - Keep user's change, can be adjusted
   includeOuterEdges: true,
-  outerEdgePadding: 150,
-  minColumnWidth: 1, 
-  minCellHeight: 1,   
+  outerEdgePadding: 0,
+  minColumnWidth: 32, // Increased minimum width
+  minCellHeight: 32,   // Increased minimum height
 
   // Colors
   colorSchemeName: 'dark_blue_red', // USER CHANGE
