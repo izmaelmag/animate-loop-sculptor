@@ -8,10 +8,16 @@ import p5 from "p5";
  * 
  * @param {p5} p The p5 instance.
  * @param {string} letter The character to render.
- * @param {number} [size=256] The final texture dimension (size x size).
+ * @param {number} size The final texture dimension (size x size).
+ * @param {string} fontFamily The font family name to use.
  * @returns {p5.Graphics | null} The generated texture, or null if creation failed.
  */
-export function createLetterTexture(p: p5, letter: string, size: number = 256): p5.Graphics | null {
+export function createLetterTexture(
+    p: p5, 
+    letter: string, 
+    size: number, 
+    fontFamily: string
+): p5.Graphics | null {
     // 1. Initial Graphics buffer
     let pg1: p5.Graphics;
     try {
@@ -26,7 +32,7 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
     pg1.fill(255);
     pg1.textAlign(p.CENTER, p.CENTER);
     pg1.textSize(size * 0.85);
-    pg1.textFont('Cascadia Code');
+    pg1.textFont(fontFamily);
     pg1.text(letter, size / 2, size / 2);
 
     // 2. Find Bounding Box (without extra padding)
@@ -100,17 +106,23 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
 /**
  * Generates textures for the uppercase alphabet and digits.
  * @param {p5} p The p5 instance.
- * @param {number} [textureSize=256] The size for each texture.
+ * @param {number} textureSize The size for each texture.
+ * @param {string} fontFamily The font family name to use.
+ * @param {string} charsToGenerate The string of characters to generate textures for.
  * @returns {Record<string, p5.Graphics>} An object mapping characters to their textures.
  */
-export function generateAlphabetTextures(p: p5, textureSize: number = 256): Record<string, p5.Graphics> {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+export function generateAlphabetTextures(
+    p: p5, 
+    textureSize: number, 
+    fontFamily: string,
+    charsToGenerate: string
+): Record<string, p5.Graphics> {
     const textures: Record<string, p5.Graphics> = {};
-    console.log(`Generating character textures (${textureSize}x${textureSize})...`);
+    console.log(`Generating character textures (${textureSize}x${textureSize}) using font '${fontFamily}'...`);
     const startTime = p.millis();
 
-    for (const char of chars) {
-        const texture = createLetterTexture(p, char, textureSize);
+    for (const char of charsToGenerate) {
+        const texture = createLetterTexture(p, char, textureSize, fontFamily);
         if (texture) {
             textures[char] = texture;
         } else {
