@@ -98,51 +98,27 @@ export function createLetterTexture(p: p5, letter: string, size: number = 256): 
 }
 
 /**
- * Generates textures for each character in the provided string.
- * @param p The p5 instance.
- * @param size The width and height of the texture buffer.
- * @param characters The string of characters to generate textures for.
- * @param fontName The name of the font to use (must match loaded CSS font).
- * @returns A record where keys are characters and values are p5.Graphics buffers.
+ * Generates textures for the uppercase alphabet and digits.
+ * @param {p5} p The p5 instance.
+ * @param {number} [textureSize=256] The size for each texture.
+ * @returns {Record<string, p5.Graphics>} An object mapping characters to their textures.
  */
-export function generateAlphabetTextures(
-  p: p5,
-  size: number,
-  characters: string,
-  fontName: string
-): Record<string, p5.Graphics> {
-  console.log(`Generating character textures (${size}x${size}) using font: ${fontName}...`);
-  const startTime = p.millis();
-  const textures: Record<string, p5.Graphics> = {};
-  const uniqueChars = Array.from(new Set(characters));
+export function generateAlphabetTextures(p: p5, textureSize: number = 256): Record<string, p5.Graphics> {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const textures: Record<string, p5.Graphics> = {};
+    console.log(`Generating character textures (${textureSize}x${textureSize})...`);
+    const startTime = p.millis();
 
-  for (const char of uniqueChars) {
-    const buffer = p.createGraphics(size, size);
-    buffer.smooth();
-    buffer.pixelDensity(1);
-    buffer.fill(255);
-    buffer.noStroke();
-    buffer.textAlign(p.CENTER, p.CENTER);
-    buffer.textFont(fontName);
-
-    let fontSize = size * 0.8;
-    buffer.textSize(fontSize);
-
-    let charWidth = buffer.textWidth(char);
-    const maxCharWidth = size * 0.9;
-    while (charWidth > maxCharWidth && fontSize > 10) {
-      fontSize -= 2;
-      buffer.textSize(fontSize);
-      charWidth = buffer.textWidth(char);
+    for (const char of chars) {
+        const texture = createLetterTexture(p, char, textureSize);
+        if (texture) {
+            textures[char] = texture;
+        } else {
+             console.warn(`Skipping texture generation for '${char}' due to error.`);
+        }
     }
 
-    buffer.text(char, size / 2, size / 2);
-    textures[char] = buffer;
-  }
-
-  const endTime = p.millis();
-  console.log(
-    `Character textures generated in ${((endTime - startTime) / 1000).toFixed(2)} seconds.`
-  );
-  return textures;
+    const endTime = p.millis();
+    console.log(`Character textures generated in ${((endTime - startTime) / 1000).toFixed(2)} seconds.`);
+    return textures;
 } 

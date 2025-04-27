@@ -7,55 +7,74 @@ import {
   Line,
   Point,
   Color,
+  defaultRectangleRenderer,
   RectangleRenderFunction,
   RectangleMetadata,
 } from "./Rectangle";
-import { generateAlphabetTextures } from "../../utils/textureUtils";
-import { defaultConfig, UnstableGridConfig } from "./config"; // Import config
+import { generateAlphabetTextures } from "../../utils/textureUtils"; // Corrected path
 
-// --- Use values from config --- 
-const config: UnstableGridConfig = defaultConfig; // Use default config for now
+// --- Font Loading ---
+// Remove preload logic - rely on CSS loading via index.html
+// let cascadiaFont: p5.Font;
+// const CASCADIA_CODE_URL = '...'; 
+// function preloadAnimation(p: p5) { ... }
 
-// --- Removed Constants (now in config) ---
-// const DARK_PURPLE = ...
-// const LIME_GREEN = ...
-// const COLOR_PALETTE = ...
-// let alphabetTextures = ...
-// const CHARS_FOR_TEXTURES = ...
-// const FPS = ...
-// const WIDTH = ...
-// const HEIGHT = ...
-// const DURATION = ...
-// export const columnsCount = ...
-// export const cellsCount = ...
-// const cellAmplitude = ...
-// const columnNoiseOffset = ...
-// const columnNoiseFrequency = ...
-// const columnNoiseSpeed = ...
-// const columnDisplacementFactor = ...
-// const gridInsetColumns = ... // Not used?
-// const gridInsetRows = ... // Not used?
-// const includeOuterEdges = ...
-// const outerEdgePadding = ...
-// const TARGET_WORD = ...
+// --- Color Definitions ---
+const DARK_PURPLE = "#6A0DAD";
+const LIME_GREEN = "#32CD32";
+const COLOR_PALETTE: string[] = [DARK_PURPLE, LIME_GREEN];
 
-// Global variable to hold the generated textures (still needed)
+// Global variable to hold the generated textures
 let alphabetTextures: Record<string, p5.Graphics> = {};
+const CHARS_FOR_TEXTURES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Same chars as in generator
 
-// Create a single noise generator for consistent values (still needed)
+const FPS = 60;
+const WIDTH = 1080;
+const HEIGHT = 1920;
+const DURATION = 1;
+
+export const columnsCount = 8; // Export this constant
+// Number of cells in each column
+export const cellsCount = 8;   // Export this constant
+// Amplitude of cell y-movement - Recalculate based on new columnsCount
+const cellAmplitude = HEIGHT / cellsCount * 1; // Adjust amplitude based on cell height now
+// Noise offset between columns (0 = synchronized, higher = more different)
+const columnNoiseOffset = -20;
+
+// Noise control parameters
+// Frequency for column positioning (lower = smoother transitions)
+const columnNoiseFrequency = 1.5; // Increased frequency for more erratic column movement
+// Speed of column movement (lower = slower changes)
+const columnNoiseSpeed = 25;     // Increased column speed
+// Maximum displacement as a fraction of column width
+const columnDisplacementFactor = 0.8; // Increased displacement significantly
+
+// Inner grid settings
+// Inset from edges in columns
+const gridInsetColumns = 0;
+// Inset from edges in rows
+const gridInsetRows = 0;
+// Add outer edge rectangles (за пределами видимой сетки)
+const includeOuterEdges = true;
+// Extra padding for outer points (pixels)
+const outerEdgePadding = 150;
+
+// Create a single noise generator for consistent values
 const noise2D = createNoise2D();
 
-// Store line positions (still needed)
+// Store line positions
 const linePositions: number[] = [];
 const originalPositions: number[] = [];
 
-// Store columns (still needed)
+// Store columns
 const columns: Column[] = [];
 
-// Store rectangles for inner grid (still needed)
+// Store rectangles for inner grid
 const rectangles: Rectangle[] = [];
 
-// --- New Textured Rectangle Renderer (Uses config for colors/word) ---
+// --- New Textured Rectangle Renderer ---
+const TARGET_WORD = "PARADOX";
+
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
@@ -79,25 +98,29 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   let letter: string | null = null;
   let assignedColorHex: string | null = null;
 
-  // --- Determine Letter and Color based on Area (Use config) ---
+  // --- Determine Letter and Color based on Area ---
   if (isBorder) {
-    // Border area: Random character, Border color
-    const charIndex = rectIndex % config.charsForTextures.length;
-    letter = config.charsForTextures[charIndex];
-    assignedColorHex = config.borderColor; // Use config color
+    // Border area: Random character, Purple color
+    const charIndex = rectIndex % CHARS_FOR_TEXTURES.length;
+    letter = CHARS_FOR_TEXTURES[charIndex];
+    assignedColorHex = DARK_PURPLE;
   } else if (isWordArea) {
     // Word area: PARADOX (no shift), Alternating row colors
-    // --- Letter Selection (Use config word) ---
-    if (col >= 0 && col < config.targetWord.length) {
-      letter = config.targetWord[col]; 
+
+    // --- Letter Selection (No Shift) ---
+    // Use col directly as the index into the word (0-6)
+    if (col >= 0 && col < TARGET_WORD.length) {
+      letter = TARGET_WORD[col];
     } else {
-      letter = '?'; 
+      // Fallback for safety, though col should be 0-6 here
+      letter = '?';
     }
-    // --- Color Selection (Use config colors) ---
-    if (row % 2 === 0) { 
-      assignedColorHex = config.wordColor1;
-    } else { 
-      assignedColorHex = config.wordColor2;
+
+    // --- Color Selection (Alternating Rows) ---
+    if (row % 2 === 0) { // Even rows (0, 2, 4, 6 relative to word area)
+      assignedColorHex = LIME_GREEN;
+    } else { // Odd rows (1, 3, 5 relative to word area)
+      assignedColorHex = DARK_PURPLE;
     }
   }
 
@@ -147,76 +170,70 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   }
 };
 
+// Use the new textured renderer instead of the default one
 const renderRectangle: RectangleRenderFunction = renderTexturedRectangle;
 
-function setupLines(p: p5, cfg: UnstableGridConfig) { // Accept config
+function setupLines() {
+  // Clear any existing data
   linePositions.length = 0;
   originalPositions.length = 0;
   columns.length = 0;
 
-  // Use config values
-  const spacing = cfg.WIDTH / cfg.columnsCount;
+  // Set up evenly spaced lines
+  const spacing = WIDTH / columnsCount;
 
-  for (let i = 0; i <= cfg.columnsCount; i++) {
+  // Create positions for all division lines (including left and right edge)
+  for (let i = 0; i <= columnsCount; i++) {
     const xPos = i * spacing;
     linePositions.push(xPos);
-    originalPositions.push(xPos);
+    originalPositions.push(xPos); // Store original positions for reference
   }
 
-  for (let i = 0; i < cfg.columnsCount; i++) {
+  // Create columns between the lines
+  for (let i = 0; i < columnsCount; i++) {
     const leftX = linePositions[i];
     const rightX = linePositions[i + 1];
-    // Pass relevant config values to Column constructor
-    const column = new Column(
-      p, // Pass p5 instance if needed by Column
-      leftX, 
-      rightX, 
-      cfg.cellsCount, 
-      i, 
-      0, // Initial progress
-      {
-        cellAmplitudeY: cfg.cellAmplitudeY,
-        noiseOffsetY: cfg.cellNoiseOffsetY,
-        cellNoiseFrequencyY: cfg.cellNoiseFrequencyY,
-        cellNoiseSpeedY: cfg.cellNoiseSpeedY,
-        minCellHeightPixels: cfg.minCellHeightPixels,
-        cellAmplitudeXFactor: cfg.cellAmplitudeXFactor,
-        cellNoiseOffsetX: cfg.cellNoiseOffsetX,
-        cellNoiseFrequencyX: cfg.cellNoiseFrequencyX,
-        cellNoiseSpeedX: cfg.cellNoiseSpeedX,
-        cellPaddingXPixels: cfg.cellPaddingXPixels,
-        totalHeight: cfg.HEIGHT,
-        baseColumnWidth: cfg.WIDTH / cfg.columnsCount // Pass calculated base width
-      } // Pass config object
-    );
+    const column = new Column(leftX, rightX, cellsCount, i, 0);
+
+    // --- Set vertical noise parameters (Y) ---
+    // Increase vertical amplitude, frequency, and speed
+    const verticalAmplitudeFactor = 0.6; // Increased vertical amplitude
+    column.setCellAmplitudeY(cellAmplitude * verticalAmplitudeFactor);
+    column.setNoiseOffsetY(columnNoiseOffset);
+    column.setCellNoiseFrequencyY(0.5); // Increased frequency Y
+    column.setCellNoiseSpeedY(15);   // Increased speed Y
+
+    // --- Set horizontal noise parameters (X) ---
+    // Increase horizontal amplitude, frequency, and speed
+    const horizontalAmplitudeFactor = 0.8; // Increased horizontal amplitude
+    column.setCellAmplitudeX(cellAmplitude * horizontalAmplitudeFactor);
+    column.setNoiseOffsetX(columnNoiseOffset + 0.5); // Keep separate offset
+    column.setCellNoiseFrequencyX(0.6); // Increased frequency X
+    column.setCellNoiseSpeedX(20);  // Increased speed X
 
     columns.push(column);
   }
 
-  setupRectangles(cfg); // Pass config
+  // Create rectangles based on cell centers
+  setupRectangles();
 }
 
-function setupRectangles(cfg: UnstableGridConfig) { // Accept config
+// Create rectangles connecting cell centers
+function setupRectangles() {
   rectangles.length = 0;
 
-  // Use config values
-  const minX = -cfg.outerEdgePadding;
-  const maxX = cfg.WIDTH + cfg.outerEdgePadding;
-  const minY = -cfg.outerEdgePadding;
-  const maxY = cfg.HEIGHT + cfg.outerEdgePadding;
+  const minX = -outerEdgePadding;
+  const maxX = WIDTH + outerEdgePadding;
+  const minY = -outerEdgePadding;
+  const maxY = HEIGHT + outerEdgePadding;
 
-  for (let i = 0; i <= cfg.columnsCount; i++) {
-    for (let j = 0; j <= cfg.cellsCount; j++) {
-      const createRect = cfg.includeOuterEdges || (i < cfg.columnsCount && j < cfg.cellsCount);
+  for (let i = 0; i <= columnsCount; i++) {
+    for (let j = 0; j <= cellsCount; j++) {
+      const createRect =
+        includeOuterEdges || (i < columnsCount && j < cellsCount);
 
       if (createRect) {
-        // ... (logic for getting/creating points, using cfg.WIDTH/HEIGHT/outerEdgePadding) ...
-        // Inside the logic for virtual points, use cfg.WIDTH, cfg.HEIGHT, minX, maxX etc.
-        // Example for Top-left virtual point:
-        // const x = i === 0 ? minX : i > 0 ? columns[i - 1].cells[0].centerX : maxX;
-        // const y = j === 0 ? minY : j > 0 ? columns[0].cells[j - 1].centerY : maxY;
-        
-        // --- Corrected logic for virtual points using config --- 
+        // Get or create cell centers
         let topLeft: Point;
         let topRight: Point;
         let bottomRight: Point;
@@ -226,40 +243,73 @@ function setupRectangles(cfg: UnstableGridConfig) { // Accept config
         if (i > 0 && j > 0) {
           topLeft = columns[i - 1].cells[j - 1].center;
         } else {
-          const x = i === 0 ? minX : (i > 0 && columns[i - 1]?.cells[0]) ? columns[i - 1].cells[0].centerX : maxX; // Added check
-          const y = j === 0 ? minY : (j > 0 && columns[0]?.cells[j - 1]) ? columns[0].cells[j - 1].centerY : maxY; // Added check
+          // Create virtual point outside the grid
+          const x =
+            i === 0 ? minX : i > 0 ? columns[i - 1].cells[0].centerX : maxX;
+          const y =
+            j === 0 ? minY : j > 0 ? columns[0].cells[j - 1].centerY : maxY;
           topLeft = { x, y };
         }
-        // ... (similar logic for topRight, bottomRight, bottomLeft using cfg values where needed) ...
+
         // Top-right point
-        if (i < cfg.columnsCount && j > 0) {
+        if (i < columnsCount && j > 0) {
           topRight = columns[i].cells[j - 1].center;
         } else {
-          const x = i >= cfg.columnsCount ? maxX : (i < cfg.columnsCount && columns[i]?.cells[0]) ? columns[i].cells[0].centerX : minX;
-          const y = j === 0 ? minY : (j > 0 && columns[0]?.cells[j - 1]) ? columns[0].cells[j - 1].centerY : maxY;
+          // Create virtual point
+          const x =
+            i >= columnsCount
+              ? maxX
+              : i < columnsCount
+              ? columns[i].cells[0].centerX
+              : minX;
+          const y =
+            j === 0 ? minY : j > 0 ? columns[0].cells[j - 1].centerY : maxY;
           topRight = { x, y };
         }
+
         // Bottom-right point
-        if (i < cfg.columnsCount && j < cfg.cellsCount) {
+        if (i < columnsCount && j < cellsCount) {
           bottomRight = columns[i].cells[j].center;
         } else {
-          const x = i >= cfg.columnsCount ? maxX : (i < cfg.columnsCount && columns[i]?.cells[j]) ? columns[i].cells[j].centerX : minX;
-          const y = j >= cfg.cellsCount ? maxY : (j < cfg.cellsCount && columns[0]?.cells[j]) ? columns[0].cells[j].centerY : minY;
+          // Create virtual point
+          const x =
+            i >= columnsCount
+              ? maxX
+              : i < columnsCount
+              ? columns[i].cells[0].centerX
+              : minX;
+          const y =
+            j >= cellsCount
+              ? maxY
+              : j < cellsCount
+              ? columns[0].cells[j].centerY
+              : minY;
           bottomRight = { x, y };
         }
+
         // Bottom-left point
-        if (i > 0 && j < cfg.cellsCount) {
+        if (i > 0 && j < cellsCount) {
           bottomLeft = columns[i - 1].cells[j].center;
         } else {
-          const x = i === 0 ? minX : (i > 0 && columns[i - 1]?.cells[j]) ? columns[i - 1].cells[j].centerX : maxX;
-          const y = j >= cfg.cellsCount ? maxY : (j < cfg.cellsCount && columns[0]?.cells[j]) ? columns[0].cells[j].centerY : minY; 
+          // Create virtual point
+          const x =
+            i === 0 ? minX : i > 0 ? columns[i - 1].cells[0].centerX : maxX;
+          const y =
+            j >= cellsCount
+              ? maxY
+              : j < cellsCount
+              ? columns[0].cells[j].centerY
+              : minY;
           bottomLeft = { x, y };
         }
 
         const rect = new Rectangle(topLeft, topRight, bottomRight, bottomLeft);
-        const isBorder = i === 0 || i === cfg.columnsCount || j === 0 || j === cfg.cellsCount;
+
+        // --- Determine if border or word area ---
+        const isBorder = i === 0 || i === columnsCount || j === 0 || j === cellsCount;
         const isWordArea = !isBorder;
 
+        // --- Set Metadata ---
         rect.setMetadata({
           colTopLeft: i - 1, // 0-based index for the actual cell/quad column
           rowTopLeft: j - 1, // 0-based index for the actual cell/quad row
@@ -267,136 +317,234 @@ function setupRectangles(cfg: UnstableGridConfig) { // Accept config
           rowBottomRight: j,
           isBorder: isBorder,
           isWordArea: isWordArea
+          // Remove assignedColor - it will be determined in the renderer
         });
+
         rectangles.push(rect);
       }
     }
   }
 }
 
-function updateRectangles(cfg: UnstableGridConfig) { // Accept config
+// Update rectangle vertices based on current cell centers
+function updateRectangles() {
+  // Обновляем существующие прямоугольники вместо пересоздания
   for (const rect of rectangles) {
     const metadata = rect.getMetadata();
+
     if (metadata) {
-      // ... (logic for getting points, using cfg values where needed) ...
-      // Inside the logic for virtual points, use cfg.WIDTH, cfg.HEIGHT, minX, maxX etc.
-      // --- Corrected logic for virtual points using config --- 
-      const minX = -cfg.outerEdgePadding;
-      const maxX = cfg.WIDTH + cfg.outerEdgePadding;
-      const minY = -cfg.outerEdgePadding;
-      const maxY = cfg.HEIGHT + cfg.outerEdgePadding;
-      // ... (similar logic as in setupRectangles for getting/calculating points) ... 
-       let topLeft: Point;
-       let topRight: Point;
-       let bottomRight: Point;
-       let bottomLeft: Point;
-       const { colTopLeft, rowTopLeft, colBottomRight, rowBottomRight } = metadata;
+      const {
+        colTopLeft,
+        rowTopLeft,
+        colBottomRight,
+        rowBottomRight,
+      } = metadata; // Removed isBorder from destructuring as it's not used here
+
+      // Получаем актуальные центры ячеек или виртуальные точки
+      let topLeft: Point;
+      let topRight: Point;
+      let bottomRight: Point;
+      let bottomLeft: Point;
+
+      // Обрабатываем случаи, когда нужны виртуальные точки за пределами сетки
+      const minX = -outerEdgePadding;
+      const maxX = WIDTH + outerEdgePadding;
+      const minY = -outerEdgePadding;
+      const maxY = HEIGHT + outerEdgePadding;
 
       // Top-left point
-      if (colTopLeft >= 0 && rowTopLeft >= 0) {
+      if (
+        colTopLeft >= 0 &&
+        rowTopLeft >= 0 &&
+        colTopLeft < columnsCount &&
+        rowTopLeft < cellsCount
+      ) {
         topLeft = columns[colTopLeft].cells[rowTopLeft].center;
       } else {
-        const x = colTopLeft < 0 ? minX : (colTopLeft < columns.length && columns[colTopLeft]?.cells[0]) ? columns[colTopLeft].cells[0].centerX : maxX;
-        const y = rowTopLeft < 0 ? minY : (rowTopLeft < columns[0]?.cells.length && columns[0]?.cells[rowTopLeft]) ? columns[0].cells[rowTopLeft].centerY : maxY;
+        // Virtual point
+        const x =
+          colTopLeft < 0
+            ? minX
+            : colTopLeft >= columnsCount
+            ? maxX
+            : columns[colTopLeft].cells[0].centerX; // Use correct index
+        const y =
+          rowTopLeft < 0
+            ? minY
+            : rowTopLeft >= cellsCount
+            ? maxY
+            : columns[0].cells[rowTopLeft].centerY; // Use correct index
         topLeft = { x, y };
       }
+
       // Top-right point
-      if (colBottomRight >= 0 && rowTopLeft >= 0 && colBottomRight < columns.length) {
-         topRight = columns[colBottomRight].cells[rowTopLeft].center;
+      if (
+        colBottomRight >= 0 &&
+        rowTopLeft >= 0 &&
+        colBottomRight < columnsCount &&
+        rowTopLeft < cellsCount
+      ) {
+        topRight = columns[colBottomRight].cells[rowTopLeft].center;
       } else {
-         const x = colBottomRight < 0 ? minX : (colBottomRight < columns.length && columns[colBottomRight]?.cells[0]) ? columns[colBottomRight].cells[0].centerX : maxX;
-         const y = rowTopLeft < 0 ? minY : (rowTopLeft < columns[0]?.cells.length && columns[0]?.cells[rowTopLeft]) ? columns[0].cells[rowTopLeft].centerY : maxY;
-         topRight = { x, y };
-      }
-      // Bottom-right point
-      if (colBottomRight >= 0 && rowBottomRight >= 0 && colBottomRight < columns.length && rowBottomRight < columns[colBottomRight]?.cells.length) {
-        bottomRight = columns[colBottomRight].cells[rowBottomRight].center;
-      } else {
-        const x = colBottomRight < 0 ? minX : (colBottomRight < columns.length && columns[colBottomRight]?.cells[0]) ? columns[colBottomRight].cells[0].centerX : maxX;
-        const y = rowBottomRight < 0 ? minY : (rowBottomRight < columns[0]?.cells.length && columns[0]?.cells[rowBottomRight]) ? columns[0].cells[rowBottomRight].centerY : maxY;
-        bottomRight = { x, y };
-      }
-      // Bottom-left point
-      if (colTopLeft >= 0 && rowBottomRight >= 0 && rowBottomRight < columns[colTopLeft]?.cells.length) {
-         bottomLeft = columns[colTopLeft].cells[rowBottomRight].center;
-      } else {
-        const x = colTopLeft < 0 ? minX : (colTopLeft < columns.length && columns[colTopLeft]?.cells[0]) ? columns[colTopLeft].cells[0].centerX : maxX;
-        const y = rowBottomRight < 0 ? minY : (rowBottomRight < columns[0]?.cells.length && columns[0]?.cells[rowBottomRight]) ? columns[0].cells[rowBottomRight].centerY : maxY;
-         bottomLeft = { x, y };
+        // Virtual point
+        const x =
+          colBottomRight < 0
+            ? minX
+            : colBottomRight >= columnsCount
+            ? maxX
+            : columns[colBottomRight].cells[0].centerX; // Use correct index
+        const y =
+          rowTopLeft < 0
+            ? minY
+            : rowTopLeft >= cellsCount
+            ? maxY
+            : columns[0].cells[rowTopLeft].centerY; // Use correct index
+        topRight = { x, y };
       }
 
+      // Bottom-right point
+      if (
+        colBottomRight >= 0 &&
+        rowBottomRight >= 0 &&
+        colBottomRight < columnsCount &&
+        rowBottomRight < cellsCount
+      ) {
+        bottomRight = columns[colBottomRight].cells[rowBottomRight].center;
+      } else {
+        // Virtual point
+        const x =
+          colBottomRight < 0
+            ? minX
+            : colBottomRight >= columnsCount
+            ? maxX
+            : columns[colBottomRight].cells[0].centerX; // Use correct index
+        const y =
+          rowBottomRight < 0
+            ? minY
+            : rowBottomRight >= cellsCount
+            ? maxY
+            : columns[0].cells[rowBottomRight].centerY; // Use correct index
+        bottomRight = { x, y };
+      }
+
+      // Bottom-left point
+      if (
+        colTopLeft >= 0 &&
+        rowBottomRight >= 0 &&
+        colTopLeft < columnsCount &&
+        rowBottomRight < cellsCount
+      ) {
+        bottomLeft = columns[colTopLeft].cells[rowBottomRight].center;
+      } else {
+        // Virtual point
+        const x =
+          colTopLeft < 0
+            ? minX
+            : colTopLeft >= columnsCount
+            ? maxX
+            : columns[colTopLeft].cells[0].centerX; // Use correct index
+        const y =
+          rowBottomRight < 0
+            ? minY
+            : rowBottomRight >= cellsCount
+            ? maxY
+            : columns[0].cells[rowBottomRight].centerY; // Use correct index
+        bottomLeft = { x, y };
+      }
+
+      // Обновляем только вершины, сохраняя тот же объект и его цвет
       rect.setVertices(topLeft, topRight, bottomRight, bottomLeft);
     }
   }
 }
 
-// Main animation function (uses config)
-const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number): void => { 
+const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number, totalFrames: number): void => {
+  // Restore background and translate for WebGL
   p.background(0);
-  p.translate(-config.WIDTH / 2, -config.HEIGHT / 2);
+  p.translate(-p.width / 2, -p.height / 2);
 
+  // --- Restore Original Animation Logic ---
   const isActive = normalizedTime > 0.001;
-  
-  // Update line positions using config
+  // Update line positions based on noise
   for (let i = 1; i < linePositions.length - 1; i++) {
     if (isActive) {
-      const noiseValue = noise2D(i * config.columnNoiseFrequency, normalizedTime * config.columnNoiseSpeed) * 2 - 1;
-      const maxDisplacement = (config.WIDTH / config.columnsCount) * config.columnDisplacementFactor;
+      const noiseValue =
+        noise2D(i * columnNoiseFrequency, normalizedTime * columnNoiseSpeed) *
+          2 -
+        1;
+      const maxDisplacement = (WIDTH / columnsCount) * columnDisplacementFactor;
       let newPosition = originalPositions[i] + noiseValue * maxDisplacement;
-      const minLeftX = linePositions[i - 1] + config.minColumnWidthPixels;
-      const maxRightX = i < linePositions.length - 1 ? linePositions[i + 1] - config.minColumnWidthPixels : config.WIDTH;
+      const minLeftX = linePositions[i - 1] + 96;
+      const maxRightX =
+        i < linePositions.length - 1
+          ? linePositions[i + 1] - 96
+          : WIDTH;
       newPosition = p.max(minLeftX, p.min(maxRightX, newPosition));
       linePositions[i] = newPosition;
     } else {
       linePositions[i] = originalPositions[i];
     }
   }
-
-  // Update columns using config values passed during setup
+  // Update columns based on line positions
   for (let i = 0; i < columns.length; i++) {
     const leftX = linePositions[i];
     const rightX = linePositions[i + 1];
     columns[i].setBounds(leftX, rightX);
-    columns[i].setGlobalProgress(normalizedTime); 
-    columns[i].update(); // Column uses config passed in constructor
+    // --- Use original normalizedTime for progress --- 
+    columns[i].setGlobalProgress(normalizedTime); // Use original normalizedTime
+    // --- End progress setting ---
+    columns[i].update();
   }
-
-  updateRectangles(config); // Pass config
-
+  // Update rectangles based on current cell centers
+  updateRectangles();
+  // Рендеринг всех четырехугольников
   rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     if (metadata) {
-      metadata.rectIndex = index; 
-      renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata );
+      metadata.rectIndex = index; // Assign index for renderer
+      renderRectangle(
+        p,
+        normalizedTime,
+        rect.getLines(),
+        rect.getDiagonalIntersection(),
+        rect.getVertices(),
+        rect.getColor(),
+        metadata
+      );
     }
   });
+  // --- End Restored Logic ---
 };
 
-// Setup function (uses config)
 const setupAnimation: AnimationFunction = (p: p5): void => {
   p.background(0);
-  p.frameRate(config.FPS);
+  p.frameRate(FPS);
 
-  // Use config for texture generation (will be parameterized later)
-  console.log(`Using font: ${config.fontName}, Texture size: ${config.textureSizePixels}x${config.textureSizePixels}`);
-  alphabetTextures = generateAlphabetTextures(p, config.textureSizePixels, config.charsForTextures, config.fontName);
+  // Restore texture size calculation and generation
+  const finalTextureSize = 256;
+  console.log(`Using fixed texture size: ${finalTextureSize}x${finalTextureSize}`);
+  alphabetTextures = generateAlphabetTextures(p, finalTextureSize);
 
-  setupLines(p, config); // Pass config
+  // Restore line/rectangle setup
+  setupLines();
 
-  console.log("Setup complete. Textures generated:", Object.keys(alphabetTextures).length);
+  console.log(
+    "Restored setup complete. Textures generated:",
+    Object.keys(alphabetTextures).length
+  );
   console.log("Rectangles created:", rectangles.length);
 };
 
-// Export settings (uses config for dimensions etc.)
+// Now declare the settings after animation is defined
 export const settings: AnimationSettings = {
   id: "unstableGrid",
   name: "unstableGrid",
 
-  fps: config.FPS,
-  width: config.WIDTH,
-  height: config.HEIGHT,
-  totalFrames: config.DURATION_SECONDS * config.FPS,
+  fps: FPS,
+  width: WIDTH,
+  height: HEIGHT,
+  totalFrames: DURATION * FPS,
 
   function: animation,
-  onSetup: setupAnimation, 
+  onSetup: setupAnimation,
 };
