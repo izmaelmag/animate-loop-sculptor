@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Опционально: применить к body или другим элементам для веб-версии */
+body {
+  font-family: "Cascadia Code", sans-serif;
+}
+
 @layer base {
   :root {
     --background: 0 0% 98%;

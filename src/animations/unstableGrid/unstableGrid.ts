@@ -31,7 +31,7 @@ const CHARS_FOR_TEXTURES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Same chars
 const FPS = 60;
 const WIDTH = 1080;
 const HEIGHT = 1920;
-const DURATION = 30;
+const DURATION = 1;
 
 export const columnsCount = 8; // Export this constant
 // Number of cells in each column

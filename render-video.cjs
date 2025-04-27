@@ -38,7 +38,7 @@ const TEMPLATE = options.template;
 
 // MEMORY MANAGEMENT SETTINGS
 const CONCURRENCY = 1;
-const MEMORY_LIMIT = 4096;
+const MEMORY_LIMIT = 4096*2;
 
 // OUTPUT FILE PATH
 const OUTPUT_DIR = path.join(__dirname, "output");
