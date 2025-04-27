@@ -33,23 +33,18 @@ export interface UnstableGridConfig {
   useHighResTextures: boolean; // Flag to choose render size
   textureUvEpsilon: number;// Inset for texture UVs to prevent edge bleeding (0 to 0.5)
 
-  // Column Noise (Horizontal movement of vertical division lines)
-  columnNoiseOffset: number;    // Base noise offset between columns
-  columnNoiseFrequency: number; // Frequency/scale of column noise pattern
-  columnNoiseSpeed: number;     // Speed of column noise evolution over time
-  columnDisplacementFactor: number; // Max displacement fraction of original column width
+  // Animation Timing
+  updateIntervalFrames: number; // How often to calculate new random targets
+  easingFactor: number;         // Controls the amount of ease-in-out (e.g., 1=linear, 2=quadratic)
 
-  // Cell Noise - Vertical (Y movement of horizontal division lines)
-  cellVerticalAmplitudeFactor: number; // Multiplier for base vertical cell amplitude
-  cellNoiseOffsetY: number;           // Noise offset for vertical cell movement
-  cellNoiseFrequencyY: number;      // Frequency/scale of vertical cell noise
-  cellNoiseSpeedY: number;          // Speed of vertical cell noise evolution
+  // Column Movement Target Range
+  columnDisplacementFactor: number; // Max displacement fraction relative to original width
 
-  // Cell Noise - Horizontal (X movement of cell centers within columns)
-  cellHorizontalAmplitudeFactor: number; // Multiplier for base horizontal cell amplitude
-  cellNoiseOffsetX: number;           // Noise offset for horizontal cell movement
-  cellNoiseFrequencyX: number;      // Frequency/scale of horizontal cell noise
-  cellNoiseSpeedX: number;          // Speed of horizontal cell noise evolution
+  // Cell Vertical Movement Target Range
+  cellVerticalAmplitudeFactor: number; // Max displacement fraction relative to original cell height
+
+  // Cell Horizontal Movement Target Range
+  cellHorizontalAmplitudeFactor: number; // Max displacement fraction relative to original cell width
   cellPaddingX: number;               // Min padding from column edges for cell center X (px)
 }
 
@@ -59,15 +54,15 @@ export const config: UnstableGridConfig = {
   width: 1080,
   height: 1920,
   fps: 60,
-  durationInSeconds: 30, // Increased duration
+  durationInSeconds: 5, // Increased duration
 
   // Grid Structure
   columnsCount: WORD.length + 1,
   cellsCount: Math.floor(1.6 * WORD.length) + 1,
   includeOuterEdges: true,
   outerEdgePadding: 150,
-  minColumnWidth: 32, // Previously hardcoded in unstableGrid.ts animation fn
-  minCellHeight: 5,   // Previously hardcoded in Columns.ts update fn
+  minColumnWidth: 1, // Drastically reduced
+  minCellHeight: 1,   // Drastically reduced
 
   // Colors
   colorPalette: {
@@ -85,22 +80,17 @@ export const config: UnstableGridConfig = {
   useHighResTextures: false, // Default to preview quality
   textureUvEpsilon: 0.01, 
 
-  // Column Noise (Horizontal movement of vertical division lines)
-  columnNoiseOffset: -20,     // Base offset affecting both cell X/Y noise as well? Check usage.
-  columnNoiseFrequency: 1.5,  // Controls "waviness" of column lines
-  columnNoiseSpeed: 25,       // How fast column lines change shape
-  columnDisplacementFactor: 0.8, // How far column lines can move horizontally
+  // Animation Timing
+  updateIntervalFrames: 60, // Update targets every second
+  easingFactor: 2, // Quadratic ease-in-out by default
 
-  // Cell Noise - Vertical (Y movement of horizontal division lines)
-  cellVerticalAmplitudeFactor: 0.6, // How much vertical stretch/squish
-  cellNoiseOffsetY: -20,            // Offset specifically for Y noise (currently same as column offset)
-  cellNoiseFrequencyY: 0.5,       // Controls "waviness" of horizontal cell lines
-  cellNoiseSpeedY: 15,            // How fast horizontal cell lines change shape
+  // Column Movement Target Range
+  columnDisplacementFactor: 1.2, // Increased > 1 to allow wider range
 
-  // Cell Noise - Horizontal (X movement of cell centers within columns)
-  cellHorizontalAmplitudeFactor: 0.8, // How much cells move side-to-side
-  cellNoiseOffsetX: -20 + 0.5,        // Offset specifically for X noise (currently based on column offset)
-  cellNoiseFrequencyX: 0.6,         // Controls "waviness" of horizontal cell movement
-  cellNoiseSpeedX: 20,              // How fast cells move side-to-side
-  cellPaddingX: 10,                 // Previously hardcoded in Columns.ts update fn
+  // Cell Vertical Movement Target Range
+  cellVerticalAmplitudeFactor: 0.8, // Increased
+
+  // Cell Horizontal Movement Target Range
+  cellHorizontalAmplitudeFactor: 1.0, // Increased
+  cellPaddingX: 1, // Drastically reduced
 }; 

@@ -1,169 +1,194 @@
-import { createNoise2D } from "simplex-noise";
+import p5 from "p5";
 import { Cell } from "./Cell";
-import { UnstableGridConfig } from "./config"; // Import config type
+import { UnstableGridConfig } from "./config"; // Import config type only
+
+interface CellBoundaries {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
 
 export class Column {
-  public cells: Cell[] = [];
-  // Store original Y positions and X centers of cells
-  private originalCellPositions: number[] = []; // Stores topY, bottomY pairs
-  private originalCellCenterX: number = 0; // Store original center X
+  cells: Cell[] = [];
+  leftBoundary: number;  // Current interpolated boundary
+  rightBoundary: number; // Current interpolated boundary
+  cellsCount: number;
+  originalWidth: number;
+  originalCellHeight: number;
+  originalCellCenterX: number;
+  originalBoundaryYPositions: number[] = []; // Keep originals for target calculation
+  
+  // --- State for Direct Cell Boundary Interpolation ---
+  private previousCellBoundaries: CellBoundaries[] = [];
+  private targetCellBoundaries: CellBoundaries[] = [];
+  private currentCellBoundaries: CellBoundaries[] = []; // Interpolated values used for resize
 
-  // Noise parameters are now set via setters from unstableGrid.ts
-  private cellAmplitudeY!: number; // Use definite assignment assertion or initialize in constructor
-  private noiseOffsetY!: number;
-  private cellNoiseFrequencyY!: number;
-  private cellNoiseSpeedY!: number;
-  private cellAmplitudeX!: number;
-  private noiseOffsetX!: number;
-  private cellNoiseFrequencyX!: number;
-  private cellNoiseSpeedX!: number;
+  // --- Amplitude/Config (passed in constructor) ---
+  private cellAmplitudeYFactor: number = 0;
+  private cellAmplitudeXFactor: number = 0;
+  private config: UnstableGridConfig;
+  private minCellHeight: number;
+  private cellPaddingX: number;
 
-  private noiseY = createNoise2D();
-  private noiseX = createNoise2D();
-  private config: UnstableGridConfig; // Store config
+  private p: p5; // Store p5 instance
 
   constructor(
-    public leftX: number,
-    public rightX: number,
-    public cellsCount: number,
-    public columnIndex: number,
-    public globalProgress: number,
-    config: UnstableGridConfig // Receive config object
+    leftX: number,
+    rightX: number,
+    cellsCount: number,
+    _columnIndex: number,
+    _noiseSeed: number, 
+    config: UnstableGridConfig,
+    p: p5 
   ) {
-    this.config = config; // Store config
-    this.originalCellCenterX = this.leftX + (this.rightX - this.leftX) / 2;
-    this._createCells();
-  }
+    this.leftBoundary = leftX;
+    this.rightBoundary = rightX;
+    this.cellsCount = cellsCount;
+    this.config = config;
+    this.p = p; 
 
-  get width(): number {
-    return this.rightX - this.leftX;
-  }
+    this.originalWidth = rightX - leftX;
+    this.originalCellHeight = this.config.height / this.cellsCount;
+    this.minCellHeight = this.config.minCellHeight;
+    this.cellPaddingX = this.config.cellPaddingX;
+    this.originalCellCenterX = leftX + this.originalWidth / 2;
 
-  public setBounds(leftX: number, rightX: number) {
-    this.leftX = leftX;
-    this.rightX = rightX;
-
-    // Update original center X when bounds change
-    this.originalCellCenterX = this.leftX + (this.rightX - this.leftX) / 2;
-
-    // Update X coordinates for all cells via resize (which should update centerX)
-    for (const cell of this.cells) {
-      // Assuming resize updates the internal bounds used for centerX calculation
-      cell.resize(this.leftX, this.rightX, cell.topY, cell.bottomY);
-      // We will apply noise *in addition* to this base centerX in update()
+    // Calculate original Y boundaries
+    const spacing = this.config.height / this.cellsCount;
+    for (let i = 0; i <= this.cellsCount; i++) {
+      this.originalBoundaryYPositions.push(i * spacing);
     }
+
+    this._createCellsAndInitBoundaries();
   }
 
-  public setGlobalProgress(globalProgress: number) {
-    this.globalProgress = globalProgress;
-  }
-
-  // --- Setters for Vertical Noise ---
-  public setCellAmplitudeY(amplitude: number) {
-    this.cellAmplitudeY = amplitude;
-  }
-  public setNoiseOffsetY(offset: number) {
-    this.noiseOffsetY = offset;
-  }
-  public setCellNoiseFrequencyY(frequency: number) {
-    this.cellNoiseFrequencyY = frequency;
-  }
-  public setCellNoiseSpeedY(speed: number) {
-    this.cellNoiseSpeedY = speed;
-  }
-
-  // --- Setters for Horizontal Noise ---
-  public setCellAmplitudeX(amplitude: number) {
-    this.cellAmplitudeX = amplitude;
-  }
-  public setNoiseOffsetX(offset: number) {
-    this.noiseOffsetX = offset;
-  }
-  public setCellNoiseFrequencyX(frequency: number) {
-    this.cellNoiseFrequencyX = frequency;
-  }
-  public setCellNoiseSpeedX(speed: number) {
-    this.cellNoiseSpeedX = speed;
-  }
-
-
-  private _createCells() {
+  // Combines cell creation and boundary state initialization
+  private _createCellsAndInitBoundaries(): void {
     this.cells = [];
-    this.originalCellPositions = [];
-
-    // Use config height
-    const totalHeight = this.config.height; 
-    const cellHeight = totalHeight / this.cellsCount;
+    this.previousCellBoundaries = [];
+    this.targetCellBoundaries = [];
+    this.currentCellBoundaries = [];
 
     for (let i = 0; i < this.cellsCount; i++) {
-      const topY = i * cellHeight;
-      const bottomY = topY + cellHeight;
-      const cell = new Cell(this.leftX, this.rightX, topY, bottomY);
+      const initialBounds: CellBoundaries = {
+          left: this.leftBoundary,
+          right: this.rightBoundary,
+          top: this.originalBoundaryYPositions[i],
+          bottom: this.originalBoundaryYPositions[i+1]
+      };
+      
+      const cell = new Cell(
+          initialBounds.left,
+          initialBounds.right,
+          initialBounds.top,
+          initialBounds.bottom
+      );
       this.cells.push(cell);
-      this.originalCellPositions.push(topY);
-      this.originalCellPositions.push(bottomY);
+      
+      // Initialize all states with initial boundaries
+      this.previousCellBoundaries.push({...initialBounds});
+      this.targetCellBoundaries.push({...initialBounds});
+      this.currentCellBoundaries.push({...initialBounds});
     }
   }
 
-  public update() {
-    const isActive = this.globalProgress > 0.001;
-    const currentColumnWidth = this.rightX - this.leftX;
-    // Use config columnsCount
-    const baseColumnWidth = this.config.width / this.config.columnsCount; 
+  // Called by unstableGrid on update frames to set new random TARGET cell boundaries
+  updateCellTargets(p: p5, targetColumnLeft: number, targetColumnRight: number): void {
+    // Store current INTERPOLATED boundaries as previous for the next lerp cycle
+    // Important: Use deep copy
+    this.previousCellBoundaries = this.currentCellBoundaries.map(b => ({...b}));
 
-    const boundaryYPositions: number[] = [0];
-    for (let i = 0; i < this.cells.length; i++) {
-      let boundaryY = this.originalCellPositions[i * 2 + 1]; 
-      if (isActive && i < this.cells.length - 1) {
-        const noiseValueY =
-          this.noiseY(
-            i * this.cellNoiseFrequencyY + this.noiseOffsetY * this.columnIndex,
-            this.globalProgress * this.cellNoiseSpeedY
-          ) * 2 - 1;
-        boundaryY += noiseValueY * this.cellAmplitudeY;
-      }
-      boundaryYPositions.push(boundaryY); 
+    // Calculate target Y boundaries (similar logic to before)
+    const targetBoundaryYPositions: number[] = [...this.originalBoundaryYPositions];
+    for (let i = 1; i < this.originalBoundaryYPositions.length - 1; i++) {
+        const randomValue = p.random(-1, 1);
+        const distToTop = this.originalBoundaryYPositions[i] - this.originalBoundaryYPositions[i - 1];
+        const distToBottom = this.originalBoundaryYPositions[i + 1] - this.originalBoundaryYPositions[i];
+        const maxDispUp = distToTop - this.minCellHeight;
+        const maxDispDown = distToBottom - this.minCellHeight;
+        const baseAmplitude = this.originalCellHeight * this.cellAmplitudeYFactor; 
+        let displacement = randomValue * baseAmplitude;
+        if (displacement < 0) { displacement = Math.max(displacement, -maxDispUp); }
+        else { displacement = Math.min(displacement, maxDispDown); }
+        targetBoundaryYPositions[i] = this.originalBoundaryYPositions[i] + displacement;
     }
-    boundaryYPositions[this.cells.length] = this.config.height; // Use config height
 
-    for (let i = 0; i < this.cells.length; i++) {
-      const cell = this.cells[i];
-      let topY = boundaryYPositions[i];
-      let bottomY = boundaryYPositions[i+1];
+    // Calculate target X center displacement (similar logic to before)
+    const randomValueX = p.random(-1, 1);
+    const maxHorizontalDisp = this.originalWidth - this.cellPaddingX; 
+    const baseAmplitudeX = this.originalWidth * this.cellAmplitudeXFactor;
+    let displacementX = randomValueX * baseAmplitudeX;
+    displacementX = Math.max(-maxHorizontalDisp, Math.min(maxHorizontalDisp, displacementX));
+    const targetCellCenterX = this.originalCellCenterX + displacementX;
 
-      // Use config minCellHeight
-      const MIN_CELL_HEIGHT = this.config.minCellHeight; 
-      if (bottomY - topY < MIN_CELL_HEIGHT) {
-          const midY = (topY + bottomY) / 2;
-          topY = midY - MIN_CELL_HEIGHT / 2;
-          bottomY = midY + MIN_CELL_HEIGHT / 2;
-          if (i > 0) boundaryYPositions[i] = topY;
-          boundaryYPositions[i+1] = bottomY;
-      }
-      // Use config height
-      topY = Math.max(0, Math.min(this.config.height - MIN_CELL_HEIGHT, topY));
-      bottomY = Math.max(MIN_CELL_HEIGHT, Math.min(this.config.height, bottomY));
-      if (bottomY <= topY) bottomY = topY + MIN_CELL_HEIGHT;
+    // Calculate target cell width (keeping original width for now)
+    const targetCellWidth = this.originalWidth;
 
-      cell.resize(this.leftX, this.rightX, topY, bottomY);
+    // Calculate and store target boundaries for each cell
+    for(let i = 0; i < this.cellsCount; i++) {
+        const targetTop = targetBoundaryYPositions[i];
+        const targetBottom = targetBoundaryYPositions[i + 1];
+        
+        // Calculate target Left/Right based on target center and width
+        let targetLeft = targetCellCenterX - targetCellWidth / 2;
+        let targetRight = targetCellCenterX + targetCellWidth / 2;
 
-      let newCenterX = this.originalCellCenterX;
-      if (isActive) {
-        const noiseValueX =
-          this.noiseX(
-            i * this.cellNoiseFrequencyX + this.noiseOffsetX * this.columnIndex,
-            this.globalProgress * this.cellNoiseSpeedX + 100
-          ) * 2 - 1;
-        const widthRatio = baseColumnWidth > 0 ? currentColumnWidth / baseColumnWidth : 1;
-        const displacementX = noiseValueX * this.cellAmplitudeX * widthRatio;
-        newCenterX += displacementX;
-
-        // Use config cellPaddingX
-        const paddingX = this.config.cellPaddingX; 
-        newCenterX = Math.max(this.leftX + paddingX, Math.min(this.rightX - paddingX, newCenterX));
-      } 
-      cell.center.x = newCenterX;
-      cell.center.y = cell.topY + (cell.bottomY - cell.topY) / 2;
+        // Clamp target Left/Right using the TARGET column boundaries
+        targetLeft = Math.max(targetColumnLeft + this.cellPaddingX, targetLeft);
+        targetRight = Math.min(targetColumnRight - this.cellPaddingX, targetRight);
+        // Ensure min width within target bounds
+        if (targetRight - targetLeft < this.config.minColumnWidth) {
+             const center = (targetLeft + targetRight) / 2;
+             targetLeft = center - this.config.minColumnWidth / 2;
+             targetRight = center + this.config.minColumnWidth / 2;
+             // Re-clamp after ensuring min width
+             targetLeft = Math.max(targetColumnLeft + this.cellPaddingX, targetLeft);
+             targetRight = Math.min(targetColumnRight - this.cellPaddingX, targetRight);
+        }
+        
+        this.targetCellBoundaries[i] = {
+            left: targetLeft,
+            right: targetRight,
+            top: targetTop,
+            bottom: targetBottom,
+        };
     }
   }
+
+  // Called every frame by unstableGrid to interpolate towards target cell boundaries
+  interpolateCellBoundaries(lerpFactor: number): void {
+    for (let i = 0; i < this.cellsCount; i++) {
+        const prev = this.previousCellBoundaries[i];
+        const target = this.targetCellBoundaries[i];
+        const current = this.currentCellBoundaries[i]; // Get ref to current
+
+        current.left = this.p.lerp(prev.left, target.left, lerpFactor);
+        current.right = this.p.lerp(prev.right, target.right, lerpFactor);
+        current.top = this.p.lerp(prev.top, target.top, lerpFactor);
+        current.bottom = this.p.lerp(prev.bottom, target.bottom, lerpFactor);
+
+        // Apply the fully interpolated boundaries to the cell object
+        this.cells[i].resize(
+            current.left,
+            current.right,
+            current.top,
+            current.bottom
+        );
+    }
+  }
+
+  // Update the current column boundaries (called by unstableGrid)
+  setBounds(leftX: number, rightX: number): void {
+    this.leftBoundary = leftX;
+    this.rightBoundary = rightX;
+    // No need to update cells here, interpolateCellBoundaries handles it
+  }
+
+  // Setters for Amplitudes (renamed factors for clarity)
+  setCellAmplitudeYFactor(factor: number): void { this.cellAmplitudeYFactor = factor; }
+  setCellAmplitudeXFactor(factor: number): void { this.cellAmplitudeXFactor = factor; }
+
+  // REMOVED: interpolateState, _updateCellGeometry, updateTargets, previous/target BoundaryYPositions, previous/target CellCenterX etc.
 }
+

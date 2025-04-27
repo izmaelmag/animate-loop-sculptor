@@ -62,6 +62,8 @@ let cellAmplitude: number; // Will be calculated in setupAnimation
 let noise2D: ReturnType<typeof createNoise2D>;
 let linePositions: number[] = [];
 let originalPositions: number[] = [];
+let targetLinePositions: number[] = []; // Target positions for lines
+let previousLinePositions: number[] = []; // Line positions at the start of the interval
 let columns: Column[] = [];
 let rectangles: Rectangle[] = [];
 let alphabetTextures: Record<string, p5.Graphics> = {};
@@ -144,9 +146,24 @@ const renderTexturedRectangle: RectangleRenderFunction = (
 // Use the new textured renderer instead of the default one
 const renderRectangle: RectangleRenderFunction = renderTexturedRectangle;
 
-function setupLines() {
+// Easing function (easeInOut Quadratic)
+function easeInOutQuad(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+}
+function easeInOutPower(t: number, power: number): number {
+    t = Math.max(0, Math.min(1, t)); // Clamp t to [0, 1]
+    if (t < 0.5) {
+        return Math.pow(2, power - 1) * Math.pow(t, power);
+    } else {
+        return 1 - Math.pow(-2 * t + 2, power) / 2;
+    }
+}
+
+function setupLines(p: p5) { // Pass p for random
   linePositions = [];
   originalPositions = [];
+  targetLinePositions = [];
+  previousLinePositions = [];
   columns = [];
   
   const spacing = config.width / config.columnsCount;
@@ -155,28 +172,21 @@ function setupLines() {
     const xPos = i * spacing;
     linePositions.push(xPos);
     originalPositions.push(xPos);
+    targetLinePositions.push(xPos); // Initial target is the original position
+    previousLinePositions.push(xPos); // Initial previous is the original position
   }
 
+  // Initialize columns (pass p for random inside Column)
   for (let i = 0; i < config.columnsCount; i++) {
     const leftX = linePositions[i];
     const rightX = linePositions[i + 1];
-    // Pass config height to constructor or ensure Column reads it
-    const column = new Column(leftX, rightX, config.cellsCount, i, 0, config);
-
-    // Set noise parameters from config
-    column.setCellAmplitudeY(cellAmplitude * config.cellVerticalAmplitudeFactor);
-    column.setNoiseOffsetY(config.cellNoiseOffsetY); 
-    column.setCellNoiseFrequencyY(config.cellNoiseFrequencyY);
-    column.setCellNoiseSpeedY(config.cellNoiseSpeedY);
-
-    column.setCellAmplitudeX(cellAmplitude * config.cellHorizontalAmplitudeFactor);
-    column.setNoiseOffsetX(config.cellNoiseOffsetX); 
-    column.setCellNoiseFrequencyX(config.cellNoiseFrequencyX);
-    column.setCellNoiseSpeedX(config.cellNoiseSpeedX);
-
+    const column = new Column(leftX, rightX, config.cellsCount, i, 0, config, p);
+    // Use new amplitude factor setters
+    column.setCellAmplitudeYFactor(config.cellVerticalAmplitudeFactor); // Use Factor setter
+    column.setCellAmplitudeXFactor(config.cellHorizontalAmplitudeFactor); // Use Factor setter
     columns.push(column);
   }
-  setupRectangles();
+  setupRectangles(); // This needs updated logic too if it depends on Columns directly
 }
 
 // Create rectangles connecting cell centers
@@ -419,85 +429,90 @@ function updateRectangles() {
   }
 }
 
-const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number, totalFrames: number): void => {
-  // Restore background and translate for WebGL
+// Function to calculate new random target line positions with constraints
+function calculateNewTargetLinePositions(p: p5) {
+    for (let i = 1; i < originalPositions.length - 1; i++) {
+        const randomValue = p.random(-1, 1); // Random value from -1 to 1
+
+        const distToLeft = originalPositions[i] - originalPositions[i-1];
+        const distToRight = originalPositions[i+1] - originalPositions[i];
+        
+        // Allow movement almost up to the neighbor's original position, minus minWidth
+        const maxDispLeft = distToLeft - config.minColumnWidth;
+        const maxDispRight = distToRight - config.minColumnWidth;
+        
+        const baseAmplitude = (config.width / config.columnsCount) * config.columnDisplacementFactor;
+        let displacement = randomValue * baseAmplitude;
+
+        // Apply the relaxed displacement limits
+        if (displacement < 0) { 
+            displacement = Math.max(displacement, -maxDispLeft); // Limit by distance to left neighbor
+        } else { 
+            displacement = Math.min(displacement, maxDispRight); // Limit by distance to right neighbor
+        }
+        targetLinePositions[i] = originalPositions[i] + displacement;
+    }
+    // Keep start/end targets fixed
+    targetLinePositions[0] = originalPositions[0];
+    targetLinePositions[originalPositions.length - 1] = originalPositions[originalPositions.length - 1];
+}
+
+const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number): void => {
   p.background(0);
   p.translate(-config.width / 2, -config.height / 2);
 
-  // --- Restore Original Animation Logic ---
-  const isActive = normalizedTime > 0.001;
-  // Update line positions based on noise
-  for (let i = 1; i < linePositions.length - 1; i++) {
-    if (isActive) {
-      const noiseValue =
-        noise2D(i * config.columnNoiseFrequency, normalizedTime * config.columnNoiseSpeed) *
-          2 -
-        1;
-      const maxDisplacement = (config.width / config.columnsCount) * config.columnDisplacementFactor;
-      let newPosition = originalPositions[i] + noiseValue * maxDisplacement;
-      const minLeftX = linePositions[i - 1] + config.minColumnWidth;
-      const maxRightX =
-        i < linePositions.length - 1
-          ? linePositions[i + 1] - config.minColumnWidth
-          : config.width;
-      newPosition = p.max(minLeftX, p.min(maxRightX, newPosition));
-      linePositions[i] = newPosition;
-    } else {
-      linePositions[i] = originalPositions[i];
-    }
+  const updateInterval = config.updateIntervalFrames;
+  const isUpdateFrame = currentFrameNum % updateInterval === 0;
+
+  if (isUpdateFrame || currentFrameNum === 0) { 
+      previousLinePositions = [...linePositions]; 
+      calculateNewTargetLinePositions(p); // Calculate target column lines
+      
+      // Call updateCellTargets for each column, passing TARGET line positions
+      columns.forEach((col, i) => 
+          col.updateCellTargets(p, targetLinePositions[i], targetLinePositions[i + 1])
+      );
   }
-  // Update columns based on line positions
+
+  // Calculate lerp factor for the current interval
+  const progressInInterval = (currentFrameNum % updateInterval) / updateInterval;
+  const lerpFactor = easeInOutPower(progressInInterval, config.easingFactor);
+
+  // Interpolate column line positions
+  for (let i = 0; i < linePositions.length; i++) {
+      linePositions[i] = p.lerp(previousLinePositions[i], targetLinePositions[i], lerpFactor);
+  }
+
+  // Update columns: set current bounds and interpolate cell boundaries
   for (let i = 0; i < columns.length; i++) {
-    const leftX = linePositions[i];
-    const rightX = linePositions[i + 1];
-    columns[i].setBounds(leftX, rightX);
-    // --- Use original normalizedTime for progress --- 
-    columns[i].setGlobalProgress(normalizedTime); // Use original normalizedTime
-    // --- End progress setting ---
-    columns[i].update();
+    const leftX = linePositions[i]; // Use INTERPOLATED line position
+    const rightX = linePositions[i + 1]; // Use INTERPOLATED line position
+    columns[i].setBounds(leftX, rightX); // Update column's current boundary knowledge
+    columns[i].interpolateCellBoundaries(lerpFactor); // Interpolate the cells
   }
-  // Update rectangles based on current cell centers
-  updateRectangles();
-  // Рендеринг всех четырехугольников
+
+  updateRectangles(); // Update quads based on interpolated cell centers
+
+  // Render rectangles
   rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     if (metadata) {
-      metadata.rectIndex = index; // Assign index for renderer
-      renderRectangle(
-        p,
-        normalizedTime,
-        rect.getLines(),
-        rect.getDiagonalIntersection(),
-        rect.getVertices(),
-        rect.getColor(),
-        metadata
-      );
+      metadata.rectIndex = index;
+      renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata);
     }
   });
-  // --- End Restored Logic ---
 };
 
 const setupAnimation: AnimationFunction = (p: p5): void => {
   p.background(0);
   p.frameRate(config.fps);
   noise2D = createNoise2D(); 
-  cellAmplitude = config.height / config.cellsCount; 
+  // cellAmplitude = config.height / config.cellsCount; // This variable seems unused now
+  const selectedTextureSize = config.useHighResTextures ? config.textureSizeRender : config.textureSizePreview;
+  console.log(`Using texture size: ${selectedTextureSize}x${selectedTextureSize}`);
+  alphabetTextures = generateAlphabetTextures(p, selectedTextureSize, config.fontFamily, config.charsForTexture);
   
-  // Select texture size based on config flag
-  const selectedTextureSize = config.useHighResTextures 
-                              ? config.textureSizeRender 
-                              : config.textureSizePreview;
-                              
-  console.log(`Using texture size: ${selectedTextureSize}x${selectedTextureSize}`); // Log selected size
-
-  // Pass selected size and other config values
-  alphabetTextures = generateAlphabetTextures(
-    p, 
-    selectedTextureSize, // Use selected size
-    config.fontFamily, 
-    config.charsForTexture
-  );
-  setupLines(); 
+  setupLines(p); 
 
   console.log("Setup complete using config. Textures generated:", Object.keys(alphabetTextures).length);
   console.log("Rectangles created:", rectangles.length);
