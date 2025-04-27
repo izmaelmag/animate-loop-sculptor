@@ -74,7 +74,6 @@ const rectangles: Rectangle[] = [];
 
 // --- New Textured Rectangle Renderer ---
 const TARGET_WORD = "PARADOX";
-// const TARGET_COL = 1; // No longer needed
 
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
@@ -107,16 +106,16 @@ const renderTexturedRectangle: RectangleRenderFunction = (
     assignedColorHex = DARK_PURPLE;
   } else if (isWordArea) {
     // Word area: PARADOX (no shift), Alternating row colors
-    
+
     // --- Letter Selection (No Shift) ---
     // Use col directly as the index into the word (0-6)
     if (col >= 0 && col < TARGET_WORD.length) {
-      letter = TARGET_WORD[col]; 
+      letter = TARGET_WORD[col];
     } else {
       // Fallback for safety, though col should be 0-6 here
-      letter = '?'; 
+      letter = '?';
     }
-    
+
     // --- Color Selection (Alternating Rows) ---
     if (row % 2 === 0) { // Even rows (0, 2, 4, 6 relative to word area)
       assignedColorHex = LIME_GREEN;
@@ -136,15 +135,15 @@ const renderTexturedRectangle: RectangleRenderFunction = (
 
   if (texture) {
     p.push();
-    
+
     // Apply tint (use determined color, default to white if somehow null)
     if (assignedColorHex) {
-        p.tint(assignedColorHex); 
+        p.tint(assignedColorHex);
     } else {
         p.tint(255); // Default to white if color assignment failed
     }
 
-    p.textureMode(p.NORMAL); 
+    p.textureMode(p.NORMAL);
     p.textureWrap(p.CLAMP);
     p.texture(texture);
     p.noStroke();
@@ -162,9 +161,9 @@ const renderTexturedRectangle: RectangleRenderFunction = (
     // Bottom-Left vertex -> UV (epsilon, 1 - epsilon)
     p.vertex(vertices[3].x, vertices[3].y, UV_EPSILON, 1 - UV_EPSILON);
     p.endShape(p.CLOSE);
-    
+
     p.noTint(); // Reset tint
-    
+
     p.pop();
   } else {
     console.warn(`Texture not found for letter: ${letter}`);
@@ -196,18 +195,18 @@ function setupLines() {
     const rightX = linePositions[i + 1];
     const column = new Column(leftX, rightX, cellsCount, i, 0);
 
-    // --- Set vertical noise parameters (Y) --- 
+    // --- Set vertical noise parameters (Y) ---
     // Increase vertical amplitude, frequency, and speed
     const verticalAmplitudeFactor = 0.6; // Increased vertical amplitude
-    column.setCellAmplitudeY(cellAmplitude * verticalAmplitudeFactor); 
-    column.setNoiseOffsetY(columnNoiseOffset); 
+    column.setCellAmplitudeY(cellAmplitude * verticalAmplitudeFactor);
+    column.setNoiseOffsetY(columnNoiseOffset);
     column.setCellNoiseFrequencyY(0.5); // Increased frequency Y
     column.setCellNoiseSpeedY(15);   // Increased speed Y
 
-    // --- Set horizontal noise parameters (X) --- 
+    // --- Set horizontal noise parameters (X) ---
     // Increase horizontal amplitude, frequency, and speed
     const horizontalAmplitudeFactor = 0.8; // Increased horizontal amplitude
-    column.setCellAmplitudeX(cellAmplitude * horizontalAmplitudeFactor); 
+    column.setCellAmplitudeX(cellAmplitude * horizontalAmplitudeFactor);
     column.setNoiseOffsetX(columnNoiseOffset + 0.5); // Keep separate offset
     column.setCellNoiseFrequencyX(0.6); // Increased frequency X
     column.setCellNoiseSpeedX(20);  // Increased speed X
@@ -339,8 +338,7 @@ function updateRectangles() {
         rowTopLeft,
         colBottomRight,
         rowBottomRight,
-        isBorder,
-      } = metadata;
+      } = metadata; // Removed isBorder from destructuring as it's not used here
 
       // Получаем актуальные центры ячеек или виртуальные точки
       let topLeft: Point;
@@ -369,13 +367,13 @@ function updateRectangles() {
             ? minX
             : colTopLeft >= columnsCount
             ? maxX
-            : columns[colTopLeft].cells[0].centerX;
+            : columns[colTopLeft].cells[0].centerX; // Use correct index
         const y =
           rowTopLeft < 0
             ? minY
             : rowTopLeft >= cellsCount
             ? maxY
-            : columns[0].cells[rowTopLeft].centerY;
+            : columns[0].cells[rowTopLeft].centerY; // Use correct index
         topLeft = { x, y };
       }
 
@@ -394,13 +392,13 @@ function updateRectangles() {
             ? minX
             : colBottomRight >= columnsCount
             ? maxX
-            : columns[colBottomRight].cells[0].centerX;
+            : columns[colBottomRight].cells[0].centerX; // Use correct index
         const y =
           rowTopLeft < 0
             ? minY
             : rowTopLeft >= cellsCount
             ? maxY
-            : columns[0].cells[rowTopLeft].centerY;
+            : columns[0].cells[rowTopLeft].centerY; // Use correct index
         topRight = { x, y };
       }
 
@@ -419,13 +417,13 @@ function updateRectangles() {
             ? minX
             : colBottomRight >= columnsCount
             ? maxX
-            : columns[colBottomRight].cells[0].centerX;
+            : columns[colBottomRight].cells[0].centerX; // Use correct index
         const y =
           rowBottomRight < 0
             ? minY
             : rowBottomRight >= cellsCount
             ? maxY
-            : columns[0].cells[rowBottomRight].centerY;
+            : columns[0].cells[rowBottomRight].centerY; // Use correct index
         bottomRight = { x, y };
       }
 
@@ -444,13 +442,13 @@ function updateRectangles() {
             ? minX
             : colTopLeft >= columnsCount
             ? maxX
-            : columns[colTopLeft].cells[0].centerX;
+            : columns[colTopLeft].cells[0].centerX; // Use correct index
         const y =
           rowBottomRight < 0
             ? minY
             : rowBottomRight >= cellsCount
             ? maxY
-            : columns[0].cells[rowBottomRight].centerY;
+            : columns[0].cells[rowBottomRight].centerY; // Use correct index
         bottomLeft = { x, y };
       }
 
@@ -460,98 +458,78 @@ function updateRectangles() {
   }
 }
 
-const animation: AnimationFunction = (p: p5, normalizedTime: number): void => {
-  p.background(0); // Clear background each frame
-
-  // --- BEGIN WEBGL Coordinate System Adjustment ---
-  // Translate the coordinate system so (0,0) is the top-left corner
+const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number, totalFrames: number): void => {
+  // Restore background and translate for WebGL
+  p.background(0);
   p.translate(-p.width / 2, -p.height / 2);
-  // --- END WEBGL Coordinate System Adjustment ---
 
-  // Reduce delay to start animation almost immediately
+  // --- Restore Original Animation Logic ---
   const isActive = normalizedTime > 0.001;
-
   // Update line positions based on noise
-  // Keep first and last positions fixed (edges of screen)
   for (let i = 1; i < linePositions.length - 1; i++) {
     if (isActive) {
-      // Use noise to get a value between -1 and 1
       const noiseValue =
         noise2D(i * columnNoiseFrequency, normalizedTime * columnNoiseSpeed) *
           2 -
         1;
-
-      // Maximum displacement amount (% of the original spacing)
       const maxDisplacement = (WIDTH / columnsCount) * columnDisplacementFactor;
-
-      // Calculate new position with displacement
       let newPosition = originalPositions[i] + noiseValue * maxDisplacement;
-
-      // Ensure minimum column width (16px)
-      const minLeftX = linePositions[i - 1] + 96; // minimum 96px from previous line
+      const minLeftX = linePositions[i - 1] + 96;
       const maxRightX =
         i < linePositions.length - 1
-          ? linePositions[i + 1] - 96 // minimum 96px from next line
-          : WIDTH; // or right edge
-
-      // Clamp the new position to maintain minimum width
-      newPosition = p.max(minLeftX, p.min(maxRightX, newPosition)); // Use p.max/p.min
-
+          ? linePositions[i + 1] - 96
+          : WIDTH;
+      newPosition = p.max(minLeftX, p.min(maxRightX, newPosition));
       linePositions[i] = newPosition;
     } else {
-      // Reset to original position for start of animation
       linePositions[i] = originalPositions[i];
     }
   }
-
   // Update columns based on line positions
   for (let i = 0; i < columns.length; i++) {
     const leftX = linePositions[i];
     const rightX = linePositions[i + 1];
-
     columns[i].setBounds(leftX, rightX);
-    columns[i].setGlobalProgress(normalizedTime);
+    // --- Use original normalizedTime for progress --- 
+    columns[i].setGlobalProgress(normalizedTime); // Use original normalizedTime
+    // --- End progress setting ---
     columns[i].update();
   }
-
   // Update rectangles based on current cell centers
   updateRectangles();
-
-  // Рендеринг всех четырехугольников с использованием renderRectangle (который теперь renderTexturedRectangle)
+  // Рендеринг всех четырехугольников
   rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     if (metadata) {
-      // Add index to metadata before calling
-      metadata.rectIndex = index; 
+      metadata.rectIndex = index; // Assign index for renderer
       renderRectangle(
-        p, 
-        normalizedTime, 
-        rect.getLines(), 
-        rect.getDiagonalIntersection(), 
-        rect.getVertices(), 
-        rect.getColor(), 
-        metadata // Metadata now includes rectIndex
+        p,
+        normalizedTime,
+        rect.getLines(),
+        rect.getDiagonalIntersection(),
+        rect.getVertices(),
+        rect.getColor(),
+        metadata
       );
     }
   });
+  // --- End Restored Logic ---
 };
 
 const setupAnimation: AnimationFunction = (p: p5): void => {
   p.background(0);
   p.frameRate(FPS);
 
-  // --- Removed dynamic texture size calculation --- 
-  const finalTextureSize = 256; // Set fixed texture size
+  // Restore texture size calculation and generation
+  const finalTextureSize = 256;
   console.log(`Using fixed texture size: ${finalTextureSize}x${finalTextureSize}`);
-  // --- End Calculation ---
-
-  // Generate alphabet textures ONCE during setup using fixed size
   alphabetTextures = generateAlphabetTextures(p, finalTextureSize);
 
-  setupLines(); // This now also calls setupRectangles internally
+  // Restore line/rectangle setup
+  setupLines();
 
   console.log(
-    "Setup complete. Textures generated:",
+    "Restored setup complete. Textures generated:",
     Object.keys(alphabetTextures).length
   );
   console.log("Rectangles created:", rectangles.length);
@@ -567,7 +545,6 @@ export const settings: AnimationSettings = {
   height: HEIGHT,
   totalFrames: DURATION * FPS,
 
-  // preload: preloadAnimation, // Remove preload from settings
   function: animation,
-  onSetup: setupAnimation, // Ensure this setup function is used
+  onSetup: setupAnimation,
 };

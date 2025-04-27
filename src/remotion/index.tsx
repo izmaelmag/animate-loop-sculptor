@@ -11,8 +11,6 @@ const calculateMetaData = async ({ props }: { props: Record<string, unknown> }) 
   const templateId = (props.templateId || props.templateName || DEFAULT_TEMPLATE_ID) as AnimationName;
   const settings = animationSettings[templateId] || defaultAnimation;
 
-  console.log(`calculateMetadata called with props: ${JSON.stringify(props)}, using templateId: ${templateId}`);
-
   return {
     durationInFrames: settings.totalFrames,
     fps: settings.fps,

@@ -14,19 +14,13 @@ export const MyVideo: React.FC<MyVideoProps> = ({
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
-  console.log("MyVideo rendering with template ID:", templateId);
-
   // Get the current animation settings with fallback to default
   const currentSettings = animationSettings[templateId] || defaultAnimation;
 
   if (!currentSettings) {
     console.error(`Animation not found: ${templateId}, using default`);
+    // This case should ideally not happen if default is always available
   }
-
-  // Log animation settings being used
-  console.log(
-    `Using animation: ${currentSettings.id} (${currentSettings.name}), FPS: ${currentSettings.fps}, Total Frames: ${currentSettings.totalFrames}`
-  );
 
   return (
     <div

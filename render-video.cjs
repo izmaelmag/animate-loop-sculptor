@@ -82,7 +82,7 @@ async function renderVideo() {
     console.log("Getting composition list...");
     const compositions = await getCompositions(bundleLocation, {
       inputProps: {
-        templateName: TEMPLATE,
+        templateId: TEMPLATE,
       },
     });
 
@@ -114,7 +114,7 @@ async function renderVideo() {
       codec: "h264",
       outputLocation: OUTPUT_FILE,
       inputProps: {
-        templateName: TEMPLATE,
+        templateId: TEMPLATE,
       },
       imageFormat: "jpeg",
       fps,
@@ -122,11 +122,13 @@ async function renderVideo() {
       crf,
       concurrency: CONCURRENCY,
       frameRange: undefined,
+      logLevel: 'verbose',
       chromiumOptions: {
+        chromeMode: "chrome-for-testing",
         disableWebSecurity: true,
         headless: true,
         enableGPU: true,
-        gl: 'angle',
+        gl: "angle",
       },
       browserExecutable: undefined,
       envVariables: {

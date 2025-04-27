@@ -112,50 +112,50 @@ export class Column {
     const currentColumnWidth = this.rightX - this.leftX;
     const baseColumnWidth = 1080 / columnsCount;
 
+    // Calculate all noisy boundary Y positions first
+    const boundaryYPositions: number[] = [0]; // Start with top boundary at 0
+    for (let i = 0; i < this.cells.length; i++) {
+      let boundaryY = this.originalCellPositions[i * 2 + 1]; // Original bottom boundary
+      if (isActive && i < this.cells.length - 1) { // No noise for the very last boundary
+        const noiseValueY =
+          this.noiseY(
+            i * this.cellNoiseFrequencyY + this.noiseOffsetY * this.columnIndex,
+            this.globalProgress * this.cellNoiseSpeedY
+          ) * 2 - 1;
+        
+        boundaryY += noiseValueY * this.cellAmplitudeY;
+      }
+      boundaryYPositions.push(boundaryY); 
+    }
+    // Ensure last boundary is at the bottom edge
+    boundaryYPositions[this.cells.length] = 1920; 
+
+    // Now update cells using the calculated boundaries
     for (let i = 0; i < this.cells.length; i++) {
       const cell = this.cells[i];
-      let currentTopY = cell.topY;
-      let currentBottomY = cell.bottomY;
+      let topY = boundaryYPositions[i];
+      let bottomY = boundaryYPositions[i+1];
 
-      // --- Vertical Noise Calculation (Boundaries) ---
-      // Only update boundaries for cells before the last one
-      if (i < this.cells.length - 1) {
-        const nextCell = this.cells[i+1];
-        if (isActive) {
-          const noiseValueY =
-            this.noiseY(
-              i * this.cellNoiseFrequencyY + this.noiseOffsetY * this.columnIndex,
-              this.globalProgress * this.cellNoiseSpeedY
-            ) * 2 - 1;
-          
-          const originalBottomY = this.originalCellPositions[i * 2 + 1];
-          let newBottomY = originalBottomY + noiseValueY * this.cellAmplitudeY;
-
-          // Reduce minimum cell height constraint significantly
-          const MIN_CELL_HEIGHT = 5; 
-          const minBottomY = cell.topY + MIN_CELL_HEIGHT; 
-          const maxBottomY = 
-            i < this.cells.length - 2 
-            ? this.originalCellPositions[(i + 1) * 2 + 1] - MIN_CELL_HEIGHT // Ensure next cell min height
-            : 1920 - MIN_CELL_HEIGHT;
-          
-          newBottomY = Math.max(minBottomY, Math.min(maxBottomY, newBottomY));
-          currentBottomY = newBottomY; // Use calculated bottom Y
-          // Update next cell's top to match
-          nextCell.resize(this.leftX, this.rightX, currentBottomY, nextCell.bottomY); 
-        } else {
-           // Reset to original positions at start
-           currentTopY = this.originalCellPositions[i*2];
-           currentBottomY = this.originalCellPositions[i*2+1];
-        }
-      } else {
-         // Ensure last cell goes to the bottom
-         currentBottomY = 1920;
+      // Apply minimum height constraint (adjust both boundaries if needed)
+      const MIN_CELL_HEIGHT = 5; 
+      if (bottomY - topY < MIN_CELL_HEIGHT) {
+          const midY = (topY + bottomY) / 2;
+          topY = midY - MIN_CELL_HEIGHT / 2;
+          bottomY = midY + MIN_CELL_HEIGHT / 2;
+          // Re-clamp adjacent boundaries (this could get complex, simplify for now)
+          if (i > 0) boundaryYPositions[i] = topY;
+          boundaryYPositions[i+1] = bottomY;
       }
-       // Apply vertical bounds update
-       cell.resize(this.leftX, this.rightX, currentTopY, currentBottomY);
+      // Clamp boundaries to screen edges (just in case)
+      topY = Math.max(0, Math.min(1920 - MIN_CELL_HEIGHT, topY));
+      bottomY = Math.max(MIN_CELL_HEIGHT, Math.min(1920, bottomY));
+      if (bottomY <= topY) bottomY = topY + MIN_CELL_HEIGHT; // Final safety
+
+      // Apply vertical bounds update
+      cell.resize(this.leftX, this.rightX, topY, bottomY);
 
       // --- Horizontal Noise Calculation (Center X) ---
+      let newCenterX = this.originalCellCenterX;
       if (isActive) {
         const noiseValueX =
           this.noiseX(
@@ -163,22 +163,14 @@ export class Column {
             this.globalProgress * this.cellNoiseSpeedX + 100 // Add offset to time/seed
           ) * 2 - 1;
 
-        // Normalize displacement based on current width relative to base width
-        const widthRatio = baseColumnWidth > 0 ? currentColumnWidth / baseColumnWidth : 1; // Avoid division by zero
+        const widthRatio = baseColumnWidth > 0 ? currentColumnWidth / baseColumnWidth : 1;
         const displacementX = noiseValueX * this.cellAmplitudeX * widthRatio;
-        
-        // Apply noise to the original center X
-        let newCenterX = this.originalCellCenterX + displacementX;
+        newCenterX += displacementX;
 
-        // Clamp newCenterX 
         const paddingX = 10; 
         newCenterX = Math.max(this.leftX + paddingX, Math.min(this.rightX - paddingX, newCenterX));
-
-        cell.center.x = newCenterX; 
-      } else {
-        cell.center.x = this.originalCellCenterX;
-      }
-      
+      } 
+      cell.center.x = newCenterX;
       cell.center.y = cell.topY + (cell.bottomY - cell.topY) / 2;
     }
   }
