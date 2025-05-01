@@ -16,8 +16,8 @@ import {
   getActiveColorScheme,
   ColorSchemeName,
   EasingFunctionName,
-  AnimationScene,
 } from "./config";
+import { AnimationScene } from './timeline';
 import { easings } from "../../utils/easing";
 
 // --- Font Loading ---
@@ -110,10 +110,17 @@ function getActiveEasingFunction(): (t: number) => number {
 
 // --- lerpPoint Helper ---
 function lerpPoint(p: p5, p1: Point, p2: Point, t: number): Point {
-  return {
-    x: p.lerp(p1.x, p2.x, t),
-    y: p.lerp(p1.y, p2.y, t),
-  };
+    return {
+        x: p.lerp(p1.x, p2.x, t),
+        y: p.lerp(p1.y, p2.y, t),
+    };
+}
+
+// --- Bilinear Interpolation Helper for Points (NEW) ---
+function bilinearInterpolatePoint(p: p5, tl: Point, tr: Point, br: Point, bl: Point, u: number, v: number): Point {
+    const p1 = lerpPoint(p, tl, tr, u); // Interpolate top edge
+    const p2 = lerpPoint(p, bl, br, u); // Interpolate bottom edge
+    return lerpPoint(p, p1, p2, v);      // Interpolate vertically
 }
 
 // --- Helper to get color from hex string ---
@@ -126,68 +133,90 @@ function colorFromHex(p: p5, hex: string): p5.Color {
     }
 }
 
-// --- Textured Rectangle Renderer (Uses interpolated color) ---
+// --- Textured Rectangle Renderer (Supports Subdivision) ---
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
   _lines: Line[],
   _intersection: Point | null,
-  vertices: Point[], 
-  _color: Color, // Original color from Rectangle is unused
+  vertices: Point[], // Expecting [topLeft, topRight, bottomRight, bottomLeft]
+  _color: Color, 
   metadata: RectangleMetadata | null
 ): void => {
   const col = metadata?.colTopLeft; 
   const row = metadata?.rowTopLeft; 
-  const rectIndex = metadata?.rectIndex; // Needed for filler char calculation
+  const rectIndex = metadata?.rectIndex; 
 
   if (col === undefined || row === undefined || vertices.length !== 4 || rectIndex === undefined || !activeScene) return;
   
   let letter: string | null = null;
-  
-  // Determine the character (same logic as before)
   const layoutCell = activeScene.layoutGrid?.[row]?.[col];
   if (layoutCell) { 
     letter = layoutCell.char;
   } else { 
-    if (config.fillerChars && config.fillerChars.length > 0) { // Ensure fillerChars exist
+    if (config.fillerChars && config.fillerChars.length > 0) {
         const charIndex = (rectIndex + col + row) % config.fillerChars.length;
         letter = config.fillerChars[charIndex];
     } else {
-        letter = " "; // Fallback if no fillers defined
+        letter = " "; 
     }
   }
 
-  // --- Get the INTERPOLATED color --- 
   const interpolatedColor = currentCellColors?.[row]?.[col];
   if (!interpolatedColor) {
-    // console.warn(`No interpolated color found for row ${row}, col ${col}`);
-    return; // Skip rendering if color isn't ready
+    return; 
   }
   
-  // --- Rendering (Single Quad) --- 
   if (letter) {
     const texture = alphabetTextures[letter];
     if (texture) {
       p.push();
-      // Use the interpolated p5.Color object directly for tint
       p.tint(interpolatedColor);
       p.textureMode(p.NORMAL); 
       p.textureWrap(p.CLAMP);
       p.texture(texture);
       p.noStroke();
-      
-      const UV_EPSILON = config.textureUvEpsilon; 
-      const uv00 = { u: UV_EPSILON, v: UV_EPSILON };       
-      const uv10 = { u: 1 - UV_EPSILON, v: UV_EPSILON };    
-      const uv11 = { u: 1 - UV_EPSILON, v: 1 - UV_EPSILON };
-      const uv01 = { u: UV_EPSILON, v: 1 - UV_EPSILON };    
 
-      p.beginShape();
-      p.vertex(vertices[0].x, vertices[0].y, uv00.u, uv00.v); 
-      p.vertex(vertices[1].x, vertices[1].y, uv10.u, uv10.v); 
-      p.vertex(vertices[2].x, vertices[2].y, uv11.u, uv11.v); 
-      p.vertex(vertices[3].x, vertices[3].y, uv01.u, uv01.v); 
-      p.endShape(p.CLOSE);
+      const N = Math.max(1, Math.floor(config.subdivisionLevel)); // Ensure N >= 1
+      const UV_EPSILON = config.textureUvEpsilon;
+      
+      // Original corner vertices
+      const [tl_v, tr_v, br_v, bl_v] = vertices;
+      
+      // Iterate through the sub-grid
+      for (let j = 0; j < N; j++) { // Vertical subdivisions
+        for (let i = 0; i < N; i++) { // Horizontal subdivisions
+            // Calculate normalized u, v for the four corners of the sub-quad
+            const u0 = i / N;
+            const u1 = (i + 1) / N;
+            const v0 = j / N;
+            const v1 = (j + 1) / N;
+
+            // Calculate vertex positions using bilinear interpolation
+            const sub_tl = bilinearInterpolatePoint(p, tl_v, tr_v, br_v, bl_v, u0, v0);
+            const sub_tr = bilinearInterpolatePoint(p, tl_v, tr_v, br_v, bl_v, u1, v0);
+            const sub_br = bilinearInterpolatePoint(p, tl_v, tr_v, br_v, bl_v, u1, v1);
+            const sub_bl = bilinearInterpolatePoint(p, tl_v, tr_v, br_v, bl_v, u0, v1);
+
+            // Calculate UV coordinates with epsilon
+            const uv_tl_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u0);
+            const uv_tl_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v0);
+            const uv_tr_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u1);
+            const uv_tr_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v0);
+            const uv_br_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u1);
+            const uv_br_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v1);
+            const uv_bl_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u0);
+            const uv_bl_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v1);
+
+            // Draw the sub-quad
+            p.beginShape();
+            p.vertex(sub_tl.x, sub_tl.y, uv_tl_u, uv_tl_v);
+            p.vertex(sub_tr.x, sub_tr.y, uv_tr_u, uv_tr_v);
+            p.vertex(sub_br.x, sub_br.y, uv_br_u, uv_br_v);
+            p.vertex(sub_bl.x, sub_bl.y, uv_bl_u, uv_bl_v);
+            p.endShape(p.CLOSE);
+        }
+      }
       
       p.noTint();
       p.pop();
