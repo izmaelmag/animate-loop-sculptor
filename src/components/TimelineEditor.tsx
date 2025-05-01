@@ -115,16 +115,77 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
   );
 };
 
+// Key for localStorage
+const LOCAL_STORAGE_KEY = 'timelineEditorState';
+
 // --- Main Editor Component ---
 const TimelineEditor: React.FC = () => {
+  // --- State Initialization ---
+  // Initialize state with potentially null/default values first
   const [gridCols, setGridCols] = useState<number>(INITIAL_GRID_COLS);
   const [gridRows, setGridRows] = useState<number>(INITIAL_GRID_ROWS);
   const [scenes, setScenes] = useState<EditableScene[]>([]);
   const [selectedSceneIndex, setSelectedSceneIndex] = useState<number | null>(null);
   const [selectedCellCoords, setSelectedCellCoords] = useState<{ row: number; col: number } | null>(null);
   const [nextSceneId, setNextSceneId] = useState<number>(0);
-  const hiddenInputRef = useRef<HTMLInputElement>(null); // Ref for the hidden input
-  const [exportJson, setExportJson] = useState<string>(''); // State for the export JSON string
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const [exportJson, setExportJson] = useState<string>(''); 
+  const [isLoaded, setIsLoaded] = useState(false); // Flag to prevent saving before loading
+
+  // --- Load State from localStorage on Mount ---
+  useEffect(() => {
+    console.log("Attempting to load state from localStorage...");
+    const savedStateString = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedStateString) {
+      try {
+        const savedState = JSON.parse(savedStateString);
+        console.log("Loaded state:", savedState);
+
+        // Restore state (with fallbacks)
+        setGridCols(savedState.gridCols ?? INITIAL_GRID_COLS);
+        setGridRows(savedState.gridRows ?? INITIAL_GRID_ROWS);
+        setScenes(savedState.scenes ?? []);
+        setSelectedSceneIndex(savedState.selectedSceneIndex ?? null);
+
+        // Recalculate nextSceneId based on loaded scenes
+        const maxId = (savedState.scenes ?? []).reduce((max: number, scene: EditableScene) => Math.max(max, scene.id), -1);
+        setNextSceneId(maxId + 1);
+        console.log(`Recalculated nextSceneId: ${maxId + 1}`);
+
+      } catch (error) {
+        console.error("Failed to parse saved state from localStorage:", error);
+        // Optionally clear corrupted data: localStorage.removeItem(LOCAL_STORAGE_KEY);
+      }
+    } else {
+        console.log("No saved state found.");
+        // If no saved state, ensure nextSceneId starts at 0
+        setNextSceneId(0);
+    }
+    setIsLoaded(true); // Mark loading as complete
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  // --- Save State to localStorage on Update ---
+  useEffect(() => {
+    // Don't save until initial load is complete
+    if (!isLoaded) {
+        return;
+    }
+    console.log("State changed, saving to localStorage...");
+    const stateToSave = {
+      gridCols,
+      gridRows,
+      scenes,
+      selectedSceneIndex,
+      // Do not save: nextSceneId (recalculated), exportJson (derived), selectedCellCoords (transient)
+    };
+    try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToSave));
+        console.log("State saved.");
+    } catch (error) {
+        console.error("Failed to save state to localStorage:", error);
+    }
+    // Depend on the state variables we want to save
+  }, [scenes, gridCols, gridRows, selectedSceneIndex, isLoaded]); 
 
   // Memoize current scene and cell data to avoid unnecessary calculations
   const currentScene = useMemo(() => {
@@ -165,9 +226,13 @@ const TimelineEditor: React.FC = () => {
       startFrame: scenes.length > 0 ? (scenes[scenes.length - 1].startFrame + (scenes[scenes.length - 1].durationFrames || 60)) : 0,
       durationFrames: 60,
       layoutGrid: newLayoutGrid,
-      stylePresets: { // Start with a basic filler preset
-          'filler': { color: '#555555'}
+      stylePresets: { // Start with basic presets
+          'filler': { color: DEFAULT_SECONDARY_COLOR }, // Use default secondary for filler
+          'default': { color: '#FFFFFF' } // Add a default preset for normal text
       },
+      // Initialize scene colors with defaults
+      backgroundColor: DEFAULT_BG_COLOR, 
+      secondaryColor: DEFAULT_SECONDARY_COLOR,
     };
     const newScenes = [...scenes, newScene];
     setScenes(newScenes);
@@ -296,21 +361,37 @@ const TimelineEditor: React.FC = () => {
   // --- Export Logic ---
   const convertEditableToAnimationScenes = (editableScenes: EditableScene[]): AnimationScene[] => {
     return editableScenes.map(scene => {
-        const newLayoutGrid: (LayoutCell | null)[][] = scene.layoutGrid.map(row => 
-            row.map(cell => {
+        // Clone presets to avoid modifying the editor state directly
+        const sceneStylePresets = { ...scene.stylePresets };
+        let customStyleAddedOrUpdated = false;
+
+        const newLayoutGrid: (LayoutCell | null)[][] = scene.layoutGrid.map((row, r) => 
+            row.map((cell, c) => {
                 if (!cell) return null;
 
-                // Always return object format
-                const layoutCell: { char: string; style?: CellStyle } = {
-                    char: cell.char,
-                };
-                
-                // Add style object ONLY if color exists
+                let styleIdToUse: string;
+
+                // Check if custom color exists for this cell
                 if (cell.color) {
-                    // Assuming CellStyle = { color: string } based on previous errors
-                    layoutCell.style = { color: cell.color }; 
+                    styleIdToUse = 'customColorCell'; // Use a consistent ID for now
+                    // Add/Update the single custom preset for this scene
+                    sceneStylePresets[styleIdToUse] = { color: cell.color };
+                    customStyleAddedOrUpdated = true;
+                } else {
+                    // No custom color, use the default style ID
+                    styleIdToUse = 'default'; 
+                    // Ensure 'default' preset exists, add if missing (should be added by handleAddScene)
+                    if (!sceneStylePresets[styleIdToUse]) {
+                         sceneStylePresets[styleIdToUse] = { color: '#FFFFFF' }; // Fallback white
+                    }
                 }
 
+                // Return object in the format expected by AnimationScene
+                const layoutCell: LayoutCell = {
+                    char: cell.char,
+                    styleId: styleIdToUse,
+                };
+                
                 return layoutCell;
             })
         );
@@ -319,14 +400,18 @@ const TimelineEditor: React.FC = () => {
         const animationScene: AnimationScene = {
             startFrame: scene.startFrame,
             layoutGrid: newLayoutGrid,
-            stylePresets: scene.stylePresets,
-            // Add scene colors if they exist
+            stylePresets: sceneStylePresets, // Use the potentially modified presets
             ...(scene.backgroundColor && { backgroundColor: scene.backgroundColor }),
             ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
         };
         if (scene.durationFrames !== undefined) {
             animationScene.durationFrames = scene.durationFrames;
         }
+
+        // Log if custom style was added/updated for this scene
+        // if (customStyleAddedOrUpdated) {
+        //     console.log(`Scene ${scene.id}: Added/Updated 'customColorCell' preset.`);
+        // }
 
         return animationScene;
     });

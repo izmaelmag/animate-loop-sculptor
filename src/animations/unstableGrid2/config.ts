@@ -133,10 +133,10 @@ export const DEFAULT_SECONDARY_COLOR = '#555555';
 // --- Default Configuration Values --- 
 export const config: UnstableGridConfig = {
   // Canvas/Render Settings
-  width: 1080,
+  width: 1920,
   height: 1080, // User changed
   fps: 60,
-  durationInSeconds: 10, // User changed
+  durationInSeconds: 30, // User changed
 
   // Grid Structure
   // Используем импортированный timeline
@@ -164,9 +164,9 @@ export const config: UnstableGridConfig = {
   subdivisionLevel: 1, 
 
   // Animation Timing
-  updateIntervalFrames: 20, // User changed
+  updateIntervalFrames: 180, // User changed
   easingFunctionName: 'easeInOutCubic', 
-  colorTransitionFrames: 15, // User changed
+  colorTransitionFrames: 40, // User changed
 
   // Point Movement Target Range
   pointDisplacementXFactor: 0.2, // User changed
