@@ -1,11 +1,88 @@
 // Configuration for the unstableGrid2 animation (Point Grid based)
 
-// Example Text Lines
-const defaultTextLines = [
-  "POINT",
-  "GRID",
-  "", // Пустая строка для отступа
-  "FREEDOM"
+// --- Scene / Timeline Structures ---
+
+// Описание стиля ячейки
+export interface CellStyle {
+  color: string; // Основной цвет
+  // Можно добавить: fontWeight, fontStyle и т.д.
+}
+
+// Описание содержимого ячейки в макете
+export interface LayoutCell {
+  char: string;  // Отображаемый символ
+  styleId: string; // Идентификатор стиля из stylePresets
+}
+
+// Описание одной сцены на таймлайне
+export interface AnimationScene {
+  startFrame: number;     // Кадр начала сцены
+  durationFrames?: number; // Опциональная длительность (иначе до след. сцены)
+  layoutGrid: (LayoutCell | null)[][]; // 2D массив макета [row][col], null = filler
+  stylePresets: Record<string, CellStyle>; // Набор стилей для этой сцены
+}
+
+// --- Example Timeline ---
+// Определим цвета заранее для примера (используем цвета из 'dark_blue_red')
+const primaryColor = "#E94560";   
+const primaryDarkerColor = "#B3364E"; 
+const secondaryColor = "#0F3460"; 
+const whiteColor = "#FFFFFF";
+const bgColor = "#1A1A2E"; // Фон
+
+const defaultTimeline: AnimationScene[] = [
+  // --- SCENE 1: "GRID" --- 
+  {
+    startFrame: 0,
+    durationFrames: 120, // 2 секунды
+    stylePresets: {
+      'gridText': { color: primaryColor }, 
+      'filler': { color: secondaryColor } 
+    },
+    layoutGrid: [
+      // Адаптируем под размер сетки, который вычислится позже
+      // Пример для сетки ~5x5 (или больше)
+      [ null, null, null, null, null, null ],
+      [ null, { char: 'G', styleId: 'gridText' }, { char: 'R', styleId: 'gridText' }, { char: 'I', styleId: 'gridText' }, { char: 'D', styleId: 'gridText' }, null ],
+      [ null, null, null, null, null, null ],
+      [ null, null, null, null, null, null ],
+      [ null, null, null, null, null, null ],
+    ]
+  },
+  // --- SCENE 2: "MORPH" --- 
+  {
+    startFrame: 120,
+    durationFrames: 180, // 3 секунды
+     stylePresets: {
+      'morphNormal': { color: primaryColor }, 
+      'morphDarker': { color: primaryDarkerColor }, 
+      'filler': { color: secondaryColor } // Стиль для фона можно переопределить или оставить
+    },
+     layoutGrid: [
+      [ null, null, null, null, null, null, null ],
+      [ null, null, null, null, null, null, null ],
+      [ null, { char: 'M', styleId: 'morphNormal' }, { char: 'O', styleId: 'morphDarker' }, { char: 'R', styleId: 'morphNormal' }, { char: 'P', styleId: 'morphDarker' }, { char: 'H', styleId: 'morphNormal' }, null ],
+      [ null, null, null, null, null, null, null ],
+      [ null, null, null, null, null, null, null ],
+    ]
+  },
+  // --- SCENE 3: "DONE!" --- 
+  {
+    startFrame: 300, // Начинается после второй (120 + 180)
+    // durationFrames: не указано, длится до конца
+     stylePresets: {
+      'done': { color: whiteColor }, 
+      'exclam': { color: primaryColor }, 
+      'filler': { color: secondaryColor } // Можно использовать другой цвет фона
+    },
+     layoutGrid: [
+      [ null, null, null, null, null, null, null ],
+      [ null, null, null, null, null, null, null ],
+      [ null, null, { char: 'D', styleId: 'done' }, { char: 'O', styleId: 'done' }, { char: 'N', styleId: 'done' }, { char: 'E', styleId: 'done' }, { char: '!', styleId: 'exclam' } ],
+      [ null, null, null, null, null, null, null ],
+      [ null, null, null, null, null, null, null ],
+    ]
+  }
 ];
 
 // --- Цветовые Схемы ---
@@ -82,47 +159,56 @@ export interface UnstableGridConfig {
   includeOuterEdges: boolean;
   outerEdgePadding: number;
 
-  // Colors (New Structure)
-  colorSchemeName: ColorSchemeName; // Имя выбранной схемы
+  // Colors (ColorSchemeName может больше не использоваться напрямую для текста)
+  colorSchemeName: ColorSchemeName; // Оставляем для фона или defaultStyle
 
-  // REMOVED: colorPalette
-  /*
-  colorPalette: {
-    primary: string;   // Used for word letters on odd rows
-    secondary: string; // Used for word letters on even rows & border chars
-  };
-  */
+  // --- НОВАЯ СЕКЦИЯ: Таймлайн Текста ---
+  animationTimeline: AnimationScene[]; // Массив сцен
+  fillerChars: string; // Символы для заполнения пустых ячеек
+  defaultStyleId: string; // ID стиля по умолчанию для fillerChars (из первой сцены?)
+
+  // REMOVED: textLines
   
-  // Text Content & Font
-  textLines: string[];       
+  // Font & Textures
   fontFamily: string; 
   fontUrl: string;         
-  charsForTexture: string; 
+  // REMOVED: charsForTexture 
   textureSizePreview: number; 
   textureSizeRender: number;  
   useHighResTextures: boolean; 
   textureUvEpsilon: number;
 
   // Animation Timing
-  updateIntervalFrames: number; // How often to calculate new random targets
-  easingFunctionName: EasingFunctionName; // Имя выбранной easing-функции
+  updateIntervalFrames: number; 
+  easingFunctionName: EasingFunctionName; 
 
-  // Point Movement Target Range (Replaces Column/Cell factors)
-  pointDisplacementXFactor: number; // Max displacement fraction relative to original grid cell width
-  pointDisplacementYFactor: number; // Max displacement fraction relative to original grid cell height
+  // Point Movement Target Range
+  pointDisplacementXFactor: number; 
+  pointDisplacementYFactor: number; 
 }
 
-// Helper to calculate grid columns based on text lines
-function calculateGridColumns(lines: string[]): number {
-    if (!lines || lines.length === 0) return 2; 
-    const maxLength = Math.max(...lines.map(line => line.length));
-    return Math.max(2, maxLength); // Grid columns should match max text length
+// Helper to calculate grid dimensions (можно сделать умнее, смотря на max layoutGrid размеры)
+function calculateGridColumnsFromTimeline(timeline: AnimationScene[]): number {
+    if (!timeline || timeline.length === 0) return 5;
+    let maxCols = 0;
+    for (const scene of timeline) {
+        if (scene.layoutGrid && scene.layoutGrid.length > 0) {
+            const sceneMaxCols = Math.max(...scene.layoutGrid.map(row => row?.length || 0));
+            maxCols = Math.max(maxCols, sceneMaxCols);
+        }
+    }
+    return Math.max(2, maxCols); // Минимум 2 колонки
 }
 
-// Helper to calculate grid rows (can be independent or based on text)
-function calculateGridRows(lines: string[]): number {
-    // Example: at least number of lines + 1 for spacing, minimum 3 rows
-    return Math.max(3, lines.length + 1); 
+function calculateGridRowsFromTimeline(timeline: AnimationScene[]): number {
+    if (!timeline || timeline.length === 0) return 5;
+    let maxRows = 0;
+    for (const scene of timeline) {
+        if (scene.layoutGrid) {
+            maxRows = Math.max(maxRows, scene.layoutGrid.length);
+        }
+    }
+     return Math.max(3, maxRows); // Минимум 3 ряда
 }
 
 // --- Default Configuration Values ---
@@ -134,19 +220,20 @@ export const config: UnstableGridConfig = {
   durationInSeconds: 30, 
 
   // Grid Structure
-  gridColumns: calculateGridColumns(defaultTextLines), // Calculate based on default lines
-  gridRows: calculateGridRows(defaultTextLines),       // Calculate based on default lines
+  gridColumns: calculateGridColumnsFromTimeline(defaultTimeline), 
+  gridRows: calculateGridRowsFromTimeline(defaultTimeline),      
   includeOuterEdges: true,
   outerEdgePadding: 150,
 
   // Colors
-  colorSchemeName: 'dark_blue_red', 
+  colorSchemeName: 'dark_blue_red', // Используется для фона и, возможно, для defaultStyleId
   
   // Text Content & Font
-  textLines: defaultTextLines, 
+  animationTimeline: defaultTimeline,
+  fillerChars: ".,:;*+=", // Обновленные символы фона
+  defaultStyleId: 'filler', // Используем стиль 'filler' для фона (должен быть в первой сцене)
   fontFamily: "Cascadia Code", 
   fontUrl: "/CascadiaCode.ttf", 
-  charsForTexture: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*+-%", 
   textureSizePreview: 256,  
   textureSizeRender: 512,   
   useHighResTextures: false, 
@@ -157,6 +244,6 @@ export const config: UnstableGridConfig = {
   easingFunctionName: 'easeInOutCubic', 
 
   // Point Movement Target Range
-  pointDisplacementXFactor: 0.8, // Example value
-  pointDisplacementYFactor: 0.6, // Example value
+  pointDisplacementXFactor: 0.8, 
+  pointDisplacementYFactor: 0.6, 
 }; 

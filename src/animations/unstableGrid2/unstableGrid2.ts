@@ -16,6 +16,7 @@ import {
   getActiveColorScheme,
   ColorSchemeName,
   EasingFunctionName,
+  AnimationScene,
 } from "./config";
 import { easings } from "../../utils/easing";
 
@@ -56,7 +57,7 @@ const DURATION = config.durationInSeconds;
 const FPS = config.fps;
 let cellAmplitude: number; // This is also likely unused now
 
-// --- State Variables for Point Grid ---
+// --- State Variables for Point Grid & Timeline ---
 let noise2D: ReturnType<typeof createNoise2D>;
 let originalPoints: Point[][] = [];
 let previousPoints: Point[][] = [];
@@ -64,6 +65,11 @@ let targetPoints: Point[][] = [];
 let currentPoints: Point[][] = []; // Holds the interpolated points
 let rectangles: Rectangle[] = [];
 let alphabetTextures: Record<string, p5.Graphics> = {};
+
+// Timeline state (Declarations were missing)
+let currentSceneIndex = -1;
+let activeScene: AnimationScene | null = null; 
+let allNeededChars = ""; // String containing all unique characters for textures
 
 // --- Глобальная переменная для активной схемы ---
 let activeColorScheme = getActiveColorScheme(config.colorSchemeName);
@@ -106,87 +112,84 @@ function lerpPoint(p: p5, p1: Point, p2: Point, t: number): Point {
   };
 }
 
-// --- Textured Rectangle Renderer (No changes needed, uses vertices) ---
+// --- Textured Rectangle Renderer (Restored Logic) ---
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
   _lines: Line[],
   _intersection: Point | null,
-  vertices: Point[],
-  _color: Color,
+  vertices: Point[], 
+  _color: Color, 
   metadata: RectangleMetadata | null
 ): void => {
-  // Extract cell coordinates and index
-  const col = metadata?.colTopLeft;
-  const row = metadata?.rowTopLeft;
-  const rectIndex = metadata?.rectIndex;
+  const col = metadata?.colTopLeft; 
+  const row = metadata?.rowTopLeft; 
+  const rectIndex = metadata?.rectIndex; 
 
-  if (
-    col === undefined ||
-    row === undefined ||
-    vertices.length !== 4 ||
-    rectIndex === undefined
-  )
-    return;
+  // Original entry log (keep commented unless needed)
+  // console.log(`[Render] rectIndex: ${rectIndex}, col: ${col}, row: ${row}, vertices:`, vertices);
 
+  if (col === undefined || row === undefined || vertices.length !== 4 || rectIndex === undefined || !activeScene) return;
+  
   let letter: string | null = null;
   let assignedColorHex: string | null = null;
-  let isTextCell = false;
+  // let isTextCell = false; // This flag seems unused now
+  let styleId: string | null = null;
 
-  // Check if this cell corresponds to a character in the textLines
-  if (row >= 0 && row < config.textLines.length) {
-    const currentLine = config.textLines[row];
-    if (currentLine !== "" && col >= 0 && col < currentLine.length) {
-      letter = currentLine[col];
-      assignedColorHex =
-        col % 2 === 0
-          ? activeColorScheme.primary
-          : activeColorScheme.primary_darker;
-      isTextCell = true;
-    }
+  // Check if this cell corresponds to a character in the active scene's layoutGrid
+  const layoutCell = activeScene.layoutGrid?.[row]?.[col];
+
+  if (layoutCell) { 
+    letter = layoutCell.char;
+    styleId = layoutCell.styleId;
+    // isTextCell = true; 
+  } else { 
+    const charIndex = (rectIndex + col + row) % config.fillerChars.length;
+    letter = config.fillerChars[charIndex];
+    styleId = config.defaultStyleId; 
   }
 
-  // If it's not a text cell, treat it as a border/filler cell
-  if (!isTextCell) {
-    const charIndex = (rectIndex + col + row) % config.charsForTexture.length;
-    letter = config.charsForTexture[charIndex];
-    assignedColorHex = activeColorScheme.secondary; // Use secondary color for filler
+  const stylePreset = activeScene.stylePresets?.[styleId || config.defaultStyleId];
+  if (stylePreset) {
+    assignedColorHex = stylePreset.color;
+  } else {
+    console.warn(`Style preset "${styleId || config.defaultStyleId}" not found. Using secondary color.`);
+    assignedColorHex = activeColorScheme.secondary; 
   }
 
-  // --- Rendering (Single Quad) ---
+  // Original log for determined values (keep commented unless needed)
+  // console.log(`[Render] Letter: ${letter}, StyleID: ${styleId}, Color: ${assignedColorHex}`);
+
+  // --- Rendering (Single Quad) --- 
   if (letter) {
     const texture = alphabetTextures[letter];
+    // Original log for texture status (keep commented unless needed)
+    // console.log(`[Render] Texture for '${letter}': ${texture ? 'Found' : 'NOT FOUND'}`);
     if (texture) {
       p.push();
-      if (assignedColorHex) {
-        p.tint(assignedColorHex);
-      } else {
-        p.tint(255);
-      }
-      p.textureMode(p.NORMAL);
+      if (assignedColorHex) { p.tint(assignedColorHex); } else { p.tint(255); }
+      p.textureMode(p.NORMAL); 
       p.textureWrap(p.CLAMP);
       p.texture(texture);
       p.noStroke();
+      
+      const UV_EPSILON = config.textureUvEpsilon; 
+      const uv00 = { u: UV_EPSILON, v: UV_EPSILON };       
+      const uv10 = { u: 1 - UV_EPSILON, v: UV_EPSILON };    
+      const uv11 = { u: 1 - UV_EPSILON, v: 1 - UV_EPSILON };
+      const uv01 = { u: UV_EPSILON, v: 1 - UV_EPSILON };    
 
-      // Define UV coordinates for the 4 corners
-      const UV_EPSILON = config.textureUvEpsilon;
-      const uv00 = { u: UV_EPSILON, v: UV_EPSILON }; // Top Left
-      const uv10 = { u: 1 - UV_EPSILON, v: UV_EPSILON }; // Top Right
-      const uv11 = { u: 1 - UV_EPSILON, v: 1 - UV_EPSILON }; // Bottom Right
-      const uv01 = { u: UV_EPSILON, v: 1 - UV_EPSILON }; // Bottom Left
-
-      // Draw the original single quad (2 triangles implicitly)
       p.beginShape();
-      p.vertex(vertices[0].x, vertices[0].y, uv00.u, uv00.v); // Top Left
-      p.vertex(vertices[1].x, vertices[1].y, uv10.u, uv10.v); // Top Right
-      p.vertex(vertices[2].x, vertices[2].y, uv11.u, uv11.v); // Bottom Right
-      p.vertex(vertices[3].x, vertices[3].y, uv01.u, uv01.v); // Bottom Left
+      p.vertex(vertices[0].x, vertices[0].y, uv00.u, uv00.v); 
+      p.vertex(vertices[1].x, vertices[1].y, uv10.u, uv10.v); 
+      p.vertex(vertices[2].x, vertices[2].y, uv11.u, uv11.v); 
+      p.vertex(vertices[3].x, vertices[3].y, uv01.u, uv01.v); 
       p.endShape(p.CLOSE);
-
+      
       p.noTint();
       p.pop();
     } else {
-      console.warn(`Texture not found for letter: ${letter}`);
+       // console.warn(`Texture not found for letter: ${letter}`);
     }
   }
 };
@@ -342,63 +345,113 @@ function calculateNewTargetPoints(p: p5) {
   }
 }
 
-// --- Animation Loop ---
-const animation: AnimationFunction = (
-  p: p5,
-  normalizedTime: number,
-  currentFrameNum: number
-): void => {
+// --- Animation Loop (Update Scene Logic) --- 
+const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number): void => {
+  // Log current frame number at the very beginning (first 200 frames)
+  if (currentFrameNum < 200) {
+      console.log(`[Animation Entry] Frame: ${currentFrameNum}`);
+  }
+
   p.background(activeColorScheme.background);
   p.translate(-config.width / 2, -config.height / 2);
 
+  // --- Find Active Scene --- 
+  let newSceneIndex = -1;
+  // Log entering the loop on specific frames for debugging
+  if (currentFrameNum === 0 || currentFrameNum === 119 || currentFrameNum === 120 || currentFrameNum === 299 || currentFrameNum === 300) {
+      console.log(`[Scene Search] Frame ${currentFrameNum}: Searching for scene...`);
+  }
+  for (let i = config.animationTimeline.length - 1; i >= 0; i--) {
+      const scene = config.animationTimeline[i];
+      const check = currentFrameNum >= scene.startFrame;
+      // Log check results on specific frames
+      if (currentFrameNum === 0 || currentFrameNum === 119 || currentFrameNum === 120 || currentFrameNum === 299 || currentFrameNum === 300) {
+          console.log(`[Scene Search]   Checking scene ${i} (start: ${scene.startFrame}): ${currentFrameNum} >= ${scene.startFrame} is ${check}`);
+      }
+      if (check) {
+          newSceneIndex = i;
+          // Log when found on specific frames
+          if (currentFrameNum === 0 || currentFrameNum === 119 || currentFrameNum === 120 || currentFrameNum === 299 || currentFrameNum === 300) {
+              console.log(`[Scene Search]   Found potential scene: ${i}`);
+          }
+          break; // Found the latest applicable scene
+      }
+  }
+  // Log the final result for specific frames
+  if (currentFrameNum === 0 || currentFrameNum === 119 || currentFrameNum === 120 || currentFrameNum === 299 || currentFrameNum === 300) {
+      console.log(`[Scene Search] Frame ${currentFrameNum}: Final newSceneIndex = ${newSceneIndex}`);
+  }
+
+  // Check if scene changed or if it's the first frame
+  const sceneChanged = newSceneIndex !== currentSceneIndex;
+  if (sceneChanged) {
+      currentSceneIndex = newSceneIndex;
+      if (currentSceneIndex !== -1) {
+          activeScene = config.animationTimeline[currentSceneIndex];
+          console.log(`[Animation Loop] Switched to scene ${currentSceneIndex} at frame ${currentFrameNum}`);
+      } else {
+          activeScene = null; // No scene active
+          console.log(`[Animation Loop] No scene active at frame ${currentFrameNum}`);
+      }
+  }
+
+  // Log active scene status AFTER potential update
+  if (currentFrameNum === 0 || sceneChanged) { // Log on first frame or change
+      console.log(`[Animation Loop Status] Frame ${currentFrameNum}, Active Scene Index: ${currentSceneIndex}, Active Scene Exists: ${!!activeScene}`);
+  }
+
+  // --- Update Point Targets & Interpolate Points ---
   const updateInterval = config.updateIntervalFrames;
   const isUpdateFrame = currentFrameNum % updateInterval === 0;
-
-  // --- Update Targets ---
-  if (isUpdateFrame || currentFrameNum === 0) {
-    // Store current points as previous
-    previousPoints = currentPoints.map((row) => row.map((pt) => ({ ...pt })));
-    calculateNewTargetPoints(p); // Calculate new targets for all points
+  
+  if (isUpdateFrame || currentFrameNum === 0) { 
+      previousPoints = currentPoints.map(row => row.map(pt => ({...pt})));
+      calculateNewTargetPoints(p); 
+      // Log target vs previous point on update frame
+      if (currentPoints.length > 1 && currentPoints[1].length > 1) { // Check array bounds
+        console.log(`[Update Frame ${currentFrameNum}] PrevPt[1][1]:`, previousPoints[1][1], `TargetPt[1][1]:`, targetPoints[1][1]);
+      }
   }
 
-  // --- Interpolate Points ---
-  const progressInInterval =
-    (currentFrameNum % updateInterval) / updateInterval;
+  const progressInInterval = (currentFrameNum % updateInterval) / updateInterval;
   const activeEase = getActiveEasingFunction();
   const lerpFactor = activeEase(progressInInterval);
-
-  for (let j = 0; j < currentPoints.length; j++) {
-    for (let i = 0; i < currentPoints[j].length; i++) {
-      currentPoints[j][i] = lerpPoint(
-        p,
-        previousPoints[j][i],
-        targetPoints[j][i],
-        lerpFactor
-      );
-    }
+  // Log lerpFactor periodically
+  if (currentFrameNum % 15 === 0) { // Log every 15 frames
+      console.log(`[Frame ${currentFrameNum}] Lerp Factor: ${lerpFactor.toFixed(3)} (Progress: ${progressInInterval.toFixed(3)})`);
   }
 
-  // --- Update Geometry & Render ---
-  updateRectangles(); // Update rectangle vertices based on interpolated points
+  for (let j = 0; j < currentPoints.length; j++) {
+      for (let i = 0; i < currentPoints[j].length; i++) {
+          // Log point update periodically for a sample point
+          // if (j === 1 && i === 1 && currentFrameNum % 15 === 0) {
+          //     console.log(`[Frame ${currentFrameNum}] Interpolating Pt[1][1]:`, previousPoints[j][i], `->`, targetPoints[j][i], ` Result:`, currentPoints[j][i]);
+          // }
+          currentPoints[j][i] = lerpPoint(p, previousPoints[j][i], targetPoints[j][i], lerpFactor);
+      }
+  }
 
-  rectangles.forEach((rect, index) => {
-    const metadata = rect.getMetadata();
-    if (metadata) {
-      metadata.rectIndex = index; // Assign index needed by renderer
-      renderRectangle(
-        p,
-        normalizedTime,
-        rect.getLines(),
-        rect.getDiagonalIntersection(),
-        rect.getVertices(),
-        rect.getColor(),
-        metadata
-      );
-    }
-  });
+  // --- Update Geometry & Render --- 
+  updateRectangles(); 
+
+  if (activeScene) { 
+      rectangles.forEach((rect, index) => {
+        const metadata = rect.getMetadata();
+        if (metadata) {
+          metadata.rectIndex = index; 
+          // Log right before calling render function (Remove this debug log)
+          // console.log(`[Loop] Calling render for index ${index}, col ${metadata.colTopLeft}, row ${metadata.rowTopLeft}`);
+          renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata);
+        } else {
+           // console.warn(`[Animation Loop] Rectangle ${index} has no metadata.`);
+        }
+      });
+  } else {
+       // console.log(`[Animation Loop] Frame ${currentFrameNum}: No active scene, skipping render.`);
+  }
 };
 
-// --- Setup Function ---
+// --- Setup Function (Update Texture Generation) ---
 const setupAnimation: AnimationFunction = (p: p5): void => {
   activeColorScheme = getActiveColorScheme(config.colorSchemeName);
   console.log(`Using color scheme: ${config.colorSchemeName}`);
@@ -406,25 +459,49 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
   p.frameRate(config.fps);
   noise2D = createNoise2D();
 
-  const selectedTextureSize = config.useHighResTextures
-    ? config.textureSizeRender
-    : config.textureSizePreview;
-  console.log(
-    `Using texture size: ${selectedTextureSize}x${selectedTextureSize}`
-  );
-  alphabetTextures = generateAlphabetTextures(
-    p,
-    selectedTextureSize,
-    config.fontFamily,
-    config.charsForTexture
-  );
+  // --- Collect all unique characters needed for textures ---
+  const chars = config.fillerChars || " ";
+  const charSet = new Set<string>(chars.split(''));
+  
+  config.animationTimeline.forEach(scene => {
+    if (scene.layoutGrid) {
+      scene.layoutGrid.forEach(row => {
+        if (row) {
+          row.forEach(cell => {
+            if (cell && cell.char) {
+              charSet.add(cell.char);
+            }
+          });
+        }
+      });
+    }
+  });
+  allNeededChars = Array.from(charSet).join('');
+  
+  if (typeof allNeededChars !== 'string' || allNeededChars.length === 0) {
+    console.warn("No valid characters found for textures, using fallback space.")
+    allNeededChars = " ";
+  }
+  console.log("Characters needed for textures:", allNeededChars);
 
-  setupGridPoints(p); // Initialize the point grid
+  // --- Generate textures ---
+  const selectedTextureSize = config.useHighResTextures ? config.textureSizeRender : config.textureSizePreview;
+  console.log(`Using texture size: ${selectedTextureSize}x${selectedTextureSize}`);
+  
+  if (typeof allNeededChars === 'string') {
+    // Use the collected allNeededChars string here
+    alphabetTextures = generateAlphabetTextures(p, selectedTextureSize, config.fontFamily, allNeededChars);
+  } else {
+    console.error("Critical error: allNeededChars is not a string before generating textures!");
+    alphabetTextures = generateAlphabetTextures(p, selectedTextureSize, config.fontFamily, "? ");
+  }
+  
+  // ... Initialize Grid & Scene ...
+  setupGridPoints(p);
+  currentSceneIndex = -1;
+  activeScene = null;
 
-  console.log(
-    "Setup complete using config (Point Grid). Textures generated:",
-    Object.keys(alphabetTextures).length
-  );
+  console.log("Setup complete using config (Timeline). Textures generated:", Object.keys(alphabetTextures).length);
   console.log("Rectangles created:", rectangles.length);
 };
 

@@ -280,8 +280,11 @@ export class AnimationController {
   // Animation frame loop methods
   //-------------------------------------
   private startAnimationLoop(): void {
-    this.stopAnimationLoop();
-    this.updateFrame();
+    this.stopAnimationLoop(); // Ensure previous loop is stopped
+    // Request the first frame
+    if (this._isPlaying) { // Start only if supposed to be playing
+        this.animationFrameRef = requestAnimationFrame(this.updateFrame);
+    }
   }
 
   private stopAnimationLoop(): void {
@@ -292,20 +295,16 @@ export class AnimationController {
   }
 
   private updateFrame = (): void => {
-    // Simply advance to the next frame
+    // Advance to the next frame
     this.currentFrame =
       this._currentFrame + 1 >= this.totalFrames ? 0 : this._currentFrame + 1;
 
     // Redraw P5 canvas with new frame
     this.redraw();
 
-    // Continue the animation loop if still playing using setTimeout
-    // to control frame rate instead of relying on requestAnimationFrame timing
+    // Continue the animation loop using only requestAnimationFrame
     if (this._isPlaying) {
-      const frameDelay = 1000 / this.fps; // Time between frames in ms
-      setTimeout(() => {
-        this.animationFrameRef = requestAnimationFrame(this.updateFrame);
-      }, frameDelay);
+      this.animationFrameRef = requestAnimationFrame(this.updateFrame);
     }
   };
 
