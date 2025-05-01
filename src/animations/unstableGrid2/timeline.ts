@@ -22,6 +22,10 @@ export interface AnimationScene {
   startFrame: number;
   /** Optional duration in frames (otherwise lasts until the next scene) */
   durationFrames?: number;
+  /** Optional background color for this scene */
+  backgroundColor?: string;
+  /** Optional secondary/filler color for this scene */
+  secondaryColor?: string;
   /** 2D layout array [row][col], null = filler */
   layoutGrid: (LayoutCell | null)[][];
   /** Style presets for this scene */
@@ -35,14 +39,17 @@ const primaryColor = "#E94560";
 const primaryDarkerColor = "#B3364E";
 const secondaryColor = "#0F3460";
 const whiteColor = "#FFFFFF";
-// Background color might be better defined in main config
-// const bgColor = "#1A1A2E";
+const bgColorScene1 = "#1A1A2E"; // Example background for scene 1
+const bgColorScene2 = "#2A2A4E"; // Slightly different background for scene 2
+const secondaryColorScene3 = "#406080"; // Different secondary for scene 3
 
-export const defaultTimeline: AnimationScene[] = [
+export const timeline: AnimationScene[] = [
   // --- SCENE 1: "GRID" ---
   {
     startFrame: 0,
     durationFrames: 120, // 2 seconds
+    backgroundColor: bgColorScene1,
+    secondaryColor: secondaryColor, // Use the default secondary
     stylePresets: {
       gridText: { color: primaryColor },
       filler: { color: secondaryColor },
@@ -66,6 +73,8 @@ export const defaultTimeline: AnimationScene[] = [
   {
     startFrame: 120,
     durationFrames: 180, // 3 seconds
+    backgroundColor: bgColorScene2, // Changed background
+    secondaryColor: secondaryColor, // Same secondary
     stylePresets: {
       morphNormal: { color: primaryColor },
       morphDarker: { color: primaryDarkerColor },
@@ -90,10 +99,12 @@ export const defaultTimeline: AnimationScene[] = [
   // --- SCENE 3: "DONE!" ---
   {
     startFrame: 300, // Starts after the second scene (120 + 180)
+    // backgroundColor: undefined, // Will use previous or default
+    secondaryColor: secondaryColorScene3, // Changed secondary
     stylePresets: {
       done: { color: whiteColor },
       exclam: { color: primaryColor },
-      filler: { color: secondaryColor },
+      filler: { color: secondaryColorScene3 }, // Use the new secondary for filler here too
     },
     layoutGrid: [
       [null, null, null, null, null, null, null],
@@ -118,11 +129,13 @@ export const defaultTimeline: AnimationScene[] = [
 /**
  * Processes the animation timeline.
  * (Currently returns the input timeline unmodified. Future logic can be added here).
- * 
+ *
  * @param inputTimeline - The raw animation timeline data.
  * @returns The processed animation timeline.
  */
-export function processTimeline(inputTimeline: AnimationScene[]): AnimationScene[] {
+export function processTimeline(
+  inputTimeline: AnimationScene[]
+): AnimationScene[] {
   console.log("Processing timeline data...");
 
   // --- Future Logic Placeholder ---
@@ -130,17 +143,21 @@ export function processTimeline(inputTimeline: AnimationScene[]): AnimationScene
   // TODO: Validate style IDs against presets?
   // TODO: Merge global default styles?
   // TODO: Sort scenes by startFrame?
-  
+
   // For now, just perform a basic validation and return the input
   if (!Array.isArray(inputTimeline)) {
-      console.error("Invalid timeline input: expected an array.");
-      return []; // Return empty on error
+    console.error("Invalid timeline input: expected an array.");
+    return []; // Return empty on error
   }
 
   // Example: Ensure scenes are sorted by startFrame (optional but good practice)
-  const sortedTimeline = [...inputTimeline].sort((a, b) => a.startFrame - b.startFrame);
+  const sortedTimeline = [...inputTimeline].sort(
+    (a, b) => a.startFrame - b.startFrame
+  );
 
-  console.log(`Timeline processing complete. ${sortedTimeline.length} scenes processed.`);
+  console.log(
+    `Timeline processing complete. ${sortedTimeline.length} scenes processed.`
+  );
   return sortedTimeline;
 }
 

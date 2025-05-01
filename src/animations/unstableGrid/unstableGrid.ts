@@ -358,7 +358,7 @@ function calculateNewTargetLinePositions(p: p5) {
         // Apply the relaxed displacement limits
         if (displacement < 0) { 
             displacement = Math.max(displacement, -maxDispLeft); // Limit by distance to left neighbor
-        } else { 
+    } else {
             displacement = Math.min(displacement, maxDispRight); // Limit by distance to right neighbor
         }
         targetLinePositions[i] = originalPositions[i] + displacement;

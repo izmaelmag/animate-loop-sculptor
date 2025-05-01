@@ -1,7 +1,7 @@
 // Configuration for the unstableGrid2 animation (Point Grid based)
 
 // Import timeline types and data
-import { AnimationScene, defaultTimeline } from './timeline';
+import { AnimationScene, timeline } from './timeline';
 
 // --- Цветовые Схемы (для фона и дефолтных стилей) ---
 interface ColorScheme {
@@ -126,6 +126,10 @@ function calculateGridRowsFromTimeline(timeline: AnimationScene[]): number {
      return Math.max(3, maxRows); 
 }
 
+// Default colors (added export)
+export const DEFAULT_BG_COLOR = '#282c34';
+export const DEFAULT_SECONDARY_COLOR = '#555555';
+
 // --- Default Configuration Values --- 
 export const config: UnstableGridConfig = {
   // Canvas/Render Settings
@@ -135,9 +139,9 @@ export const config: UnstableGridConfig = {
   durationInSeconds: 10, // User changed
 
   // Grid Structure
-  // Используем импортированный defaultTimeline
-  gridColumns: calculateGridColumnsFromTimeline(defaultTimeline), 
-  gridRows: calculateGridRowsFromTimeline(defaultTimeline),      
+  // Используем импортированный timeline
+  gridColumns: calculateGridColumnsFromTimeline(timeline), 
+  gridRows: calculateGridRowsFromTimeline(timeline),      
   includeOuterEdges: true,
   outerEdgePadding: 150,
 
@@ -145,8 +149,8 @@ export const config: UnstableGridConfig = {
   colorSchemeName: 'dark_blue_red', 
   
   // Text Content
-  // Используем импортированный defaultTimeline
-  animationTimeline: defaultTimeline,
+  // Используем импортированный timeline
+  animationTimeline: timeline,
   fillerChars: ".,:;*+=", 
   defaultStyleId: 'filler', 
 

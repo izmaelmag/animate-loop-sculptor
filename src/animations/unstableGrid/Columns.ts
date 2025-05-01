@@ -87,7 +87,7 @@ export class Column {
           initialBounds.bottom
       );
       this.cells.push(cell);
-      
+
       // Initialize all states with initial boundaries
       this.previousCellBoundaries.push({...initialBounds});
       this.targetCellBoundaries.push({...initialBounds});

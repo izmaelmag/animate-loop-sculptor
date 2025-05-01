@@ -16,8 +16,10 @@ import {
   getActiveColorScheme,
   ColorSchemeName,
   EasingFunctionName,
+  DEFAULT_BG_COLOR,
+  DEFAULT_SECONDARY_COLOR
 } from "./config";
-import { AnimationScene } from './timeline';
+import { AnimationScene, timeline, LayoutCell, CellStyle } from './timeline';
 import { easings } from "../../utils/easing";
 
 // --- Font Loading ---
@@ -70,13 +72,21 @@ let activeColorScheme = getActiveColorScheme(config.colorSchemeName);
 // Timeline state
 let currentSceneIndex = -1;
 let activeScene: AnimationScene | null = null; 
+let previousScene: AnimationScene | null = null;
 let allNeededChars = ""; // String containing all unique characters for textures
 
 // Color state
 let previousCellColors: p5.Color[][] = [];
 let targetCellColors: p5.Color[][] = [];
 let currentCellColors: p5.Color[][] = [];
-let colorLerpProgress = 1; // NEW: Progress for color interpolation (0 to 1)
+
+// NEW: Scene Color state
+let previousBgColor: p5.Color | null = null;
+let targetBgColor: p5.Color | null = null;
+let currentBgColor: p5.Color | null = null; 
+let previousSecondaryColor: p5.Color | null = null;
+let targetSecondaryColor: p5.Color | null = null;
+let currentSecondaryColor: p5.Color | null = null;
 
 // --- Easing Functions ---
 // REMOVED inline definitions
@@ -123,14 +133,27 @@ function bilinearInterpolatePoint(p: p5, tl: Point, tr: Point, br: Point, bl: Po
     return lerpPoint(p, p1, p2, v);      // Interpolate vertically
 }
 
-// --- Helper to get color from hex string ---
-function colorFromHex(p: p5, hex: string): p5.Color {
+// --- Color Helpers ---
+function parseColor(p: p5, hex: string | undefined, defaultHex: string): p5.Color {
     try {
-        return p.color(hex);
+        const validHex = hex || defaultHex;
+        if (!/^#([0-9A-F]{3}){1,2}$/i.test(validHex)) {
+            throw new Error("Invalid hex format");
+        }
+        return p.color(validHex);
     } catch (e) {
-        console.warn(`Invalid hex color string: "${hex}". Using black.`, e);
-        return p.color(0); // Fallback to black
+        console.warn(`Invalid hex color: "${hex}". Using default: "${defaultHex}".`, e);
+        try {
+            return p.color(defaultHex);
+        } catch {
+            return p.color(defaultHex === DEFAULT_BG_COLOR ? 0 : 128);
+        }
     }
+}
+
+function interpolateColor(p: p5, c1: p5.Color, c2: p5.Color, factor: number): p5.Color {
+  factor = p.constrain(factor, 0, 1);
+  return p.lerpColor(c1, c2, factor);
 }
 
 // --- Textured Rectangle Renderer (Supports Subdivision) ---
@@ -348,14 +371,14 @@ function calculateNewTargetPoints(p: p5) {
   const maxDispX = cellWidth * config.pointDisplacementXFactor;
   const maxDispY = cellHeight * config.pointDisplacementYFactor;
 
+  console.log(`[Frame ${p.frameCount}] Calculating new target points...`); // Log calculation start
+
   for (let j = 0; j <= rows; j++) {
     for (let i = 0; i <= cols; i++) {
-      // Keep boundary points fixed (or allow limited movement later)
       if (i === 0 || i === cols || j === 0 || j === rows) {
         targetPoints[j][i] = { ...originalPoints[j][i] };
-        continue; // Skip inner logic for boundary points
+        continue; 
       }
-
       // Calculate random displacement for interior points
       const randomX = p.random(-1, 1);
       const randomY = p.random(-1, 1);
@@ -371,98 +394,91 @@ function calculateNewTargetPoints(p: p5) {
         x: originalPoints[j][i].x + displacementX,
         y: originalPoints[j][i].y + displacementY,
       };
+      // Log one target point for comparison
+      if (j === 1 && i === 1) console.log(`  Target[1][1] set to:`, targetPoints[j][i]);
     }
   }
 }
 
-// --- Calculate Target Cell Colors (NEW) ---
-function calculateTargetCellColors(p: p5) {
-    if (!activeScene) return; // Need an active scene
-
+// --- Calculate Target Cell Colors (Reverted to use styleId) ---
+function calculateTargetCellColors(p: p5, scene: AnimationScene, interpolatedSecondaryColor: p5.Color) {
     const rows = config.gridRows;
     const cols = config.gridColumns;
-    const fallbackColor = colorFromHex(p, activeColorScheme.secondary); // Fallback color
+    const newTargetColors: p5.Color[][] = [];
+
+    // Use the provided interpolated secondary color for null cells
+    const secondaryColor = interpolatedSecondaryColor; 
 
     for (let r = 0; r < rows; r++) {
-        if (!targetCellColors[r]) targetCellColors[r] = []; // Initialize row if needed
+        newTargetColors[r] = [];
         for (let c = 0; c < cols; c++) {
-            let targetHex: string | null = null;
-            let styleId: string | null = null;
-            const layoutCell = activeScene.layoutGrid?.[r]?.[c];
+            const layoutCell = scene.layoutGrid?.[r]?.[c];
+            let targetHex: string | undefined;
+            let styleId: string | undefined;
 
-            if (layoutCell) { 
+            if (layoutCell) {
+                // Assuming LayoutCell is { char: string; styleId?: string; }
                 styleId = layoutCell.styleId;
-            } else { 
-                styleId = config.defaultStyleId; 
+                if (!styleId) { // If no styleId, try finding a default preset? Or use primary?
+                    // Let's prioritize finding a preset named after the character itself, then default
+                    styleId = scene.stylePresets[layoutCell.char] ? layoutCell.char : config.defaultStyleId;
+                }
+            } else {
+                // Null cell - use the secondary color directly, no preset needed
+                newTargetColors[r][c] = secondaryColor;
+                continue; // Skip preset lookup for null cells
             }
 
-            const stylePreset = activeScene.stylePresets?.[styleId || config.defaultStyleId];
-            if (stylePreset && stylePreset.color) {
-                targetHex = stylePreset.color;
-            } 
+            // Find the color from the style preset
+            const stylePreset = scene.stylePresets?.[styleId || config.defaultStyleId];
+            targetHex = stylePreset?.color;
             
-            // Store p5.Color object
-            targetCellColors[r][c] = targetHex ? colorFromHex(p, targetHex) : fallbackColor;
+            // Fallback if preset or color is missing - use activeColorScheme.primary
+            if (!targetHex) {
+                 targetHex = activeColorScheme.primary;
+            }
+
+            // Final fallback to white if even primary is missing
+            newTargetColors[r][c] = parseColor(p, targetHex, '#FFFFFF'); 
         }
     }
+    targetCellColors = newTargetColors;
 }
 
 // --- Initialize Cell Colors (NEW) ---
-function initializeCellColors(p: p5) {
+function initializeCellColors(p: p5, scene: AnimationScene, initialSecondaryColor: p5.Color) {
     const rows = config.gridRows;
     const cols = config.gridColumns;
     previousCellColors = [];
-    targetCellColors = [];
     currentCellColors = [];
-    
-    // Determine initial active scene (assuming scene 0 starts at frame 0)
-    activeScene = config.animationTimeline.find(scene => scene.startFrame === 0) || config.animationTimeline[0] || null;
-    
-    if (!activeScene) {
-        console.error("Cannot initialize colors: No initial scene found (startFrame 0)!");
-        // Initialize with a default color if no scene
-        const defaultColor = colorFromHex(p, activeColorScheme.background); 
-        for (let r = 0; r < rows; r++) {
-            previousCellColors[r] = new Array(cols).fill(defaultColor);
-            targetCellColors[r] = new Array(cols).fill(defaultColor);
-            currentCellColors[r] = new Array(cols).fill(defaultColor);
-        }
-        activeScene = null; // Ensure activeScene is null if initialization failed partially
-        return;
-    }
-    
-    currentSceneIndex = config.animationTimeline.indexOf(activeScene);
-    console.log(`Initializing colors based on scene ${currentSceneIndex}`);
 
-    // Calculate initial target colors using the initial active scene
-    calculateTargetCellColors(p);
+    // Calculate initial target colors using the provided secondary color
+    calculateTargetCellColors(p, scene, initialSecondaryColor); 
 
-    // Initialize all arrays with the initial target colors
+    // Initialize previous and current colors to the initial target colors
     for (let r = 0; r < rows; r++) {
-        previousCellColors[r] = [...targetCellColors[r]]; 
-        currentCellColors[r] = [...targetCellColors[r]]; 
+        previousCellColors[r] = [];
+        currentCellColors[r] = [];
+        for (let c = 0; c < cols; c++) {
+            const initialColor = targetCellColors[r][c]; 
+            previousCellColors[r][c] = initialColor;
+            currentCellColors[r][c] = initialColor;
+        }
     }
-    colorLerpProgress = 1; // Start fully transitioned
 }
 
 // --- Animation Loop (Integrate Color Lerp) --- 
-const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number): void => {
-  // Log current frame number at the very beginning (first 200 frames)
-  if (currentFrameNum < 200) {
-      console.log(`[Animation Entry] Frame: ${currentFrameNum}`);
-  }
+const animation: AnimationFunction = (p: p5, _normalizedTime: number, currentFrameNum: number): void => {
+  const frame = currentFrameNum;
 
-  p.background(activeColorScheme.background);
-  p.translate(-config.width / 2, -config.height / 2);
-
-  // --- Find Active Scene --- 
+  // 1. Determine Active Scene and Previous Scene
   let newSceneIndex = -1;
   // Log entering the loop on specific frames for debugging
   if (currentFrameNum === 0 || currentFrameNum === 119 || currentFrameNum === 120 || currentFrameNum === 299 || currentFrameNum === 300) {
       console.log(`[Scene Search] Frame ${currentFrameNum}: Searching for scene...`);
   }
-  for (let i = config.animationTimeline.length - 1; i >= 0; i--) {
-      const scene = config.animationTimeline[i];
+  for (let i = timeline.length - 1; i >= 0; i--) {
+      const scene = timeline[i];
       const check = currentFrameNum >= scene.startFrame;
       // Log check results on specific frames
       if (currentFrameNum === 0 || currentFrameNum === 119 || currentFrameNum === 120 || currentFrameNum === 299 || currentFrameNum === 300) {
@@ -483,103 +499,197 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFram
   }
 
   const sceneChanged = newSceneIndex !== currentSceneIndex;
+  // Store previous index *before* updating current
+  const previousSceneIndex = currentSceneIndex; 
+  currentSceneIndex = newSceneIndex;
+
+  activeScene = currentSceneIndex !== -1 ? timeline[currentSceneIndex] : null;
+  // Use the stored previous index to get the previous scene
+  previousScene = previousSceneIndex !== -1 ? timeline[previousSceneIndex] : null; 
+
+   if (!activeScene) {
+      // Handle case with no active scene
+      console.log(`[Frame ${frame}] No active scene found (index ${currentSceneIndex}).`);
+      const fallbackBg = currentBgColor || parseColor(p, undefined, DEFAULT_BG_COLOR);
+      p.background(fallbackBg);
+      p.fill(255);
+      p.textAlign(p.CENTER, p.CENTER);
+      p.text("No active scene", p.width / 2, p.height / 2);
+      return; // Exit animation loop if no scene
+   }
+
+  // Declare sceneStartTime ONCE here
+  const sceneStartTime = activeScene.startFrame;
+
+  // 2. Calculate Scene Color Transition
+  const timeIntoSceneTransition = Math.max(0, frame - sceneStartTime);
+  const colorTransitionDuration = Math.max(1, config.colorTransitionFrames); 
+  const colorTransitionT = p.constrain(timeIntoSceneTransition / colorTransitionDuration, 0, 1);
+
+  // Determine target colors (from current scene)
+  targetBgColor = parseColor(p, activeScene.backgroundColor, DEFAULT_BG_COLOR);
+  targetSecondaryColor = parseColor(p, activeScene.secondaryColor, DEFAULT_SECONDARY_COLOR);
+
+  // Determine previous colors (from previous scene, or defaults if first scene)
   if (sceneChanged) {
-      currentSceneIndex = newSceneIndex;
-      if (currentSceneIndex !== -1) {
-          const newActiveScene = config.animationTimeline[currentSceneIndex];
-          if (newActiveScene) {
-              // --- Scene Change: Update Color Targets --- 
-              // 1. Store current colors as previous
-              previousCellColors = currentCellColors.map(row => [...row]);
-              // 2. Set new active scene
-              activeScene = newActiveScene;
-              // 3. Calculate new target colors based on the *new* scene
-              calculateTargetCellColors(p);
-              colorLerpProgress = 0; // RESET color lerp progress on scene change
-              console.log(`[Animation Loop] Switched to scene ${currentSceneIndex} at frame ${currentFrameNum}. Updated target colors.`);
-          } else {
-              activeScene = null; // Scene index valid but scene data missing?
-          }
-      } else {
-          // --- No Scene Active --- 
-          // Optionally set previous/target colors to background?
-          previousCellColors = currentCellColors.map(row => [...row]); // Keep last color as prev
-          const bgColor = colorFromHex(p, activeColorScheme.background);
-          targetCellColors = previousCellColors.map(row => new Array(row.length).fill(bgColor)); // Target is background
-          activeScene = null; 
-          console.log(`[Animation Loop] No scene active at frame ${currentFrameNum}`);
-      }
-  } else if (currentSceneIndex === -1 && newSceneIndex === -1) {
-       // Handle case where no scene is active initially or becomes inactive
-       // Optionally reset color lerp progress here too if needed
+      previousBgColor = previousScene ? parseColor(p, previousScene.backgroundColor, DEFAULT_BG_COLOR) : targetBgColor; 
+      previousSecondaryColor = previousScene ? parseColor(p, previousScene.secondaryColor, DEFAULT_SECONDARY_COLOR) : targetSecondaryColor;
+      previousCellColors = currentCellColors; // Start cell lerp from current colors
+      console.log(`[Scene Change ${frame}] PrevBG: ${previousBgColor?.toString()}, TargetBG: ${targetBgColor?.toString()}`);
+      console.log(`[Scene Change ${frame}] PrevSec: ${previousSecondaryColor?.toString()}, TargetSec: ${targetSecondaryColor?.toString()}`);
+  } else if (!previousBgColor || !previousSecondaryColor) {
+      // Initialize previous colors if they are null (e.g., on first frame of animation)
+      previousBgColor = targetBgColor; // Start fully at target
+      previousSecondaryColor = targetSecondaryColor;
+      console.log(`[Frame ${frame}] Initializing previous scene colors.`);
   }
 
-  // Log active scene status AFTER potential update
-  if (currentFrameNum === 0 || sceneChanged) { 
-      console.log(`[Animation Loop Status] Frame ${currentFrameNum}, Active Scene Index: ${currentSceneIndex}, Active Scene Exists: ${!!activeScene}`);
-  }
+  // Interpolate scene colors (with guards)
+  currentBgColor = previousBgColor && targetBgColor ? 
+                   interpolateColor(p, previousBgColor, targetBgColor, colorTransitionT) :
+                   (targetBgColor || parseColor(p, undefined, DEFAULT_BG_COLOR)); // Fallback
+                   
+  currentSecondaryColor = previousSecondaryColor && targetSecondaryColor ? 
+                         interpolateColor(p, previousSecondaryColor, targetSecondaryColor, colorTransitionT) :
+                         (targetSecondaryColor || parseColor(p, undefined, DEFAULT_SECONDARY_COLOR)); // Fallback
 
-  // --- Update Point Targets & Interpolate Points ---
-  const updateInterval = config.updateIntervalFrames;
-  const isUpdateFrame = currentFrameNum % updateInterval === 0;
-  
-  if (isUpdateFrame || currentFrameNum === 0) { 
+   // Log interpolation values for debugging
+   if (frame >= sceneStartTime && frame < sceneStartTime + colorTransitionDuration + 5) { // Log during and slightly after transition
+       console.log(`[Frame ${frame}] Scene ${currentSceneIndex} | ColorT: ${colorTransitionT.toFixed(2)} | currentBg: ${currentBgColor?.toString()}`);
+   }
+
+  // --- Point Update Logic (Periodic) --- 
+  const updateInterval = Math.max(1, config.updateIntervalFrames);
+  const isUpdateFrame = (frame % updateInterval === 0) || (frame === 0); // Update on frame 0 too
+
+  if (isUpdateFrame) {
+      console.log(`[Frame ${frame}] Point Update Triggered (Interval: ${updateInterval})`);
+      // Capture current points as previous *before* calculating new targets
+      previousPoints = currentPoints.map(row => row.map(pt => ({...pt}))); 
+      if (previousPoints.length > 1 && previousPoints[0].length > 1) console.log(`  Prev[1][1] captured for update:`, previousPoints[1][1]);
+      // Calculate new targets 
+      calculateNewTargetPoints(p);
+  } else if (!previousPoints || previousPoints.length === 0) {
+      // Initialize previous points if it's somehow empty 
       previousPoints = currentPoints.map(row => row.map(pt => ({...pt})));
-      calculateNewTargetPoints(p); 
-      // Log target vs previous point on update frame
-      if (currentPoints.length > 1 && currentPoints[1].length > 1) { // Check array bounds
-        console.log(`[Update Frame ${currentFrameNum}] PrevPt[1][1]:`, previousPoints[1][1], `TargetPt[1][1]:`, targetPoints[1][1]);
-      }
+      console.warn(`[Frame ${frame}] Initialized missing previousPoints during non-update frame.`);
   }
 
-  const progressInInterval = (currentFrameNum % updateInterval) / updateInterval;
-  const activeEase = getActiveEasingFunction();
-  const positionLerpFactor = activeEase(progressInInterval); // Factor for points
+  // 4. Interpolate Grid Points (Always runs, interpolates towards the latest target)
+  const POINT_TRANSITION_FRAMES = updateInterval; // Transition duration = update interval
+  const timeSinceLastUpdate = frame % POINT_TRANSITION_FRAMES;
+  const pointT = p.constrain(timeSinceLastUpdate / POINT_TRANSITION_FRAMES, 0, 1);
+  const easedPointT = getActiveEasingFunction()(pointT); 
+  console.log(`[Frame ${frame}] PointT: ${pointT.toFixed(3)}, EasedPointT: ${easedPointT.toFixed(3)}`); 
 
-  for (let j = 0; j < currentPoints.length; j++) {
-      for (let i = 0; i < currentPoints[j].length; i++) {
-          currentPoints[j][i] = lerpPoint(p, previousPoints[j][i], targetPoints[j][i], positionLerpFactor);
-      }
+  // Interpolate points using the updated previousPoints and potentially updated targetPoints
+  if (previousPoints && previousPoints.length === config.gridRows + 1) { 
+       for (let r = 0; r <= config.gridRows; r++) {
+           for (let c = 0; c <= config.gridColumns; c++) {
+               // Check if points exist before lerping
+               const prevPt = previousPoints[r]?.[c];
+               const targetPt = targetPoints[r]?.[c];
+               
+               if (prevPt && targetPt) {
+                   // Log one point before lerp
+                   if (r === 1 && c === 1 && frame % 10 === 0) { // Log every 10 frames for one point
+                        console.log(`  Lerping[1][1] | Prev: ${JSON.stringify(prevPt)} | Target: ${JSON.stringify(targetPt)} | T: ${easedPointT.toFixed(3)}`);
+                   }
+                   currentPoints[r][c] = lerpPoint(p, prevPt, targetPt, easedPointT);
+               } else {
+                   // Fallback if points are missing
+                   currentPoints[r][c] = targetPt || originalPoints[r]?.[c] || { x: c * (p.width / config.gridColumns), y: r * (p.height / config.gridRows) };
+                   if (!prevPt) console.warn(`[Point Lerp] Missing previousPoint at [${r},${c}] frame ${frame}.`);
+                   if (!targetPt) console.warn(`[Point Lerp] Missing targetPoint at [${r},${c}] frame ${frame}. Using original.`);
+               }
+           }
+       }
+       updateRectangles(); // Update rectangle vertices based on currentPoints
+  } else {
+       console.warn(`[Frame ${frame}] Skipping point interpolation due to missing or invalid previousPoints.`);
+       // If points are missing, maybe just set current to target or original?
+       currentPoints = targetPoints.length > 0 ? targetPoints : originalPoints;
+       updateRectangles();
   }
 
-  // --- Interpolate Colors (Using dedicated progress) --- 
-  if (colorLerpProgress < 1) {
-      colorLerpProgress = Math.min(1, colorLerpProgress + 1 / config.colorTransitionFrames);
-  }
-  const colorLerpFactor = activeEase(colorLerpProgress); // Use the same easing for color
-
-  if (previousCellColors.length === config.gridRows && targetCellColors.length === config.gridRows) {
+  // 5. Interpolate Cell Colors
+  const easedColorT = colorTransitionT; // Use the same T for cell colors
+  if (currentCellColors.length === config.gridRows) {
       for (let r = 0; r < config.gridRows; r++) {
           if (!currentCellColors[r]) currentCellColors[r] = []; // Ensure row exists
+          // Ensure row has correct number of columns
+          if (currentCellColors[r].length !== config.gridColumns) {
+              // Adjust row length if needed, filling with default secondary
+              const defaultSecondary = currentSecondaryColor || parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+              currentCellColors[r] = Array(config.gridColumns).fill(defaultSecondary).map((_, c) => currentCellColors[r][c] || defaultSecondary);
+          }
+
           for (let c = 0; c < config.gridColumns; c++) {
-              if (previousCellColors[r]?.[c] && targetCellColors[r]?.[c]) { 
-                  currentCellColors[r][c] = p.lerpColor(previousCellColors[r][c], targetCellColors[r][c], colorLerpFactor);
-              } else if (!currentCellColors[r]?.[c]) {
-                  // Initialize if missing, perhaps with background
-                  currentCellColors[r][c] = colorFromHex(p, activeColorScheme.background); 
+              const prevColor = previousCellColors[r]?.[c];
+              const targetColor = targetCellColors[r]?.[c];
+
+              if (prevColor && targetColor) { 
+                  // Both colors exist, interpolate normally
+                  currentCellColors[r][c] = interpolateColor(p, prevColor, targetColor, easedColorT);
+              } else {
+                  // Handle missing color(s)
+                  // Prioritize target color if available, otherwise use current secondary
+                  const fallbackColor = targetColor || currentSecondaryColor || parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+                  currentCellColors[r][c] = fallbackColor; 
+
+                  // Log the issue for debugging
+                  if (!prevColor) console.warn(`[Color Lerp] Missing previousCellColor at [${r},${c}] frame ${currentFrameNum}. Using fallback.`);
+                  if (!targetColor) console.warn(`[Color Lerp] Missing targetCellColor at [${r},${c}] frame ${currentFrameNum}. Using fallback.`);
               }
           }
       }
-  } else {
-      // console.warn("Color array dimension mismatch, skipping color lerp");
+  } else if (config.gridRows > 0 && config.gridColumns > 0) {
+       // Initialize the whole currentCellColors if it's completely missing/wrong size
+       console.warn("currentCellColors dimensions incorrect, re-initializing.");
+       const defaultSecondary = currentSecondaryColor || parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+       currentCellColors = Array(config.gridRows).fill(0).map(() => Array(config.gridColumns).fill(defaultSecondary));
+       // Also might need to re-init previousCellColors and targetCellColors here
+       previousCellColors = currentCellColors.map(row => [...row]);
+       if (activeScene) calculateTargetCellColors(p, activeScene, defaultSecondary);
+       else targetCellColors = currentCellColors.map(row => [...row]);
+       currentCellColors = previousCellColors.map(row => [...row]);
   }
 
-  // --- Update Geometry & Render --- 
-  updateRectangles(); 
+  // 6. Render
+  p.background(currentBgColor); 
 
-  if (activeScene) { 
-      rectangles.forEach((rect, index) => {
-        const metadata = rect.getMetadata();
-        if (metadata && metadata.rowTopLeft < currentCellColors.length && metadata.colTopLeft < currentCellColors[metadata.rowTopLeft]?.length) { // Check bounds
-            metadata.rectIndex = index; 
-            renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata);
-        } 
-      });
-  } 
+  // Draw Rectangles using the renderTexturedRectangle function
+  rectangles.forEach((rect, index) => {
+      const metadata = rect.getMetadata();
+      // Ensure metadata exists and row/col indices are valid before rendering
+      if (metadata && metadata.rowTopLeft < currentCellColors.length && metadata.colTopLeft < currentCellColors[metadata.rowTopLeft]?.length) { 
+          // Assign rectIndex to metadata for potential use inside renderer
+          metadata.rectIndex = index; 
+          // Call the specific renderer function
+          renderTexturedRectangle(
+              p, 
+              _normalizedTime, 
+              rect.getLines(), 
+              rect.getDiagonalIntersection(), 
+              rect.getVertices(), 
+              rect.getColor(), // Pass color from rect, though renderer might ignore it for texture tint
+              metadata
+          );
+      } else {
+          // Optional: Log if a rectangle is skipped due to invalid metadata or color index
+          // console.warn(`Skipping render for rect index ${index} due to invalid metadata or color index.`);
+      }
+  });
+
+  // --- Draw Debug Info ---
+  // ... (debug info logic)
 };
 
 // --- Setup Function (Update Texture Generation) ---
 const setupAnimation: AnimationFunction = (p: p5): void => {
+  // Declare initialSceneIndex at the top level of the function
+  let initialSceneIndex = 0; 
+
   activeColorScheme = getActiveColorScheme(config.colorSchemeName);
   console.log(`Using color scheme: ${config.colorSchemeName}`);
   p.background(activeColorScheme.background);
@@ -590,7 +700,7 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
   const chars = config.fillerChars || " ";
   const charSet = new Set<string>(chars.split(''));
   
-  config.animationTimeline.forEach(scene => {
+  timeline.forEach(scene => {
     if (scene.layoutGrid) {
       scene.layoutGrid.forEach(row => {
         if (row) {
@@ -623,16 +733,69 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
     alphabetTextures = generateAlphabetTextures(p, selectedTextureSize, config.fontFamily, "? ");
   }
   
-  // ... Initialize Grid & Scene ...
-  setupGridPoints(p);
-  currentSceneIndex = -1;
+  // Initialize Grid & Scene
+  setupGridPoints(p); 
+  currentSceneIndex = -1; // Reset before finding the first scene
   activeScene = null;
+  // initialSceneIndex is already declared above
+   if (timeline.length === 0) {
+       console.error("Timeline is empty. Cannot initialize animation.");
+       return; 
+   }
+   // Find the scene active at frame 0 or the first scene
+   for (let i = timeline.length - 1; i >= 0; i--) {
+       if (0 >= timeline[i].startFrame) {
+           initialSceneIndex = i;
+           break;
+       }
+   }
+   currentSceneIndex = initialSceneIndex;
+   activeScene = timeline[currentSceneIndex];
+   previousScene = null; // No previous scene on setup
 
-  console.log("Setup complete using config (Timeline). Textures generated:", Object.keys(alphabetTextures).length);
-  console.log("Rectangles created:", rectangles.length);
-
-  // Initialize cell colors
-  initializeCellColors(p);
+   if (!activeScene) { // Check if activeScene is null after finding index
+       // Accessing initialSceneIndex here is now safe
+       console.error(`Failed to find active scene with index ${initialSceneIndex}. Initializing with defaults.`);
+       // Initialize colors with defaults if no active scene
+       targetBgColor = parseColor(p, undefined, DEFAULT_BG_COLOR);
+       targetSecondaryColor = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+   } else {
+       // Initialize Color State using the found activeScene
+       targetBgColor = parseColor(p, activeScene.backgroundColor, DEFAULT_BG_COLOR);
+       targetSecondaryColor = parseColor(p, activeScene.secondaryColor, DEFAULT_SECONDARY_COLOR);
+   }
+   
+   // Initialize current/previous colors
+   previousBgColor = targetBgColor; 
+   previousSecondaryColor = targetSecondaryColor;
+   currentBgColor = targetBgColor;
+   currentSecondaryColor = targetSecondaryColor; // Use the parsed target color initially
+   
+   // Calculate initial target points and initialize cell colors
+   if (activeScene) {
+       calculateNewTargetPoints(p); 
+       // Parse the initial secondary color *before* passing to initializeCellColors
+       const initialSecondaryParsed = parseColor(p, activeScene.secondaryColor, DEFAULT_SECONDARY_COLOR);
+       initializeCellColors(p, activeScene, initialSecondaryParsed); 
+   } else {
+       // No active scene, initialize points/colors to default state
+       targetPoints = originalPoints.map(row => row.map(pt => ({...pt})));
+       const defaultSecondaryParsed = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+       targetCellColors = Array(config.gridRows).fill(0).map(() => Array(config.gridColumns).fill(defaultSecondaryParsed));
+       // Pass the parsed default secondary color
+       initializeCellColors(p, { startFrame: 0, layoutGrid: [], stylePresets: {} }, defaultSecondaryParsed); 
+   }
+   
+   // Initialize current/previous points
+   currentPoints = targetPoints.map(row => row.map(pt => ({...pt})));
+   previousPoints = targetPoints.map(row => row.map(pt => ({...pt})));
+   
+   updateRectangles(); // Initial update based on starting points
+   
+   console.log("Animation Setup Complete.");
+   // Removed non-existent fontStyle from log
+   console.log(`Using font: ${config.fontFamily}`); 
+   console.log(`Initial Scene Index: ${currentSceneIndex}`);
 };
 
 // Now declare the settings after animation is defined

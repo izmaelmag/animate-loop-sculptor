@@ -7,7 +7,6 @@ import { AnimationScene, CellStyle, LayoutCell } from '../animations/unstableGri
 interface EditableLayoutCell {
   char: string;
   color?: string; // Direct color for editor simplicity
-  colorStaggerDelayFrames?: number;
 }
 
 // Scene type used within the editor state
@@ -15,6 +14,8 @@ interface EditableScene {
   id: number; // Unique ID for key in React
   startFrame: number;
   durationFrames?: number;
+  backgroundColor?: string; // Scene background color
+  secondaryColor?: string; // Scene secondary/filler color
   // Layout grid specific to this scene
   layoutGrid: (EditableLayoutCell | null)[][];
   // We'll keep stylePresets, but editing happens via direct cell color for now
@@ -24,6 +25,8 @@ interface EditableScene {
 // --- Initial Settings ---
 const INITIAL_GRID_COLS = 10; // Increased default size
 const INITIAL_GRID_ROWS = 6;
+const DEFAULT_BG_COLOR = '#282c34'; // Default grid background
+const DEFAULT_SECONDARY_COLOR = '#333'; // Default null cell background
 
 // --- GridDisplay Component ---
 interface GridDisplayProps {
@@ -32,6 +35,8 @@ interface GridDisplayProps {
   layoutGrid: (EditableLayoutCell | null)[][]; // Pass the grid data
   selectedCellCoords: { row: number; col: number } | null;
   onCellClick: (row: number, col: number) => void;
+  backgroundColor?: string; // Optional scene background
+  secondaryColor?: string; // Optional scene secondary color
 }
 
 const GridDisplay: React.FC<GridDisplayProps> = ({ 
@@ -40,10 +45,15 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
     layoutGrid, 
     selectedCellCoords, 
     onCellClick, 
+    backgroundColor, // Use passed colors
+    secondaryColor, 
 }) => {
   if (rows <= 0 || cols <= 0) {
     return <div style={{ color: 'red' }}>Invalid grid dimensions</div>;
   }
+
+  const gridBg = backgroundColor || DEFAULT_BG_COLOR;
+  const cellSecondaryBg = secondaryColor || DEFAULT_SECONDARY_COLOR;
 
   const cellStyleBase: React.CSSProperties = {
     border: '1px solid #555',
@@ -68,7 +78,7 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
     border: '1px solid #aaa',
     maxWidth: 'fit-content',
     margin: '20px 0',
-    backgroundColor: '#282c34', // Darker background for contrast
+    backgroundColor: gridBg, // Use scene or default background
   };
 
   const cells = [];
@@ -79,8 +89,8 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
 
       const cellStyle: React.CSSProperties = {
         ...cellStyleBase,
-        backgroundColor: isSelected ? '#445588' : '#333', // Highlight selected
-        color: cellData?.color || (isSelected ? '#fff' : '#ccc'), // Use cell color or default
+        backgroundColor: cellData ? (isSelected ? '#445588' : '#333') : (isSelected ? '#445588' : cellSecondaryBg), 
+        color: cellData?.color || (isSelected ? '#fff' : '#ccc'), 
         fontWeight: cellData ? 'bold' : 'normal',
       };
 
@@ -114,6 +124,7 @@ const TimelineEditor: React.FC = () => {
   const [selectedCellCoords, setSelectedCellCoords] = useState<{ row: number; col: number } | null>(null);
   const [nextSceneId, setNextSceneId] = useState<number>(0);
   const hiddenInputRef = useRef<HTMLInputElement>(null); // Ref for the hidden input
+  const [exportJson, setExportJson] = useState<string>(''); // State for the export JSON string
 
   // Memoize current scene and cell data to avoid unnecessary calculations
   const currentScene = useMemo(() => {
@@ -221,21 +232,18 @@ const TimelineEditor: React.FC = () => {
                newLayoutGrid[row][col] = null; 
           } else {
               const existingData = currentCell || { char: '' }; 
-              // --- SIMPLIFIED MERGE --- 
+              
               const newCellData: EditableLayoutCell = {
                   ...existingData,
-                  ...updates, // Let updates naturally overwrite
+                  ...updates, 
               };
-              // --- END SIMPLIFIED MERGE --- 
               
               // Keep logic to remove undefined/empty props
               if (newCellData.color === '') delete newCellData.color;
-              if (newCellData.colorStaggerDelayFrames === undefined || (typeof newCellData.colorStaggerDelayFrames === 'string' && newCellData.colorStaggerDelayFrames === '')) {
-                   delete newCellData.colorStaggerDelayFrames;
-              }
+
               // Ensure char is not literally empty string if cell should exist
-              if (newCellData.char === '' && (newCellData.color || newCellData.colorStaggerDelayFrames !== undefined)) {
-                  newCellData.char = existingData.char || ' '; // Restore prev char or use space if forcing cell to exist
+              if (newCellData.char === '' && newCellData.color) { // Only check color now
+                  newCellData.char = existingData.char || ' '; 
               }
               console.log(`[handleCellChange] Setting cell [${row}, ${col}] to:`, newCellData);
               newLayoutGrid[row][col] = newCellData;
@@ -249,25 +257,12 @@ const TimelineEditor: React.FC = () => {
     [selectedSceneIndex]
   );
 
-
   // Update color for selected cell
   const handleSelectedCellColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (selectedCellCoords) {
           handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: event.target.value });
       }
   };
-
-  // Update stagger delay for selected cell
-  const handleSelectedCellStaggerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (selectedCellCoords) {
-          const value = event.target.value;
-          const numValue = parseInt(value, 10);
-          handleCellChange(selectedCellCoords.row, selectedCellCoords.col, {
-              colorStaggerDelayFrames: value === '' ? undefined : (isNaN(numValue) ? undefined : Math.max(0, numValue))
-          });
-      }
-  };
-
 
   // --- Scene Parameter Editing ---
    const handleSceneParamChange = (
@@ -278,18 +273,70 @@ const TimelineEditor: React.FC = () => {
      setScenes(prevScenes => {
          const updatedScenes = [...prevScenes];
          const sceneToUpdate = { ...updatedScenes[selectedSceneIndex] };
-         const numericValue = typeof value === 'string' ? parseInt(value, 10) : value;
-
-         if (!isNaN(numericValue)) {
-             (sceneToUpdate[param as 'startFrame' | 'durationFrames']) = numericValue >= 0 ? numericValue : 0;
-         } else if (param === 'durationFrames' && value === '') {
-             delete sceneToUpdate.durationFrames;
+         
+         // Handle numeric values
+         if (param === 'startFrame' || param === 'durationFrames') {
+             const numericValue = typeof value === 'string' ? parseInt(value, 10) : value;
+             if (!isNaN(numericValue)) {
+                 (sceneToUpdate[param as 'startFrame' | 'durationFrames']) = numericValue >= 0 ? numericValue : 0;
+             } else if (param === 'durationFrames' && value === '') {
+                 delete sceneToUpdate.durationFrames;
+             }
+         } 
+         // Handle string values (colors)
+         else if (param === 'backgroundColor' || param === 'secondaryColor') {
+             sceneToUpdate[param] = value === '' ? undefined : String(value); // Store as string or undefined
          }
+         
          updatedScenes[selectedSceneIndex] = sceneToUpdate;
          return updatedScenes;
      });
    };
 
+  // --- Export Logic ---
+  const convertEditableToAnimationScenes = (editableScenes: EditableScene[]): AnimationScene[] => {
+    return editableScenes.map(scene => {
+        const newLayoutGrid: (LayoutCell | null)[][] = scene.layoutGrid.map(row => 
+            row.map(cell => {
+                if (!cell) return null;
+
+                // Always return object format
+                const layoutCell: { char: string; style?: CellStyle } = {
+                    char: cell.char,
+                };
+                
+                // Add style object ONLY if color exists
+                if (cell.color) {
+                    // Assuming CellStyle = { color: string } based on previous errors
+                    layoutCell.style = { color: cell.color }; 
+                }
+
+                return layoutCell;
+            })
+        );
+
+        // Construct the AnimationScene
+        const animationScene: AnimationScene = {
+            startFrame: scene.startFrame,
+            layoutGrid: newLayoutGrid,
+            stylePresets: scene.stylePresets,
+            // Add scene colors if they exist
+            ...(scene.backgroundColor && { backgroundColor: scene.backgroundColor }),
+            ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
+        };
+        if (scene.durationFrames !== undefined) {
+            animationScene.durationFrames = scene.durationFrames;
+        }
+
+        return animationScene;
+    });
+  };
+
+  const handleGenerateExport = () => {
+      const animationScenes = convertEditableToAnimationScenes(scenes);
+      const jsonString = JSON.stringify(animationScenes, null, 2);
+      setExportJson(jsonString);
+  };
 
   // --- Styles --- (Copied from previous example, adjusted slightly)
    const editorStyle: React.CSSProperties = { display: 'flex', gap: '20px', padding: '20px', fontFamily: 'sans-serif', flexWrap: 'wrap' };
@@ -313,6 +360,27 @@ const TimelineEditor: React.FC = () => {
        padding: 0,
        margin: 0,
        overflow: 'hidden' // Ensure it doesn't affect layout
+   };
+
+   const exportTextAreaStyle: React.CSSProperties = {
+       width: '95%',
+       minHeight: '200px',
+       fontFamily: 'monospace',
+       fontSize: '0.8em',
+       marginTop: '10px',
+       whiteSpace: 'pre',
+       overflowWrap: 'normal',
+       overflowX: 'scroll'
+   };
+
+   const colorInputStyle: React.CSSProperties = { 
+       marginLeft: '10px', 
+       border: 'none', 
+       padding: 0, 
+       width: '40px', 
+       height: '20px', 
+       cursor: 'pointer', 
+       verticalAlign: 'middle' 
    };
 
   // --- Render ---
@@ -353,7 +421,31 @@ const TimelineEditor: React.FC = () => {
       {/* Selected Scene Settings */}
       <div style={sectionStyle}>
         <h3>Scene Settings</h3>
-        {currentScene ? ( <> <div style={inputGroupStyle}> <label style={labelStyle} htmlFor="startFrame">Start Frame:</label> <input style={smallInputStyle} type="number" id="startFrame" min="0" value={currentScene.startFrame} onChange={(e) => handleSceneParamChange('startFrame', e.target.value)} /> </div> <div style={inputGroupStyle}> <label style={labelStyle} htmlFor="durationFrames">Duration (opt.):</label> <input style={smallInputStyle} type="number" id="durationFrames" min="1" value={currentScene.durationFrames ?? ''} onChange={(e) => handleSceneParamChange('durationFrames', e.target.value)} placeholder="auto" /> </div> </>
+        {currentScene ? ( 
+          <> 
+            <div style={inputGroupStyle}> <label style={labelStyle} htmlFor="startFrame">Start Frame:</label> <input style={smallInputStyle} type="number" id="startFrame" min="0" value={currentScene.startFrame} onChange={(e) => handleSceneParamChange('startFrame', e.target.value)} /> </div> 
+            <div style={inputGroupStyle}> <label style={labelStyle} htmlFor="durationFrames">Duration (opt.):</label> <input style={smallInputStyle} type="number" id="durationFrames" min="1" value={currentScene.durationFrames ?? ''} onChange={(e) => handleSceneParamChange('durationFrames', e.target.value)} placeholder="auto" /> </div> 
+            <div style={inputGroupStyle}> 
+              <label style={labelStyle} htmlFor="bgColor">Background Color:</label> 
+              <input 
+                type="color" 
+                id="bgColor" 
+                value={currentScene.backgroundColor ?? '#000000'} // Default picker to black if unset
+                onChange={(e) => handleSceneParamChange('backgroundColor', e.target.value)}
+                style={colorInputStyle}
+              />
+            </div> 
+            <div style={inputGroupStyle}> 
+              <label style={labelStyle} htmlFor="secondaryColor">Secondary Color:</label> 
+              <input 
+                type="color" 
+                id="secondaryColor" 
+                value={currentScene.secondaryColor ?? '#808080'} // Default picker to gray if unset
+                onChange={(e) => handleSceneParamChange('secondaryColor', e.target.value)}
+                style={colorInputStyle}
+              />
+            </div> 
+          </>
         ) : ( <p>Select a scene.</p> )}
       </div>
 
@@ -373,21 +465,9 @@ const TimelineEditor: React.FC = () => {
                        <input
                          type="color"
                          id="cellColor"
-                         value={selectedCellData?.color ?? '#ffffff'} // Default to white if no color set
+                         value={selectedCellData?.color ?? '#ffffff'} 
                          onChange={handleSelectedCellColorChange}
                          style={{ border: 'none', padding: 0, width: '50px', height: '30px', cursor: 'pointer'}}
-                       />
-                     </div>
-                     <div style={inputGroupStyle}>
-                       <label style={labelStyle} htmlFor="cellStagger">Stagger Delay (frames):</label>
-                       <input
-                         style={smallInputStyle}
-                         type="number"
-                         id="cellStagger"
-                         min="0"
-                         value={selectedCellData?.colorStaggerDelayFrames ?? ''}
-                         onChange={handleSelectedCellStaggerChange}
-                         placeholder="0"
                        />
                      </div>
                  </>
@@ -405,13 +485,27 @@ const TimelineEditor: React.FC = () => {
                     layoutGrid={currentScene.layoutGrid}
                     selectedCellCoords={selectedCellCoords}
                     onCellClick={handleCellClick}
+                    backgroundColor={currentScene.backgroundColor}
+                    secondaryColor={currentScene.secondaryColor}
                  />
             ) : (
                 <p style={{color: '#888'}}>Add or select a scene to see the grid preview.</p>
             )}
        </div>
 
-       {/* TODO: Export Section */}
+       {/* Export Section */}
+       <div style={{...sectionStyle, width: '100%', order: 99}}> {/* Use order to place it last? Or adjust flex layout */} 
+            <h3>Export Timeline</h3>
+            <button onClick={handleGenerateExport}>Generate Export JSON</button>
+            {exportJson && (
+                <textarea 
+                    style={exportTextAreaStyle}
+                    value={exportJson}
+                    readOnly
+                    onClick={(e) => (e.target as HTMLTextAreaElement).select()} // Select all on click
+                />
+            )}
+       </div>
 
     </div>
   );
