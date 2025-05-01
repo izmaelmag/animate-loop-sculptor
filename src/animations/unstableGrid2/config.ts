@@ -181,6 +181,7 @@ export interface UnstableGridConfig {
   // Animation Timing
   updateIntervalFrames: number; 
   easingFunctionName: EasingFunctionName; 
+  colorTransitionFrames: number; // NEW: Duration for color lerp
 
   // Point Movement Target Range
   pointDisplacementXFactor: number; 
@@ -242,6 +243,7 @@ export const config: UnstableGridConfig = {
   // Animation Timing
   updateIntervalFrames: 60, 
   easingFunctionName: 'easeInOutCubic', 
+  colorTransitionFrames: 30, // NEW: Color transition over 0.5 seconds (at 60fps)
 
   // Point Movement Target Range
   pointDisplacementXFactor: 0.8, 

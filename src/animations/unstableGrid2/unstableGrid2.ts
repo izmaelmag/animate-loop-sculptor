@@ -57,7 +57,7 @@ const DURATION = config.durationInSeconds;
 const FPS = config.fps;
 let cellAmplitude: number; // This is also likely unused now
 
-// --- State Variables for Point Grid & Timeline ---
+// --- State Variables for Point Grid, Timeline & Colors ---
 let noise2D: ReturnType<typeof createNoise2D>;
 let originalPoints: Point[][] = [];
 let previousPoints: Point[][] = [];
@@ -65,14 +65,18 @@ let targetPoints: Point[][] = [];
 let currentPoints: Point[][] = []; // Holds the interpolated points
 let rectangles: Rectangle[] = [];
 let alphabetTextures: Record<string, p5.Graphics> = {};
+let activeColorScheme = getActiveColorScheme(config.colorSchemeName);
 
-// Timeline state (Declarations were missing)
+// Timeline state
 let currentSceneIndex = -1;
 let activeScene: AnimationScene | null = null; 
 let allNeededChars = ""; // String containing all unique characters for textures
 
-// --- Глобальная переменная для активной схемы ---
-let activeColorScheme = getActiveColorScheme(config.colorSchemeName);
+// Color state
+let previousCellColors: p5.Color[][] = [];
+let targetCellColors: p5.Color[][] = [];
+let currentCellColors: p5.Color[][] = [];
+let colorLerpProgress = 1; // NEW: Progress for color interpolation (0 to 1)
 
 // --- Easing Functions ---
 // REMOVED inline definitions
@@ -112,62 +116,61 @@ function lerpPoint(p: p5, p1: Point, p2: Point, t: number): Point {
   };
 }
 
-// --- Textured Rectangle Renderer (Restored Logic) ---
+// --- Helper to get color from hex string ---
+function colorFromHex(p: p5, hex: string): p5.Color {
+    try {
+        return p.color(hex);
+    } catch (e) {
+        console.warn(`Invalid hex color string: "${hex}". Using black.`, e);
+        return p.color(0); // Fallback to black
+    }
+}
+
+// --- Textured Rectangle Renderer (Uses interpolated color) ---
 const renderTexturedRectangle: RectangleRenderFunction = (
   p: p5,
   _normalizedTime: number,
   _lines: Line[],
   _intersection: Point | null,
   vertices: Point[], 
-  _color: Color, 
+  _color: Color, // Original color from Rectangle is unused
   metadata: RectangleMetadata | null
 ): void => {
   const col = metadata?.colTopLeft; 
   const row = metadata?.rowTopLeft; 
-  const rectIndex = metadata?.rectIndex; 
-
-  // Original entry log (keep commented unless needed)
-  // console.log(`[Render] rectIndex: ${rectIndex}, col: ${col}, row: ${row}, vertices:`, vertices);
+  const rectIndex = metadata?.rectIndex; // Needed for filler char calculation
 
   if (col === undefined || row === undefined || vertices.length !== 4 || rectIndex === undefined || !activeScene) return;
   
   let letter: string | null = null;
-  let assignedColorHex: string | null = null;
-  // let isTextCell = false; // This flag seems unused now
-  let styleId: string | null = null;
-
-  // Check if this cell corresponds to a character in the active scene's layoutGrid
+  
+  // Determine the character (same logic as before)
   const layoutCell = activeScene.layoutGrid?.[row]?.[col];
-
   if (layoutCell) { 
     letter = layoutCell.char;
-    styleId = layoutCell.styleId;
-    // isTextCell = true; 
   } else { 
-    const charIndex = (rectIndex + col + row) % config.fillerChars.length;
-    letter = config.fillerChars[charIndex];
-    styleId = config.defaultStyleId; 
+    if (config.fillerChars && config.fillerChars.length > 0) { // Ensure fillerChars exist
+        const charIndex = (rectIndex + col + row) % config.fillerChars.length;
+        letter = config.fillerChars[charIndex];
+    } else {
+        letter = " "; // Fallback if no fillers defined
+    }
   }
 
-  const stylePreset = activeScene.stylePresets?.[styleId || config.defaultStyleId];
-  if (stylePreset) {
-    assignedColorHex = stylePreset.color;
-  } else {
-    console.warn(`Style preset "${styleId || config.defaultStyleId}" not found. Using secondary color.`);
-    assignedColorHex = activeColorScheme.secondary; 
+  // --- Get the INTERPOLATED color --- 
+  const interpolatedColor = currentCellColors?.[row]?.[col];
+  if (!interpolatedColor) {
+    // console.warn(`No interpolated color found for row ${row}, col ${col}`);
+    return; // Skip rendering if color isn't ready
   }
-
-  // Original log for determined values (keep commented unless needed)
-  // console.log(`[Render] Letter: ${letter}, StyleID: ${styleId}, Color: ${assignedColorHex}`);
-
+  
   // --- Rendering (Single Quad) --- 
   if (letter) {
     const texture = alphabetTextures[letter];
-    // Original log for texture status (keep commented unless needed)
-    // console.log(`[Render] Texture for '${letter}': ${texture ? 'Found' : 'NOT FOUND'}`);
     if (texture) {
       p.push();
-      if (assignedColorHex) { p.tint(assignedColorHex); } else { p.tint(255); }
+      // Use the interpolated p5.Color object directly for tint
+      p.tint(interpolatedColor);
       p.textureMode(p.NORMAL); 
       p.textureWrap(p.CLAMP);
       p.texture(texture);
@@ -188,8 +191,6 @@ const renderTexturedRectangle: RectangleRenderFunction = (
       
       p.noTint();
       p.pop();
-    } else {
-       // console.warn(`Texture not found for letter: ${letter}`);
     }
   }
 };
@@ -345,7 +346,77 @@ function calculateNewTargetPoints(p: p5) {
   }
 }
 
-// --- Animation Loop (Update Scene Logic) --- 
+// --- Calculate Target Cell Colors (NEW) ---
+function calculateTargetCellColors(p: p5) {
+    if (!activeScene) return; // Need an active scene
+
+    const rows = config.gridRows;
+    const cols = config.gridColumns;
+    const fallbackColor = colorFromHex(p, activeColorScheme.secondary); // Fallback color
+
+    for (let r = 0; r < rows; r++) {
+        if (!targetCellColors[r]) targetCellColors[r] = []; // Initialize row if needed
+        for (let c = 0; c < cols; c++) {
+            let targetHex: string | null = null;
+            let styleId: string | null = null;
+            const layoutCell = activeScene.layoutGrid?.[r]?.[c];
+
+            if (layoutCell) { 
+                styleId = layoutCell.styleId;
+            } else { 
+                styleId = config.defaultStyleId; 
+            }
+
+            const stylePreset = activeScene.stylePresets?.[styleId || config.defaultStyleId];
+            if (stylePreset && stylePreset.color) {
+                targetHex = stylePreset.color;
+            } 
+            
+            // Store p5.Color object
+            targetCellColors[r][c] = targetHex ? colorFromHex(p, targetHex) : fallbackColor;
+        }
+    }
+}
+
+// --- Initialize Cell Colors (NEW) ---
+function initializeCellColors(p: p5) {
+    const rows = config.gridRows;
+    const cols = config.gridColumns;
+    previousCellColors = [];
+    targetCellColors = [];
+    currentCellColors = [];
+    
+    // Determine initial active scene (assuming scene 0 starts at frame 0)
+    activeScene = config.animationTimeline.find(scene => scene.startFrame === 0) || config.animationTimeline[0] || null;
+    
+    if (!activeScene) {
+        console.error("Cannot initialize colors: No initial scene found (startFrame 0)!");
+        // Initialize with a default color if no scene
+        const defaultColor = colorFromHex(p, activeColorScheme.background); 
+        for (let r = 0; r < rows; r++) {
+            previousCellColors[r] = new Array(cols).fill(defaultColor);
+            targetCellColors[r] = new Array(cols).fill(defaultColor);
+            currentCellColors[r] = new Array(cols).fill(defaultColor);
+        }
+        activeScene = null; // Ensure activeScene is null if initialization failed partially
+        return;
+    }
+    
+    currentSceneIndex = config.animationTimeline.indexOf(activeScene);
+    console.log(`Initializing colors based on scene ${currentSceneIndex}`);
+
+    // Calculate initial target colors using the initial active scene
+    calculateTargetCellColors(p);
+
+    // Initialize all arrays with the initial target colors
+    for (let r = 0; r < rows; r++) {
+        previousCellColors[r] = [...targetCellColors[r]]; 
+        currentCellColors[r] = [...targetCellColors[r]]; 
+    }
+    colorLerpProgress = 1; // Start fully transitioned
+}
+
+// --- Animation Loop (Integrate Color Lerp) --- 
 const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFrameNum: number): void => {
   // Log current frame number at the very beginning (first 200 frames)
   if (currentFrameNum < 200) {
@@ -382,21 +453,40 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFram
       console.log(`[Scene Search] Frame ${currentFrameNum}: Final newSceneIndex = ${newSceneIndex}`);
   }
 
-  // Check if scene changed or if it's the first frame
   const sceneChanged = newSceneIndex !== currentSceneIndex;
   if (sceneChanged) {
       currentSceneIndex = newSceneIndex;
       if (currentSceneIndex !== -1) {
-          activeScene = config.animationTimeline[currentSceneIndex];
-          console.log(`[Animation Loop] Switched to scene ${currentSceneIndex} at frame ${currentFrameNum}`);
+          const newActiveScene = config.animationTimeline[currentSceneIndex];
+          if (newActiveScene) {
+              // --- Scene Change: Update Color Targets --- 
+              // 1. Store current colors as previous
+              previousCellColors = currentCellColors.map(row => [...row]);
+              // 2. Set new active scene
+              activeScene = newActiveScene;
+              // 3. Calculate new target colors based on the *new* scene
+              calculateTargetCellColors(p);
+              colorLerpProgress = 0; // RESET color lerp progress on scene change
+              console.log(`[Animation Loop] Switched to scene ${currentSceneIndex} at frame ${currentFrameNum}. Updated target colors.`);
+          } else {
+              activeScene = null; // Scene index valid but scene data missing?
+          }
       } else {
-          activeScene = null; // No scene active
+          // --- No Scene Active --- 
+          // Optionally set previous/target colors to background?
+          previousCellColors = currentCellColors.map(row => [...row]); // Keep last color as prev
+          const bgColor = colorFromHex(p, activeColorScheme.background);
+          targetCellColors = previousCellColors.map(row => new Array(row.length).fill(bgColor)); // Target is background
+          activeScene = null; 
           console.log(`[Animation Loop] No scene active at frame ${currentFrameNum}`);
       }
+  } else if (currentSceneIndex === -1 && newSceneIndex === -1) {
+       // Handle case where no scene is active initially or becomes inactive
+       // Optionally reset color lerp progress here too if needed
   }
 
   // Log active scene status AFTER potential update
-  if (currentFrameNum === 0 || sceneChanged) { // Log on first frame or change
+  if (currentFrameNum === 0 || sceneChanged) { 
       console.log(`[Animation Loop Status] Frame ${currentFrameNum}, Active Scene Index: ${currentSceneIndex}, Active Scene Exists: ${!!activeScene}`);
   }
 
@@ -415,20 +505,34 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFram
 
   const progressInInterval = (currentFrameNum % updateInterval) / updateInterval;
   const activeEase = getActiveEasingFunction();
-  const lerpFactor = activeEase(progressInInterval);
-  // Log lerpFactor periodically
-  if (currentFrameNum % 15 === 0) { // Log every 15 frames
-      console.log(`[Frame ${currentFrameNum}] Lerp Factor: ${lerpFactor.toFixed(3)} (Progress: ${progressInInterval.toFixed(3)})`);
-  }
+  const positionLerpFactor = activeEase(progressInInterval); // Factor for points
 
   for (let j = 0; j < currentPoints.length; j++) {
       for (let i = 0; i < currentPoints[j].length; i++) {
-          // Log point update periodically for a sample point
-          // if (j === 1 && i === 1 && currentFrameNum % 15 === 0) {
-          //     console.log(`[Frame ${currentFrameNum}] Interpolating Pt[1][1]:`, previousPoints[j][i], `->`, targetPoints[j][i], ` Result:`, currentPoints[j][i]);
-          // }
-          currentPoints[j][i] = lerpPoint(p, previousPoints[j][i], targetPoints[j][i], lerpFactor);
+          currentPoints[j][i] = lerpPoint(p, previousPoints[j][i], targetPoints[j][i], positionLerpFactor);
       }
+  }
+
+  // --- Interpolate Colors (Using dedicated progress) --- 
+  if (colorLerpProgress < 1) {
+      colorLerpProgress = Math.min(1, colorLerpProgress + 1 / config.colorTransitionFrames);
+  }
+  const colorLerpFactor = activeEase(colorLerpProgress); // Use the same easing for color
+
+  if (previousCellColors.length === config.gridRows && targetCellColors.length === config.gridRows) {
+      for (let r = 0; r < config.gridRows; r++) {
+          if (!currentCellColors[r]) currentCellColors[r] = []; // Ensure row exists
+          for (let c = 0; c < config.gridColumns; c++) {
+              if (previousCellColors[r]?.[c] && targetCellColors[r]?.[c]) { 
+                  currentCellColors[r][c] = p.lerpColor(previousCellColors[r][c], targetCellColors[r][c], colorLerpFactor);
+              } else if (!currentCellColors[r]?.[c]) {
+                  // Initialize if missing, perhaps with background
+                  currentCellColors[r][c] = colorFromHex(p, activeColorScheme.background); 
+              }
+          }
+      }
+  } else {
+      // console.warn("Color array dimension mismatch, skipping color lerp");
   }
 
   // --- Update Geometry & Render --- 
@@ -437,18 +541,12 @@ const animation: AnimationFunction = (p: p5, normalizedTime: number, currentFram
   if (activeScene) { 
       rectangles.forEach((rect, index) => {
         const metadata = rect.getMetadata();
-        if (metadata) {
-          metadata.rectIndex = index; 
-          // Log right before calling render function (Remove this debug log)
-          // console.log(`[Loop] Calling render for index ${index}, col ${metadata.colTopLeft}, row ${metadata.rowTopLeft}`);
-          renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata);
-        } else {
-           // console.warn(`[Animation Loop] Rectangle ${index} has no metadata.`);
-        }
+        if (metadata && metadata.rowTopLeft < currentCellColors.length && metadata.colTopLeft < currentCellColors[metadata.rowTopLeft]?.length) { // Check bounds
+            metadata.rectIndex = index; 
+            renderRectangle(p, normalizedTime, rect.getLines(), rect.getDiagonalIntersection(), rect.getVertices(), rect.getColor(), metadata);
+        } 
       });
-  } else {
-       // console.log(`[Animation Loop] Frame ${currentFrameNum}: No active scene, skipping render.`);
-  }
+  } 
 };
 
 // --- Setup Function (Update Texture Generation) ---
@@ -503,6 +601,9 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
 
   console.log("Setup complete using config (Timeline). Textures generated:", Object.keys(alphabetTextures).length);
   console.log("Rectangles created:", rectangles.length);
+
+  // Initialize cell colors
+  initializeCellColors(p);
 };
 
 // Now declare the settings after animation is defined
