@@ -271,6 +271,8 @@ function setupGridPoints(p: p5) {
 
   const gridW = config.width;
   const gridH = config.height;
+  const halfW = gridW / 2;
+  const halfH = gridH / 2;
   const cols = config.gridColumns;
   const rows = config.gridRows;
   const cellWidth = gridW / cols;
@@ -284,8 +286,8 @@ function setupGridPoints(p: p5) {
     currentPoints[j] = [];
     for (let i = 0; i <= cols; i++) {
       // Iterate columns (X)
-      const x = i * cellWidth;
-      const y = j * cellHeight;
+      const x = i * cellWidth - halfW;
+      const y = j * cellHeight - halfH;
       const point = { x, y };
       originalPoints[j][i] = { ...point };
       previousPoints[j][i] = { ...point };
@@ -366,36 +368,37 @@ function updateRectangles() {
 function calculateNewTargetPoints(p: p5) {
   const cols = config.gridColumns;
   const rows = config.gridRows;
-  const cellWidth = config.width / cols;
-  const cellHeight = config.height / rows;
+  const gridW = config.width;
+  const gridH = config.height;
+  const halfW = gridW / 2;
+  const halfH = gridH / 2;
+  const cellWidth = gridW / cols;
+  const cellHeight = gridH / rows;
   const maxDispX = cellWidth * config.pointDisplacementXFactor;
   const maxDispY = cellHeight * config.pointDisplacementYFactor;
 
-  console.log(`[Frame ${p.frameCount}] Calculating new target points...`); // Log calculation start
+  console.log(`[Frame ${p.frameCount}] Calculating new target points (WEBGL coords)...`);
 
   for (let j = 0; j <= rows; j++) {
     for (let i = 0; i <= cols; i++) {
+      // Boundary points remain fixed relative to the *original* centered grid
       if (i === 0 || i === cols || j === 0 || j === rows) {
-        targetPoints[j][i] = { ...originalPoints[j][i] };
+        // Ensure target points for boundaries use the calculated original centered points
+        targetPoints[j][i] = { ...originalPoints[j][i] }; 
         continue; 
       }
       // Calculate random displacement for interior points
       const randomX = p.random(-1, 1);
       const randomY = p.random(-1, 1);
-
       const displacementX = randomX * maxDispX;
       const displacementY = randomY * maxDispY;
 
-      // TODO: Add collision avoidance or stricter limits?
-      // For now, just apply displacement to original position.
-      // Could limit displacement based on distance to original neighbors.
-
+      // Add displacement to the original *centered* point
       targetPoints[j][i] = {
         x: originalPoints[j][i].x + displacementX,
         y: originalPoints[j][i].y + displacementY,
       };
-      // Log one target point for comparison
-      if (j === 1 && i === 1) console.log(`  Target[1][1] set to:`, targetPoints[j][i]);
+      if (j === 1 && i === 1) console.log(`  Target[1][1] set to (WebGL):`, targetPoints[j][i]);
     }
   }
 }
