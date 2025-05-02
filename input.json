@@ -1,0 +1,826 @@
+{
+  "text": " Sound that keeps on playing like it's all alone The music, it's religion, the gods, the song People keep on moving when they sit alone It's feelings that happen when we all belong Forget discrimination, it's been made up to say Everybody's loving, ain't no time to make names Oh, we've got the feeling of forever and me Flying up together on an open plane We're gonna make love, we're gonna get high We're gonna make love, we're gonna get high We're gonna make love, we're gonna get high We're gonna make love, we're gonna get high We're gonna make love",
+  "segments": [
+    {
+      "id": 0,
+      "seek": 0,
+      "start": 1.700000000000001,
+      "end": 6.82,
+      "text": " Sound that keeps on playing like it's all alone",
+      "tokens": [
+        50365, 14673, 300, 5965, 322, 2433, 411, 309, 311, 439, 3312, 50716
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.3485602081799116,
+      "compression_ratio": 1.4645161290322581,
+      "no_speech_prob": 0.772476851940155,
+      "words": [
+        {
+          "word": " Sound",
+          "start": 1.700000000000001,
+          "end": 2.74,
+          "probability": 0.07464153319597244
+        },
+        {
+          "word": " that",
+          "start": 2.74,
+          "end": 3.32,
+          "probability": 0.12686797976493835
+        },
+        {
+          "word": " keeps",
+          "start": 3.32,
+          "end": 3.72,
+          "probability": 0.9810153245925903
+        },
+        {
+          "word": " on",
+          "start": 3.72,
+          "end": 3.98,
+          "probability": 0.8713076710700989
+        },
+        {
+          "word": " playing",
+          "start": 3.98,
+          "end": 4.5,
+          "probability": 0.939501941204071
+        },
+        {
+          "word": " like",
+          "start": 4.5,
+          "end": 5.04,
+          "probability": 0.7180559039115906
+        },
+        {
+          "word": " it's",
+          "start": 5.04,
+          "end": 5.46,
+          "probability": 0.9602552652359009
+        },
+        {
+          "word": " all",
+          "start": 5.46,
+          "end": 5.74,
+          "probability": 0.9435474872589111
+        },
+        {
+          "word": " alone",
+          "start": 5.74,
+          "end": 6.82,
+          "probability": 0.9106746912002563
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "seek": 0,
+      "start": 6.82,
+      "end": 12.44,
+      "text": " The music, it's religion, the gods, the song",
+      "tokens": [
+        50716, 440, 1318, 11, 309, 311, 7561, 11, 264, 14049, 11, 264, 2153,
+        50999
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.3485602081799116,
+      "compression_ratio": 1.4645161290322581,
+      "no_speech_prob": 0.772476851940155,
+      "words": [
+        {
+          "word": " The",
+          "start": 6.82,
+          "end": 7.7,
+          "probability": 0.7479367852210999
+        },
+        {
+          "word": " music,",
+          "start": 7.7,
+          "end": 8.78,
+          "probability": 0.9969242215156555
+        },
+        {
+          "word": " it's",
+          "start": 8.8,
+          "end": 9.32,
+          "probability": 0.863889753818512
+        },
+        {
+          "word": " religion,",
+          "start": 9.32,
+          "end": 9.96,
+          "probability": 0.9924494028091431
+        },
+        {
+          "word": " the",
+          "start": 10.28,
+          "end": 10.8,
+          "probability": 0.8953794836997986
+        },
+        {
+          "word": " gods,",
+          "start": 10.8,
+          "end": 11.64,
+          "probability": 0.877409815788269
+        },
+        {
+          "word": " the",
+          "start": 11.66,
+          "end": 11.94,
+          "probability": 0.9813345670700073
+        },
+        {
+          "word": " song",
+          "start": 11.94,
+          "end": 12.44,
+          "probability": 0.7547864317893982
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "seek": 0,
+      "start": 12.44,
+      "end": 17.78,
+      "text": " People keep on moving when they sit alone",
+      "tokens": [50999, 3432, 1066, 322, 2684, 562, 436, 1394, 3312, 51266],
+      "temperature": 0.0,
+      "avg_logprob": -0.3485602081799116,
+      "compression_ratio": 1.4645161290322581,
+      "no_speech_prob": 0.772476851940155,
+      "words": [
+        {
+          "word": " People",
+          "start": 12.44,
+          "end": 13.72,
+          "probability": 0.8259345889091492
+        },
+        {
+          "word": " keep",
+          "start": 13.72,
+          "end": 14.62,
+          "probability": 0.9935621023178101
+        },
+        {
+          "word": " on",
+          "start": 14.62,
+          "end": 15.06,
+          "probability": 0.9261167645454407
+        },
+        {
+          "word": " moving",
+          "start": 15.06,
+          "end": 15.62,
+          "probability": 0.9584234356880188
+        },
+        {
+          "word": " when",
+          "start": 15.62,
+          "end": 16.02,
+          "probability": 0.3779664933681488
+        },
+        {
+          "word": " they",
+          "start": 16.02,
+          "end": 16.34,
+          "probability": 0.9975088834762573
+        },
+        {
+          "word": " sit",
+          "start": 16.34,
+          "end": 16.74,
+          "probability": 0.4433174431324005
+        },
+        {
+          "word": " alone",
+          "start": 16.74,
+          "end": 17.78,
+          "probability": 0.989669144153595
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "seek": 0,
+      "start": 17.78,
+      "end": 23.26,
+      "text": " It's feelings that happen when we all belong",
+      "tokens": [51266, 467, 311, 6640, 300, 1051, 562, 321, 439, 5784, 51544],
+      "temperature": 0.0,
+      "avg_logprob": -0.3485602081799116,
+      "compression_ratio": 1.4645161290322581,
+      "no_speech_prob": 0.772476851940155,
+      "words": [
+        {
+          "word": " It's",
+          "start": 17.78,
+          "end": 18.8,
+          "probability": 0.6779260039329529
+        },
+        {
+          "word": " feelings",
+          "start": 18.8,
+          "end": 19.32,
+          "probability": 0.43674156069755554
+        },
+        {
+          "word": " that",
+          "start": 19.32,
+          "end": 20.48,
+          "probability": 0.7919564843177795
+        },
+        {
+          "word": " happen",
+          "start": 20.48,
+          "end": 21.12,
+          "probability": 0.8951828479766846
+        },
+        {
+          "word": " when",
+          "start": 21.12,
+          "end": 21.54,
+          "probability": 0.7974874973297119
+        },
+        {
+          "word": " we",
+          "start": 21.54,
+          "end": 21.92,
+          "probability": 0.998583197593689
+        },
+        {
+          "word": " all",
+          "start": 21.92,
+          "end": 22.44,
+          "probability": 0.3643111288547516
+        },
+        {
+          "word": " belong",
+          "start": 22.44,
+          "end": 23.26,
+          "probability": 0.9317949414253235
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "seek": 0,
+      "start": 23.26,
+      "end": 28.88,
+      "text": " Forget discrimination, it's been made up to say",
+      "tokens": [
+        51544, 18675, 15973, 11, 309, 311, 668, 1027, 493, 281, 584, 51818
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.3485602081799116,
+      "compression_ratio": 1.4645161290322581,
+      "no_speech_prob": 0.772476851940155,
+      "words": [
+        {
+          "word": " Forget",
+          "start": 23.26,
+          "end": 24.54,
+          "probability": 0.9910135865211487
+        },
+        {
+          "word": " discrimination,",
+          "start": 24.54,
+          "end": 26.02,
+          "probability": 0.9236918091773987
+        },
+        {
+          "word": " it's",
+          "start": 26.64,
+          "end": 27.24,
+          "probability": 0.5546051040291786
+        },
+        {
+          "word": " been",
+          "start": 27.24,
+          "end": 27.4,
+          "probability": 0.638896644115448
+        },
+        {
+          "word": " made",
+          "start": 27.4,
+          "end": 27.88,
+          "probability": 0.9852356910705566
+        },
+        {
+          "word": " up",
+          "start": 27.88,
+          "end": 28.36,
+          "probability": 0.748049795627594
+        },
+        {
+          "word": " to",
+          "start": 28.36,
+          "end": 28.42,
+          "probability": 0.7048811316490173
+        },
+        {
+          "word": " say",
+          "start": 28.42,
+          "end": 28.88,
+          "probability": 0.47438859939575195
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "seek": 2888,
+      "start": 30.64,
+      "end": 34.56,
+      "text": " Everybody's loving, ain't no time to make names",
+      "tokens": [
+        50365, 7646, 311, 9344, 11, 7862, 380, 572, 565, 281, 652, 5288, 50674
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": [
+        {
+          "word": " Everybody's",
+          "start": 30.64,
+          "end": 31.66,
+          "probability": 0.5539252161979675
+        },
+        {
+          "word": " loving,",
+          "start": 31.66,
+          "end": 32.14,
+          "probability": 0.6245244741439819
+        },
+        {
+          "word": " ain't",
+          "start": 32.3,
+          "end": 32.78,
+          "probability": 0.9521403610706329
+        },
+        {
+          "word": " no",
+          "start": 32.78,
+          "end": 32.86,
+          "probability": 0.9978112578392029
+        },
+        {
+          "word": " time",
+          "start": 32.86,
+          "end": 33.44,
+          "probability": 0.9841626882553101
+        },
+        {
+          "word": " to",
+          "start": 33.44,
+          "end": 33.64,
+          "probability": 0.9892110824584961
+        },
+        {
+          "word": " make",
+          "start": 33.64,
+          "end": 34.04,
+          "probability": 0.5608866214752197
+        },
+        {
+          "word": " names",
+          "start": 34.04,
+          "end": 34.56,
+          "probability": 0.8192000985145569
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "seek": 2888,
+      "start": 34.56,
+      "end": 39.8,
+      "text": " Oh, we've got the feeling of forever and me",
+      "tokens": [
+        50674, 876, 11, 321, 600, 658, 264, 2633, 295, 5680, 293, 385, 50932
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": [
+        {
+          "word": " Oh,",
+          "start": 34.56,
+          "end": 35.86,
+          "probability": 0.7970178127288818
+        },
+        {
+          "word": " we've",
+          "start": 35.92,
+          "end": 36.42,
+          "probability": 0.7298517227172852
+        },
+        {
+          "word": " got",
+          "start": 36.42,
+          "end": 36.8,
+          "probability": 0.9988161325454712
+        },
+        {
+          "word": " the",
+          "start": 36.8,
+          "end": 37.06,
+          "probability": 0.9900159239768982
+        },
+        {
+          "word": " feeling",
+          "start": 37.06,
+          "end": 37.56,
+          "probability": 0.9992523789405823
+        },
+        {
+          "word": " of",
+          "start": 37.56,
+          "end": 38.16,
+          "probability": 0.7761006951332092
+        },
+        {
+          "word": " forever",
+          "start": 38.16,
+          "end": 38.78,
+          "probability": 0.9850125312805176
+        },
+        {
+          "word": " and",
+          "start": 38.78,
+          "end": 39.54,
+          "probability": 0.19722215831279755
+        },
+        {
+          "word": " me",
+          "start": 39.54,
+          "end": 39.8,
+          "probability": 0.30668383836746216
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "seek": 2888,
+      "start": 39.8,
+      "end": 45.58,
+      "text": " Flying up together on an open plane",
+      "tokens": [50932, 34287, 493, 1214, 322, 364, 1269, 5720, 51211],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": [
+        {
+          "word": " Flying",
+          "start": 39.8,
+          "end": 41.46,
+          "probability": 0.9504408240318298
+        },
+        {
+          "word": " up",
+          "start": 41.46,
+          "end": 42.32,
+          "probability": 0.6488775014877319
+        },
+        {
+          "word": " together",
+          "start": 42.32,
+          "end": 42.92,
+          "probability": 0.9993731379508972
+        },
+        {
+          "word": " on",
+          "start": 42.92,
+          "end": 43.68,
+          "probability": 0.9630563259124756
+        },
+        {
+          "word": " an",
+          "start": 43.68,
+          "end": 44.0,
+          "probability": 0.5713405609130859
+        },
+        {
+          "word": " open",
+          "start": 44.0,
+          "end": 44.6,
+          "probability": 0.12786181271076202
+        },
+        {
+          "word": " plane",
+          "start": 44.6,
+          "end": 45.58,
+          "probability": 0.8201490044593811
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "seek": 2888,
+      "start": 45.58,
+      "end": 51.48,
+      "text": " We're gonna make love, we're gonna get high",
+      "tokens": [
+        51211, 492, 434, 799, 652, 959, 11, 321, 434, 799, 483, 1090, 51544
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": [
+        {
+          "word": " We're",
+          "start": 45.58,
+          "end": 47.6,
+          "probability": 0.5577375814318657
+        },
+        {
+          "word": " gonna",
+          "start": 47.6,
+          "end": 47.88,
+          "probability": 0.944544792175293
+        },
+        {
+          "word": " make",
+          "start": 47.88,
+          "end": 48.24,
+          "probability": 0.9993982315063477
+        },
+        {
+          "word": " love,",
+          "start": 48.24,
+          "end": 49.1,
+          "probability": 0.9981421232223511
+        },
+        {
+          "word": " we're",
+          "start": 49.62,
+          "end": 50.42,
+          "probability": 0.9926599264144897
+        },
+        {
+          "word": " gonna",
+          "start": 50.42,
+          "end": 50.64,
+          "probability": 0.999943733215332
+        },
+        {
+          "word": " get",
+          "start": 50.64,
+          "end": 50.96,
+          "probability": 0.998909592628479
+        },
+        {
+          "word": " high",
+          "start": 50.96,
+          "end": 51.48,
+          "probability": 0.9991047978401184
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "seek": 2888,
+      "start": 52.46,
+      "end": 57.22,
+      "text": " We're gonna make love, we're gonna get high",
+      "tokens": [
+        51544, 492, 434, 799, 652, 959, 11, 321, 434, 799, 483, 1090, 51814
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": [
+        {
+          "word": " We're",
+          "start": 52.46,
+          "end": 53.16,
+          "probability": 0.9952235817909241
+        },
+        {
+          "word": " gonna",
+          "start": 53.16,
+          "end": 53.44,
+          "probability": 0.9996532201766968
+        },
+        {
+          "word": " make",
+          "start": 53.44,
+          "end": 53.78,
+          "probability": 0.999897837638855
+        },
+        {
+          "word": " love,",
+          "start": 53.78,
+          "end": 54.62,
+          "probability": 0.9999287128448486
+        },
+        {
+          "word": " we're",
+          "start": 55.6,
+          "end": 55.9,
+          "probability": 0.9996628165245056
+        },
+        {
+          "word": " gonna",
+          "start": 55.9,
+          "end": 56.22,
+          "probability": 0.9999111890792847
+        },
+        {
+          "word": " get",
+          "start": 56.22,
+          "end": 56.5,
+          "probability": 0.9999090433120728
+        },
+        {
+          "word": " high",
+          "start": 56.5,
+          "end": 57.22,
+          "probability": 0.9999078512191772
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "seek": 2888,
+      "start": 57.86,
+      "end": 58.86,
+      "text": " We're gonna make love, we're gonna get high",
+      "tokens": [
+        51814, 492, 434, 799, 652, 959, 11, 321, 434, 799, 483, 1090, 51864
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": [
+        {
+          "word": " We're",
+          "start": 57.86,
+          "end": 58.68,
+          "probability": 0.9195588529109955
+        },
+        {
+          "word": " gonna",
+          "start": 58.68,
+          "end": 58.86,
+          "probability": 0.9952026605606079
+        },
+        {
+          "word": " make",
+          "start": 58.86,
+          "end": 58.86,
+          "probability": 0.9751933217048645
+        },
+        {
+          "word": " love,",
+          "start": 58.86,
+          "end": 58.86,
+          "probability": 0.9969034790992737
+        },
+        {
+          "word": " we're",
+          "start": 58.86,
+          "end": 58.86,
+          "probability": 0.9965512752532959
+        },
+        {
+          "word": " gonna",
+          "start": 58.86,
+          "end": 58.86,
+          "probability": 0.99957674741745
+        },
+        {
+          "word": " get",
+          "start": 58.86,
+          "end": 58.86,
+          "probability": 0.9934788942337036
+        },
+        {
+          "word": " high",
+          "start": 58.86,
+          "end": 58.86,
+          "probability": 0.998941957950592
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "seek": 2888,
+      "start": 58.86,
+      "end": 58.86,
+      "text": "",
+      "tokens": [],
+      "temperature": 0.0,
+      "avg_logprob": -0.24746478687633167,
+      "compression_ratio": 2.312977099236641,
+      "no_speech_prob": 0.00647263927385211,
+      "words": []
+    },
+    {
+      "id": 12,
+      "seek": 5888,
+      "start": 58.88,
+      "end": 62.34,
+      "text": " We're gonna make love, we're gonna get high",
+      "tokens": [
+        50365, 492, 434, 799, 652, 959, 11, 321, 434, 799, 483, 1090, 50559
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.24539009730021158,
+      "compression_ratio": 1.4130434782608696,
+      "no_speech_prob": 0.0847751796245575,
+      "words": [
+        {
+          "word": " We're",
+          "start": 58.88,
+          "end": 58.92,
+          "probability": 0.2065410353243351
+        },
+        {
+          "word": " gonna",
+          "start": 58.92,
+          "end": 58.92,
+          "probability": 0.43493586778640747
+        },
+        {
+          "word": " make",
+          "start": 58.92,
+          "end": 59.14,
+          "probability": 0.9366304874420166
+        },
+        {
+          "word": " love,",
+          "start": 59.14,
+          "end": 59.64,
+          "probability": 0.9936968684196472
+        },
+        {
+          "word": " we're",
+          "start": 60.0,
+          "end": 61.42,
+          "probability": 0.8330126702785492
+        },
+        {
+          "word": " gonna",
+          "start": 61.42,
+          "end": 61.64,
+          "probability": 0.9929909706115723
+        },
+        {
+          "word": " get",
+          "start": 61.64,
+          "end": 61.9,
+          "probability": 0.8564374446868896
+        },
+        {
+          "word": " high",
+          "start": 61.9,
+          "end": 62.34,
+          "probability": 0.995434582233429
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "seek": 5888,
+      "start": 63.46,
+      "end": 65.38,
+      "text": " We're gonna make love",
+      "tokens": [50559, 492, 434, 799, 652, 959, 50716],
+      "temperature": 0.0,
+      "avg_logprob": -0.24539009730021158,
+      "compression_ratio": 1.4130434782608696,
+      "no_speech_prob": 0.0847751796245575,
+      "words": [
+        {
+          "word": " We're",
+          "start": 63.46,
+          "end": 64.14,
+          "probability": 0.6378102898597717
+        },
+        {
+          "word": " gonna",
+          "start": 64.14,
+          "end": 64.4,
+          "probability": 0.9982603192329407
+        },
+        {
+          "word": " make",
+          "start": 64.4,
+          "end": 64.72,
+          "probability": 0.9997014403343201
+        },
+        {
+          "word": " love",
+          "start": 64.72,
+          "end": 65.38,
+          "probability": 0.9988927245140076
+        }
+      ]
+    }
+  ],
+  "language": "en"
+}

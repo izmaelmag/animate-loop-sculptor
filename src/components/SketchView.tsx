@@ -5,31 +5,62 @@ import PlayerPanels from "./PlayerPanels";
 const SketchView = () => {
   const { controller, currentAnimationId } = useAnimation();
   const sketchRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [currentFrame, setCurrentFrame] = useState(0);
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const [localFps, setLocalFps] = useState(60);
 
-  // Initialize P5 instance when component mounts or animation changes
   useEffect(() => {
     if (!sketchRef.current || !controller) return;
 
     console.log(`Initializing P5 for animation: ${currentAnimationId}`);
-    
-    // Initialize the controller with the sketch container
     controller.initializeP5(sketchRef.current);
-
-    // Set initial state
     setCurrentFrame(controller.currentFrame);
-    
-    // Subscribe to frame changes to update local state
-    const unsubscribe = controller.onFrameChanged((frame) => {
-      setCurrentFrame(frame);
-    });
+    setLocalFps(controller.fps);
 
-    // Cleanup function to ensure the p5 instance is properly removed when unmounting
+    let unsubscribeFrame: (() => void) | null = null;
+    let unsubscribePlayState: (() => void) | null = null;
+
+    if (audioRef.current) {
+      unsubscribeFrame = controller.onFrameChanged((frame) => {
+        setCurrentFrame(frame);
+        if (audioRef.current) {
+          const targetTime = frame / localFps;
+          if (Math.abs(audioRef.current.currentTime - targetTime) > 0.1) {
+            audioRef.current.currentTime = targetTime;
+          }
+        }
+      });
+
+      unsubscribePlayState = controller.onPlayStateChanged((isPlaying) => {
+        console.log(`Controller play state changed -> ${isPlaying ? 'playing' : 'pausing'} audio`);
+        if (isPlaying) {
+          audioRef.current?.play().catch(e => console.error("Audio play failed:", e));
+        } else {
+          audioRef.current?.pause();
+        }
+      });
+
+      audioRef.current.currentTime = controller.currentFrame / localFps;
+      if (controller.isPlaying) {
+        audioRef.current.play().catch(e => console.error("Initial audio play failed:", e));
+      } else {
+        audioRef.current.pause();
+      }
+
+    } else {
+      unsubscribeFrame = controller.onFrameChanged((frame) => {
+        setCurrentFrame(frame);
+      });
+    }
+
     return () => {
-      unsubscribe();
+      console.log("Cleaning up SketchView listeners and P5 instance...");
+      if (unsubscribeFrame) unsubscribeFrame();
+      if (unsubscribePlayState) unsubscribePlayState();
       controller.destroy();
     };
-  }, [controller, currentAnimationId]);
+  }, [controller, currentAnimationId, audioSrc]);
 
   if (!controller) {
     return <div>Loading sketch view...</div>;
@@ -37,14 +68,16 @@ const SketchView = () => {
 
   return (
     <div className="flex flex-col justify-start items-center h-full p-0 md:p-6 pt-4 md:pt-6 relative gap-0 md:gap-2">
-      <div className="mx-auto flex py-12 md:py-4 h-[100%] min-h-[0px] flex-shrink-1 flex-col relative">
+      <audio ref={audioRef} src={audioSrc ?? undefined} preload="auto" />
+      
+      <div className="mx-auto flex py-4 md:py-4 h-[auto] min-h-[0px] flex-shrink-1 flex-col relative w-full">
         <div
           className="canvas-wrapper aspect-reels w-full flex items-center justify-center relative"
           ref={sketchRef}
         />
       </div>
 
-      <PlayerPanels isPlayable={true} />
+      <PlayerPanels isPlayable={true} setAudioSrc={setAudioSrc} />
     </div>
   );
 };

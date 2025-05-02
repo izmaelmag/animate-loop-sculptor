@@ -616,6 +616,26 @@ const animation: AnimationFunction = (
     );
   }
 
+  // --- Handle cases where no new scene is found --- 
+  // If newSceneIndex is still -1 after the loop, it means we are past the startFrame 
+  // of the last defined scene. In this case, we should continue using the 
+  // *last known valid scene* index (currentSceneIndex).
+  if (newSceneIndex === -1) {
+    if (currentSceneIndex !== -1) {
+      // We had a valid scene before, keep using it.
+      newSceneIndex = currentSceneIndex;
+      // console.log(`[Frame ${currentFrameNum}] No new scene found. Re-using last active scene index: ${newSceneIndex}`);
+    } else {
+      // This case should ideally not happen if timeline is not empty and setup worked,
+      // but as a fallback, handle the error gracefully.
+      console.error(`[Frame ${currentFrameNum}] CRITICAL ERROR: No active scene found and no previous scene index available! Timeline might be empty or setup failed.`);
+      // Optionally draw a default background and return to prevent further errors
+      p.background(parseColor(p, undefined, DEFAULT_BG_COLOR)); 
+      return; 
+    }
+  }
+
+  // Now, newSceneIndex is guaranteed to be a valid index (or we returned early)
   const sceneChanged = currentSceneIndex !== newSceneIndex;
   previousScene = activeScene;
   currentSceneIndex = newSceneIndex;

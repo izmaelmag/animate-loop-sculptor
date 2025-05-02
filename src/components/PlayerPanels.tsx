@@ -13,10 +13,12 @@ import SettingsPanel from "./SettingsPanel";
 
 interface PlayerPanelsProps {
   isPlayable?: boolean;
+  setAudioSrc?: (src: string | null) => void;
 }
 
 export default function PlayerPanels({
   isPlayable = true,
+  setAudioSrc,
 }: PlayerPanelsProps) {
   const isMobile = useIsMobile();
 
@@ -70,7 +72,7 @@ export default function PlayerPanels({
             </CarouselItem>
 
             <CarouselItem>
-              <SettingsPanel isEnabled={isPlayable} />
+              <SettingsPanel isEnabled={isPlayable} setAudioSrc={setAudioSrc} />
             </CarouselItem>
           </CarouselContent>
         </Carousel>
@@ -81,7 +83,7 @@ export default function PlayerPanels({
   return (
     <div className="fixed right-4 top-4 flex flex-col gap-4 w-[480px]">
       <Timeline isPlayable={isPlayable} />
-      <SettingsPanel isEnabled={isPlayable} />
+      <SettingsPanel isEnabled={isPlayable} setAudioSrc={setAudioSrc} />
     </div>
   );
 }

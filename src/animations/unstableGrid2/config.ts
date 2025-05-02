@@ -164,7 +164,7 @@ export const config: UnstableGridConfig = {
   width: 1080,
   height: 1920, // User changed
   fps: 60,
-  durationInSeconds: 15, // User changed
+  durationInSeconds: 58, // User changed
 
   // Grid Structure
   // Используем импортированный timeline
@@ -188,9 +188,9 @@ export const config: UnstableGridConfig = {
   fontUrl: "/CascadiaCode.ttf",
   textureSizePreview: 128,
   textureSizeRender: 512,
-  useHighResTextures: true,
+  useHighResTextures: false,
   textureUvEpsilon: 0.01,
-  subdivisionLevel: 4,
+  subdivisionLevel: 1,
 
   // Animation Timing
   easingFunctionName: "easeInOutElastic",
@@ -200,7 +200,7 @@ export const config: UnstableGridConfig = {
   noiseSpeed: 0.05,
   noiseFrequencyX: 0.5,
   noiseFrequencyY: 0.5,
-  noiseAmplitudeX: 50, // Example: Max 50px displacement
-  noiseAmplitudeY: 50,
+  noiseAmplitudeX: 20, // Example: Max 50px displacement
+  noiseAmplitudeY: 20,
   pointFollowFactor: 0.5, // Example: 8% towards target each frame
 };
