@@ -187,10 +187,10 @@ export const config: UnstableGridConfig = {
   fontFamily: "Cascadia Code",
   fontUrl: "/CascadiaCode.ttf",
   textureSizePreview: 128,
-  textureSizeRender: 1024,
+  textureSizeRender: 512,
   useHighResTextures: true,
   textureUvEpsilon: 0.01,
-  subdivisionLevel: 8,
+  subdivisionLevel: 4,
 
   // Animation Timing
   easingFunctionName: "easeInOutElastic",
