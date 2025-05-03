@@ -45,43 +45,10 @@ const secondaryColorScene3 = "#406080";
 
 export const timeline: AnimationScene[] = [
   {
-    startFrame: 111,
+    startFrame: 0,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "U",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        null,
-      ],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -101,71 +68,53 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 67,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 40,
   },
   {
-    startFrame: 178,
+    startFrame: 151,
     layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
         null,
         {
           char: "S",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "O",
+          char: "o",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "U",
+          char: "u",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "N",
+          char: "n",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "D",
+          char: "d",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         null,
       ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        null,
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "T",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -180,104 +129,38 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 35,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 191,
   },
   {
-    startFrame: 213,
+    startFrame: 191,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "U",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        null,
-      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
         null,
         null,
-        null,
-        null,
         {
-          char: "I",
+          char: "i",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "T",
+          char: "t",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
+        null,
+        null,
         null,
       ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "P",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -292,123 +175,54 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 27,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 20,
   },
   {
-    startFrame: 240,
+    startFrame: 211,
     layoutGrid: [
       [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [
         null,
         {
-          char: "S",
+          char: "k",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "O",
+          char: "e",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "U",
+          char: "e",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "N",
+          char: "p",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "D",
+          char: "s",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         null,
       ],
       [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        null,
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "T",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "P",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -422,177 +236,42 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 27,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 267,
+    startFrame: 232,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "U",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffa92c",
-          },
-        },
-        null,
-      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
         null,
         null,
-        null,
-        null,
         {
-          char: "I",
+          char: "o",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "T",
+          char: "n",
           style: {
-            color: "#ffa92c",
+            color: "#FFFFFF",
           },
         },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "P",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
         null,
         null,
         null,
       ],
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "P",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "L",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "Y",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "G",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
     stylePresets: {
@@ -603,72 +282,63 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 25,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 23,
   },
   {
-    startFrame: 315,
+    startFrame: 255,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "L",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        {
+          char: "p",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "l",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "y",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "g",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -683,87 +353,48 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 4,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 40,
   },
   {
-    startFrame: 319,
+    startFrame: 295,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "L",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "T",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "l",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "k",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -778,101 +409,85 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
     durationFrames: 19,
+  },
+  {
+    startFrame: 314,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "t",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "s",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 24,
   },
   {
     startFrame: 338,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "L",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "T",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
         null,
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
         null,
+        {
+          char: "o",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
         null,
         null,
         null,
@@ -891,281 +506,43 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 52,
-  },
-  {
-    startFrame: 390,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "L",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "T",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "K",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 57,
-  },
-  {
-    startFrame: 447,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
     durationFrames: 36,
   },
   {
-    startFrame: 483,
+    startFrame: 374,
     layoutGrid: [
       [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [
         null,
         null,
         {
-          char: "A",
+          char: "a",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "N",
+          char: "n",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "D",
+          char: "d",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         null,
         null,
       ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "M",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "U",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "C",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1180,96 +557,32 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 61,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 25,
   },
   {
-    startFrame: 544,
+    startFrame: 399,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
       [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "M",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "U",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "C",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
         null,
         null,
-        null,
         {
-          char: "I",
+          char: "o",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
         {
-          char: "S",
+          char: "n",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         null,
@@ -1290,178 +603,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 34,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 64,
   },
   {
-    startFrame: 578,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "M",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "U",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "C",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "R",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "L",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        {
-          char: "G",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 50,
-  },
-  {
-    startFrame: 660,
+    startFrame: 463,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1475,19 +622,19 @@ export const timeline: AnimationScene[] = [
         {
           char: "A",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "N",
+          char: "n",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "D",
+          char: "d",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         null,
@@ -1507,84 +654,216 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 16,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 19,
   },
   {
-    startFrame: 676,
+    startFrame: 482,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "m",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "u",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "s",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "c",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 58,
+  },
+  {
+    startFrame: 540,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [
         null,
         null,
         {
-          char: "A",
+          char: "i",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "N",
+          char: "s",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
+        null,
         null,
         null,
       ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 23,
+  },
+  {
+    startFrame: 563,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [
-        null,
-        null,
         {
-          char: "T",
+          char: "r",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "H",
+          char: "e",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "E",
+          char: "l",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
-        null,
-        null,
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "g",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "o",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
       ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 66,
+  },
+  {
+    startFrame: 629,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [
         null,
         null,
         {
-          char: "G",
+          char: "a",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "O",
+          char: "n",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         {
-          char: "D",
+          char: "d",
           style: {
-            color: "#ffd145",
+            color: "#FFFFFF",
           },
         },
         null,
@@ -1604,291 +883,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 35,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 711,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        {
-          char: "T",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "H",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        {
-          char: "G",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 29,
-  },
-  {
-    startFrame: 740,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "A",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        {
-          char: "T",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "H",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "E",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        {
-          char: "G",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "D",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "I",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-      ],
-      [
-        null,
-        null,
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          char: "S",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "O",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "N",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "G",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        {
-          char: "!",
-          style: {
-            color: "#ffd145",
-          },
-        },
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 49,
-  },
-  {
-    startFrame: 789,
+    startFrame: 650,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1900,7 +900,7 @@ export const timeline: AnimationScene[] = [
         null,
         null,
         {
-          char: "T",
+          char: "t",
           style: {
             color: "#FFFFFF",
           },
@@ -1934,12 +934,124 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 25,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 20,
   },
   {
-    startFrame: 814,
+    startFrame: 670,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "g",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "o",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "d",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "s",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 55,
+  },
+  {
+    startFrame: 725,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "s",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "o",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "g",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 93,
+  },
+  {
+    startFrame: 818,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1949,7 +1061,7 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [
         {
-          char: "p",
+          char: "P",
           style: {
             color: "#FFFFFF",
           },
@@ -2000,9 +1112,9 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 57,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 53,
   },
   {
     startFrame: 871,
@@ -2056,12 +1168,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 42,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 22,
   },
   {
-    startFrame: 913,
+    startFrame: 893,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2102,12 +1214,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 20,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 933,
+    startFrame: 914,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2152,12 +1264,7 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: ",",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
+        null,
       ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2173,12 +1280,63 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 23,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 42,
   },
   {
-    startFrame: 970,
+    startFrame: 956,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "d",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
+  },
+  {
+    startFrame: 977,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2229,12 +1387,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
     durationFrames: 20,
   },
   {
-    startFrame: 990,
+    startFrame: 997,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2285,12 +1443,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 58,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 45,
   },
   {
-    startFrame: 1048,
+    startFrame: 1042,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2346,12 +1504,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 65,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 79,
   },
   {
-    startFrame: 1113,
+    startFrame: 1121,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2402,12 +1560,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 42,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 1155,
+    startFrame: 1142,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2473,12 +1631,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 52,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 58,
   },
   {
-    startFrame: 1207,
+    startFrame: 1200,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2519,12 +1677,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 35,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 22,
   },
   {
-    startFrame: 1242,
+    startFrame: 1222,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2535,24 +1693,14 @@ export const timeline: AnimationScene[] = [
       [
         null,
         null,
+        null,
         {
-          char: "t",
+          char: "a",
           style: {
             color: "#FFFFFF",
           },
         },
-        {
-          char: "h",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "e",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
+        null,
         null,
         null,
       ],
@@ -2570,12 +1718,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 15,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 1257,
+    startFrame: 1243,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2636,12 +1784,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 29,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 45,
   },
   {
-    startFrame: 1286,
+    startFrame: 1288,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2652,7 +1800,7 @@ export const timeline: AnimationScene[] = [
       [
         null,
         {
-          char: "t",
+          char: "w",
           style: {
             color: "#FFFFFF",
           },
@@ -2664,18 +1812,23 @@ export const timeline: AnimationScene[] = [
           },
         },
         {
-          char: "a",
+          char: "e",
           style: {
             color: "#FFFFFF",
           },
         },
         {
-          char: "t",
+          char: "r",
           style: {
             color: "#FFFFFF",
           },
         },
-        null,
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
         null,
       ],
       [null, null, null, null, null, null, null],
@@ -2692,12 +1845,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 25,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 18,
   },
   {
-    startFrame: 1311,
+    startFrame: 1306,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2738,12 +1891,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 36,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 24,
   },
   {
-    startFrame: 1347,
+    startFrame: 1330,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2789,12 +1942,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 31,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 38,
   },
   {
-    startFrame: 1378,
+    startFrame: 1368,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2855,12 +2008,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 51,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 98,
   },
   {
-    startFrame: 1429,
+    startFrame: 1466,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2921,12 +2074,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 83,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 53,
   },
   {
-    startFrame: 1512,
+    startFrame: 1519,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2992,12 +2145,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 97,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 100,
   },
   {
-    startFrame: 1618,
+    startFrame: 1619,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3053,12 +2206,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 26,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 1644,
+    startFrame: 1640,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3081,12 +2234,6 @@ export const timeline: AnimationScene[] = [
           },
         },
         {
-          char: "'",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
           char: "r",
           style: {
             color: "#FFFFFF",
@@ -3098,6 +2245,7 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
+        null,
         null,
       ],
       [null, null, null, null, null, null, null],
@@ -3114,12 +2262,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 39,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 23,
   },
   {
-    startFrame: 1683,
+    startFrame: 1663,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3170,12 +2318,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 13,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 19,
   },
   {
-    startFrame: 1696,
+    startFrame: 1682,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3216,12 +2364,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 17,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 1713,
+    startFrame: 1703,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3267,12 +2415,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 27,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 1740,
+    startFrame: 1724,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3323,12 +2471,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 51,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 81,
   },
   {
-    startFrame: 1791,
+    startFrame: 1805,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3394,12 +2542,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 135,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 103,
   },
   {
-    startFrame: 1926,
+    startFrame: 1908,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3444,12 +2592,7 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: ",",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
+        null,
       ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3465,12 +2608,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 30,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 44,
   },
   {
-    startFrame: 1972,
+    startFrame: 1952,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3526,12 +2669,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 16,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 19,
   },
   {
-    startFrame: 1988,
+    startFrame: 1971,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3572,12 +2715,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 17,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 23,
   },
   {
-    startFrame: 2005,
+    startFrame: 1994,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3628,63 +2771,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 20,
-  },
-  {
-    startFrame: 2025,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "a",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "n",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "d",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
     durationFrames: 18,
   },
   {
-    startFrame: 2043,
+    startFrame: 2012,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3696,7 +2788,7 @@ export const timeline: AnimationScene[] = [
         null,
         null,
         {
-          char: "n",
+          char: "t",
           style: {
             color: "#FFFFFF",
           },
@@ -3725,9 +2817,65 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 9,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 19,
+  },
+  {
+    startFrame: 2031,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "m",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "k",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
     startFrame: 2052,
@@ -3741,13 +2889,7 @@ export const timeline: AnimationScene[] = [
       [
         null,
         {
-          char: "p",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "l",
+          char: "n",
           style: {
             color: "#FFFFFF",
           },
@@ -3759,13 +2901,19 @@ export const timeline: AnimationScene[] = [
           },
         },
         {
-          char: "c",
+          char: "m",
           style: {
             color: "#FFFFFF",
           },
         },
         {
           char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "s",
           style: {
             color: "#FFFFFF",
           },
@@ -3786,12 +2934,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 55,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 84,
   },
   {
-    startFrame: 2107,
+    startFrame: 2136,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3815,7 +2963,7 @@ export const timeline: AnimationScene[] = [
           },
         },
         {
-          char: ",",
+          char: "!",
           style: {
             color: "#FFFFFF",
           },
@@ -3837,12 +2985,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 74,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 40,
   },
   {
-    startFrame: 2184,
+    startFrame: 2176,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3854,7 +3002,7 @@ export const timeline: AnimationScene[] = [
         null,
         null,
         {
-          char: "w",
+          char: "W",
           style: {
             color: "#FFFFFF",
           },
@@ -3883,12 +3031,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
     durationFrames: 21,
   },
   {
-    startFrame: 2205,
+    startFrame: 2197,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3934,12 +3082,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 19,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 2224,
+    startFrame: 2218,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3985,12 +3133,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 27,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 2251,
+    startFrame: 2239,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4056,12 +3204,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 33,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 43,
   },
   {
-    startFrame: 2284,
+    startFrame: 2282,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4073,18 +3221,23 @@ export const timeline: AnimationScene[] = [
         null,
         null,
         {
-          char: "o",
+          char: "a",
           style: {
             color: "#FFFFFF",
           },
         },
         {
-          char: "f",
+          char: "n",
           style: {
             color: "#FFFFFF",
           },
         },
-        null,
+        {
+          char: "d",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
         null,
         null,
       ],
@@ -4102,12 +3255,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 33,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 2317,
+    startFrame: 2303,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4173,12 +3326,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 54,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 52,
   },
   {
-    startFrame: 2371,
+    startFrame: 2355,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4187,10 +3340,32 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
-        null,
-        null,
+        {
+          char: "r",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "m",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
         {
           char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
           style: {
             color: "#FFFFFF",
           },
@@ -4201,13 +3376,6 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: "d",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        null,
         null,
       ],
       [null, null, null, null, null, null, null],
@@ -4224,63 +3392,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 30,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 111,
   },
   {
-    startFrame: 2401,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
-        {
-          char: "d",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "a",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "y",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 44,
-  },
-  {
-    startFrame: 2445,
+    startFrame: 2466,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4341,12 +3458,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 87,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 58,
   },
   {
-    startFrame: 2532,
+    startFrame: 2524,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4355,8 +3472,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
-        null,
-        null,
         {
           char: "a",
           style: {
@@ -4369,43 +3484,6 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: "l",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 21,
-  },
-  {
-    startFrame: 2553,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [
         {
           char: "t",
           style: {
@@ -4436,18 +3514,6 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: "h",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "e",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
       ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4463,12 +3529,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 61,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 91,
   },
   {
-    startFrame: 2614,
+    startFrame: 2615,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4509,12 +3575,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 28,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 18,
   },
   {
-    startFrame: 2642,
+    startFrame: 2633,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4555,12 +3621,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 31,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 2673,
+    startFrame: 2654,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4569,21 +3635,8 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
-        null,
         {
           char: "o",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "v",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "e",
           style: {
             color: "#FFFFFF",
           },
@@ -4594,39 +3647,18 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        null,
-        null,
-      ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-    ],
-    stylePresets: {
-      filler: {
-        color: "#333",
-      },
-      default: {
-        color: "#FFFFFF",
-      },
-    },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 29,
-  },
-  {
-    startFrame: 2702,
-    layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [
-        null,
-        null,
+        {
+          char: "b",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
         {
           char: "t",
           style: {
@@ -4634,19 +3666,17 @@ export const timeline: AnimationScene[] = [
           },
         },
         {
-          char: "h",
+          char: "a",
           style: {
             color: "#FFFFFF",
           },
         },
         {
-          char: "e",
+          char: "l",
           style: {
             color: "#FFFFFF",
           },
         },
-        null,
-        null,
       ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4662,12 +3692,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 23,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 61,
   },
   {
-    startFrame: 2725,
+    startFrame: 2715,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4696,13 +3726,13 @@ export const timeline: AnimationScene[] = [
           },
         },
         {
-          char: "i",
+          char: "n",
           style: {
             color: "#FFFFFF",
           },
         },
         {
-          char: "n",
+          char: "e",
           style: {
             color: "#FFFFFF",
           },
@@ -4723,12 +3753,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 41,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 143,
   },
   {
-    startFrame: 2766,
+    startFrame: 2858,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4769,12 +3799,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 108,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 14,
   },
   {
-    startFrame: 2874,
+    startFrame: 2872,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4830,12 +3860,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 9,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 13,
   },
   {
-    startFrame: 2883,
+    startFrame: 2885,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4886,9 +3916,9 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 23,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
     startFrame: 2906,
@@ -4925,12 +3955,7 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: ",",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
+        null,
         null,
       ],
       [null, null, null, null, null, null, null],
@@ -4947,12 +3972,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 84,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 116,
   },
   {
-    startFrame: 3026,
+    startFrame: 3022,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4993,12 +4018,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 14,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 11,
   },
   {
-    startFrame: 3040,
+    startFrame: 3033,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5054,12 +4079,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 9,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 13,
   },
   {
-    startFrame: 3049,
+    startFrame: 3046,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5105,12 +4130,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 35,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 24,
   },
   {
-    startFrame: 3084,
+    startFrame: 3070,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5161,12 +4186,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 80,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 113,
   },
   {
-    startFrame: 3164,
+    startFrame: 3183,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5207,12 +4232,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 37,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 8,
   },
   {
-    startFrame: 3201,
+    startFrame: 3191,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5268,12 +4293,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 13,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 12,
   },
   {
-    startFrame: 3214,
+    startFrame: 3203,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5324,12 +4349,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 26,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 27,
   },
   {
-    startFrame: 3240,
+    startFrame: 3230,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5363,12 +4388,7 @@ export const timeline: AnimationScene[] = [
             color: "#FFFFFF",
           },
         },
-        {
-          char: ",",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
+        null,
         null,
       ],
       [null, null, null, null, null, null, null],
@@ -5385,12 +4405,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 79,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 119,
   },
   {
-    startFrame: 3354,
+    startFrame: 3349,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5431,12 +4451,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 16,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 8,
   },
   {
-    startFrame: 3370,
+    startFrame: 3357,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5492,12 +4512,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 11,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 3381,
+    startFrame: 3378,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5543,12 +4563,12 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 33,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
   {
-    startFrame: 3414,
+    startFrame: 3399,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5599,88 +4619,609 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#000000",
-    secondaryColor: "#222a32",
-    durationFrames: 79,
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 119,
+  },
+  {
+    startFrame: 3518,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "W",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 10,
+  },
+  {
+    startFrame: 3528,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "w",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 8,
+  },
+  {
+    startFrame: 3536,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "m",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "k",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 24,
+  },
+  {
+    startFrame: 3560,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "l",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "o",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "v",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 124,
+  },
+  {
+    startFrame: 3684,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "w",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 8,
+  },
+  {
+    startFrame: 3692,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "w",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
+  },
+  {
+    startFrame: 3713,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "g",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "t",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 19,
+  },
+  {
+    startFrame: 3732,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "h",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "i",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "g",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "h",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 111,
+  },
+  {
+    startFrame: 3843,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "W",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 10,
+  },
+  {
+    startFrame: 3853,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "w",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "n",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
+  },
+  {
+    startFrame: 3874,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "m",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "a",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "k",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#282c34",
+    secondaryColor: "#333",
+    durationFrames: 21,
   },
 ];
-// export const timeline: AnimationScene[] = [
-//   // --- SCENE 1: "GRID" --- (Uses default colors implicitly)
-//   {
-//     startFrame: 0,
-//     durationFrames: 120,
-//     backgroundColor: bgColorScene1,
-//     secondaryColor: secondaryColor,
-//     stylePresets: {
-//       filler: { color: secondaryColor } // Keep filler preset
-//     },
-//     layoutGrid: [
-//       [null, null, null, null, null, null],
-//       [
-//         null,
-//         { char: "G" }, // No style = use default (primaryColor)
-//         { char: "R" },
-//         { char: "I" },
-//         { char: "D" },
-//         null,
-//       ],
-//       [null, null, null, null, null, null],
-//       [null, null, null, null, null, null],
-//       [null, null, null, null, null, null],
-//     ],
-//   },
-//   // --- SCENE 2: "MORPH" --- (Mixing default and specific style)
-//   {
-//     startFrame: 120,
-//     durationFrames: 180,
-//     backgroundColor: bgColorScene2,
-//     secondaryColor: secondaryColor,
-//     stylePresets: {
-//       filler: { color: secondaryColor }
-//     },
-//     layoutGrid: [
-//       [null, null, null, null, null, null, null],
-//       [null, null, null, null, null, null, null],
-//       [
-//         null,
-//         { char: "M" }, // Default color
-//         { char: "O", style: { color: primaryDarkerColor } }, // Specific color
-//         { char: "R" }, // Default color
-//         { char: "P", style: { color: primaryDarkerColor } }, // Specific color
-//         { char: "H" }, // Default color
-//         null,
-//       ],
-//       [null, null, null, null, null, null, null],
-//       [null, null, null, null, null, null, null],
-//     ],
-//   },
-//   // --- SCENE 3: "DONE!" --- (All specific styles)
-//   {
-//     startFrame: 300,
-//     secondaryColor: secondaryColorScene3,
-//     stylePresets: {
-//       filler: { color: secondaryColorScene3 },
-//     },
-//     layoutGrid: [
-//       [null, null, null, null, null, null, null],
-//       [null, null, null, null, null, null, null],
-//       [
-//         null,
-//         null,
-//         { char: "D", style: { color: whiteColor } },
-//         { char: "O", style: { color: whiteColor } },
-//         { char: "N", style: { color: whiteColor } },
-//         { char: "E", style: { color: whiteColor } },
-//         { char: "!", style: { color: primaryColor } }, // Different color
-//       ],
-//       [null, null, null, null, null, null, null],
-//       [null, null, null, null, null, null, null],
-//     ],
-//   },
-// ];
 
-// --- Timeline Processing Function ---
-
+// --- Timeline Processing Function --
 /**
  * Processes the animation timeline.
  * (Currently returns the input timeline unmodified. Future logic can be added here).

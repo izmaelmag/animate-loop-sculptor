@@ -164,7 +164,7 @@ export const config: UnstableGridConfig = {
   width: 1080,
   height: 1920, // User changed
   fps: 60,
-  durationInSeconds: 58, // User changed
+  durationInSeconds: 70, // User changed
 
   // Grid Structure
   // Используем импортированный timeline
@@ -186,7 +186,7 @@ export const config: UnstableGridConfig = {
   // Font & Textures
   fontFamily: "Cascadia Code",
   fontUrl: "/CascadiaCode.ttf",
-  textureSizePreview: 128,
+  textureSizePreview: 64,
   textureSizeRender: 512,
   useHighResTextures: false,
   textureUvEpsilon: 0.01,
