@@ -6,7 +6,7 @@
 // AND WE WILL HAVE TO START FROM SCRATCH
 // I MEAN IT, DON'T TOUCH IT
 // I AM NOT KIDDING
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw, StepForward, StepBack } from "lucide-react";
@@ -19,38 +19,33 @@ interface TimelineProps {
 
 const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
   const { controller, currentAnimationId } = useAnimation();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  
   const [totalFrames, setTotalFrames] = useState(0);
   const [fps, setFps] = useState(0);
 
-  // Initialize state from controller
   useEffect(() => {
     if (!controller) return;
 
-    // Explicitly update all state values from controller when animation changes
-    setCurrentFrame(controller.currentFrame);
-    setIsPlaying(controller.isPlaying);
     setTotalFrames(controller.totalFrames);
     setFps(controller.fps);
+    forceUpdate();
 
-    // Subscribe to frame changes
     const unsubscribeFrame = controller.onFrameChanged(
       (frame, normalizedTime) => {
-        setCurrentFrame(frame);
+        forceUpdate();
       }
     );
 
-    // Subscribe to play state changes
     const unsubscribePlayState = controller.onPlayStateChanged((playing) => {
-      setIsPlaying(playing);
+      forceUpdate();
     });
 
-    // Subscribe to settings changes (fps, totalFrames, etc.)
     const unsubscribeSettings = controller.onSettingsChanged(
-      (fps, totalFrames) => {
-        setFps(fps);
-        setTotalFrames(totalFrames);
+      (newFps, newTotalFrames) => {
+        setFps(newFps);
+        setTotalFrames(newTotalFrames);
+        forceUpdate();
       }
     );
 
@@ -67,6 +62,7 @@ const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
     const newFrame = Math.round(value[0]);
     controller.currentFrame = newFrame;
     controller.redraw();
+    forceUpdate();
   };
 
   const togglePlayback = () => {
@@ -79,9 +75,29 @@ const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
     controller.reset();
   };
 
-  if (!controller || totalFrames === 0) {
-    return <div>Loading timeline...</div>;
+  const handleStepBack = () => {
+    if (!controller) return;
+    controller.currentFrame -= 1;
+    controller.redraw();
+  };
+
+  const handleStepForward = () => {
+    if (!controller) return;
+    controller.currentFrame += 1;
+    controller.redraw();
+  };
+
+  const currentFrame = controller ? controller.currentFrame : 0;
+  const isPlaying = controller ? controller.isPlaying : false;
+  const normalizedTime = controller ? controller.normalizedTime : 0;
+
+  if (!controller) {
+    return <Panel><div>Loading timeline...</div></Panel>;
   }
+
+  const displayTotalFrames = totalFrames > 0 ? totalFrames : 1;
+  const displayCurrentFrame = Math.min(currentFrame, displayTotalFrames - 1);
+  const maxFrame = displayTotalFrames > 0 ? displayTotalFrames - 1 : 0;
 
   return (
     <Panel>
@@ -104,31 +120,21 @@ const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
             <RotateCcw size={16} />
           </Button>
 
-          {/* Frame Backwards */}
           <Button
             size="sm"
             variant="default"
-            onClick={() => {
-              if (!controller) return;
-              controller.currentFrame -= 1;
-              controller.redraw();
-            }}
+            onClick={handleStepBack}
             disabled={isPlaying || !isPlayable || currentFrame === 0}
           >
             <StepBack size={16} />
           </Button>
 
-          {/* Frame Forwards */}
           <Button
             size="sm"
             variant="default"
-            onClick={() => {
-              if (!controller) return;
-              controller.currentFrame += 1;
-              controller.redraw();
-            }}
+            onClick={handleStepForward}
             disabled={
-              isPlaying || !isPlayable || currentFrame === totalFrames - 1
+              isPlaying || !isPlayable || currentFrame >= maxFrame
             }
           >
             <StepForward size={16} />
@@ -137,18 +143,18 @@ const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
         <div className="text-xs font-mono">
           <span>
             <span>Frame:</span>{" "}
-            {(currentFrame + 1)
+            {(displayCurrentFrame + 1)
               .toString()
-              .padStart(totalFrames.toString().length, "0")}
+              .padStart(displayTotalFrames.toString().length, "0")}
             /
-            {totalFrames
+            {displayTotalFrames
               .toString()
-              .padStart(totalFrames.toString().length, "0")}
+              .padStart(displayTotalFrames.toString().length, "0")}
           </span>
 
           <span className="ml-2 text-white/50">
             <span>
-              ({(controller.normalizedTime * 100).toFixed(2).padStart(6, "0")}%
+              ({(normalizedTime * 100).toFixed(2).padStart(6, "0")}%
             </span>
             <span>&nbsp;at {fps} fps)</span>
           </span>
@@ -157,10 +163,10 @@ const Timeline: React.FC<TimelineProps> = ({ isPlayable = true }) => {
 
       <Slider
         disabled={!isPlayable}
-        value={[currentFrame]}
+        value={[displayCurrentFrame]}
         min={0}
         step={1}
-        max={totalFrames - 1}
+        max={maxFrame}
         onValueChange={handleSliderChange}
         className="mt-2 mb-6"
       />
