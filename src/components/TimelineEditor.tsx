@@ -4,9 +4,13 @@ import React, {
   useMemo,
   useRef,
   useEffect,
+  useLayoutEffect
 } from "react";
 import { toast } from "sonner"; // Import toast from sonner
 import ColorPalette from './ui/ColorPalette'; // Import the new component
+import { HexColorPicker } from 'react-colorful'; // Import picker
+import { usePopper } from 'react-popper'; // Using react-popper for popover positioning
+import { useColorPaletteStore } from '@/stores/colorPaletteStore'; // Import store to potentially reset palette
 
 // Import core types (adjust path if needed)
 import {
@@ -158,6 +162,36 @@ const PanelWrapper: React.FC<{ title?: string; children: React.ReactNode; classN
   </div>
 );
 
+// MODIFIED: Hook accepts array of refs to ignore clicks on
+const useClickOutside = (refsToIgnore: React.RefObject<HTMLElement>[], handler: (event: MouseEvent | TouchEvent) => void) => {
+  useEffect(() => {
+    const listener = (event: MouseEvent | TouchEvent) => {
+      // Check if the click target is inside *any* of the refs to ignore
+      let containedInIgnoredElement = false;
+      for (const ref of refsToIgnore) {
+        // Check if ref exists and contains the target
+        if (ref.current && ref.current.contains(event.target as Node)) {
+          containedInIgnoredElement = true;
+          break; // No need to check further if contained in one
+        }
+      }
+
+      // If the click was NOT inside any of the ignored elements, call the handler
+      if (!containedInIgnoredElement) {
+        handler(event);
+      }
+    };
+    
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  // Make sure the dependency array includes all refs (though refs themselves shouldn't change often)
+  }, [refsToIgnore, handler]); 
+};
+
 // --- Main Editor Component ---
 const TimelineEditor: React.FC = () => {
   // --- State Initialization ---
@@ -175,6 +209,66 @@ const TimelineEditor: React.FC = () => {
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const [currentFrame, setCurrentFrame] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [showCellColorPicker, setShowCellColorPicker] = useState(false);
+  const [showBgColorPicker, setShowBgColorPicker] = useState(false);
+  const [showSecondaryColorPicker, setShowSecondaryColorPicker] = useState(false);
+  
+  // Refs for popper positioning
+  const cellPickerButtonRef = useRef<HTMLButtonElement>(null);
+  const cellPickerPopoverRef = useRef<HTMLDivElement>(null);
+  const bgPickerButtonRef = useRef<HTMLButtonElement>(null);
+  const bgPickerPopoverRef = useRef<HTMLDivElement>(null);
+  const secondaryPickerButtonRef = useRef<HTMLButtonElement>(null);
+  const secondaryPickerPopoverRef = useRef<HTMLDivElement>(null);
+  
+  // Popper setup - Initialize only when refs are set
+  const popperOptions = useMemo(() => ({ 
+      placement: 'bottom-start' as const, 
+      modifiers: [{ name: 'offset', options: { offset: [0, 8] } }] 
+  }), []);
+
+  const { styles: cellStyles, attributes: cellAttributes, update: updateCellPopper } = usePopper(
+      cellPickerButtonRef.current, 
+      cellPickerPopoverRef.current, 
+      popperOptions
+  );
+  const { styles: bgStyles, attributes: bgAttributes, update: updateBgPopper } = usePopper(
+      bgPickerButtonRef.current, 
+      bgPickerPopoverRef.current, 
+      popperOptions
+  );
+  const { styles: secondaryStyles, attributes: secondaryAttributes, update: updateSecondaryPopper } = usePopper(
+      secondaryPickerButtonRef.current, 
+      secondaryPickerPopoverRef.current, 
+      popperOptions
+  );
+
+  // MODIFIED: Use useLayoutEffect instead of useEffect
+  useLayoutEffect(() => {
+      if (showCellColorPicker && updateCellPopper) {
+          console.log("Updating cell popper position");
+          updateCellPopper();
+      }
+  }, [showCellColorPicker, updateCellPopper]);
+  
+  useLayoutEffect(() => {
+      if (showBgColorPicker && updateBgPopper) {
+           console.log("Updating background popper position");
+           updateBgPopper();
+      }
+  }, [showBgColorPicker, updateBgPopper]);
+
+  useLayoutEffect(() => {
+      if (showSecondaryColorPicker && updateSecondaryPopper) {
+          console.log("Updating secondary popper position");
+          updateSecondaryPopper();
+      }
+  }, [showSecondaryColorPicker, updateSecondaryPopper]);
+
+  // MODIFIED: Pass both popover AND button refs to useClickOutside
+  useClickOutside([cellPickerPopoverRef, cellPickerButtonRef], () => setShowCellColorPicker(false));
+  useClickOutside([bgPickerPopoverRef, bgPickerButtonRef], () => setShowBgColorPicker(false));
+  useClickOutside([secondaryPickerPopoverRef, secondaryPickerButtonRef], () => setShowSecondaryColorPicker(false));
 
   // --- Load State from localStorage on Mount ---
   useEffect(() => {
@@ -520,29 +614,47 @@ const TimelineEditor: React.FC = () => {
     [selectedSceneIndex, lastUsedColor] // Add lastUsedColor as dependency
   );
 
-  // Update color for selected cell using the native input
-  const handleSelectedCellColorChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  // MODIFIED: Update color for selected cell (accepts color string directly)
+  const handleSelectedCellColorChange = useCallback((newColor: string) => { 
     if (selectedCellCoords) {
-      const newColor = event.target.value;
       handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: newColor });
       setLastUsedColor(newColor); 
+      // Maybe close picker after selection?
+      // setShowCellColorPicker(false); 
     }
   }, [selectedCellCoords, handleCellChange, setLastUsedColor]);
 
-  // --- NEW: Handle color selection from the palette ---
+  // Handle color selection from the palette
   const handlePaletteColorSelect = useCallback((color: string) => {
-      if (selectedCellCoords) {
-          console.log(`Palette color selected: ${color} for cell [${selectedCellCoords.row}, ${selectedCellCoords.col}]`);
-          // Use the existing logic to update the cell
-          handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: color });
-          // Update the last used color
-          setLastUsedColor(color);
-      } else {
-          console.log("Palette color selected, but no cell is selected.");
-          // Optionally, update lastUsedColor even if no cell is selected?
-          // setLastUsedColor(color);
-      }
-  }, [selectedCellCoords, handleCellChange, setLastUsedColor]); // Dependencies
+    if (selectedCellCoords) {
+      handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: color });
+      setLastUsedColor(color);
+      setShowCellColorPicker(false); // Close main picker if palette is used
+    } else {
+       setLastUsedColor(color); // Update last used color even if no cell selected
+       toast.info("Color selected as last used", { description: "Click a cell to apply it." });
+    }
+  }, [selectedCellCoords, handleCellChange, setLastUsedColor]);
+
+  // MODIFIED: Handle scene color changes (accepts color string directly)
+  const handleSceneColorChange = useCallback((param: "backgroundColor" | "secondaryColor", value: string) => {
+    if (selectedSceneIndex === null) return;
+    
+    const effectiveValue = value === "" ? undefined : value; 
+
+    setScenes((prevScenes) => {
+      if (selectedSceneIndex === 0) {
+            console.log(`Applying ${param}=${effectiveValue} to ALL scenes because Scene 0 was changed.`);
+            return prevScenes.map((scene) => ({ ...scene, [param]: effectiveValue, }));
+        } else {
+            console.log(`Applying ${param}=${effectiveValue} to Scene ${selectedSceneIndex} only.`);
+            return prevScenes.map((scene, index) => {
+                if (index === selectedSceneIndex) { return { ...scene, [param]: effectiveValue }; }
+                return scene;
+            });
+        }
+    });
+  }, [selectedSceneIndex, setScenes]);
 
   // --- Scene Parameter Editing ---
   const handleSceneParamChange = (
@@ -604,40 +716,6 @@ const TimelineEditor: React.FC = () => {
       }
 
       return updatedScenes;
-    });
-  };
-
-  // Handle color changes
-  const handleSceneColorChange = (
-    param: "backgroundColor" | "secondaryColor",
-    value: string
-  ) => {
-    if (selectedSceneIndex === null) return;
-
-    const effectiveValue = value === "" ? undefined : value; // Handle empty string case once
-
-    setScenes((prevScenes) => {
-      if (selectedSceneIndex === 0) {
-        // Apply to ALL scenes if changing the first scene
-        console.log(
-          `Applying ${param}=${effectiveValue} to ALL scenes because Scene 0 was changed.`
-        );
-        return prevScenes.map((scene) => ({
-          ...scene,
-          [param]: effectiveValue,
-        }));
-      } else {
-        // Apply only to the selected scene if it's not the first one
-        console.log(
-          `Applying ${param}=${effectiveValue} to Scene ${selectedSceneIndex} only.`
-        );
-        return prevScenes.map((scene, index) => {
-          if (index === selectedSceneIndex) {
-            return { ...scene, [param]: effectiveValue };
-          }
-          return scene;
-        });
-      }
     });
   };
 
@@ -956,6 +1034,9 @@ const TimelineEditor: React.FC = () => {
           )}
         </PanelWrapper>
 
+        {/* Maybe add a button to reset palette? */}
+        <button onClick={useColorPaletteStore.getState().resetColors} className="mt-auto text-xs text-gray-500 hover:text-gray-300">Reset Palette</button>
+
       </aside>
 
       {/* Main Content Area */}
@@ -974,10 +1055,50 @@ const TimelineEditor: React.FC = () => {
                        <input type="number" min="1" value={currentScene.durationFrames ?? ''} onChange={(e) => handleSceneParamChange("durationFrames", e.target.value)} placeholder="auto" className="ml-2 w-20 p-1 rounded bg-gray-700 border border-gray-600" />
                      </label>
                       <label className="text-sm"> Background Color:
-                           <input type="color" value={currentScene.backgroundColor || DEFAULT_BG_COLOR} onChange={(e) => handleSceneColorChange("backgroundColor", e.target.value)} className="ml-2 h-6 w-10 p-0 border-none rounded" />
+                           {/* Color Swatch Button */}
+                           <button 
+                              ref={bgPickerButtonRef}
+                              onClick={() => setShowBgColorPicker(s => !s)}
+                              className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                              style={{ backgroundColor: currentScene.backgroundColor || DEFAULT_BG_COLOR }}
+                           />
+                           {/* Popper for Background Color Picker */}
+                           {showBgColorPicker && (
+                              <div 
+                                 ref={bgPickerPopoverRef} 
+                                 style={bgStyles.popper} 
+                                 {...bgAttributes.popper}
+                                 className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                              >
+                                  <HexColorPicker 
+                                     color={currentScene.backgroundColor || DEFAULT_BG_COLOR} 
+                                     onChange={(color) => handleSceneColorChange("backgroundColor", color)}
+                                  />
+                              </div>
+                           )}
                       </label>
                        <label className="text-sm"> Secondary Color:
-                           <input type="color" value={currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR} onChange={(e) => handleSceneColorChange("secondaryColor", e.target.value)} className="ml-2 h-6 w-10 p-0 border-none rounded" />
+                           {/* Color Swatch Button */}
+                           <button 
+                              ref={secondaryPickerButtonRef}
+                              onClick={() => setShowSecondaryColorPicker(s => !s)}
+                              className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                              style={{ backgroundColor: currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR }}
+                           />
+                           {/* Popper for Secondary Color Picker */}
+                           {showSecondaryColorPicker && (
+                               <div 
+                                   ref={secondaryPickerPopoverRef} 
+                                   style={secondaryStyles.popper} 
+                                   {...secondaryAttributes.popper}
+                                   className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                               >
+                                   <HexColorPicker 
+                                       color={currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR} 
+                                       onChange={(color) => handleSceneColorChange("secondaryColor", color)}
+                                   />
+                               </div>
+                           )}
                        </label>
                        <button onClick={handleCopyGridFromPrevious} disabled={selectedSceneIndex === 0} className="mt-2 px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 rounded disabled:opacity-50 disabled:cursor-not-allowed">
                            Copy Grid from Previous
@@ -1018,22 +1139,36 @@ const TimelineEditor: React.FC = () => {
                          className="ml-2 w-10 p-1 rounded bg-gray-700 border border-gray-600 text-center font-mono"
                        />
                     </label>
-                     <label className="text-sm flex items-center gap-2"> 
+                     <label className="text-sm"> 
                        <span>Text Color:</span>
-                       <input
-                         type="color"
-                         value={selectedCellData?.color ?? lastUsedColor}
-                         onChange={handleSelectedCellColorChange} // Keep existing handler for native input
-                         className="h-6 w-10 p-0 border-none rounded"
-                       />
+                       {/* Color Swatch Button */}
+                       <button 
+                          ref={cellPickerButtonRef}
+                          onClick={() => setShowCellColorPicker(s => !s)}
+                          className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                          style={{ backgroundColor: selectedCellData?.color ?? lastUsedColor }}
+                        />
+                        {/* Popper for Cell Color Picker */}
+                        {showCellColorPicker && (
+                            <div 
+                              ref={cellPickerPopoverRef} 
+                              style={cellStyles.popper} 
+                              {...cellAttributes.popper}
+                              className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                            >
+                                <HexColorPicker 
+                                   color={selectedCellData?.color ?? lastUsedColor}
+                                   onChange={handleSelectedCellColorChange} // Use updated handler
+                                />
+                           </div>
+                        )}
                      </label>
                      
-                     {/* NEW: Color Palette */}
+                     {/* Updated Color Palette Usage */}
                      <div className="mt-2">
                          <label className="text-sm block mb-1">Palette:</label>
                          <ColorPalette 
-                             colors={defaultPaletteColors}
-                             onSelect={handlePaletteColorSelect} // Use the new handler
+                             onSelect={handlePaletteColorSelect} // No colors prop needed
                          />
                      </div>
                      
