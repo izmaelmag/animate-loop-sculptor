@@ -16,6 +16,7 @@ export class AnimationController {
   private animationFrameRef: number | null = null;
   private currentAnimationId: AnimationName = defaultAnimation.id;
   private containerElement: HTMLElement | null = null;
+  private startTime: number = 0; // <<< To track playback start time
 
   // Animation state
   private _currentFrame: number = 0;
@@ -283,6 +284,7 @@ export class AnimationController {
     this.stopAnimationLoop(); // Ensure previous loop is stopped
     // Request the first frame
     if (this._isPlaying) { // Start only if supposed to be playing
+        this.startTime = performance.now(); // <<< Record start time
         this.animationFrameRef = requestAnimationFrame(this.updateFrame);
     }
   }
@@ -295,17 +297,35 @@ export class AnimationController {
   }
 
   private updateFrame = (): void => {
-    // Advance to the next frame
-    this.currentFrame =
-      this._currentFrame + 1 >= this.totalFrames ? 0 : this._currentFrame + 1;
-
-    // Redraw P5 canvas with new frame
-    this.redraw();
-
-    // Continue the animation loop using only requestAnimationFrame
-    if (this._isPlaying) {
-      this.animationFrameRef = requestAnimationFrame(this.updateFrame);
+    if (!this._isPlaying || !this.p5Instance) {
+        // Stop loop if not playing or p5 instance is gone
+        this.stopAnimationLoop(); 
+        return; 
     }
+
+    // Calculate elapsed time since playback started
+    const currentTime = performance.now();
+    const elapsedTime = currentTime - this.startTime;
+
+    // Calculate the target frame based on time and FPS
+    let targetFrame = Math.floor((elapsedTime / 1000) * this.fps);
+
+    // Handle looping
+    if (this.totalFrames > 0) { 
+      targetFrame %= this.totalFrames;
+    }
+    
+    // Set the current frame (setter handles notification and clamping)
+    this.currentFrame = targetFrame;
+
+    // Redraw P5 canvas with new frame (only if frame actually changed or first frame)
+    // The redraw might already be handled by the currentFrame setter triggering notifyFrameChanged,
+    // depending on how SketchView consumes that notification. 
+    // Explicit redraw here might be redundant or cause double redraws, but let's keep it for now.
+    this.redraw(); 
+
+    // Continue the animation loop
+    this.animationFrameRef = requestAnimationFrame(this.updateFrame);
   };
 
   //-------------------------------------

@@ -593,6 +593,10 @@ const animation: AnimationFunction = (
   _normalizedTime: number,
   currentFrameNum: number
 ): void => {
+  // --- DEBUG: Log incoming frame number ---
+  console.log(`[Animation] Frame: ${currentFrameNum}`);
+  // --- END DEBUG ---
+
   // --- Wait for map and textures (using isSetupComplete flag now) ---
   // Also ensure setup function has run at least once before checking map
   if (!isSetupComplete || !textureMap) { 
