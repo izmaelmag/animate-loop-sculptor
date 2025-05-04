@@ -26,6 +26,8 @@ export interface AnimationScene {
   backgroundColor?: string;
   /** Optional secondary/filler color for this scene */
   secondaryColor?: string;
+  /** Optional background character string */
+  backgroundChars?: string; 
   /** 2D layout array [row][col], null = filler */
   layoutGrid: (LayoutCell | null)[][];
   /** Style presets for this scene (maybe less used now, keep for filler?) */

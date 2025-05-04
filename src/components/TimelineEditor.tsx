@@ -41,6 +41,7 @@ interface EditableScene {
   durationFrames?: number;
   backgroundColor?: string; // Scene background color
   secondaryColor?: string; // Scene secondary/filler color
+  backgroundChars?: string; // Optional background character string
   // Layout grid specific to this scene
   layoutGrid: (EditableLayoutCell | null)[][];
   // We'll keep stylePresets, but editing happens via direct cell color for now
@@ -278,14 +279,11 @@ const TimelineEditor: React.FC = () => {
       try {
         const savedState = JSON.parse(savedStateString);
         console.log("Loaded state:", savedState);
-
-        // Restore state (with fallbacks)
         setGridCols(savedState.gridCols ?? INITIAL_GRID_COLS);
         setGridRows(savedState.gridRows ?? INITIAL_GRID_ROWS);
-        setScenes(savedState.scenes ?? []);
+        setScenes(savedState.scenes ?? []); // Includes backgroundChars if saved
         setSelectedSceneIndex(savedState.selectedSceneIndex ?? null);
-
-        // Recalculate nextSceneId based on loaded scenes
+        setLastUsedColor(savedState.lastUsedColor ?? "#ffffff"); // Load last used color
         const maxId = (savedState.scenes ?? []).reduce(
           (max: number, scene: EditableScene) => Math.max(max, scene.id),
           -1
@@ -294,19 +292,17 @@ const TimelineEditor: React.FC = () => {
         console.log(`Recalculated nextSceneId: ${maxId + 1}`);
       } catch (error) {
         console.error("Failed to parse saved state from localStorage:", error);
-        // Optionally clear corrupted data: localStorage.removeItem(LOCAL_STORAGE_KEY);
       }
     } else {
-      console.log("No saved state found.");
-      // If no saved state, ensure nextSceneId starts at 0
-      setNextSceneId(0);
+        console.log("No saved state found.");
+        setNextSceneId(0);
+        setLastUsedColor("#ffffff"); // Ensure default last used color
     }
-    setIsLoaded(true); // Mark loading as complete
-  }, []); // Empty dependency array ensures this runs only once on mount
+    setIsLoaded(true); 
+  }, []); // Empty dependency array
 
   // --- Save State to localStorage on Update ---
   useEffect(() => {
-    // Don't save until initial load is complete
     if (!isLoaded) {
       return;
     }
@@ -314,9 +310,9 @@ const TimelineEditor: React.FC = () => {
     const stateToSave = {
       gridCols,
       gridRows,
-      scenes,
+      scenes, // scenes now include backgroundChars
       selectedSceneIndex,
-      // Do not save: nextSceneId (recalculated), exportJson (derived), selectedCellCoords (transient)
+      lastUsedColor, // Save last used color
     };
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToSave));
@@ -324,8 +320,7 @@ const TimelineEditor: React.FC = () => {
     } catch (error) {
       console.error("Failed to save state to localStorage:", error);
     }
-    // Depend on the state variables we want to save
-  }, [scenes, gridCols, gridRows, selectedSceneIndex, isLoaded]);
+  }, [scenes, gridCols, gridRows, selectedSceneIndex, isLoaded, lastUsedColor]); // Added lastUsedColor
 
   // Memoize current scene and cell data to avoid unnecessary calculations
   const currentScene = useMemo(() => {
@@ -446,8 +441,7 @@ const TimelineEditor: React.FC = () => {
 
     const newScenes = [...scenes, newScene];
     setScenes(newScenes);
-    setNextSceneId(nextSceneId + 1);
-    setSelectedSceneIndex(newScenes.length - 1); // Select the new duplicate
+    setNextSceneId(newScenes.length - 1); // Select the new duplicate
     setSelectedCellCoords(null);
   };
 
@@ -656,68 +650,68 @@ const TimelineEditor: React.FC = () => {
     });
   }, [selectedSceneIndex, setScenes]);
 
-  // --- Scene Parameter Editing ---
-  const handleSceneParamChange = (
-    param: "startFrame" | "durationFrames", // Limit param type
-    value: string | number
-  ) => {
+  // MODIFIED: Handle general scene parameter changes (including new backgroundChars)
+  const handleSceneParamChange = useCallback(( 
+      param: "startFrame" | "durationFrames" | "backgroundChars", 
+      value: string | number
+    ) => {
     if (selectedSceneIndex === null) return;
 
-    const currentSceneIndex = selectedSceneIndex; // Capture index before state update
+    const currentSceneIndex = selectedSceneIndex;
 
     setScenes((prevScenes) => {
-      let numericValue: number | undefined;
+      let processedValue: number | string | undefined = value;
+
       if (param === "startFrame" || param === "durationFrames") {
+        let numericValue: number | undefined;
         numericValue = typeof value === "string" ? parseInt(value, 10) : value;
         if (isNaN(numericValue)) {
           if (param === "durationFrames" && value === "") {
             numericValue = undefined; // Allow clearing duration
           } else {
-            return prevScenes; // Invalid number, do nothing
+            return prevScenes; // Invalid number for frame/duration
           }
         } else {
-          numericValue = Math.max(0, numericValue); // Ensure non-negative
-          if (param === "durationFrames" && numericValue === 0)
-            numericValue = 1; // Min duration 1 if set
+          numericValue = Math.max(0, numericValue); 
+          if (param === "durationFrames" && numericValue === 0) numericValue = 1; 
         }
+        processedValue = numericValue;
+      } else if (param === "backgroundChars") {
+           // Keep as string, allow empty string
+           processedValue = typeof value === 'string' ? value : '';
       }
 
-      // Create a new array for modifications
       const updatedScenes = [...prevScenes];
       const sceneToUpdate = { ...updatedScenes[currentSceneIndex] };
 
-      // Update the target scene
-      if (param === "startFrame") {
-        sceneToUpdate.startFrame = numericValue as number;
-      } else if (param === "durationFrames") {
-        sceneToUpdate.durationFrames = numericValue; // Can be undefined
+      // Use a safer approach with key check:
+      if (param === 'startFrame' || param === 'durationFrames') {
+          sceneToUpdate[param] = processedValue as number | undefined;
+      } else if (param === 'backgroundChars') {
+          sceneToUpdate[param] = processedValue as string | undefined;
+      } else {
+          // Log error or ignore if the parameter isn't one we expect to handle here
+          console.warn(`Attempted to update unhandled scene parameter: ${param}`);
       }
+
       updatedScenes[currentSceneIndex] = sceneToUpdate;
 
-      // --- Adjust subsequent scene timings ---
-      let previousEndFrame =
-        sceneToUpdate.startFrame + (sceneToUpdate.durationFrames || 1); // Use 1 if duration undefined for calc
-
-      for (let i = currentSceneIndex + 1; i < updatedScenes.length; i++) {
-        const currentStart = updatedScenes[i].startFrame;
-        const currentDuration = updatedScenes[i].durationFrames;
-
-        if (currentStart !== previousEndFrame) {
-          console.log(
-            `Adjusting Scene ${i} startFrame from ${currentStart} to ${previousEndFrame}`
-          );
-          updatedScenes[i] = {
-            ...updatedScenes[i],
-            startFrame: previousEndFrame,
-          };
-        }
-        // Update previousEndFrame for the *next* iteration
-        previousEndFrame = updatedScenes[i].startFrame + (currentDuration || 1);
+      // Adjust subsequent scene timings if startFrame or durationFrames changed
+      if (param === "startFrame" || param === "durationFrames") {
+            let previousEndFrame = sceneToUpdate.startFrame + (sceneToUpdate.durationFrames || 1); 
+            for (let i = currentSceneIndex + 1; i < updatedScenes.length; i++) {
+                const currentStart = updatedScenes[i].startFrame;
+                const currentDuration = updatedScenes[i].durationFrames;
+                if (currentStart !== previousEndFrame) {
+                    updatedScenes[i] = { ...updatedScenes[i], startFrame: previousEndFrame, };
+                }
+                previousEndFrame = updatedScenes[i].startFrame + (currentDuration || 1);
+            }
       }
-
+      
       return updatedScenes;
     });
-  };
+  }, [selectedSceneIndex, setScenes]);
 
   // --- NEW: Copy Grid Logic ---
   const handleCopyGridFromPrevious = () => {
@@ -822,51 +816,33 @@ const TimelineEditor: React.FC = () => {
 }, [gridRows, gridCols, setScenes, setNextSceneId, setSelectedSceneIndex, setSelectedCellCoords]);
 
   // --- Export Logic ---
-  const convertEditableToAnimationScenes = (
+  const convertEditableToAnimationScenes = useCallback((
     editableScenes: EditableScene[]
   ): AnimationScene[] => {
     return editableScenes.map((scene) => {
-      // Keep only necessary presets (like 'filler')?
-      // Or just pass them all through? Let's pass them for now.
-      const sceneStylePresets = { ...scene.stylePresets };
-
-      const newLayoutGrid: (LayoutCell | null)[][] = scene.layoutGrid.map(
-        (row) =>
-          row.map((cell) => {
+        const sceneStylePresets = { ...scene.stylePresets };
+        const newLayoutGrid: (LayoutCell | null)[][] = scene.layoutGrid.map(
+          (row) => row.map((cell) => {
             if (!cell) return null;
-
-            // Construct the LayoutCell in the new format
-            const layoutCell: LayoutCell = {
-              char: cell.char,
-            };
-
-            // Add style property only if a custom color exists
-            if (cell.color) {
-              layoutCell.style = { color: cell.color };
-            }
-            // No need for styleId or modifying presets here anymore
-
+            const layoutCell: LayoutCell = { char: cell.char };
+            if (cell.color) { layoutCell.style = { color: cell.color }; }
             return layoutCell;
           })
-      );
-
-      // Construct the AnimationScene
-      const animationScene: AnimationScene = {
-        startFrame: scene.startFrame,
-        layoutGrid: newLayoutGrid,
-        stylePresets: sceneStylePresets, // Pass original/cloned presets
-        ...(scene.backgroundColor && {
-          backgroundColor: scene.backgroundColor,
-        }),
-        ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
-      };
-      if (scene.durationFrames !== undefined) {
-        animationScene.durationFrames = scene.durationFrames;
-      }
-
-      return animationScene;
+        );
+        const animationScene: AnimationScene = {
+            startFrame: scene.startFrame,
+            layoutGrid: newLayoutGrid,
+            stylePresets: sceneStylePresets, 
+            ...(scene.backgroundColor && { backgroundColor: scene.backgroundColor }),
+            ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
+            ...(scene.backgroundChars && { backgroundChars: scene.backgroundChars }), // Include backgroundChars
+        };
+        if (scene.durationFrames !== undefined) {
+            animationScene.durationFrames = scene.durationFrames;
+        }
+        return animationScene;
     });
-  };
+  }, []);
 
   const handleGenerateExport = useCallback(() => {
     setExportJson("Generating..."); 
@@ -1054,53 +1030,62 @@ const TimelineEditor: React.FC = () => {
                      <label className="text-sm"> Duration (opt.):
                        <input type="number" min="1" value={currentScene.durationFrames ?? ''} onChange={(e) => handleSceneParamChange("durationFrames", e.target.value)} placeholder="auto" className="ml-2 w-20 p-1 rounded bg-gray-700 border border-gray-600" />
                      </label>
-                      <label className="text-sm"> Background Color:
-                           {/* Color Swatch Button */}
-                           <button 
-                              ref={bgPickerButtonRef}
-                              onClick={() => setShowBgColorPicker(s => !s)}
-                              className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
-                              style={{ backgroundColor: currentScene.backgroundColor || DEFAULT_BG_COLOR }}
-                           />
-                           {/* Popper for Background Color Picker */}
-                           {showBgColorPicker && (
-                              <div 
-                                 ref={bgPickerPopoverRef} 
-                                 style={bgStyles.popper} 
-                                 {...bgAttributes.popper}
-                                 className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
-                              >
-                                  <HexColorPicker 
-                                     color={currentScene.backgroundColor || DEFAULT_BG_COLOR} 
-                                     onChange={(color) => handleSceneColorChange("backgroundColor", color)}
-                                  />
-                              </div>
-                           )}
-                      </label>
-                       <label className="text-sm"> Secondary Color:
-                           {/* Color Swatch Button */}
-                           <button 
-                              ref={secondaryPickerButtonRef}
-                              onClick={() => setShowSecondaryColorPicker(s => !s)}
-                              className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
-                              style={{ backgroundColor: currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR }}
-                           />
-                           {/* Popper for Secondary Color Picker */}
-                           {showSecondaryColorPicker && (
-                               <div 
-                                   ref={secondaryPickerPopoverRef} 
-                                   style={secondaryStyles.popper} 
-                                   {...secondaryAttributes.popper}
-                                   className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
-                               >
-                                   <HexColorPicker 
-                                       color={currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR} 
-                                       onChange={(color) => handleSceneColorChange("secondaryColor", color)}
-                                   />
-                               </div>
-                           )}
-                       </label>
-                       <button onClick={handleCopyGridFromPrevious} disabled={selectedSceneIndex === 0} className="mt-2 px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+                     <label className="text-sm flex items-center gap-2"> 
+                       <span>Background Color:</span>
+                       <button 
+                          ref={bgPickerButtonRef}
+                          onClick={() => setShowBgColorPicker(s => !s)}
+                          className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                          style={{ backgroundColor: currentScene.backgroundColor || DEFAULT_BG_COLOR }}
+                       />
+                       {showBgColorPicker && (
+                          <div 
+                             ref={bgPickerPopoverRef} 
+                             style={bgStyles.popper} 
+                             {...bgAttributes.popper}
+                             className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                          >
+                              <HexColorPicker 
+                                 color={currentScene.backgroundColor || DEFAULT_BG_COLOR} 
+                                 onChange={(color) => handleSceneColorChange("backgroundColor", color)}
+                              />
+                          </div>
+                       )}
+                     </label>
+                     <label className="text-sm flex items-center gap-2"> 
+                       <span>Secondary Color:</span>
+                       <button 
+                          ref={secondaryPickerButtonRef}
+                          onClick={() => setShowSecondaryColorPicker(s => !s)}
+                          className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                          style={{ backgroundColor: currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR }}
+                       />
+                       {showSecondaryColorPicker && (
+                           <div 
+                               ref={secondaryPickerPopoverRef} 
+                               style={secondaryStyles.popper} 
+                               {...secondaryAttributes.popper}
+                               className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                           >
+                               <HexColorPicker 
+                                   color={currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR} 
+                                   onChange={(color) => handleSceneColorChange("secondaryColor", color)}
+                               />
+                           </div>
+                       )}
+                     </label>
+                     <label className="text-sm flex items-center"> 
+                       <span>Background Chars (opt.):</span>
+                       <input 
+                            type="text" 
+                            value={currentScene.backgroundChars ?? ''}
+                            onChange={(e) => handleSceneParamChange("backgroundChars", e.target.value)}
+                            placeholder="e.g., .-:" 
+                            maxLength={15}
+                            className="w-40 p-1 rounded bg-gray-700 border border-gray-600 font-mono text-xs ml-2"
+                        />
+                     </label>
+                     <button onClick={handleCopyGridFromPrevious} disabled={selectedSceneIndex === 0} className="mt-2 px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 rounded disabled:opacity-50 disabled:cursor-not-allowed">
                            Copy Grid from Previous
                        </button>
                   </div>

@@ -811,7 +811,52 @@ const animation: AnimationFunction = (
   // 6. Render
   p.background(currentBgColor);
 
-  // Draw Rectangles using the renderTexturedRectangle function
+  // --- NEW: Render Background Characters --- 
+  if (activeScene && activeScene.backgroundChars && activeScene.backgroundChars.length > 0) {
+      const chars = activeScene.backgroundChars;
+      const charLength = chars.length;
+      const fontSize = config.textureSizePreview * 0.6; // Adjust font size as needed
+      p.textSize(fontSize);
+      p.textAlign(p.CENTER, p.CENTER);
+      
+      // Determine background character color (e.g., slightly darker/lighter than bg or low alpha secondary)
+      // REMOVED calculation based on primary background
+      // const bgColorR = p.red(currentBgColor!); // Assumes currentBgColor is not null
+      // const bgColorG = p.green(currentBgColor!); 
+      // const bgColorB = p.blue(currentBgColor!); 
+      // Example: Make slightly lighter or darker based on brightness, with low alpha
+      // const brightness = (bgColorR * 0.299 + bgColorG * 0.587 + bgColorB * 0.114);
+      // const delta = brightness > 128 ? -30 : 30; // Adjust contrast amount
+      // const bgCharColor = p.color(bgColorR + delta, bgColorG + delta, bgColorB + delta, 30); // Low alpha (adjust 30)
+
+      // Use the interpolated secondary color directly
+      if (!currentSecondaryColor) {
+          console.warn("currentSecondaryColor is null, cannot draw background chars");
+          // Handle the case where color is null, maybe skip drawing or use a default
+      } else {
+          p.fill(currentSecondaryColor); // Use the secondary color directly
+          p.noStroke();
+
+          // Get cell dimensions (assuming uniform grid for simplicity)
+          const cellWidth = config.width / config.gridColumns;
+          const cellHeight = config.height / config.gridRows;
+          const offsetX = cellWidth / 2;
+          const offsetY = cellHeight / 2 + fontSize * 0.3; // Adjust vertical offset
+
+          // Loop through grid cells and draw background characters
+          for (let r = 0; r < config.gridRows; r++) {
+              for (let c = 0; c < config.gridColumns; c++) {
+                  const charIndex = (r * config.gridColumns + c) % charLength;
+                  const charToDraw = chars[charIndex];
+                  const x = c * cellWidth + offsetX;
+                  const y = r * cellHeight + offsetY;
+                  p.text(charToDraw, x, y);
+              }
+          }
+      }
+  }
+
+  // --- Render Main Rectangles (using existing texture renderer) --- 
   rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     // Ensure metadata exists and row/col indices are valid before rendering
