@@ -42,7 +42,8 @@ export type RectangleRenderFunction = (
   intersectionPoint: Point, // Точка пересечения диагоналей, вычисленная методом getDiagonalIntersection()
   vertices: Point[], // Вершины четырехугольника
   color: Color, // Цвет четырехугольника
-  metadata: RectangleMetadata // Метаданные четырехугольника
+  metadata: RectangleMetadata, // Метаданные четырехугольника
+  currentFrameNum: number // <<< ADD currentFrameNum
 ) => void;
 
 export class Rectangle {
@@ -177,7 +178,8 @@ export const defaultRectangleRenderer: RectangleRenderFunction = (
   intersectionPoint, // Точка пересечения диагоналей, вычисленная методом getDiagonalIntersection()
   vertices,
   color,
-  metadata
+  metadata,
+  currentFrameNum
 ) => {
   // Настройка параметров рендеринга
   p5Instance.noFill();

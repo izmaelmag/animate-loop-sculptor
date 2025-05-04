@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import p5 from "p5";
 import { AnimationSettings, AnimationFunction } from "@/types/animations";
 import { createNoise3D } from "simplex-noise";
@@ -21,6 +22,10 @@ import {
 } from "./config";
 import { AnimationScene, timeline, LayoutCell, CellStyle } from "./timeline";
 import { easings } from "../../utils/easing";
+import { staticFile } from "remotion";
+
+// --- Global Setup Guard ---
+let isSetupComplete = false; 
 
 // --- Font Loading ---
 // Remove preload logic - rely on CSS loading via index.html
@@ -187,7 +192,8 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   _intersection: Point | null,
   vertices: Point[], // Expecting [topLeft, topRight, bottomRight, bottomLeft]
   _color: Color,
-  metadata: RectangleMetadata | null
+  metadata: RectangleMetadata | null,
+  currentFrameNum: number
 ): void => {
   const col = metadata?.colTopLeft;
   const row = metadata?.rowTopLeft;
@@ -222,6 +228,7 @@ const renderTexturedRectangle: RectangleRenderFunction = (
 
   if (letter) {
     const texture = alphabetTextures[letter];
+
     if (texture) {
       p.push();
       p.tint(interpolatedColor);
@@ -311,7 +318,34 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   }
 };
 
-const renderRectangle: RectangleRenderFunction = renderTexturedRectangle;
+// --- NEW: Solid Color Rectangle Renderer ---
+const renderSolidRectangle: RectangleRenderFunction = (
+  p: p5,
+  _normalizedTime: number,
+  _lines: Line[],
+  _intersection: Point | null,
+  vertices: Point[], // Expecting [topLeft, topRight, bottomRight, bottomLeft]
+  _color: Color, 
+  metadata: RectangleMetadata | null
+): void => {
+  if (vertices.length !== 4) return;
+  
+  p.push();
+  p.noFill(); // Use no fill for wireframe
+  p.stroke(255); // Use white stroke
+  p.strokeWeight(1); // Set a thin stroke weight (optional)
+  
+  const [tl_v, tr_v, br_v, bl_v] = vertices;
+  
+  p.beginShape();
+  p.vertex(tl_v.x, tl_v.y);
+  p.vertex(tr_v.x, tr_v.y);
+  p.vertex(br_v.x, br_v.y);
+  p.vertex(bl_v.x, bl_v.y);
+  p.endShape(p.CLOSE);
+  
+  p.pop();
+};
 
 // Easing function (easeInOut Quadratic)
 function easeInOutQuad(t: number): number {
@@ -443,9 +477,9 @@ function calculateNewTargetPoints(p: p5, frame: number) {
 
   // Use the specific noise3D function
   const noiseFn = noise3D; // Use our initialized 3D noise function
-  if (!noiseFn) { 
-      // console.warn("noise3D function not initialized!");
-      return; // Exit if noise isn't ready
+  if (!noiseFn) {
+    // console.warn("noise3D function not initialized!");
+    return; // Exit if noise isn't ready
   }
 
   // console.log(`[Frame ${frame}] Calculating noise target points...`);
@@ -464,6 +498,7 @@ function calculateNewTargetPoints(p: p5, frame: number) {
       const displacementY = noiseValY * ampY;
 
       // Log displacement for one point
+      /* // COMMENTED OUT - Too much noise
       if (j === 1 && i === 1 && frame % 30 === 0) {
         console.log(
           `[Frame ${frame}] Noise Disp[1][1]: dx=${displacementX.toFixed(
@@ -471,6 +506,7 @@ function calculateNewTargetPoints(p: p5, frame: number) {
           )}, dy=${displacementY.toFixed(2)}`
         );
       }
+      */
 
       targetPoints[j][i] = {
         x: originalPoints[j][i].x + displacementX,
@@ -557,409 +593,191 @@ const animation: AnimationFunction = (
   _normalizedTime: number,
   currentFrameNum: number
 ): void => {
-  // --- Wait for map and textures if they are still loading --- 
-  if (textureLoadingPromise || !textureMap) { // Check both promise and map object
-      p.background(activeColorScheme.background); // Show background while loading
-      p.fill(255);
-      p.textAlign(p.CENTER, p.CENTER);
-      p.textSize(32);
-      p.text("Loading map/textures...", 0, 0);
-      // console.log("Waiting for map/texture loading promise..."); // Optional log
-      return; // Skip drawing the main animation until loaded
+  // --- Wait for map and textures (using isSetupComplete flag now) ---
+  // Also ensure setup function has run at least once before checking map
+  if (!isSetupComplete || !textureMap) { 
+    p.background(activeColorScheme.background); // Show background while loading/setup
+    // --- REMOVED Loading Text / Wait Logs ---
+    return; // Skip drawing until setup is complete and map is loaded
   }
 
-  const frame = currentFrameNum;
+  // --- DEBUG: Log that animation function is running (Only if setup is complete) ---
+  /* // REMOVED DEBUG LOG
+  if (currentFrameNum === 0) { // Log only once for the first frame
+      console.info(`[Frame ${currentFrameNum}] Animation function running. Setup is complete. Rectangles count: ${rectangles.length}`); 
+  }
+  */
+  // --- END DEBUG ---
 
-  // --- State needed for transitions ---
-  // let sceneTransitionProgress = 1; // REMOVED - Now managed by isTransitioning
-  const sceneTransitionIncrement =
-    1 / Math.max(1, config.colorTransitionFrames); // Keep for calculation
+  // --- ASSETS LOADED / SETUP COMPLETE --- 
+  // Re-enabled core drawing logic
 
-  // 1. Determine Active Scene and Previous Scene
+  // 1. Determine Active Scene and Colors
   let newSceneIndex = -1;
-  // Log entering the loop on specific frames for debugging
-  /* // Removed Scene Search Logs
-  if (
-    currentFrameNum === 0 ||
-    currentFrameNum === 119 ||
-    currentFrameNum === 120 ||
-    currentFrameNum === 299 ||
-    currentFrameNum === 300
-  ) {
-    console.log(
-      `[Scene Search] Frame ${currentFrameNum}: Searching for scene...`
-    );
-  }
-  */
   for (let i = timeline.length - 1; i >= 0; i--) {
-    const scene = timeline[i];
-    const check = currentFrameNum >= scene.startFrame;
-    // Log check results on specific frames
-    /* // Removed Scene Search Logs
-    if (
-      currentFrameNum === 0 ||
-      currentFrameNum === 119 ||
-      currentFrameNum === 120 ||
-      currentFrameNum === 299 ||
-      currentFrameNum === 300
-    ) {
-      console.log(
-        `[Scene Search]   Checking scene ${i} (start: ${scene.startFrame}): ${currentFrameNum} >= ${scene.startFrame} is ${check}`
-      );
-    }
-    */
-    if (check) {
-      newSceneIndex = i;
-      // Log when found on specific frames
-      /* // Removed Scene Search Logs
-      if (
-        currentFrameNum === 0 ||
-        currentFrameNum === 119 ||
-        currentFrameNum === 120 ||
-        currentFrameNum === 299 ||
-        currentFrameNum === 300
-      ) {
-        console.log(`[Scene Search]   Found potential scene: ${i}`);
+      if (currentFrameNum >= timeline[i].startFrame) {
+          newSceneIndex = i;
+          break; 
       }
-      */
-      break; // Found the latest applicable scene
-    }
   }
-  // Log the final result for specific frames
-  /* // Removed Scene Search Logs
-  if (
-    currentFrameNum === 0 ||
-    currentFrameNum === 119 ||
-    currentFrameNum === 120 ||
-    currentFrameNum === 299 ||
-    currentFrameNum === 300
-  ) {
-    console.log(
-      `[Scene Search] Frame ${currentFrameNum}: Final newSceneIndex = ${newSceneIndex}`
-    );
-  }
-  */
-
-  // --- Handle cases where no new scene is found ---
-  // If newSceneIndex is still -1 after the loop, it means we are past the startFrame
-  // of the last defined scene. In this case, we should continue using the
-  // *last known valid scene* index (currentSceneIndex).
   if (newSceneIndex === -1) {
     if (currentSceneIndex !== -1) {
-      // We had a valid scene before, keep using it.
       newSceneIndex = currentSceneIndex;
-      // console.log(`[Frame ${currentFrameNum}] No new scene found. Re-using last active scene index: ${newSceneIndex}`);
     } else {
-      // This case should ideally not happen if timeline is not empty and setup worked,
-      // but as a fallback, handle the error gracefully.
       console.error(
-        `[Frame ${currentFrameNum}] CRITICAL ERROR: No active scene found and no previous scene index available! Timeline might be empty or setup failed.`
+        `[Frame ${currentFrameNum}] CRITICAL ERROR: No active scene found!`
       );
-      // Optionally draw a default background and return to prevent further errors
-      p.background(parseColor(p, undefined, DEFAULT_BG_COLOR));
+      p.background(parseColor(p, undefined, DEFAULT_BG_COLOR)); 
       return;
     }
   }
-
-  // Now, newSceneIndex is guaranteed to be a valid index (or we returned early)
   const sceneChanged = currentSceneIndex !== newSceneIndex;
-  // Store the previous scene's actual data if it exists
   const actualPreviousScene =
     currentSceneIndex >= 0 && currentSceneIndex < timeline.length
       ? timeline[currentSceneIndex]
       : null;
-  // previousScene = activeScene; // REMOVED - Use actualPreviousScene
   currentSceneIndex = newSceneIndex;
   activeScene = timeline[currentSceneIndex];
 
-  // If the scene changes, START a new transition
   if (sceneChanged) {
-    // console.log(
-    //   `[Frame ${currentFrameNum}] SCENE CHANGED! From ${
-    //     actualPreviousScene?.startFrame ?? "N/A"
-    //   } to ${activeScene.startFrame}. Starting transition...`
-    // );
-    isTransitioning = true;
-    transitionStartFrame = currentFrameNum;
+      isTransitioning = true;
+      transitionStartFrame = currentFrameNum;
+      // Store previous colors
+      previousBgColor = currentBgColor ? p.color(currentBgColor.toString()) : parseColor(p, undefined, DEFAULT_BG_COLOR);
+      previousSecondaryColor = currentSecondaryColor ? p.color(currentSecondaryColor.toString()) : parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+      previousCellColors = currentCellColors.map((row) => row.map((c) => c));
 
-    // Store the CURRENT rendered colors as the starting point for the transition
-    previousCellColors = currentCellColors.map((row) => row.map((c) => c)); // Deep copy current colors
-    previousBgColor = currentBgColor
-      ? p.color(currentBgColor.toString())
-      : null; // Clone current color
-    previousSecondaryColor = currentSecondaryColor
-      ? p.color(currentSecondaryColor.toString())
-      : null;
-
-    // Calculate NEW target scene colors based on the NEW active scene
-    targetBgColor = parseColor(
-      p,
-      activeScene.backgroundColor,
-      activeColorScheme.background
-    );
-    targetSecondaryColor = parseColor(
-      p,
-      activeScene.secondaryColor,
-      activeColorScheme.primary_darker
-    );
-
-    // Calculate NEW target cell colors based on the NEW active scene and its target secondary color
-    calculateTargetCellColors(p, activeScene, targetSecondaryColor);
-
-    // sceneTransitionProgress = 0; // REMOVED
-
-    // Update target points only when scene changes
-    calculateNewTargetPoints(p, currentFrameNum);
-  } // End of sceneChanged block
-
-  // --- Calculate Transition Progress ---
+      // Calculate new target colors
+      targetBgColor = parseColor(p, activeScene.backgroundColor, DEFAULT_BG_COLOR);
+      targetSecondaryColor = parseColor(p, activeScene.secondaryColor, DEFAULT_SECONDARY_COLOR);
+      calculateTargetCellColors(p, activeScene, targetSecondaryColor);
+  }
+  
   let sceneTransitionProgress = 1.0;
   if (isTransitioning) {
-    const framesSinceStart = currentFrameNum - transitionStartFrame;
-    sceneTransitionProgress = Math.min(
-      1.0,
-      framesSinceStart / config.colorTransitionFrames
-    );
-
-    // Log progress during transition
-    // if (currentFrameNum % 5 === 0) {
-    //       console.log(`[Frame ${currentFrameNum}] Transition Progress: ${sceneTransitionProgress.toFixed(3)} (Frames elapsed: ${framesSinceStart})`);
-    // }
-
-    if (sceneTransitionProgress >= 1.0) {
-      isTransitioning = false; // End transition
-      // console.log(`[Frame ${currentFrameNum}] Transition Finished.`);
-      // Ensure final colors match target precisely
-      previousBgColor = targetBgColor;
-      previousSecondaryColor = targetSecondaryColor;
-      previousCellColors = targetCellColors;
-    }
+      const framesSinceStart = currentFrameNum - transitionStartFrame;
+      sceneTransitionProgress = Math.min(1.0, framesSinceStart / config.colorTransitionFrames);
+      if (sceneTransitionProgress >= 1.0) {
+          isTransitioning = false;
+          // Ensure final colors match target precisely
+          previousBgColor = targetBgColor;
+          previousSecondaryColor = targetSecondaryColor;
+          previousCellColors = targetCellColors;
+      }
   }
 
-  // Apply easing to the progress if desired (optional)
-  // const easedTransitionProgress = easeInOutQuad(sceneTransitionProgress); // Example
-  const finalTransitionProgress = sceneTransitionProgress; // Use linear for now
-
-  // --- Interpolate Colors ---
-  currentBgColor = interpolateColor(
-    p,
-    previousBgColor!,
-    targetBgColor!,
-    finalTransitionProgress // Use the calculated progress
-  );
-  currentSecondaryColor = interpolateColor(
-    p,
-    previousSecondaryColor!,
-    targetSecondaryColor!,
-    finalTransitionProgress // Use the calculated progress
-  );
-
-  // Log interpolated BgColor during transition
-  // if (isTransitioning && currentFrameNum % 5 === 0) {
-  //      console.log(`[Frame ${currentFrameNum}] BgColor Lerp: Prev=${previousBgColor?.toString()}, Target=${targetBgColor?.toString()}, Current=${currentBgColor?.toString()}, T=${finalTransitionProgress.toFixed(3)}`);
-  // }
-
-  // Interpolate individual cell colors using the same progress
+  // Interpolate Colors
+  currentBgColor = interpolateColor(p, previousBgColor!, targetBgColor!, sceneTransitionProgress);
+  currentSecondaryColor = interpolateColor(p, previousSecondaryColor!, targetSecondaryColor!, sceneTransitionProgress);
   for (let r = 0; r < config.gridRows; r++) {
     for (let c = 0; c < config.gridColumns; c++) {
       if (previousCellColors[r]?.[c] && targetCellColors[r]?.[c]) {
-        currentCellColors[r][c] = interpolateColor(
-          p,
-          previousCellColors[r][c],
-          targetCellColors[r][c],
-          finalTransitionProgress // Use the calculated progress
-        );
-         // --- Fix Linter and Log for Cell[0][0] Color ---
-         // if (
-         //   r === 0 &&
-         //   c === 0 &&
-         //   isTransitioning &&
-         //   currentFrameNum % 5 === 0
-         // ) {
-         //   const prevHex = previousCellColors[r][c].toString("#rrggbb");
-         //   const targetHex = targetCellColors[r][c].toString("#rrggbb");
-         //   const currentHex = currentCellColors[r][c].toString("#rrggbb");
-         //   console.log(
-         //     `[Frame ${currentFrameNum}] Cell[0][0] Lerp: Prev=${prevHex}, Target=${targetHex}, Current=${currentHex}, T=${finalTransitionProgress.toFixed(3)}`
-         //   );
-         // }
+        currentCellColors[r][c] = interpolateColor(p, previousCellColors[r][c], targetCellColors[r][c], sceneTransitionProgress);
       } else if (targetCellColors[r]?.[c]) {
-        // Fallback if previous doesn't exist (e.g., grid resize?)
         currentCellColors[r][c] = targetCellColors[r][c];
       } else {
-        // Fallback if target is somehow missing
-        currentCellColors[r][c] = currentSecondaryColor ?? p.color(128); // Use interpolated secondary or gray
+        currentCellColors[r][c] = currentSecondaryColor ?? p.color(128);
       }
     }
   }
-
-  // --- Recalculate Target Cell Colors based on INTERPOLATED secondary color ---
-  // This is important if filler cells should fade with the secondary color transition
-  // If filler cells should snap to the new scene's secondary color, calculate targetCellColors
-  // ONLY during sceneChanged block.
-  // Let's assume fillers should transition smoothly:
-  calculateTargetCellColors(p, activeScene, currentSecondaryColor!);
-  // Re-apply target colors to the currentCellColors where the original layout was null
-  // (This ensures filler cells update during the transition)
+  // Recalculate target cell colors based on interpolated secondary for filler cells
+  calculateTargetCellColors(p, activeScene, currentSecondaryColor!); 
   for (let r = 0; r < config.gridRows; r++) {
     for (let c = 0; c < config.gridColumns; c++) {
-      if (!activeScene.layoutGrid?.[r]?.[c]) {
-        // If it's a filler cell in the *target* layout
+      if (!activeScene.layoutGrid?.[r]?.[c]) { // If it's a filler cell
         if (targetCellColors[r]?.[c]) {
-          currentCellColors[r][c] = targetCellColors[r][c]; // Update filler cell to the calculated target (based on interpolated secondary)
+          currentCellColors[r][c] = targetCellColors[r][c]; 
         }
       }
     }
   }
 
-  // --- Always Update Point Positions ---
-  const easingFunc = getActiveEasingFunction();
-  const timeParam = (currentFrameNum % FPS) / FPS; // Example: simple cyclical time, adjust as needed
-  const easedTime = easingFunc(timeParam); // Apply easing if desired for interpolation
-
-  // Interpolate points towards their target using pointFollowFactor
-  const followFactor = config.pointFollowFactor; // How quickly points move to target
+  // Update Point Positions (RE-ENABLED)
+  const easingFunc = getActiveEasingFunction(); // Assuming this doesn't need font
+  const followFactor = config.pointFollowFactor; 
   for (let r = 0; r < currentPoints.length; r++) {
     for (let c = 0; c < currentPoints[r].length; c++) {
       const current = currentPoints[r][c];
       const target = targetPoints[r][c];
 
-      // Noise displacement calculation (moved from calculateNewTargetPoints)
       const noiseValX = noise3D(
-        target.x * config.noiseFrequencyX * 0.01, // Scale frequency
+        target.x * config.noiseFrequencyX * 0.01, 
         target.y * config.noiseFrequencyX * 0.01,
-        currentFrameNum * config.noiseSpeed * 0.1 // Scale speed
+        currentFrameNum * config.noiseSpeed * 0.1 
       );
       const noiseValY = noise3D(
-        target.x * config.noiseFrequencyY * 0.01 + 1000, // Offset Y noise
+        target.x * config.noiseFrequencyY * 0.01 + 1000, 
         target.y * config.noiseFrequencyY * 0.01 + 1000,
         currentFrameNum * config.noiseSpeed * 0.1
       );
 
-      // Map noise from [-1, 1] to displacement range
-      const displacementX = p.map(
-        noiseValX,
-        -1,
-        1,
-        -config.noiseAmplitudeX,
-        config.noiseAmplitudeX
-      );
-      const displacementY = p.map(
-        noiseValY,
-        -1,
-        1,
-        -config.noiseAmplitudeY,
-        config.noiseAmplitudeY
-      );
-
-      // Apply noise to the target position
+      const displacementX = p.map(noiseValX, -1, 1, -config.noiseAmplitudeX, config.noiseAmplitudeX);
+      const displacementY = p.map(noiseValY, -1, 1, -config.noiseAmplitudeY, config.noiseAmplitudeY);
+      
       const noisyTargetX = target.x + displacementX;
       const noisyTargetY = target.y + displacementY;
 
-      // Debug log for specific point (optional)
-      // if (r === 1 && c === 1) {
-      //   console.log(`[Frame ${currentFrameNum}] Noise Disp[${r}][${c}]: dx=${displacementX.toFixed(2)}, dy=${displacementY.toFixed(2)}`);
-      // }
-
-      // Lerp towards the *noisy* target
       const newX = p.lerp(current.x, noisyTargetX, followFactor);
       const newY = p.lerp(current.y, noisyTargetY, followFactor);
-
-      // Debug log for lerp (optional)
-      // if (r === 1 && c === 1) {
-      //    console.log(`[Frame ${currentFrameNum}] Lerp[${r}][${c}]: Curr=(${current.x.toFixed(1)}, ${current.y.toFixed(1)}) Target=(${noisyTargetX.toFixed(1)}, ${noisyTargetY.toFixed(1)}) New=(${newX.toFixed(1)}, ${newY.toFixed(1)}) Factor=${followFactor}`);
-      // }
-
+      
       currentPoints[r][c] = { x: newX, y: newY };
     }
   }
 
   // Update rectangle vertices based on interpolated points
-  updateRectangles();
+  updateRectangles(); // RE-ENABLED
 
-  // 6. Render
+  // Render Background
   p.background(currentBgColor);
 
-  // --- NEW: Render Background Characters ---
-  if (
-    activeScene &&
-    activeScene.backgroundChars &&
-    activeScene.backgroundChars.length > 0
-  ) {
-    const chars = activeScene.backgroundChars;
-    const charLength = chars.length;
-    const fontSize = config.textureSizePreview * 0.6; // Adjust font size as needed
-    p.textSize(fontSize);
-    p.textAlign(p.CENTER, p.CENTER);
-
-    // Determine background character color (e.g., slightly darker/lighter than bg or low alpha secondary)
-    // REMOVED calculation based on primary background
-    // const bgColorR = p.red(currentBgColor!); // Assumes currentBgColor is not null
-    // const bgColorG = p.green(currentBgColor!);
-    // const bgColorB = p.blue(currentBgColor!);
-    // Example: Make slightly lighter or darker based on brightness, with low alpha
-    // const brightness = (bgColorR * 0.299 + bgColorG * 0.587 + bgColorB * 0.114);
-    // const delta = brightness > 128 ? -30 : 30; // Adjust contrast amount
-    // const bgCharColor = p.color(bgColorR + delta, bgColorG + delta, bgColorB + delta, 30); // Low alpha (adjust 30)
-
-    // Use the interpolated secondary color directly
-    if (!currentSecondaryColor) {
-      // console.warn(
-      //   "currentSecondaryColor is null, cannot draw background chars"
-      // );
-      // Handle the case where color is null, maybe skip drawing or use a default
-    } else {
-      p.fill(currentSecondaryColor); // Use the secondary color directly
-      p.noStroke();
-
-      // Get cell dimensions (assuming uniform grid for simplicity)
-      const cellWidth = config.width / config.gridColumns;
-      const cellHeight = config.height / config.gridRows;
-      const offsetX = cellWidth / 2;
-      const offsetY = cellHeight / 2 + fontSize * 0.3; // Adjust vertical offset
-
-      // Loop through grid cells and draw background characters
-      for (let r = 0; r < config.gridRows; r++) {
-        for (let c = 0; c < config.gridColumns; c++) {
-          const charIndex = (r * config.gridColumns + c) % charLength;
-          const charToDraw = chars[charIndex];
-          const x = c * cellWidth + offsetX;
-          const y = r * cellHeight + offsetY;
-          p.text(charToDraw, x, y);
-        }
-      }
-    }
-  }
-
-  // --- Render Main Rectangles (using existing texture renderer) ---
+  // --- Render Main Rectangles (using TEXTURED renderer again) ---
   rectangles.forEach((rect, index) => {
-    const metadata = rect.getMetadata();
-    // Ensure metadata exists and row/col indices are valid before rendering
-    if (
-      metadata &&
-      metadata.rowTopLeft < currentCellColors.length &&
-      metadata.colTopLeft < currentCellColors[metadata.rowTopLeft]?.length
-    ) {
-      // Assign rectIndex to metadata for potential use inside renderer
-      metadata.rectIndex = index;
-      // Call the specific renderer function
-      renderTexturedRectangle(
-        p,
-        _normalizedTime,
-        rect.getLines(),
-        rect.getDiagonalIntersection(),
-        rect.getVertices(),
-        rect.getColor(), // Pass color from rect, though renderer might ignore it for texture tint
-        metadata
-      );
-    } else {
-      // Optional: Log if a rectangle is skipped due to invalid metadata or color index
-      // console.warn(`Skipping render for rect index ${index} due to invalid metadata or color index.`);
-    }
+      const metadata = rect.getMetadata();
+      if (metadata) {
+          metadata.rectIndex = index; 
+          
+          // --- DEBUG: Log render call and vertices for the first rectangle --- (REMOVED)
+          /*
+          if (index === 0 && currentFrameNum % 60 === 0) { // Log every 60 frames
+            const vertices = rect.getVertices();
+            console.info(`[Frame ${currentFrameNum}] Calling renderSolidRectangle for index 0. Vertices:`, JSON.stringify(vertices)); // Use console.info
+          }
+          */
+          // --- END DEBUG ---
+
+          // Use the TEXTURED renderer again
+          renderTexturedRectangle(
+              p, 
+              _normalizedTime, 
+              rect.getLines(), 
+              rect.getDiagonalIntersection(), 
+              rect.getVertices(), 
+              rect.getColor(),
+              metadata,
+              currentFrameNum // Pass currentFrameNum
+          );
+      } 
   });
 
-  // --- Draw Debug Info ---
-  // ... (debug info logic)
+  /* // --- Background Chars DISABLED --- 
+  // ...
+  */
+
+  /* // --- Debug Info DISABLED --- 
+  // ... 
+  */
+
+  currentPoints = originalPoints.map((row) => row.map((pt) => ({ ...pt })));
+  updateRectangles(); 
+
+  // --- DEBUG: Log rectangles length after setup ---
+  console.info(`[Setup Complete] Rectangles initialized. Count: ${rectangles.length}`);
+  // --- END DEBUG ---
+
+  // --- Set Setup Complete Flag ---
+  isSetupComplete = true;
+  // console.info("[Setup] Setup complete flag set."); // REMOVED DEBUG LOG
+  // --- End Set Setup Complete Flag ---
 };
 
 // --- Seeded PRNG (Mulberry32) and String-to-Seed Helpers ---
@@ -988,34 +806,40 @@ function mulberry32(seed: number) {
 // Keep track of loading state
 let textureLoadingPromise: Promise<void> | null = null;
 let textureMap: Record<string, string> | null = null; // Variable to hold the loaded map
+// let loadedFont: p5.Font | null = null; // REMOVED Font variable
+// let fontLoadingPromise: Promise<void> | null = null; // REMOVED Font promise
 
 const setupAnimation: AnimationFunction = (
   p: p5,
-  _normalizedTime?: number, // Made optional
-  _currentFrameNum?: number, // Made optional
-  _totalFrames?: number, // Made optional
-  props?: { noiseSeedPhrase?: string } // Added optional props argument
+  _normalizedTime?: number, 
+  _currentFrameNum?: number, 
+  _totalFrames?: number, 
+  props?: { noiseSeedPhrase?: string } 
 ): void => {
-  // Declare initialSceneIndex at the top level of the function
+  // --- Setup Guard ---
+  if (isSetupComplete) {
+      // console.info("[Setup] Skipping setup, already complete.");
+      return; 
+  }
+  console.info("[Setup] Running setup...");
+  // --- End Setup Guard ---
+
   let initialSceneIndex = 0;
 
   activeColorScheme = getActiveColorScheme(config.colorSchemeName);
-  // console.log(`Using color scheme: ${config.colorSchemeName}`);
   p.background(activeColorScheme.background);
   p.frameRate(config.fps);
 
-  // --- Initialize Noise with Seed ---
-  // PRIORITIZE seed from props if provided
+  // Initialize Noise 
   const seedPhraseToUse = props?.noiseSeedPhrase ?? config.noiseSeedPhrase;
   const seedNumber = stringToSeed(seedPhraseToUse);
   const seededPrng = mulberry32(seedNumber);
-  noise3D = createNoise3D(seededPrng); // Pass the seeded PRNG
-  // console.log(
-  //   `Initialized noise with seed phrase: "${seedPhraseToUse}" (numeric: ${seedNumber})`
-  // );
+  noise3D = createNoise3D(seededPrng); 
 
-  // --- Collect Characters (Still needed to know WHICH textures to load) ---
-  const chars = config.fillerChars || " ";
+  // --- Load Font --- (REMOVED)
+
+  // --- Collect Characters (Still needed for texture map keys) ---
+  const chars = config.fillerChars || " "; // Keep collecting chars
   const charSet = new Set<string>(chars.split(""));
   timeline.forEach((scene) => {
     if (scene.layoutGrid) {
@@ -1029,145 +853,143 @@ const setupAnimation: AnimationFunction = (
         }
       });
     }
+    // Collect background characters as well
+    if (scene.backgroundChars) { // This part is not strictly needed if background chars are disabled
+        for (const char of scene.backgroundChars) {
+            charSet.add(char);
+        }
+    }
   });
   allNeededChars = Array.from(charSet).join("");
   if (typeof allNeededChars !== "string" || allNeededChars.length === 0) {
-    allNeededChars = " ";
+    allNeededChars = " "; 
   }
 
-  // --- Load Map and Pre-generated Textures --- 
-  console.log(`Loading texture map and ${charSet.size} textures...`);
-  alphabetTextures = {}; // Reset textures object
-  textureMap = null; // Reset map object
+  // --- Load Map and Textures (Keep this logic, even if textures aren't used yet) ---
+  console.info(`[Setup] Loading texture map and ${charSet.size} textures...`); // Changed log prefix
+  alphabetTextures = {}; 
+  textureMap = null; 
 
-  // Create a promise chain: load JSON first, then load images
+  // Re-assign promise only if setup is running for the first time
   textureLoadingPromise = new Promise<Record<string, string>>((resolve, reject) => {
       p.loadJSON(
-          '/animations/unstableGrid2/textures/map.json',
+          staticFile("/animations/unstableGrid2/textures/map.json"), 
           (loadedMap: Record<string, string>) => {
-              console.log("Texture map loaded successfully.");
-              textureMap = loadedMap; // Store the loaded map
+              console.info("[Setup] Texture map loaded successfully."); // Changed log prefix
+              textureMap = loadedMap; 
               resolve(loadedMap);
           },
           (err) => {
-              console.error("Failed to load texture map (map.json):", err);
+              console.error("[Setup] Failed to load texture map (map.json):", err); // Changed log prefix
               reject(new Error("Failed to load map.json"));
           }
       );
   })
   .then((loadedMap) => {
-      // Map loaded, now load images based on the map
-      const imageLoadPromises: Promise<void>[] = [];
-      charSet.forEach(char => {
-          const filename = loadedMap[char]; // Get filename from map
-          if (!filename) {
-              console.warn(`Character '${char}' not found in texture map. Skipping.`);
-              return; // Skip if char not in map
-          }
-          const texturePath = `/animations/unstableGrid2/textures/${filename}`; // Construct path
-          
-          const promise = new Promise<void>((resolve, reject) => {
-              p.loadImage(texturePath, 
-                  (img) => {
-                      alphabetTextures[char] = img;
-                      resolve();
-                  },
-                  (err) => {
-                      console.error(`Failed to load texture for character '${char}' from ${texturePath}:`, err);
-                      reject(err); // Reject specific image load
+      const charsToLoad = Array.from(charSet);
+      const loadTexturesSequentially = async () => {
+          console.info(`[Setup] Sequentially loading ${charsToLoad.length} textures...`); // Changed log prefix
+          for (const char of charsToLoad) {
+              const filename = loadedMap[char]; 
+              if (!filename) {
+                  if (char === ' ') {
+                      // console.info("[Setup] Skipping space character texture (likely not generated)."); // Optional log
+                  } else {
+                    console.warn(
+                      `[Setup] Character '${char}' not found in texture map. Skipping.` // Changed log prefix
+                    );
                   }
+                  continue; 
+              }
+              const texturePath = staticFile(
+                  `/animations/unstableGrid2/textures/${filename}` 
               );
-          });
-          imageLoadPromises.push(promise);
-      });
-      // Return a promise that resolves when all images are loaded
-      return Promise.all(imageLoadPromises).then(() => { /* All images loaded */ });
+              const img = await new Promise<p5.Image>((resolve, reject) => {
+                  p.loadImage(
+                      texturePath,
+                      (loadedImg) => resolve(loadedImg),
+                      (err) => {
+                          console.error(
+                              `[Setup] Failed to load texture for character '${char}' from ${texturePath}:`,
+                              err
+                          ); // Changed log prefix
+                          reject(new Error(`Failed loading ${texturePath}`));
+                      }
+                  );
+              });
+              alphabetTextures[char] = img; 
+          }
+          console.info("[Setup] Finished sequential texture loading."); // Changed log prefix
+      };
+      return loadTexturesSequentially();
   })
   .then(() => {
-      console.log("All textures loaded successfully.");
-      textureLoadingPromise = null; // Clear main promise once done
+      console.info("[Setup] All textures loaded successfully."); // Changed log prefix
+      textureLoadingPromise = null; // Set promise to null on success
   })
   .catch((error) => {
-      console.error("Error during texture map or image loading:", error);
-      textureLoadingPromise = null; // Clear promise on error too
-      textureMap = null; // Clear map on error
-      // Handle critical error
+      console.error("[Setup] Error during texture map or image loading:", error); // Changed log prefix
+      textureLoadingPromise = null; // Also set to null on error
+      textureMap = null; // Clear map on error too
   });
+  // REMOVED .finally() block as redundant now promise is cleared in then/catch
 
   // Initialize Grid & Scene
   setupGridPoints(p);
-  currentSceneIndex = -1; // Reset before finding the first scene
+  currentSceneIndex = -1; 
   activeScene = null;
-  // initialSceneIndex is already declared above
-  if (timeline.length === 0) {
-    console.error("Timeline is empty. Cannot initialize animation.");
-    return;
-  }
-  // Find the scene active at frame 0 or the first scene
-  for (let i = timeline.length - 1; i >= 0; i--) {
-    if (0 >= timeline[i].startFrame) {
-      initialSceneIndex = i;
-      break;
-    }
-  }
-  currentSceneIndex = initialSceneIndex;
-  activeScene = timeline[currentSceneIndex];
-  previousScene = null; // No previous scene on setup
+   if (timeline.length === 0) {
+       console.error("Timeline is empty. Cannot initialize animation.");
+       return; 
+   }
+   for (let i = timeline.length - 1; i >= 0; i--) {
+       if (0 >= timeline[i].startFrame) {
+           initialSceneIndex = i;
+           break;
+       }
+   }
+   currentSceneIndex = initialSceneIndex;
+   activeScene = timeline[currentSceneIndex];
+   previousScene = null; 
 
-  if (!activeScene) {
-    // Check if activeScene is null after finding index
-    // Accessing initialSceneIndex here is now safe
+   if (!activeScene) {
     console.error(
       `Failed to find active scene with index ${initialSceneIndex}. Initializing with defaults.`
     );
-    // Initialize colors with defaults if no active scene
-    targetBgColor = parseColor(p, undefined, DEFAULT_BG_COLOR);
-    targetSecondaryColor = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
-  } else {
-    // Initialize Color State using the found activeScene
-    targetBgColor = parseColor(
-      p,
-      activeScene.backgroundColor,
-      DEFAULT_BG_COLOR
-    );
-    targetSecondaryColor = parseColor(
-      p,
-      activeScene.secondaryColor,
-      DEFAULT_SECONDARY_COLOR
-    );
-  }
-
-  // Initialize current/previous colors
-  previousBgColor = targetBgColor;
-  previousSecondaryColor = targetSecondaryColor;
-  currentBgColor = targetBgColor;
-  currentSecondaryColor = targetSecondaryColor; // Use the parsed target color initially
-
-  // Calculate initial target points based on the first active scene
-  if (activeScene) {
-    calculateNewTargetPoints(p, 0); // Initial calculation for targetPoints at frame 0
-    // Parse the initial secondary color *before* passing to initializeCellColors
-    const initialSecondaryParsed = parseColor(
-      p,
-      activeScene.secondaryColor,
-      DEFAULT_SECONDARY_COLOR
-    );
-    initializeCellColors(p, activeScene, initialSecondaryParsed);
-  } else {
-    // No active scene, initialize target points to original
+       targetBgColor = parseColor(p, undefined, DEFAULT_BG_COLOR);
+       targetSecondaryColor = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+   } else {
+    targetBgColor = parseColor(p, activeScene.backgroundColor, DEFAULT_BG_COLOR);
+    targetSecondaryColor = parseColor(p, activeScene.secondaryColor, DEFAULT_SECONDARY_COLOR);
+   }
+   
+   previousBgColor = targetBgColor; 
+   previousSecondaryColor = targetSecondaryColor;
+   currentBgColor = targetBgColor;
+   currentSecondaryColor = targetSecondaryColor;
+   
+   if (activeScene) {
+       calculateNewTargetPoints(p, 0); 
+    const initialSecondaryParsed = parseColor(p, activeScene.secondaryColor, DEFAULT_SECONDARY_COLOR);
+       initializeCellColors(p, activeScene, initialSecondaryParsed); 
+   } else {
     targetPoints = originalPoints.map((row) => row.map((pt) => ({ ...pt })));
-    // ... (initialize cell colors with defaults)
-  }
-
-  // Initialize current points to the *original* points, not the first target
+    // Initialize cell colors with defaults if no active scene
+    const defaultSecondary = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+    initializeCellColors(p, {} as AnimationScene, defaultSecondary); // Pass dummy scene
+   }
+   
   currentPoints = originalPoints.map((row) => row.map((pt) => ({ ...pt })));
+   updateRectangles(); 
+  
+  // --- DEBUG: Log rectangles length after setup ---
+  console.info(`[Setup] Rectangles initialized. Count: ${rectangles.length}`); // Changed log prefix
+  // --- END DEBUG ---
 
-  updateRectangles(); // Initial update based on starting points (original)
-
-  // console.log("Animation Setup Complete.");
-  // Removed non-existent fontStyle from log
-  // console.log(`Using font: ${config.fontFamily}`);
-  // console.log(`Initial Scene Index: ${currentSceneIndex}`);
+  // --- Set Setup Complete Flag ---
+  isSetupComplete = true;
+  // console.info("[Setup] Setup complete flag set."); // REMOVED DEBUG LOG
+  // --- End Set Setup Complete Flag ---
 };
 
 // Now declare the settings after animation is defined

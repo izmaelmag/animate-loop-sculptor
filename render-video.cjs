@@ -37,8 +37,8 @@ const QUALITY = options.quality; // 'high', 'medium', 'low'
 const TEMPLATE = options.template;
 
 // MEMORY MANAGEMENT SETTINGS
-const CONCURRENCY = 8;
-const MEMORY_LIMIT = 4096*2;
+const CONCURRENCY = 1;
+const MEMORY_LIMIT = 4096 * 2;
 
 // OUTPUT FILE PATH
 const OUTPUT_DIR = path.join(__dirname, "output");
@@ -122,7 +122,7 @@ async function renderVideo() {
       crf,
       concurrency: CONCURRENCY,
       frameRange: undefined,
-      logLevel: 'verbose',
+      logLevel: "verbose",
       chromiumOptions: {
         chromeMode: "chrome-for-testing",
         disableWebSecurity: true,

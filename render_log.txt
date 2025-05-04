@@ -1,0 +1,687 @@
+
+> vite_react_shadcn_ts@0.0.0 remotion:render
+> ts-node render-video.cjs --enable-gc --template unstableGrid2 -q high --concurrency=1
+
+Starting video rendering with template: unstableGrid2
+Quality setting: high
+Bundling the composition...
+Getting composition list...
+Starting render...
+Using composition settings: 60fps, 300 frames
+Quality: high (CRF: 18)
+Concurrency: 4, Memory limit: 8192MB
+[renderMedia()] Free memory: 1010319360 Estimated usage parallel encoding 2073600000
+[renderMedia()] Using concurrency: 4
+[renderMedia()] delayRender() timeout: 30000
+[renderMedia()] Codec supports parallel rendering: true
+[renderMedia()] Parallel encoding is disabled.
+[renderMedia()] Rendering frames 0-299
+Created directory for temporary files /var/folders/33/_jx24tw52_vc_4_l4xkmcrfw0000gn/T/remotion-v4.0.291-assetsal17kgeu5a
+Ensuring browser executable
+Ensured browser is available.
+[openBrowser()] Opening browser: gl = angle, executable = /Users/izm/Animator/node_modules/.remotion/chrome-headless-shell/mac-arm64/chrome-headless-shell-mac-arm64/chrome-headless-shell, enableMultiProcessOnLinux = true
+[compositor] Starting Rust process. Max video cache size: 3053MB, max threads = 2
+Progress: 0%[Tab 0] delayRender() "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 3] delayRender() "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 1] delayRender() "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 1ms
+[Tab 2] delayRender() "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 0] delayRender() "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 1ms
+[Tab 3] delayRender() "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 1] delayRender() "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 6ms
+[Tab 2] delayRender() "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 6ms
+[Tab 3] delayRender() "Waiting for Composition "MyVideo"" handle was cleared after 3ms
+[Tab 0] delayRender() "Waiting for Composition "MyVideo"" handle was cleared after 4ms
+[Tab 1] delayRender() "Waiting for Composition "MyVideo"" handle was cleared after 4ms
+[Tab 2] delayRender() "Waiting for Composition "MyVideo"" handle was cleared after 4ms
+[Tab 0] delayRender() "Waiting for Root component to unsuspend" handle was cleared after 1ms
+[Tab 3] delayRender() "Waiting for Root component to unsuspend" handle was cleared after 2ms
+[Tab 1] delayRender() "Waiting for Root component to unsuspend" handle was cleared after 1ms
+[Tab 2] delayRender() "Waiting for Root component to unsuspend" handle was cleared after 1ms
+[Tab 0] delayRender() "Loading custom font" handle was cleared after 10ms
+[Tab 3] delayRender() "Loading custom font" handle was cleared after 12ms
+[Tab 1] delayRender() "Loading custom font" handle was cleared after 14ms
+[Tab 2] delayRender() "Loading custom font" handle was cleared after 16ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:822] [Setup] Running setup...
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:865] [Setup] Loading texture map and 44 textures...
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:983] [Setup] Rectangles initialized. Count: 88
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:876] [Setup] Texture map loaded successfully.
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:890] [Setup] Sequentially loading 44 textures...
+[Tab 0] delayRender() "Setting the current frame to 0" handle was cleared after 0ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:822] [Setup] Running setup...
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:822] [Setup] Running setup...
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:865] [Setup] Loading texture map and 44 textures...
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:865] [Setup] Loading texture map and 44 textures...
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:983] [Setup] Rectangles initialized. Count: 88
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:983] [Setup] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 1" handle was cleared after 0ms
+[Tab 3] delayRender() "Setting the current frame to 3" handle was cleared after 0ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:822] [Setup] Running setup...
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:865] [Setup] Loading texture map and 44 textures...
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:876] [Setup] Texture map loaded successfully.
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:890] [Setup] Sequentially loading 44 textures...
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:983] [Setup] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 2" handle was cleared after 0ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:876] [Setup] Texture map loaded successfully.
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:890] [Setup] Sequentially loading 44 textures...
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:876] [Setup] Texture map loaded successfully.
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:890] [Setup] Sequentially loading 44 textures...
+Progress: 0%Progress: 0%Progress: 1%Progress: 1%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 5" handle was cleared after 152ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 4" handle was cleared after 159ms
+Progress: 1%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 6" handle was cleared after 165ms
+[Tab 2] delayRender() "Setting the current frame to 7" handle was cleared after 157ms
+Progress: 1%Progress: 2%Progress: 2%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 9" handle was cleared after 89ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 8" handle was cleared after 100ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 10" handle was cleared after 100ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 11" handle was cleared after 96ms
+Progress: 2%Progress: 2%Progress: 3%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 13" handle was cleared after 64ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 12" handle was cleared after 92ms
+Progress: 3%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 14" handle was cleared after 90ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 15" handle was cleared after 86ms
+Progress: 3%Progress: 3%Progress: 4%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 16" handle was cleared after 63ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 17" handle was cleared after 61ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:920] [Setup] Finished sequential texture loading.
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:924] [Setup] All textures loaded successfully.
+Progress: 4%Progress: 4%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 18" handle was cleared after 91ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:920] [Setup] Finished sequential texture loading.
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:924] [Setup] All textures loaded successfully.
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:920] [Setup] Finished sequential texture loading.
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:924] [Setup] All textures loaded successfully.
+Progress: 4%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:920] [Setup] Finished sequential texture loading.
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:924] [Setup] All textures loaded successfully.
+Progress: 4%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 19" handle was cleared after 84ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 20" handle was cleared after 83ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 21" handle was cleared after 83ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 22" handle was cleared after 106ms
+Progress: 5%Progress: 5%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 23" handle was cleared after 37ms
+Progress: 5%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 24" handle was cleared after 36ms
+Progress: 5%Progress: 6%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 25" handle was cleared after 76ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 26" handle was cleared after 64ms
+Progress: 6%Progress: 6%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 27" handle was cleared after 74ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 28" handle was cleared after 61ms
+Progress: 6%Progress: 7%Progress: 7%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 30" handle was cleared after 61ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 29" handle was cleared after 90ms
+Progress: 7%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 32" handle was cleared after 79ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 31" handle was cleared after 87ms
+Progress: 7%Progress: 7%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 33" handle was cleared after 86ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 34" handle was cleared after 69ms
+Progress: 8%Progress: 8%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 35" handle was cleared after 88ms
+[Tab 0] delayRender() "Setting the current frame to 36" handle was cleared after 62ms
+Progress: 8%Progress: 8%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 37" handle was cleared after 55ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 38" handle was cleared after 53ms
+Progress: 9%Progress: 9%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 40" handle was cleared after 77ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 39" handle was cleared after 82ms
+Progress: 9%Progress: 9%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 41" handle was cleared after 71ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 42" handle was cleared after 68ms
+Progress: 10%Progress: 10%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 44" handle was cleared after 60ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 43" handle was cleared after 65ms
+Progress: 10%Progress: 10%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 45" handle was cleared after 70ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 46" handle was cleared after 69ms
+Progress: 11%Progress: 11%Progress: 11%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 47" handle was cleared after 65ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 48" handle was cleared after 68ms
+Progress: 11%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 49" handle was cleared after 79ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 50" handle was cleared after 78ms
+Progress: 11%Progress: 12%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 51" handle was cleared after 63ms
+[Tab 0] delayRender() "Setting the current frame to 52" handle was cleared after 61ms
+Progress: 12%Progress: 12%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 54" handle was cleared after 67ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 53" handle was cleared after 73ms
+Progress: 12%Progress: 13%Progress: 13%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 55" handle was cleared after 69ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 56" handle was cleared after 69ms
+Progress: 13%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 58" handle was cleared after 77ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 57" handle was cleared after 81ms
+Progress: 13%Progress: 14%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 59" handle was cleared after 67ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 60" handle was cleared after 66ms
+Progress: 14%Progress: 14%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 62" handle was cleared after 64ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 61" handle was cleared after 70ms
+Progress: 14%Progress: 14%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 63" handle was cleared after 67ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 64" handle was cleared after 67ms
+Progress: 15%Progress: 15%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 65" handle was cleared after 70ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 66" handle was cleared after 69ms
+Progress: 15%Progress: 15%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 67" handle was cleared after 71ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 68" handle was cleared after 70ms
+Progress: 16%Progress: 16%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 70" handle was cleared after 45ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 69" handle was cleared after 49ms
+Progress: 16%Progress: 16%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 71" handle was cleared after 68ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 72" handle was cleared after 66ms
+Progress: 17%Progress: 17%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 73" handle was cleared after 53ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 74" handle was cleared after 50ms
+Progress: 17%Progress: 17%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 75" handle was cleared after 59ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 76" handle was cleared after 60ms
+Progress: 18%Progress: 18%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 78" handle was cleared after 46ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 77" handle was cleared after 49ms
+Progress: 18%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 80" handle was cleared after 44ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 79" handle was cleared after 48ms
+Progress: 18%Progress: 18%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 81" handle was cleared after 39ms
+Progress: 19%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 82" handle was cleared after 47ms
+Progress: 19%Progress: 19%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 85" handle was cleared after 50ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 84" handle was cleared after 53ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 83" handle was cleared after 54ms
+Progress: 19%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 86" handle was cleared after 70ms
+Progress: 20%Progress: 20%Progress: 20%Progress: 20%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 89" handle was cleared after 49ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 87" handle was cleared after 53ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 88" handle was cleared after 55ms
+Progress: 21%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 90" handle was cleared after 85ms
+Progress: 21%Progress: 21%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 91" handle was cleared after 54ms
+Progress: 21%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 92" handle was cleared after 99ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 93" handle was cleared after 95ms
+Progress: 21%Progress: 22%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 94" handle was cleared after 86ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 95" handle was cleared after 49ms
+Progress: 22%Progress: 22%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 96" handle was cleared after 65ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 97" handle was cleared after 64ms
+Progress: 22%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 98" handle was cleared after 51ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 99" handle was cleared after 50ms
+Progress: 23%Progress: 23%Progress: 23%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 100" handle was cleared after 45ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 101" handle was cleared after 46ms
+Progress: 23%Progress: 24%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 103" handle was cleared after 51ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 102" handle was cleared after 54ms
+Progress: 24%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 105" handle was cleared after 46ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 104" handle was cleared after 49ms
+Progress: 24%Progress: 24%Progress: 25%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 107" handle was cleared after 47ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 106" handle was cleared after 49ms
+Progress: 25%Progress: 25%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 109" handle was cleared after 49ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 108" handle was cleared after 51ms
+Progress: 25%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 110" handle was cleared after 81ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 111" handle was cleared after 48ms
+Progress: 25%Progress: 26%Progress: 26%Progress: 26%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 113" handle was cleared after 43ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 112" handle was cleared after 47ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 114" handle was cleared after 80ms
+Progress: 26%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 115" handle was cleared after 95ms
+Progress: 27%Progress: 27%Progress: 27%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 117" handle was cleared after 37ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 116" handle was cleared after 43ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 118" handle was cleared after 114ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 119" handle was cleared after 95ms
+Progress: 27%Progress: 28%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 120" handle was cleared after 57ms
+Progress: 28%Progress: 28%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 121" handle was cleared after 60ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 122" handle was cleared after 69ms
+Progress: 28%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 123" handle was cleared after 71ms
+Progress: 28%Progress: 29%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 124" handle was cleared after 71ms
+Progress: 29%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 125" handle was cleared after 72ms
+Progress: 29%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 126" handle was cleared after 84ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 127" handle was cleared after 82ms
+Progress: 29%Progress: 30%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 128" handle was cleared after 97ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 129" handle was cleared after 55ms
+Progress: 30%Progress: 30%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 131" handle was cleared after 61ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 130" handle was cleared after 64ms
+Progress: 30%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 132" handle was cleared after 99ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 133" handle was cleared after 64ms
+Progress: 31%Progress: 31%Progress: 31%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 134" handle was cleared after 49ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 135" handle was cleared after 47ms
+Progress: 31%Progress: 32%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 137" handle was cleared after 56ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 136" handle was cleared after 79ms
+Progress: 32%Progress: 32%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 138" handle was cleared after 50ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 139" handle was cleared after 48ms
+Progress: 32%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 141" handle was cleared after 67ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 140" handle was cleared after 73ms
+Progress: 32%Progress: 33%Progress: 33%Progress: 33%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 142" handle was cleared after 54ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 143" handle was cleared after 53ms
+Progress: 33%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 145" handle was cleared after 88ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 144" handle was cleared after 92ms
+Progress: 34%Progress: 34%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 147" handle was cleared after 50ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 146" handle was cleared after 55ms
+Progress: 34%Progress: 34%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 148" handle was cleared after 65ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 149" handle was cleared after 63ms
+Progress: 35%Progress: 35%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 151" handle was cleared after 46ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 150" handle was cleared after 50ms
+Progress: 35%Progress: 35%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 152" handle was cleared after 64ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 153" handle was cleared after 60ms
+Progress: 35%Progress: 36%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 155" handle was cleared after 57ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 154" handle was cleared after 60ms
+Progress: 36%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 156" handle was cleared after 57ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 157" handle was cleared after 57ms
+Progress: 36%Progress: 36%Progress: 37%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 158" handle was cleared after 55ms
+Progress: 37%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 159" handle was cleared after 48ms
+Progress: 37%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 161" handle was cleared after 61ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 160" handle was cleared after 63ms
+Progress: 37%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 162" handle was cleared after 59ms
+Progress: 38%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 163" handle was cleared after 61ms
+Progress: 38%Progress: 38%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 165" handle was cleared after 52ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 164" handle was cleared after 59ms
+Progress: 38%Progress: 39%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 166" handle was cleared after 72ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 167" handle was cleared after 49ms
+Progress: 39%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 168" handle was cleared after 57ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 169" handle was cleared after 56ms
+Progress: 39%Progress: 39%Progress: 39%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 171" handle was cleared after 43ms
+[Tab 2] delayRender() "Setting the current frame to 170" handle was cleared after 47ms
+Progress: 40%Progress: 40%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 172" handle was cleared after 57ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 173" handle was cleared after 56ms
+Progress: 40%Progress: 40%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 174" handle was cleared after 64ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 175" handle was cleared after 54ms
+Progress: 41%Progress: 41%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 176" handle was cleared after 76ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 177" handle was cleared after 55ms
+Progress: 41%Progress: 41%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 179" handle was cleared after 49ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 178" handle was cleared after 58ms
+Progress: 42%Progress: 42%Progress: 42%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 180" handle was cleared after 70ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 181" handle was cleared after 71ms
+Progress: 42%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 183" handle was cleared after 70ms
+Progress: 42%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 182" handle was cleared after 74ms
+Progress: 43%Progress: 43%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 184" handle was cleared after 68ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 185" handle was cleared after 72ms
+Progress: 43%Progress: 43%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 187" handle was cleared after 74ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 186" handle was cleared after 77ms
+Progress: 44%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 189" handle was cleared after 76ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 188" handle was cleared after 79ms
+Progress: 44%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 190" handle was cleared after 63ms
+Progress: 44%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 191" handle was cleared after 62ms
+Progress: 44%Progress: 45%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 192" handle was cleared after 59ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 193" handle was cleared after 55ms
+Progress: 45%Progress: 45%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 194" handle was cleared after 52ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 195" handle was cleared after 48ms
+Progress: 45%Progress: 46%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 197" handle was cleared after 61ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 196" handle was cleared after 65ms
+Progress: 46%Progress: 46%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 198" handle was cleared after 64ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 199" handle was cleared after 60ms
+Progress: 46%Progress: 46%Progress: 47%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 200" handle was cleared after 72ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 201" handle was cleared after 90ms
+Progress: 47%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 202" handle was cleared after 79ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 203" handle was cleared after 74ms
+Progress: 47%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 204" handle was cleared after 63ms
+Progress: 47%Progress: 48%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 205" handle was cleared after 68ms
+Progress: 48%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 206" handle was cleared after 58ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 207" handle was cleared after 54ms
+Progress: 48%Progress: 48%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 209" handle was cleared after 57ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 208" handle was cleared after 64ms
+Progress: 49%Progress: 49%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 211" handle was cleared after 61ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 210" handle was cleared after 66ms
+Progress: 49%Progress: 49%Progress: 49%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 212" handle was cleared after 60ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 213" handle was cleared after 75ms
+Progress: 50%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 214" handle was cleared after 76ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 215" handle was cleared after 75ms
+Progress: 50%Progress: 50%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 217" handle was cleared after 51ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 216" handle was cleared after 55ms
+Progress: 50%Progress: 51%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 218" handle was cleared after 61ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 219" handle was cleared after 64ms
+Progress: 51%Progress: 51%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 220" handle was cleared after 74ms
+[Tab 1] delayRender() "Setting the current frame to 221" handle was cleared after 52ms
+Progress: 51%Progress: 52%Progress: 52%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 222" handle was cleared after 65ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 223" handle was cleared after 64ms
+Progress: 52%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 224" handle was cleared after 80ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 225" handle was cleared after 76ms
+Progress: 52%Progress: 53%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 226" handle was cleared after 79ms
+Progress: 53%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 227" handle was cleared after 72ms
+Progress: 53%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 228" handle was cleared after 59ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 229" handle was cleared after 60ms
+Progress: 53%Progress: 53%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 230" handle was cleared after 75ms
+Progress: 54%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 231" handle was cleared after 54ms
+Progress: 54%Progress: 54%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 233" handle was cleared after 66ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 232" handle was cleared after 94ms
+Progress: 54%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 234" handle was cleared after 86ms
+Progress: 55%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 235" handle was cleared after 97ms
+Progress: 55%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 236" handle was cleared after 67ms
+[Tab 1] delayRender() "Setting the current frame to 237" handle was cleared after 66ms
+Progress: 55%Progress: 55%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 238" handle was cleared after 71ms
+Progress: 56%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 239" handle was cleared after 58ms
+Progress: 56%Progress: 56%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 240" handle was cleared after 65ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 241" handle was cleared after 64ms
+Progress: 56%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 242" handle was cleared after 78ms
+Progress: 56%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 243" handle was cleared after 82ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 244" handle was cleared after 57ms
+Progress: 57%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 245" handle was cleared after 57ms
+Progress: 57%Progress: 57%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 246" handle was cleared after 44ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 247" handle was cleared after 42ms
+Progress: 57%Progress: 58%Progress: 58%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 249" handle was cleared after 52ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 248" handle was cleared after 56ms
+Progress: 58%Progress: 58%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 251" handle was cleared after 78ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 250" handle was cleared after 80ms
+Progress: 59%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 252" handle was cleared after 66ms
+Progress: 59%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 253" handle was cleared after 96ms
+Progress: 59%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 254" handle was cleared after 64ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 255" handle was cleared after 66ms
+Progress: 59%Progress: 60%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 256" handle was cleared after 82ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 257" handle was cleared after 59ms
+Progress: 60%Progress: 60%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 258" handle was cleared after 71ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 259" handle was cleared after 68ms
+Progress: 60%Progress: 60%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 260" handle was cleared after 55ms
+[Tab 3] delayRender() "Setting the current frame to 261" handle was cleared after 50ms
+Progress: 61%Progress: 61%Progress: 61%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 262" handle was cleared after 75ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 263" handle was cleared after 75ms
+Progress: 61%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 265" handle was cleared after 90ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 264" handle was cleared after 93ms
+Progress: 62%Progress: 62%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 266" handle was cleared after 77ms
+Progress: 62%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 267" handle was cleared after 82ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 268" handle was cleared after 57ms
+Progress: 62%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 269" handle was cleared after 78ms
+Progress: 63%Progress: 63%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 270" handle was cleared after 75ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 271" handle was cleared after 47ms
+Progress: 63%Progress: 63%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 273" handle was cleared after 64ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 272" handle was cleared after 84ms
+Progress: 63%Progress: 64%Progress: 64%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 275" handle was cleared after 57ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 274" handle was cleared after 61ms
+Progress: 64%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 276" handle was cleared after 77ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 277" handle was cleared after 75ms
+Progress: 64%Progress: 65%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 278" handle was cleared after 58ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 279" handle was cleared after 55ms
+Progress: 65%Progress: 65%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 281" handle was cleared after 70ms
+[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 280" handle was cleared after 75ms
+Progress: 65%Progress: 66%Progress: 66%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 283" handle was cleared after 52ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 282" handle was cleared after 57ms
+Progress: 66%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 285" handle was cleared after 77ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 284" handle was cleared after 82ms
+Progress: 66%Progress: 67%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 286" handle was cleared after 78ms
+Progress: 67%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 287" handle was cleared after 79ms
+Progress: 67%[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 288" handle was cleared after 57ms
+Progress: 67%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 289" handle was cleared after 84ms
+Progress: 67%Progress: 68%[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 291" handle was cleared after 73ms
+[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 290" handle was cleared after 93ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 292" handle was cleared after 44ms
+Progress: 68%Progress: 68%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 293" handle was cleared after 78ms
+Progress: 68%Progress: 69%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 295" handle was cleared after 57ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 294" handle was cleared after 59ms
+[Tab 0, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 0] delayRender() "Setting the current frame to 296" handle was cleared after 57ms
+Progress: 69%Progress: 69%[Tab 1, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 1] delayRender() "Setting the current frame to 297" handle was cleared after 79ms
+Progress: 69%[Tab 2, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 2] delayRender() "Setting the current frame to 299" handle was cleared after 47ms
+[Tab 3, src/animations/unstableGrid2/unstableGrid2.ts:771] [Setup Complete] Rectangles initialized. Count: 88
+[Tab 3] delayRender() "Setting the current frame to 298" handle was cleared after 48ms
+Progress: 70%Progress: 70%Progress: 70%Received SIGTERM signal. Killing browser process
+Trying to kill browser process group -52673
+Rendering frames done in 11994ms
+[stitchFramesToVideo()] audioCodec aac
+[stitchFramesToVideo()] pixelFormat yuv420p
+[stitchFramesToVideo()] codec h264
+[stitchFramesToVideo()] shouldRenderAudio true
+[stitchFramesToVideo()] shouldRenderVideo true
+[audio] asset positions []
+[compositor] Freed memory from compositor
+[audio] Encoding progress: 80%
+[audio] Encoding progress: 100%
+[stitchFramesToVideo()] Encoder: libx264, hardware accelerated: false
+[stitchFramesToVideo()] Generated final FFmpeg command:
+[stitchFramesToVideo()] -r 60 -f image2 -s 1080x1920 -start_number 0 -i /var/folders/33/_jx24tw52_vc_4_l4xkmcrfw0000gn/T/react-motion-renderC0FsEG/element-%03d.jpeg -i /var/folders/33/_jx24tw52_vc_4_l4xkmcrfw0000gn/T/remotion-v4.0.291-assetsal17kgeu5a/remotion-audio-preprocessing/audio.aac -c:a copy -c:v libx264 -pix_fmt yuv420p -crf 18 -movflags faststart -map_metadata -1 -metadata comment=Made with Remotion 4.0.291 -y /Users/izm/Animator/output/animation--unstableGrid2-high-1746386217364.mp4
+Progress: 75%Progress: 83%Progress: 92%Progress: 100%Stitching done in 2072ms
+
+Rendering complete!
+Video saved to: /Users/izm/Animator/output/animation--unstableGrid2-high-1746386217364.mp4
+Template: unstableGrid2, Quality: high
