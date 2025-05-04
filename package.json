@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "remotion:render": "ts-node render-video.cjs --enable-gc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "fonts:render": "node scripts/generate_unstableGrid2_textures.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.0",
@@ -52,6 +53,7 @@
     "@types/uuid": "^10.0.0",
     "axios": "^1.8.3",
     "body-parser": "^1.20.3",
+    "canvas": "^3.1.0",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",

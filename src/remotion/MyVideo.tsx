@@ -33,12 +33,12 @@ export const MyVideo: React.FC<MyVideoProps> = ({
         // Use values from config
         const fontFamily = unstableGridConfig.fontFamily;
         const fontUrl = staticFile(unstableGridConfig.fontUrl);
-        console.log(`Attempting to load font '${fontFamily}' from ${fontUrl} via FontFace API...`);
+        // console.log(`Attempting to load font '${fontFamily}' from ${fontUrl} via FontFace API...`);
         const fontFace = new FontFace(fontFamily, `url(${fontUrl})`); 
         await fontFace.load(); 
         document.fonts.add(fontFace); 
         setFontLoaded(true);
-        console.log(`Font '${fontFamily}' loaded and added via FontFace API.`);
+        // console.log(`Font '${fontFamily}' loaded and added via FontFace API.`);
         continueRender(handle);
       } catch (err) {
         // Use config value in error message
@@ -51,7 +51,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({
 
   if (!fontLoaded) {
     // Use config value in log message
-    console.log(`Waiting for font '${unstableGridConfig.fontFamily}' to load via FontFace API...`);
+    // console.log(`Waiting for font '${unstableGridConfig.fontFamily}' to load via FontFace API...`);
     return null; 
   }
 
