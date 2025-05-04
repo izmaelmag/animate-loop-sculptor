@@ -167,7 +167,7 @@ export const config: UnstableGridConfig = {
   width: 1080,
   height: 1920, // User changed
   fps: 60,
-  durationInSeconds: 66, // User changed
+  durationInSeconds: 68, // User changed
 
   // Grid Structure
   // Используем импортированный timeline
@@ -200,12 +200,12 @@ export const config: UnstableGridConfig = {
   colorTransitionFrames: 25,
 
   // Point Movement (Noise Based)
-  noiseSpeed: 0.05,
+  noiseSpeed: 0.005,
   noiseFrequencyX: 0.5,
   noiseFrequencyY: 0.5,
-  noiseAmplitudeX: 20, // Example: Max 50px displacement
-  noiseAmplitudeY: 20,
-  pointFollowFactor: 0.5, // Example: 8% towards target each frame
+  noiseAmplitudeX: 50, // Example: Max 150px displacement (Increased)
+  noiseAmplitudeY: 50, // Example: Max 150px displacement (Increased)
+  pointFollowFactor: 0.5, // Example: 50% towards target each frame (Kept at 0.5 for now)
 
   // --- NEW: Seed for Noise ---
   noiseSeedPhrase: "default-unstable-grid-seed", // Default seed phrase
