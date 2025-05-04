@@ -27,7 +27,7 @@ export interface AnimationScene {
   /** Optional secondary/filler color for this scene */
   secondaryColor?: string;
   /** Optional background character string */
-  backgroundChars?: string; 
+  backgroundChars?: string;
   /** 2D layout array [row][col], null = filler */
   layoutGrid: (LayoutCell | null)[][];
   /** Style presets for this scene (maybe less used now, keep for filler?) */
@@ -50,15 +50,161 @@ export const timeline: AnimationScene[] = [
     startFrame: 0,
     layoutGrid: [
       [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          char: "C",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "O",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "M",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        {
+          char: "M",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "O",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        {
+          char: "S",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "A",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "I",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        {
+          char: "N",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "T",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+      ],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "D",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "O",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "L",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        {
+          char: "E",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "Y",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
@@ -70,17 +216,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
-    durationFrames: 40,
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
+    durationFrames: 151,
   },
   {
     startFrame: 151,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [
@@ -88,35 +230,37 @@ export const timeline: AnimationScene[] = [
         {
           char: "S",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "o",
+          char: "O",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "u",
+          char: "U",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "n",
+          char: "N",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "d",
+          char: "D",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         null,
       ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -131,32 +275,71 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
-    durationFrames: 191,
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
+    durationFrames: 40,
   },
   {
     startFrame: 191,
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
-        null,
         {
-          char: "i",
+          char: "S",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "t",
+          char: "O",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "U",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "D",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "T",
+          style: {
+            color: "#ffca00",
           },
         },
         null,
@@ -177,8 +360,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 20,
   },
   {
@@ -186,45 +369,102 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
-          char: "k",
+          char: "S",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "e",
+          char: "O",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "e",
+          char: "U",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "p",
+          char: "N",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "s",
+          char: "D",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         null,
       ],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "T",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        {
+          char: "K",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "P",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -238,8 +478,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
@@ -247,32 +487,130 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
-        null,
         {
-          char: "o",
+          char: "S",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "n",
+          char: "O",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "U",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "D",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#ffca00",
           },
         },
         null,
         null,
         null,
       ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "T",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        {
+          char: "K",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "P",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "O",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "N",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
@@ -284,66 +622,152 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 23,
   },
   {
     startFrame: 255,
     layoutGrid: [
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
+        null,
+        null,
+        null,
         {
-          char: "p",
+          char: "P",
           style: {
-            color: "#FFFFFF",
+            color: "#ffca00",
           },
         },
-        {
-          char: "l",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "a",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "y",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "i",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "n",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "g",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
+        null,
+        null,
+        null,
       ],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "S",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "O",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "L",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "D",
+          style: {
+            color: "#000000",
+          },
+        },
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "A",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "Y",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        {
+          char: "K",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "I",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "P",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#000000",
+          },
+        },
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "N",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "G",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
@@ -355,8 +779,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 40,
   },
   {
@@ -364,39 +788,37 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
-          char: "l",
+          char: "L",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "i",
+          char: "I",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "k",
+          char: "K",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "e",
+          char: "E",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         null,
         null,
       ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -411,8 +833,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 19,
   },
   {
@@ -420,32 +842,58 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "L",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "I",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "K",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [
         null,
         null,
-        {
-          char: "i",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "t",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
-        {
-          char: "s",
-          style: {
-            color: "#FFFFFF",
-          },
-        },
         null,
+        {
+          char: "I",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "T",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#db8f02",
+          },
+        },
         null,
       ],
       [null, null, null, null, null, null, null],
@@ -462,8 +910,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 24,
   },
   {
@@ -471,31 +919,80 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
-        null,
         {
-          char: "o",
+          char: "L",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "n",
+          char: "I",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
-        null,
+        {
+          char: "K",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
         null,
         null,
       ],
       [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "T",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "O",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -508,8 +1005,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 36,
   },
   {
@@ -517,37 +1014,104 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
-        null,
         {
-          char: "a",
+          char: "L",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "n",
+          char: "I",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "d",
+          char: "K",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
           },
         },
         null,
         null,
       ],
       [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "T",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "O",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#000000",
+          },
+        },
+        null,
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "A",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "D",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
@@ -559,8 +1123,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 25,
   },
   {
@@ -568,32 +1132,104 @@ export const timeline: AnimationScene[] = [
     layoutGrid: [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
-        null,
         {
-          char: "o",
+          char: "L",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
         {
-          char: "n",
+          char: "I",
           style: {
-            color: "#FFFFFF",
+            color: "#db8f02",
           },
         },
-        null,
+        {
+          char: "K",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "E",
+          style: {
+            color: "#db8f02",
+          },
+        },
         null,
         null,
       ],
       [null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "I",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "T",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        {
+          char: "S",
+          style: {
+            color: "#db8f02",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "O",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#ffca00",
+          },
+        },
+        null,
+        null,
+        null,
+        null,
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          char: "A",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "N",
+          style: {
+            color: "#000000",
+          },
+        },
+        {
+          char: "D",
+          style: {
+            color: "#000000",
+          },
+        },
+        null,
+      ],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
@@ -605,14 +1241,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 64,
   },
   {
     startFrame: 463,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -646,7 +1281,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -656,14 +1290,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 19,
   },
   {
     startFrame: 482,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -707,7 +1340,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -717,14 +1349,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 58,
   },
   {
     startFrame: 540,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -753,7 +1384,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -763,14 +1393,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 23,
   },
   {
     startFrame: 563,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -824,7 +1453,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -834,14 +1462,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 66,
   },
   {
     startFrame: 629,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -875,7 +1502,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -885,14 +1511,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 650,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -926,7 +1551,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -936,14 +1560,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 20,
   },
   {
     startFrame: 670,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -982,7 +1605,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -992,14 +1614,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 55,
   },
   {
     startFrame: 725,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1038,7 +1659,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1048,14 +1668,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 93,
   },
   {
     startFrame: 818,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1104,7 +1723,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1114,14 +1732,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 53,
   },
   {
     startFrame: 871,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1160,7 +1777,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1170,14 +1786,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 22,
   },
   {
     startFrame: 893,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1206,7 +1821,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1216,14 +1830,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 914,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1272,7 +1885,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1282,14 +1894,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 42,
   },
   {
     startFrame: 956,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1323,7 +1934,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1333,14 +1943,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 977,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1379,7 +1988,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1389,14 +1997,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 20,
   },
   {
     startFrame: 997,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1435,7 +2042,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1445,14 +2051,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 45,
   },
   {
     startFrame: 1042,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1496,7 +2101,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1506,14 +2110,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 79,
   },
   {
     startFrame: 1121,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1552,7 +2155,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1562,14 +2164,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 1142,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1623,7 +2224,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1633,14 +2233,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 58,
   },
   {
     startFrame: 1200,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1669,7 +2268,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1679,14 +2277,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 22,
   },
   {
     startFrame: 1222,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1710,7 +2307,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1720,14 +2316,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 1243,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1776,7 +2371,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1786,14 +2380,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 45,
   },
   {
     startFrame: 1288,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1837,7 +2430,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1847,14 +2439,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 18,
   },
   {
     startFrame: 1306,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1883,7 +2474,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1893,14 +2483,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 24,
   },
   {
     startFrame: 1330,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -1934,7 +2523,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -1944,14 +2532,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 38,
   },
   {
     startFrame: 1368,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2000,7 +2587,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2010,14 +2596,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 98,
   },
   {
     startFrame: 1466,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2066,7 +2651,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2076,14 +2660,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 53,
   },
   {
     startFrame: 1519,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2137,7 +2720,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2147,14 +2729,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 100,
   },
   {
     startFrame: 1619,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2198,7 +2779,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2208,14 +2788,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 1640,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2254,7 +2833,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2264,14 +2842,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 23,
   },
   {
     startFrame: 1663,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2310,7 +2887,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2320,14 +2896,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 19,
   },
   {
     startFrame: 1682,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2356,7 +2931,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2366,14 +2940,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 1703,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2407,7 +2980,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2417,14 +2989,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 1724,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2463,7 +3034,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2473,14 +3043,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 81,
   },
   {
     startFrame: 1805,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2534,7 +3103,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2544,14 +3112,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 103,
   },
   {
     startFrame: 1908,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2600,7 +3167,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2610,14 +3176,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 44,
   },
   {
     startFrame: 1952,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2661,7 +3226,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2671,14 +3235,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 19,
   },
   {
     startFrame: 1971,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2707,7 +3270,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2717,14 +3279,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 23,
   },
   {
     startFrame: 1994,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2763,7 +3324,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2773,14 +3333,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 18,
   },
   {
     startFrame: 2012,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2809,7 +3368,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2819,14 +3377,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 19,
   },
   {
     startFrame: 2031,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2865,7 +3422,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2875,14 +3431,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 2052,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2926,7 +3481,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2936,14 +3490,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 84,
   },
   {
     startFrame: 2136,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -2977,7 +3530,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -2987,14 +3539,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 40,
   },
   {
     startFrame: 2176,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3023,7 +3574,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3033,14 +3583,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 2197,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3074,7 +3623,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3084,14 +3632,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 2218,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3125,7 +3672,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3135,14 +3681,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 2239,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3196,7 +3741,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3206,14 +3750,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 43,
   },
   {
     startFrame: 2282,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3247,7 +3790,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3257,14 +3799,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 2303,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3318,7 +3859,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3328,14 +3868,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 52,
   },
   {
     startFrame: 2355,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3384,7 +3923,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3394,14 +3932,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 111,
   },
   {
     startFrame: 2466,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3450,7 +3987,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3460,14 +3996,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 58,
   },
   {
     startFrame: 2524,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3521,7 +4056,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3531,14 +4065,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 91,
   },
   {
     startFrame: 2615,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3567,7 +4100,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3577,14 +4109,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 18,
   },
   {
     startFrame: 2633,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3613,7 +4144,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3623,14 +4153,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 2654,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3684,7 +4213,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3694,14 +4222,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 61,
   },
   {
     startFrame: 2715,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -3745,7 +4272,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3755,8 +4281,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 143,
   },
   {
@@ -3767,7 +4293,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         null,
@@ -3791,7 +4316,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3801,8 +4325,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 14,
   },
   {
@@ -3813,7 +4337,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -3852,7 +4375,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3862,8 +4384,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 13,
   },
   {
@@ -3874,7 +4396,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -3908,7 +4429,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3918,8 +4438,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
@@ -3930,7 +4450,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -3964,7 +4483,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -3974,8 +4492,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 116,
   },
   {
@@ -3986,7 +4504,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         null,
@@ -4010,7 +4527,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4020,8 +4536,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 11,
   },
   {
@@ -4032,7 +4548,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -4071,7 +4586,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4081,8 +4595,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 13,
   },
   {
@@ -4093,7 +4607,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         null,
@@ -4122,7 +4635,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4132,8 +4644,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 24,
   },
   {
@@ -4144,7 +4656,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -4178,7 +4689,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4188,8 +4698,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 113,
   },
   {
@@ -4200,7 +4710,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         null,
@@ -4224,7 +4733,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4234,8 +4742,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 8,
   },
   {
@@ -4246,7 +4754,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -4285,7 +4792,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4295,8 +4801,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 12,
   },
   {
@@ -4307,7 +4813,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -4341,7 +4846,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4351,8 +4855,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 27,
   },
   {
@@ -4363,7 +4867,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         {
@@ -4397,7 +4900,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4407,8 +4909,8 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 119,
   },
   {
@@ -4419,7 +4921,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
       [
         null,
         null,
@@ -4443,7 +4944,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4453,14 +4953,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 8,
   },
   {
     startFrame: 3357,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4504,7 +5003,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4514,14 +5012,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 3378,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4555,7 +5052,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4565,14 +5061,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 3399,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4611,7 +5106,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4621,14 +5115,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 119,
   },
   {
     startFrame: 3518,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4657,7 +5150,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4667,14 +5159,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 10,
   },
   {
     startFrame: 3528,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4718,7 +5209,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4728,14 +5218,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 8,
   },
   {
     startFrame: 3536,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4774,7 +5263,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4784,14 +5272,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 24,
   },
   {
     startFrame: 3560,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4830,7 +5317,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4840,14 +5326,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 124,
   },
   {
     startFrame: 3684,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4876,7 +5361,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4886,14 +5370,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 8,
   },
   {
     startFrame: 3692,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4937,7 +5420,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4947,14 +5429,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 3713,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -4988,7 +5469,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -4998,14 +5478,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 19,
   },
   {
     startFrame: 3732,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5044,7 +5523,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -5054,14 +5532,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 111,
   },
   {
     startFrame: 3843,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5090,7 +5567,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -5100,14 +5576,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 10,
   },
   {
     startFrame: 3853,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5151,7 +5626,6 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null],
     ],
     stylePresets: {
       filler: {
@@ -5161,14 +5635,13 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
     durationFrames: 21,
   },
   {
     startFrame: 3874,
     layoutGrid: [
-      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
@@ -5207,6 +5680,59 @@ export const timeline: AnimationScene[] = [
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
+    ],
+    stylePresets: {
+      filler: {
+        color: "#333",
+      },
+      default: {
+        color: "#FFFFFF",
+      },
+    },
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
+    durationFrames: 21,
+  },
+  {
+    startFrame: 3895,
+    layoutGrid: [
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          char: "l",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "o",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "v",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        {
+          char: "e",
+          style: {
+            color: "#FFFFFF",
+          },
+        },
+        null,
+        null,
+      ],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null],
     ],
     stylePresets: {
@@ -5217,9 +5743,9 @@ export const timeline: AnimationScene[] = [
         color: "#FFFFFF",
       },
     },
-    backgroundColor: "#282c34",
-    secondaryColor: "#333",
-    durationFrames: 21,
+    backgroundColor: "#000000",
+    secondaryColor: "#121212",
+    durationFrames: 119,
   },
 ];
 

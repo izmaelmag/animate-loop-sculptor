@@ -840,6 +840,37 @@ const TimelineEditor: React.FC = () => {
     });
   };
 
+  // --- NEW: Reset Grid Logic ---
+  const handleResetGrid = useCallback(() => {
+    if (selectedSceneIndex === null) {
+        toast.error("Cannot reset grid: No scene selected.");
+        return;
+    }
+
+    const sceneToReset = scenes[selectedSceneIndex];
+    if (!sceneToReset) return; // Should not happen
+
+    if (window.confirm(`Are you sure you want to clear the grid for Scene ${selectedSceneIndex} (ID: ${sceneToReset.id})? This cannot be undone.`)) {
+        setScenes((prevScenes) => {
+            return prevScenes.map((scene, index) => {
+                if (index === selectedSceneIndex) {
+                    // Create a new empty grid
+                    const newEmptyLayoutGrid: (EditableLayoutCell | null)[][] = Array.from(
+                        { length: gridRows },
+                        () => Array(gridCols).fill(null)
+                    );
+                    console.log(`Resetting grid for Scene ${selectedSceneIndex}`);
+                    return { ...scene, layoutGrid: newEmptyLayoutGrid };
+                }
+                return scene;
+            });
+        });
+        setSelectedCellCoords(null); // Deselect cell after reset
+        toast.success(`Grid for Scene ${selectedSceneIndex} has been cleared.`);
+    }
+
+  }, [selectedSceneIndex, scenes, gridRows, gridCols, setScenes, setSelectedCellCoords]);
+
   // --- NEW: Words JSON Import Callback ---
   const handleImportWordsJson = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1407,8 +1438,17 @@ const TimelineEditor: React.FC = () => {
           title="Grid Preview"
           className="flex-1 overflow-hidden flex flex-col"
         >
-          {" "}
-          {/* Allow preview to take space */}
+          {/* Add Reset Button Here */}
+          <div className="mb-2 flex justify-end"> {/* Position button to the right */} 
+               <button 
+                  onClick={handleResetGrid}
+                  disabled={selectedSceneIndex === null}
+                  className="px-3 py-1 text-xs bg-red-700 hover:bg-red-800 rounded text-white disabled:opacity-50 disabled:cursor-not-allowed"
+               >
+                   Reset Grid
+               </button>
+          </div>
+
           {currentScene ? (
             // Center the grid within this panel
             <div className="flex-1 overflow-auto flex items-center justify-center">
