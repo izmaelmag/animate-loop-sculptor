@@ -9,8 +9,7 @@ const __dirname = path.dirname(__filename);
 
 // --- Configuration (Simplified & Self-Contained) ---
 // Characters to generate textures for (Modify this string as needed!)
-const CHARS_TO_RENDER_STRING =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+const CHARS_TO_RENDER_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 const CHARS_TO_RENDER = new Set(CHARS_TO_RENDER_STRING.split(""));
 
 const FONT_FILENAME = "font.ttf"; // Expected font filename IN THE SAME DIRECTORY as the script
@@ -71,6 +70,8 @@ const startTime = Date.now();
 
 let generatedCount = 0;
 let errorCount = 0;
+// --- NEW: Object to store the mapping ---
+const textureMap = {};
 
 // Function to sanitize character for filename
 function sanitizeFilename(char) {
@@ -84,82 +85,99 @@ function sanitizeFilename(char) {
 }
 
 for (const char of CHARS_TO_RENDER) {
-    // 1. Draw on temporary large canvas
-    const tempCanvas = createCanvas(TEMP_CANVAS_SIZE, TEMP_CANVAS_SIZE);
-    const tempCtx = tempCanvas.getContext("2d");
+  // 1. Draw on temporary large canvas
+  const tempCanvas = createCanvas(TEMP_CANVAS_SIZE, TEMP_CANVAS_SIZE);
+  const tempCtx = tempCanvas.getContext("2d");
 
-    tempCtx.fillStyle = "white";
-    tempCtx.textAlign = "center";
-    tempCtx.textBaseline = "middle";
-    const initialFontSize = TEMP_CANVAS_SIZE * 0.8; // Large font on temp canvas
-    tempCtx.font = `${initialFontSize}px "${FONT_FAMILY_NAME}"`;
-    tempCtx.fillText(char, TEMP_CANVAS_SIZE / 2, TEMP_CANVAS_SIZE / 2);
+  tempCtx.fillStyle = "white";
+  tempCtx.textAlign = "center";
+  tempCtx.textBaseline = "middle";
+  const initialFontSize = TEMP_CANVAS_SIZE * 0.8; // Large font on temp canvas
+  tempCtx.font = `${initialFontSize}px "${FONT_FAMILY_NAME}"`;
+  tempCtx.fillText(char, TEMP_CANVAS_SIZE / 2, TEMP_CANVAS_SIZE / 2);
 
-    // 2. Find Bounding Box on temporary canvas
-    let minX = TEMP_CANVAS_SIZE, minY = TEMP_CANVAS_SIZE, maxX = -1, maxY = -1;
-    let isEmpty = true;
-    try {
-        const imageData = tempCtx.getImageData(0, 0, TEMP_CANVAS_SIZE, TEMP_CANVAS_SIZE);
-        const data = imageData.data;
-        for (let y = 0; y < TEMP_CANVAS_SIZE; y++) {
-            for (let x = 0; x < TEMP_CANVAS_SIZE; x++) {
-                const alphaIndex = (y * TEMP_CANVAS_SIZE + x) * 4 + 3;
-                if (data[alphaIndex] > 0) { // Check alpha
-                    isEmpty = false;
-                    if (x < minX) minX = x;
-                    if (x > maxX) maxX = x;
-                    if (y < minY) minY = y;
-                    if (y > maxY) maxY = y;
-                }
-            }
+  // 2. Find Bounding Box on temporary canvas
+  let minX = TEMP_CANVAS_SIZE,
+    minY = TEMP_CANVAS_SIZE,
+    maxX = -1,
+    maxY = -1;
+  let isEmpty = true;
+  try {
+    const imageData = tempCtx.getImageData(
+      0,
+      0,
+      TEMP_CANVAS_SIZE,
+      TEMP_CANVAS_SIZE
+    );
+    const data = imageData.data;
+    for (let y = 0; y < TEMP_CANVAS_SIZE; y++) {
+      for (let x = 0; x < TEMP_CANVAS_SIZE; x++) {
+        const alphaIndex = (y * TEMP_CANVAS_SIZE + x) * 4 + 3;
+        if (data[alphaIndex] > 0) {
+          // Check alpha
+          isEmpty = false;
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
         }
-    } catch (imgErr) {
-        console.error(`Error getting image data for char '${char}': ${imgErr}. Skipping.`);
-        errorCount++;
-        continue;
+      }
     }
+  } catch (imgErr) {
+    console.error(
+      `Error getting image data for char '${char}': ${imgErr}. Skipping.`
+    );
+    errorCount++;
+    continue;
+  }
 
-    // 4. Create final 512x512 canvas
-    const finalCanvas = createCanvas(FINAL_TEXTURE_SIZE, FINAL_TEXTURE_SIZE);
-    const finalCtx = finalCanvas.getContext('2d');
+  // 4. Create final 512x512 canvas
+  const finalCanvas = createCanvas(FINAL_TEXTURE_SIZE, FINAL_TEXTURE_SIZE);
+  const finalCtx = finalCanvas.getContext("2d");
 
-    // 3. Handle empty character
-    if (isEmpty || maxX < minX || maxY < minY) {
-        // console.log(`Character '${char}' is empty, saving empty 512x512 texture.`);
-        // finalCanvas is already transparent, do nothing else
-    } else {
-        // 5. Copy and STRETCH the cropped portion to the final canvas
-        const tightWidth = maxX - minX + 1;
-        const tightHeight = maxY - minY + 1;
-        
-        // console.log(`Drawing char '${char}' from [${minX},${minY},${tightWidth},${tightHeight}] to [0,0,${FINAL_TEXTURE_SIZE},${FINAL_TEXTURE_SIZE}]`);
+  // 3. Handle empty character
+  if (isEmpty || maxX < minX || maxY < minY) {
+    // console.log(`Character '${char}' is empty, saving empty 512x512 texture.`);
+    // finalCanvas is already transparent, do nothing else
+  } else {
+    // 5. Copy and STRETCH the cropped portion to the final canvas
+    const tightWidth = maxX - minX + 1;
+    const tightHeight = maxY - minY + 1;
 
-        finalCtx.drawImage(
-            tempCanvas,        // Source: temporary canvas
-            minX, minY,        // Source coords (top-left of bounding box)
-            tightWidth, tightHeight, // Source dimensions (tight bounding box)
-            0, 0,              // Destination coords (top-left of final canvas)
-            FINAL_TEXTURE_SIZE, FINAL_TEXTURE_SIZE // Destination dimensions (STRETCH to fill)
-        );
-    }
+    // console.log(`Drawing char '${char}' from [${minX},${minY},${tightWidth},${tightHeight}] to [0,0,${FINAL_TEXTURE_SIZE},${FINAL_TEXTURE_SIZE}]`);
 
-    // 6. Save the final 512x512 canvas
-    const filename = sanitizeFilename(char);
-    const outputPath = path.join(OUTPUT_DIR, `${filename}.png`);
+    finalCtx.drawImage(
+      tempCanvas, // Source: temporary canvas
+      minX,
+      minY, // Source coords (top-left of bounding box)
+      tightWidth,
+      tightHeight, // Source dimensions (tight bounding box)
+      0,
+      0, // Destination coords (top-left of final canvas)
+      FINAL_TEXTURE_SIZE,
+      FINAL_TEXTURE_SIZE // Destination dimensions (STRETCH to fill)
+    );
+  }
 
-    try {
-        const buffer = finalCanvas.toBuffer("image/png"); // Save final canvas
-        fs.writeFileSync(outputPath, buffer);
-        generatedCount++;
-        // console.log(` -> Saved ${outputPath}`); // Optional: log each file
-    } catch (err) {
-        console.error(
-            `Failed to save texture for character "${char}" (${filename}): ${
-                err instanceof Error ? err.message : err
-            }`
-        );
-        errorCount++;
-    }
+  // 6. Save the final 512x512 canvas
+  const filename = sanitizeFilename(char);
+  const outputPath = path.join(OUTPUT_DIR, `${filename}.png`);
+  // --- NEW: Add entry to the map ---
+  textureMap[char] = `${filename}.png`;
+
+  try {
+    const buffer = finalCanvas.toBuffer("image/png"); // Save final canvas
+    fs.writeFileSync(outputPath, buffer);
+    generatedCount++;
+    // console.log(` -> Saved ${outputPath}`); // Optional: log each file
+  } catch (err) {
+    console.error(
+      `Failed to save texture for character "${char}" (${filename}): ${
+        err instanceof Error ? err.message : err
+      }`
+    );
+    errorCount++;
+  }
 }
 
 const endTime = Date.now();
@@ -171,4 +189,15 @@ console.log(`Errors:    ${errorCount}`);
 console.log(`Duration:  ${duration} seconds`);
 if (errorCount > 0) {
   console.warn("Some textures failed to generate. Check errors above.");
+}
+
+// --- NEW: Write the map.json file ---
+try {
+  const mapPath = path.join(OUTPUT_DIR, "map.json");
+  fs.writeFileSync(mapPath, JSON.stringify(textureMap, null, 2));
+  console.log(`Texture map saved to: ${mapPath}`);
+} catch (err) {
+  console.error(
+    `Failed to save texture map: ${err instanceof Error ? err.message : err}`
+  );
 }

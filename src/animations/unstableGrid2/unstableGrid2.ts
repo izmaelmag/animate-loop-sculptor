@@ -557,19 +557,14 @@ const animation: AnimationFunction = (
   _normalizedTime: number,
   currentFrameNum: number
 ): void => {
-  // --- Wait for textures if they are still loading --- 
-  if (textureLoadingPromise) {
+  // --- Wait for map and textures if they are still loading --- 
+  if (textureLoadingPromise || !textureMap) { // Check both promise and map object
       p.background(activeColorScheme.background); // Show background while loading
       p.fill(255);
       p.textAlign(p.CENTER, p.CENTER);
       p.textSize(32);
-      p.text("Loading textures...", 0, 0);
-      console.log("Waiting for texture loading promise..."); // Log wait status
-      // We need a mechanism to pause rendering here if setup is async
-      // In standard p5, we'd wait in draw. In Remotion, this might need
-      // delayRender/continueRender or similar if setup itself becomes async.
-      // For now, this will just log and show loading text.
-      // A more robust solution might involve Remotion's async capabilities.
+      p.text("Loading map/textures...", 0, 0);
+      // console.log("Waiting for map/texture loading promise..."); // Optional log
       return; // Skip drawing the main animation until loaded
   }
 
@@ -992,28 +987,7 @@ function mulberry32(seed: number) {
 
 // Keep track of loading state
 let textureLoadingPromise: Promise<void> | null = null;
-
-// Function to generate the texture path
-function getTexturePath(char: string): string {
-    const sanitizeFilename = (c: string): string => {
-        const charCode = c.charCodeAt(0);
-        if (c.match(/[a-zA-Z0-9\-_]/)) {
-            return `char_${c}`;
-        } else {
-            return `char_hex_${charCode.toString(16).toUpperCase()}`;
-        }
-    };
-    const filename = sanitizeFilename(char);
-    // Use staticFile provided by Remotion IF this code runs within Remotion render.
-    // If setup runs outside, staticFile won't work. Assuming it runs within Remotion for now.
-    // Path relative to the public directory.
-    const relativePath = `/animations/unstableGrid2/textures/${filename}.png`;
-    // If NOT using Remotion context for setup, adjust path generation.
-    // For direct use in Remotion render, use staticFile:
-    // return staticFile(relativePath);
-    // For now, just return the expected relative path:
-    return relativePath;
-}
+let textureMap: Record<string, string> | null = null; // Variable to hold the loaded map
 
 const setupAnimation: AnimationFunction = (
   p: p5,
@@ -1061,71 +1035,65 @@ const setupAnimation: AnimationFunction = (
     allNeededChars = " ";
   }
 
-  // --- Load Pre-generated Textures --- 
-  console.log(`Loading ${charSet.size} pre-generated textures...`);
-  const promises: Promise<void>[] = [];
+  // --- Load Map and Pre-generated Textures --- 
+  console.log(`Loading texture map and ${charSet.size} textures...`);
   alphabetTextures = {}; // Reset textures object
+  textureMap = null; // Reset map object
 
-  charSet.forEach(char => {
-      const texturePath = getTexturePath(char);
-      const promise = new Promise<void>((resolve, reject) => {
-          p.loadImage(texturePath, 
-              (img) => {
-                  alphabetTextures[char] = img;
-                  // console.log(` -> Loaded texture for: ${char}`);
-                  resolve();
-              },
-              (err) => {
-                  console.error(`Failed to load texture for character '${char}' from ${texturePath}:`, err);
-                  // Optionally handle error, e.g., use a default texture or skip
-                  reject(err);
-              }
-          );
+  // Create a promise chain: load JSON first, then load images
+  textureLoadingPromise = new Promise<Record<string, string>>((resolve, reject) => {
+      p.loadJSON(
+          '/animations/unstableGrid2/textures/map.json',
+          (loadedMap: Record<string, string>) => {
+              console.log("Texture map loaded successfully.");
+              textureMap = loadedMap; // Store the loaded map
+              resolve(loadedMap);
+          },
+          (err) => {
+              console.error("Failed to load texture map (map.json):", err);
+              reject(new Error("Failed to load map.json"));
+          }
+      );
+  })
+  .then((loadedMap) => {
+      // Map loaded, now load images based on the map
+      const imageLoadPromises: Promise<void>[] = [];
+      charSet.forEach(char => {
+          const filename = loadedMap[char]; // Get filename from map
+          if (!filename) {
+              console.warn(`Character '${char}' not found in texture map. Skipping.`);
+              return; // Skip if char not in map
+          }
+          const texturePath = `/animations/unstableGrid2/textures/${filename}`; // Construct path
+          
+          const promise = new Promise<void>((resolve, reject) => {
+              p.loadImage(texturePath, 
+                  (img) => {
+                      alphabetTextures[char] = img;
+                      resolve();
+                  },
+                  (err) => {
+                      console.error(`Failed to load texture for character '${char}' from ${texturePath}:`, err);
+                      reject(err); // Reject specific image load
+                  }
+              );
+          });
+          imageLoadPromises.push(promise);
       });
-      promises.push(promise);
+      // Return a promise that resolves when all images are loaded
+      return Promise.all(imageLoadPromises).then(() => { /* All images loaded */ });
+  })
+  .then(() => {
+      console.log("All textures loaded successfully.");
+      textureLoadingPromise = null; // Clear main promise once done
+  })
+  .catch((error) => {
+      console.error("Error during texture map or image loading:", error);
+      textureLoadingPromise = null; // Clear promise on error too
+      textureMap = null; // Clear map on error
+      // Handle critical error
   });
 
-  textureLoadingPromise = Promise.all(promises)
-      .then(() => {
-          console.log("All textures loaded successfully.");
-          textureLoadingPromise = null; // Clear promise once done
-      })
-      .catch((error) => {
-          console.error("Error loading one or more textures:", error);
-          textureLoadingPromise = null; // Clear promise on error too
-          // Handle critical error - maybe stop animation?
-      });
-
-  // --- REMOVED Dynamic Texture Generation ---
-  /*
-  const selectedTextureSize = config.useHighResTextures
-    ? config.textureSizeRender
-    : config.textureSizePreview;
-  // console.log(
-  //   `Using texture size: ${selectedTextureSize}x${selectedTextureSize}`
-  // );
-
-  if (typeof allNeededChars === "string") {
-    // Use the collected allNeededChars string here
-    alphabetTextures = generateAlphabetTextures(
-      p,
-      selectedTextureSize,
-      config.fontFamily,
-      allNeededChars
-    );
-  } else {
-    console.error(
-      "Critical error: allNeededChars is not a string before generating textures!"
-    );
-    alphabetTextures = generateAlphabetTextures(
-      p,
-      selectedTextureSize,
-      config.fontFamily,
-      "? "
-    );
-  }
-  */
-  
   // Initialize Grid & Scene
   setupGridPoints(p);
   currentSceneIndex = -1; // Reset before finding the first scene
