@@ -3,7 +3,7 @@ import { P5Animation } from "./P5Animation";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { AnimationName } from "../animations";
 import { animationSettings, defaultAnimation } from "../animations";
-import { config as unstableGridConfig } from "../animations/unstableGrid/config";
+import { config as unstableGridConfig } from "../animations/unstableGrid2/config";
 import { delayRender, continueRender, staticFile } from "remotion";
 
 interface MyVideoProps {
@@ -67,7 +67,10 @@ export const MyVideo: React.FC<MyVideoProps> = ({
         height: "100%",
       }}
     >
-      <P5Animation templateId={templateId} />
+      <P5Animation 
+        templateId={templateId} 
+        animationConfig={{ noiseSeedPhrase: unstableGridConfig.noiseSeedPhrase }}
+      />
     </div>
   );
 };

@@ -37,7 +37,7 @@ const QUALITY = options.quality; // 'high', 'medium', 'low'
 const TEMPLATE = options.template;
 
 // MEMORY MANAGEMENT SETTINGS
-const CONCURRENCY = 1;
+const CONCURRENCY = 8;
 const MEMORY_LIMIT = 4096*2;
 
 // OUTPUT FILE PATH

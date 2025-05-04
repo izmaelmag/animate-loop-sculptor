@@ -561,7 +561,8 @@ const animation: AnimationFunction = (
 
   // --- State needed for transitions ---
   // let sceneTransitionProgress = 1; // REMOVED - Now managed by isTransitioning
-  const sceneTransitionIncrement = 1 / Math.max(1, config.colorTransitionFrames); // Keep for calculation
+  const sceneTransitionIncrement =
+    1 / Math.max(1, config.colorTransitionFrames); // Keep for calculation
 
   // 1. Determine Active Scene and Previous Scene
   let newSceneIndex = -1;
@@ -620,9 +621,9 @@ const animation: AnimationFunction = (
     );
   }
 
-  // --- Handle cases where no new scene is found --- 
-  // If newSceneIndex is still -1 after the loop, it means we are past the startFrame 
-  // of the last defined scene. In this case, we should continue using the 
+  // --- Handle cases where no new scene is found ---
+  // If newSceneIndex is still -1 after the loop, it means we are past the startFrame
+  // of the last defined scene. In this case, we should continue using the
   // *last known valid scene* index (currentSceneIndex).
   if (newSceneIndex === -1) {
     if (currentSceneIndex !== -1) {
@@ -632,17 +633,22 @@ const animation: AnimationFunction = (
     } else {
       // This case should ideally not happen if timeline is not empty and setup worked,
       // but as a fallback, handle the error gracefully.
-      console.error(`[Frame ${currentFrameNum}] CRITICAL ERROR: No active scene found and no previous scene index available! Timeline might be empty or setup failed.`);
+      console.error(
+        `[Frame ${currentFrameNum}] CRITICAL ERROR: No active scene found and no previous scene index available! Timeline might be empty or setup failed.`
+      );
       // Optionally draw a default background and return to prevent further errors
-      p.background(parseColor(p, undefined, DEFAULT_BG_COLOR)); 
-      return; 
+      p.background(parseColor(p, undefined, DEFAULT_BG_COLOR));
+      return;
     }
   }
 
   // Now, newSceneIndex is guaranteed to be a valid index (or we returned early)
   const sceneChanged = currentSceneIndex !== newSceneIndex;
   // Store the previous scene's actual data if it exists
-  const actualPreviousScene = (currentSceneIndex >= 0 && currentSceneIndex < timeline.length) ? timeline[currentSceneIndex] : null;
+  const actualPreviousScene =
+    currentSceneIndex >= 0 && currentSceneIndex < timeline.length
+      ? timeline[currentSceneIndex]
+      : null;
   // previousScene = activeScene; // REMOVED - Use actualPreviousScene
   currentSceneIndex = newSceneIndex;
   activeScene = timeline[currentSceneIndex];
@@ -650,15 +656,21 @@ const animation: AnimationFunction = (
   // If the scene changes, START a new transition
   if (sceneChanged) {
     console.log(
-      `[Frame ${currentFrameNum}] SCENE CHANGED! From ${actualPreviousScene?.startFrame ?? 'N/A'} to ${activeScene.startFrame}. Starting transition...`
+      `[Frame ${currentFrameNum}] SCENE CHANGED! From ${
+        actualPreviousScene?.startFrame ?? "N/A"
+      } to ${activeScene.startFrame}. Starting transition...`
     );
     isTransitioning = true;
     transitionStartFrame = currentFrameNum;
 
     // Store the CURRENT rendered colors as the starting point for the transition
-    previousCellColors = currentCellColors.map((row) => row.map(c => c)); // Deep copy current colors
-    previousBgColor = currentBgColor ? p.color(currentBgColor.toString()) : null; // Clone current color
-    previousSecondaryColor = currentSecondaryColor ? p.color(currentSecondaryColor.toString()) : null;
+    previousCellColors = currentCellColors.map((row) => row.map((c) => c)); // Deep copy current colors
+    previousBgColor = currentBgColor
+      ? p.color(currentBgColor.toString())
+      : null; // Clone current color
+    previousSecondaryColor = currentSecondaryColor
+      ? p.color(currentSecondaryColor.toString())
+      : null;
 
     // Calculate NEW target scene colors based on the NEW active scene
     targetBgColor = parseColor(
@@ -679,38 +691,44 @@ const animation: AnimationFunction = (
 
     // Update target points only when scene changes
     calculateNewTargetPoints(p, currentFrameNum);
-
   } // End of sceneChanged block
 
-  // --- Calculate Transition Progress --- 
+  // --- Calculate Transition Progress ---
   let sceneTransitionProgress = 1.0;
   if (isTransitioning) {
-      const framesSinceStart = currentFrameNum - transitionStartFrame;
-      sceneTransitionProgress = Math.min(1.0, framesSinceStart / config.colorTransitionFrames);
+    const framesSinceStart = currentFrameNum - transitionStartFrame;
+    sceneTransitionProgress = Math.min(
+      1.0,
+      framesSinceStart / config.colorTransitionFrames
+    );
 
-      // Log progress during transition
-      if (currentFrameNum % 5 === 0) {
-            console.log(`[Frame ${currentFrameNum}] Transition Progress: ${sceneTransitionProgress.toFixed(3)} (Frames elapsed: ${framesSinceStart})`);
-      }
+    // Log progress during transition
+    if (currentFrameNum % 5 === 0) {
+      console.log(
+        `[Frame ${currentFrameNum}] Transition Progress: ${sceneTransitionProgress.toFixed(
+          3
+        )} (Frames elapsed: ${framesSinceStart})`
+      );
+    }
 
-      if (sceneTransitionProgress >= 1.0) {
-          isTransitioning = false; // End transition
-          console.log(`[Frame ${currentFrameNum}] Transition Finished.`);
-          // Ensure final colors match target precisely
-          previousBgColor = targetBgColor;
-          previousSecondaryColor = targetSecondaryColor;
-          previousCellColors = targetCellColors;
-      }
+    if (sceneTransitionProgress >= 1.0) {
+      isTransitioning = false; // End transition
+      console.log(`[Frame ${currentFrameNum}] Transition Finished.`);
+      // Ensure final colors match target precisely
+      previousBgColor = targetBgColor;
+      previousSecondaryColor = targetSecondaryColor;
+      previousCellColors = targetCellColors;
+    }
   }
 
   // Apply easing to the progress if desired (optional)
   // const easedTransitionProgress = easeInOutQuad(sceneTransitionProgress); // Example
   const finalTransitionProgress = sceneTransitionProgress; // Use linear for now
 
-  // --- Interpolate Colors --- 
+  // --- Interpolate Colors ---
   currentBgColor = interpolateColor(
     p,
-    previousBgColor!, 
+    previousBgColor!,
     targetBgColor!,
     finalTransitionProgress // Use the calculated progress
   );
@@ -723,29 +741,39 @@ const animation: AnimationFunction = (
 
   // Log interpolated BgColor during transition
   if (isTransitioning && currentFrameNum % 5 === 0) {
-       console.log(`[Frame ${currentFrameNum}] BgColor Lerp: Prev=${previousBgColor?.toString()}, Target=${targetBgColor?.toString()}, Current=${currentBgColor?.toString()}, T=${finalTransitionProgress.toFixed(3)}`);
+    console.log(
+      `[Frame ${currentFrameNum}] BgColor Lerp: Prev=${previousBgColor?.toString()}, Target=${targetBgColor?.toString()}, Current=${currentBgColor?.toString()}, T=${finalTransitionProgress.toFixed(
+        3
+      )}`
+    );
   }
 
   // Interpolate individual cell colors using the same progress
   for (let r = 0; r < config.gridRows; r++) {
     for (let c = 0; c < config.gridColumns; c++) {
-      if (
-        previousCellColors[r]?.[c] &&
-        targetCellColors[r]?.[c]
-      ) {
+      if (previousCellColors[r]?.[c] && targetCellColors[r]?.[c]) {
         currentCellColors[r][c] = interpolateColor(
           p,
           previousCellColors[r][c],
           targetCellColors[r][c],
           finalTransitionProgress // Use the calculated progress
         );
-         // --- Fix Linter and Log for Cell[0][0] Color ---
-         if (r === 0 && c === 0 && isTransitioning && currentFrameNum % 5 === 0) {
-              const prevHex = previousCellColors[r][c].toString('#rrggbb');
-              const targetHex = targetCellColors[r][c].toString('#rrggbb');
-              const currentHex = currentCellColors[r][c].toString('#rrggbb');
-              console.log(`[Frame ${currentFrameNum}] Cell[0][0] Lerp: Prev=${prevHex}, Target=${targetHex}, Current=${currentHex}, T=${finalTransitionProgress.toFixed(3)}`);
-         }
+        // --- Fix Linter and Log for Cell[0][0] Color ---
+        if (
+          r === 0 &&
+          c === 0 &&
+          isTransitioning &&
+          currentFrameNum % 5 === 0
+        ) {
+          const prevHex = previousCellColors[r][c].toString("#rrggbb");
+          const targetHex = targetCellColors[r][c].toString("#rrggbb");
+          const currentHex = currentCellColors[r][c].toString("#rrggbb");
+          console.log(
+            `[Frame ${currentFrameNum}] Cell[0][0] Lerp: Prev=${prevHex}, Target=${targetHex}, Current=${currentHex}, T=${finalTransitionProgress.toFixed(
+              3
+            )}`
+          );
+        }
       } else if (targetCellColors[r]?.[c]) {
         // Fallback if previous doesn't exist (e.g., grid resize?)
         currentCellColors[r][c] = targetCellColors[r][c];
@@ -766,7 +794,8 @@ const animation: AnimationFunction = (
   // (This ensures filler cells update during the transition)
   for (let r = 0; r < config.gridRows; r++) {
     for (let c = 0; c < config.gridColumns; c++) {
-      if (!activeScene.layoutGrid?.[r]?.[c]) { // If it's a filler cell in the *target* layout
+      if (!activeScene.layoutGrid?.[r]?.[c]) {
+        // If it's a filler cell in the *target* layout
         if (targetCellColors[r]?.[c]) {
           currentCellColors[r][c] = targetCellColors[r][c]; // Update filler cell to the calculated target (based on interpolated secondary)
         }
@@ -842,52 +871,58 @@ const animation: AnimationFunction = (
   // 6. Render
   p.background(currentBgColor);
 
-  // --- NEW: Render Background Characters --- 
-  if (activeScene && activeScene.backgroundChars && activeScene.backgroundChars.length > 0) {
-      const chars = activeScene.backgroundChars;
-      const charLength = chars.length;
-      const fontSize = config.textureSizePreview * 0.6; // Adjust font size as needed
-      p.textSize(fontSize);
-      p.textAlign(p.CENTER, p.CENTER);
-      
-      // Determine background character color (e.g., slightly darker/lighter than bg or low alpha secondary)
-      // REMOVED calculation based on primary background
-      // const bgColorR = p.red(currentBgColor!); // Assumes currentBgColor is not null
-      // const bgColorG = p.green(currentBgColor!); 
-      // const bgColorB = p.blue(currentBgColor!); 
-      // Example: Make slightly lighter or darker based on brightness, with low alpha
-      // const brightness = (bgColorR * 0.299 + bgColorG * 0.587 + bgColorB * 0.114);
-      // const delta = brightness > 128 ? -30 : 30; // Adjust contrast amount
-      // const bgCharColor = p.color(bgColorR + delta, bgColorG + delta, bgColorB + delta, 30); // Low alpha (adjust 30)
+  // --- NEW: Render Background Characters ---
+  if (
+    activeScene &&
+    activeScene.backgroundChars &&
+    activeScene.backgroundChars.length > 0
+  ) {
+    const chars = activeScene.backgroundChars;
+    const charLength = chars.length;
+    const fontSize = config.textureSizePreview * 0.6; // Adjust font size as needed
+    p.textSize(fontSize);
+    p.textAlign(p.CENTER, p.CENTER);
 
-      // Use the interpolated secondary color directly
-      if (!currentSecondaryColor) {
-          console.warn("currentSecondaryColor is null, cannot draw background chars");
-          // Handle the case where color is null, maybe skip drawing or use a default
-      } else {
-          p.fill(currentSecondaryColor); // Use the secondary color directly
-          p.noStroke();
+    // Determine background character color (e.g., slightly darker/lighter than bg or low alpha secondary)
+    // REMOVED calculation based on primary background
+    // const bgColorR = p.red(currentBgColor!); // Assumes currentBgColor is not null
+    // const bgColorG = p.green(currentBgColor!);
+    // const bgColorB = p.blue(currentBgColor!);
+    // Example: Make slightly lighter or darker based on brightness, with low alpha
+    // const brightness = (bgColorR * 0.299 + bgColorG * 0.587 + bgColorB * 0.114);
+    // const delta = brightness > 128 ? -30 : 30; // Adjust contrast amount
+    // const bgCharColor = p.color(bgColorR + delta, bgColorG + delta, bgColorB + delta, 30); // Low alpha (adjust 30)
 
-          // Get cell dimensions (assuming uniform grid for simplicity)
-          const cellWidth = config.width / config.gridColumns;
-          const cellHeight = config.height / config.gridRows;
-          const offsetX = cellWidth / 2;
-          const offsetY = cellHeight / 2 + fontSize * 0.3; // Adjust vertical offset
+    // Use the interpolated secondary color directly
+    if (!currentSecondaryColor) {
+      console.warn(
+        "currentSecondaryColor is null, cannot draw background chars"
+      );
+      // Handle the case where color is null, maybe skip drawing or use a default
+    } else {
+      p.fill(currentSecondaryColor); // Use the secondary color directly
+      p.noStroke();
 
-          // Loop through grid cells and draw background characters
-          for (let r = 0; r < config.gridRows; r++) {
-              for (let c = 0; c < config.gridColumns; c++) {
-                  const charIndex = (r * config.gridColumns + c) % charLength;
-                  const charToDraw = chars[charIndex];
-                  const x = c * cellWidth + offsetX;
-                  const y = r * cellHeight + offsetY;
-                  p.text(charToDraw, x, y);
-              }
-          }
+      // Get cell dimensions (assuming uniform grid for simplicity)
+      const cellWidth = config.width / config.gridColumns;
+      const cellHeight = config.height / config.gridRows;
+      const offsetX = cellWidth / 2;
+      const offsetY = cellHeight / 2 + fontSize * 0.3; // Adjust vertical offset
+
+      // Loop through grid cells and draw background characters
+      for (let r = 0; r < config.gridRows; r++) {
+        for (let c = 0; c < config.gridColumns; c++) {
+          const charIndex = (r * config.gridColumns + c) % charLength;
+          const charToDraw = chars[charIndex];
+          const x = c * cellWidth + offsetX;
+          const y = r * cellHeight + offsetY;
+          p.text(charToDraw, x, y);
+        }
       }
+    }
   }
 
-  // --- Render Main Rectangles (using existing texture renderer) --- 
+  // --- Render Main Rectangles (using existing texture renderer) ---
   rectangles.forEach((rect, index) => {
     const metadata = rect.getMetadata();
     // Ensure metadata exists and row/col indices are valid before rendering
@@ -918,8 +953,35 @@ const animation: AnimationFunction = (
   // ... (debug info logic)
 };
 
+// --- Seeded PRNG (Mulberry32) and String-to-Seed Helpers ---
+
+/** Simple string hashing function (like DJB2) to get a number seed */
+function stringToSeed(str: string): number {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 33) ^ str.charCodeAt(i);
+  }
+  return hash >>> 0; // Ensure positive integer
+}
+
+/** Mulberry32 PRNG */
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 0x100000000;
+  };
+}
+
 // --- Setup Function ---
-const setupAnimation: AnimationFunction = (p: p5): void => {
+const setupAnimation: AnimationFunction = (
+  p: p5,
+  _normalizedTime?: number, // Made optional
+  _currentFrameNum?: number, // Made optional
+  _totalFrames?: number, // Made optional
+  props?: { noiseSeedPhrase?: string } // Added optional props argument
+): void => {
   // Declare initialSceneIndex at the top level of the function
   let initialSceneIndex = 0;
 
@@ -927,7 +989,16 @@ const setupAnimation: AnimationFunction = (p: p5): void => {
   console.log(`Using color scheme: ${config.colorSchemeName}`);
   p.background(activeColorScheme.background);
   p.frameRate(config.fps);
-  noise3D = createNoise3D();
+
+  // --- Initialize Noise with Seed ---
+  // PRIORITIZE seed from props if provided
+  const seedPhraseToUse = props?.noiseSeedPhrase ?? config.noiseSeedPhrase;
+  const seedNumber = stringToSeed(seedPhraseToUse);
+  const seededPrng = mulberry32(seedNumber);
+  noise3D = createNoise3D(seededPrng); // Pass the seeded PRNG
+  console.log(
+    `Initialized noise with seed phrase: "${seedPhraseToUse}" (numeric: ${seedNumber})`
+  );
 
   // --- Collect all unique characters needed for textures ---
   const chars = config.fillerChars || " ";

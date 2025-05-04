@@ -125,6 +125,9 @@ export interface UnstableGridConfig {
   noiseAmplitudeX: number; // Max displacement based on noise
   noiseAmplitudeY: number;
   pointFollowFactor: number; // Smoothing factor (0-1)
+
+  // --- NEW: Seed for Noise ---
+  noiseSeedPhrase: string;
 }
 
 // --- Хелперы для Размеров Сетки ---
@@ -203,4 +206,7 @@ export const config: UnstableGridConfig = {
   noiseAmplitudeX: 20, // Example: Max 50px displacement
   noiseAmplitudeY: 20,
   pointFollowFactor: 0.5, // Example: 8% towards target each frame
+
+  // --- NEW: Seed for Noise ---
+  noiseSeedPhrase: "default-unstable-grid-seed", // Default seed phrase
 };

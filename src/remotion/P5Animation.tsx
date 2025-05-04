@@ -1,7 +1,26 @@
 import React, { useEffect, useRef } from "react";
-import { useCurrentFrame, useVideoConfig, continueRender, delayRender } from "remotion";
+import {
+  useCurrentFrame,
+  useVideoConfig,
+  continueRender,
+  delayRender,
+} from "remotion";
 import p5 from "p5";
-import { animationSettings, defaultAnimation, AnimationName } from "../animations";
+import {
+  animationSettings,
+  defaultAnimation,
+  AnimationName,
+} from "../animations";
+
+// --- NEW: Define Props Interface ---
+interface P5AnimationProps {
+  templateId?: AnimationName;
+  animationConfig?: {
+    // Optional config object
+    noiseSeedPhrase?: string;
+    // ... potentially other config overrides ...
+  };
+}
 
 declare global {
   interface Global {
@@ -11,9 +30,8 @@ declare global {
 
 export const P5Animation = ({
   templateId = defaultAnimation.id,
-}: {
-  templateId?: AnimationName;
-}) => {
+  animationConfig, // Destructure the new prop
+}: P5AnimationProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5>(); // Renamed for clarity
   const frame = useCurrentFrame();
@@ -40,15 +58,16 @@ export const P5Animation = ({
         const height = currentSettings.height || 1920;
         try {
           p.createCanvas(width, height, p.WEBGL);
-        } catch(e) {
+        } catch (e) {
           console.error("Error creating WebGL canvas:", e);
           throw e;
         }
         p.pixelDensity(1);
         if (onSetupFunction) {
           try {
-            onSetupFunction(p, 0, 0, totalFrames);
-          } catch(e) {
+            // Pass animationConfig (props) to the setup function
+            onSetupFunction(p, 0, 0, totalFrames, animationConfig);
+          } catch (e) {
             console.error("Error running onSetupFunction:", e);
           }
         }
@@ -58,12 +77,16 @@ export const P5Animation = ({
       p.draw = () => {
         const currentFrameFromRef = latestFrameRef.current;
         if (!p5InstanceRef.current) return;
-        const currentT = totalFrames > 0 ? currentFrameFromRef / totalFrames : 0;
+        const currentT =
+          totalFrames > 0 ? currentFrameFromRef / totalFrames : 0;
         const currentFrameNum = currentFrameFromRef;
         try {
           animationFunction(p, currentT, currentFrameNum, totalFrames);
-        } catch(e) {
-          console.error(`Frame ${currentFrameNum}: Error during animationFunction:`, e);
+        } catch (e) {
+          console.error(
+            `Frame ${currentFrameNum}: Error during animationFunction:`,
+            e
+          );
         }
       };
     };
@@ -74,9 +97,16 @@ export const P5Animation = ({
         p5InstanceRef.current = undefined;
       }
     };
-  }, [templateId, animationFunction, onSetupFunction, totalFrames, currentSettings]);
+  }, [
+    templateId,
+    animationFunction,
+    onSetupFunction,
+    totalFrames,
+    currentSettings,
+    animationConfig,
+  ]);
 
-  // --- Effect for redrawing the correct frame --- 
+  // --- Effect for redrawing the correct frame ---
   useEffect(() => {
     latestFrameRef.current = frame;
     if (p5InstanceRef.current) {
