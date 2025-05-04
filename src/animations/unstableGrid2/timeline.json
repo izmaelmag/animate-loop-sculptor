@@ -5684,46 +5684,556 @@
   {
     "startFrame": 1952,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
-        null,
         {
-          "char": "A",
+          "char": "L",
           "style": {
-            "color": "#00a8ff"
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
           }
         },
         {
           "char": "I",
           "style": {
-            "color": "#00a8ff"
+            "color": "#360016"
           }
         },
         {
           "char": "N",
           "style": {
-            "color": "#00a8ff"
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "G",
+          "style": {
+            "color": "#43001a"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#43001a"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#8cff00"
           }
         },
         {
           "char": "T",
           "style": {
-            "color": "#00a8ff"
+            "color": "#8cff00"
           }
         },
-        null,
-        null,
-        null
+        {
+          "char": "G",
+          "style": {
+            "color": "#43001a"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#43001a"
+          }
+        }
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ],
+      [
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#360016"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#360016"
+          }
+        }
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -5743,36 +6253,7 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          "char": "A",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        {
-          "char": "I",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        {
-          "char": "N",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        {
-          "char": "T",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        null,
-        null,
-        null
-      ],
+      [null, null, null, null, null, null, null, null],
       [
         null,
         {
@@ -5818,36 +6299,7 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [
-        null,
-        {
-          "char": "A",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        {
-          "char": "I",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        {
-          "char": "N",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        {
-          "char": "T",
-          "style": {
-            "color": "#00a8ff"
-          }
-        },
-        null,
-        null,
-        null
-      ],
+      [null, null, null, null, null, null, null, null],
       [
         null,
         {
@@ -7503,11 +7955,163 @@
   {
     "startFrame": 2715,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
-        null,
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        }
+      ],
+      [
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        }
+      ],
+      [
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
         {
           "char": "O",
           "style": {
@@ -7520,16 +8124,56 @@
             "color": "#ffca00"
           }
         },
-        null,
-        null,
-        null,
-        null,
-        null
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        }
       ],
       [
-        null,
-        null,
-        null,
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
         {
           "char": "A",
           "style": {
@@ -7542,13 +8186,82 @@
             "color": "#db8f02"
           }
         },
-        null,
-        null,
-        null
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        }
       ],
-      [null, null, null, null, null, null, null, null],
       [
-        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        }
+      ],
+      [
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
         {
           "char": "O",
           "style": {
@@ -7573,15 +8286,50 @@
             "color": "#00a8ff"
           }
         },
-        null,
-        null,
-        null
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        }
       ],
       [
-        null,
-        null,
-        null,
-        null,
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
         {
           "char": "T",
           "style": {
@@ -7600,10 +8348,20 @@
             "color": "#00a8ff"
           }
         },
-        null
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        }
       ],
       [
-        null,
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
         {
           "char": "P",
           "style": {
@@ -7634,11 +8392,119 @@
             "color": "#8cff00"
           }
         },
-        null,
-        null
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        }
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        }
+      ],
+      [
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "P",
+          "style": {
+            "color": "#002206"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#002206"
+          }
+        }
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -7658,28 +8524,28 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
+        null,
         null,
         null,
         {
           "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
-        null,
         null,
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -7704,43 +8570,62 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null,
+        null
+      ],
       [
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
           }
         },
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -7765,39 +8650,92 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
+        null,
+        null,
         {
-          "char": "m",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "a",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "k",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "e",
-          "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
         null,
         null
       ],
+      [
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "M",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "K",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -7818,46 +8756,356 @@
   {
     "startFrame": 2906,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
-        {
-          "char": "l",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "o",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "v",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "e",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
         null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        }
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        null,
+        null
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -7867,8 +9115,8 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
-    "secondaryColor": "#0f0f0f",
+    "backgroundColor": "#250000",
+    "secondaryColor": "#1e0000",
     "durationFrames": 116
   },
   {
@@ -7877,28 +9125,28 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         null,
-        {
-          "char": "w",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "e",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
         null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
         null,
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -7923,43 +9171,62 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        null,
+        null,
+        null
+      ],
       [
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -7984,34 +9251,87 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         null,
+        null,
         {
-          "char": "g",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "t",
-          "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         null,
         null,
         null
       ],
+      [
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "G",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "T",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        null,
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8032,46 +9352,356 @@
   {
     "startFrame": 3070,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
-        {
-          "char": "h",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "i",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "g",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "h",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
         null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        }
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#346005"
+          }
+        },
+        null,
+        null
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -8081,8 +9711,8 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
-    "secondaryColor": "#0f0f0f",
+    "backgroundColor": "#021e01",
+    "secondaryColor": "#011e00",
     "durationFrames": 113
   },
   {
@@ -8091,28 +9721,28 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
+        null,
         null,
         null,
         {
           "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
-        null,
         null,
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8137,43 +9767,62 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null,
+        null
+      ],
       [
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8198,35 +9847,88 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null,
+        null
+      ],
       [
         null,
         {
-          "char": "m",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "k",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
           }
         },
         {
-          "char": "e",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#db8f02"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#db8f02"
           }
         },
         null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "M",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "K",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
         null,
         null
       ],
@@ -8251,46 +9953,556 @@
   {
     "startFrame": 3230,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
-        null,
         {
-          "char": "l",
+          "char": "L",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#560021"
           }
         },
         {
-          "char": "o",
+          "char": "O",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#560021"
           }
         },
         {
-          "char": "v",
+          "char": "V",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#560021"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#560021"
           }
         },
-        null,
-        null,
-        null
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#560021"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#560021"
+          }
+        }
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -8300,7 +10512,7 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
+    "backgroundColor": "#220000",
     "secondaryColor": "#0f0f0f",
     "durationFrames": 119
   },
@@ -8315,19 +10527,19 @@
       [
         null,
         null,
-        {
-          "char": "w",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "e",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
         null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
         null,
         null,
         null
@@ -8360,40 +10572,59 @@
       [null, null, null, null, null, null, null, null],
       [
         null,
+        null,
+        null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#005298"
           }
         },
         {
-          "char": "a",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#005298"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "n",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "a",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#00a8ff"
           }
         },
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8418,33 +10649,86 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         null,
         {
-          "char": "g",
+          "char": "G",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "t",
+          "char": "T",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#151515"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#151515"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#005298"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#005298"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#005298"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#005298"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#005298"
+          }
+        },
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8465,46 +10749,281 @@
   {
     "startFrame": 3399,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        }
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#2f5c00"
+          }
+        }
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#2f5c00"
+          }
+        }
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        }
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        null,
+        null
+      ],
       [
         null,
         {
-          "char": "h",
+          "char": "H",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#2f5c00"
           }
         },
         {
-          "char": "i",
+          "char": "I",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#2f5c00"
           }
         },
         {
-          "char": "g",
+          "char": "G",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#2f5c00"
           }
         },
         {
-          "char": "h",
+          "char": "H",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#2f5c00"
           }
         },
         null,
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        {
+          "char": "I",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        {
+          "char": "G",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        {
+          "char": "H",
+          "style": {
+            "color": "#2f5c00"
+          }
+        },
+        {
+          "char": " ",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -8514,8 +11033,8 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
-    "secondaryColor": "#0f0f0f",
+    "backgroundColor": "#051300",
+    "secondaryColor": "#021400",
     "durationFrames": 119
   },
   {
@@ -8524,28 +11043,28 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
-        null,
         null,
         {
           "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ff0068"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ff0068"
           }
         },
+        null,
         null,
         null,
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8570,43 +11089,62 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ff0068"
           }
         },
         {
-          "char": "a",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "n",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "n",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "a",
-          "style": {
-            "color": "#FFFFFF"
+            "color": "#ff0068"
           }
         },
         null,
+        null,
+        null,
+        null,
         null
       ],
+      [
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8631,32 +11169,85 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         {
-          "char": "m",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ff0068"
           }
         },
         {
-          "char": "a",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ff0068"
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#8cff00"
           }
         },
         {
-          "char": "k",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
           }
         },
         {
-          "char": "e",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        null
+      ],
+      [
+        null,
+        {
+          "char": "M",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "K",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ffca00"
           }
         },
         null,
@@ -8687,39 +11278,121 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         {
-          "char": "l",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#4c001e"
           }
         },
         {
-          "char": "o",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#4c001e"
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#4c001e"
           }
         },
         {
-          "char": "v",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#4c001e"
           }
         },
         {
-          "char": "e",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#4c001e"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#4c001e"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#4c001e"
+          }
+        },
+        null
+      ],
+      [
+        null,
+        {
+          "char": "M",
+          "style": {
+            "color": "#4c001e"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#4c001e"
+          }
+        },
+        {
+          "char": "K",
+          "style": {
+            "color": "#4c001e"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#4c001e"
           }
         },
         null,
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8733,8 +11406,8 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
-    "secondaryColor": "#0f0f0f",
+    "backgroundColor": "#1c0000",
+    "secondaryColor": "#190000",
     "durationFrames": 124
   },
   {
@@ -8743,21 +11416,19 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
@@ -8765,6 +11436,8 @@
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8789,43 +11462,62 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ffca00"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
       [
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#00a8ff"
           }
         },
         null,
         null
       ],
+      [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8850,30 +11542,83 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
         null,
         {
-          "char": "g",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "t",
-          "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#00a8ff"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "G",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "T",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
         null,
         null
       ],
@@ -8901,39 +11646,116 @@
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
         null,
+        null,
         {
-          "char": "h",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#0a4300"
           }
         },
         {
-          "char": "i",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#0a4300"
           }
         },
-        {
-          "char": "g",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "char": "h",
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
+        null,
         null,
         null,
         null
       ],
-      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "W",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        {
+          "char": "N",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        {
+          "char": "A",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "G",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        {
+          "char": "T",
+          "style": {
+            "color": "#0a4300"
+          }
+        },
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        {
+          "char": "H",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "I",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "G",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        {
+          "char": "H",
+          "style": {
+            "color": "#8cff00"
+          }
+        },
+        null,
+        null
+      ],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -8947,8 +11769,8 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
-    "secondaryColor": "#0f0f0f",
+    "backgroundColor": "#001a01",
+    "secondaryColor": "#001c03",
     "durationFrames": 111
   },
   {
@@ -8961,19 +11783,19 @@
       [null, null, null, null, null, null, null, null],
       [
         null,
-        null,
         {
           "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
+        null,
         null,
         null,
         null,
@@ -9008,33 +11830,33 @@
       [
         null,
         {
-          "char": "w",
+          "char": "W",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "n",
+          "char": "N",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
@@ -9069,27 +11891,27 @@
       [
         null,
         {
-          "char": "m",
+          "char": "M",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "a",
+          "char": "A",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "k",
+          "char": "K",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         {
-          "char": "e",
+          "char": "E",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#ffca00"
           }
         },
         null,
@@ -9117,46 +11939,556 @@
   {
     "startFrame": 3895,
     "layoutGrid": [
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
       [
-        null,
         {
-          "char": "l",
+          "char": "X",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#330014"
           }
         },
         {
-          "char": "o",
+          "char": "X",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#330014"
           }
         },
         {
-          "char": "v",
+          "char": "O",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#810031"
           }
         },
         {
-          "char": "e",
+          "char": "X",
           "style": {
-            "color": "#FFFFFF"
+            "color": "#330014"
           }
         },
-        null,
-        null,
-        null
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
       ],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null]
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ],
+      [
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        }
+      ],
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ],
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ],
+      [
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#ff0068"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        }
+      ],
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ],
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ],
+      [
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "E",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "L",
+          "style": {
+            "color": "#830032"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        }
+      ],
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ],
+      [
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "O",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "V",
+          "style": {
+            "color": "#810031"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        },
+        {
+          "char": "X",
+          "style": {
+            "color": "#330014"
+          }
+        }
+      ]
     ],
     "stylePresets": {
       "filler": {
@@ -9166,8 +12498,8 @@
         "color": "#FFFFFF"
       }
     },
-    "backgroundColor": "#000000",
-    "secondaryColor": "#0f0f0f",
+    "backgroundColor": "#160000",
+    "secondaryColor": "#190000",
     "durationFrames": 119
   }
 ]
