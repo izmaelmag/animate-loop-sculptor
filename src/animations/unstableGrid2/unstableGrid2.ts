@@ -87,6 +87,10 @@ let previousSecondaryColor: p5.Color | null = null;
 let targetSecondaryColor: p5.Color | null = null;
 let currentSecondaryColor: p5.Color | null = null;
 
+// --- NEW: Transition State ---
+let isTransitioning = false;
+let transitionStartFrame = -1;
+
 // --- Easing Functions ---
 // REMOVED inline definitions
 /*
@@ -556,8 +560,8 @@ const animation: AnimationFunction = (
   const frame = currentFrameNum;
 
   // --- State needed for transitions ---
-  let sceneTransitionProgress = 1; // Start assuming complete (or will be reset)
-  const sceneTransitionIncrement = 1 / Math.max(1, config.colorTransitionFrames); // Calculate increment
+  // let sceneTransitionProgress = 1; // REMOVED - Now managed by isTransitioning
+  const sceneTransitionIncrement = 1 / Math.max(1, config.colorTransitionFrames); // Keep for calculation
 
   // 1. Determine Active Scene and Previous Scene
   let newSceneIndex = -1;
@@ -637,22 +641,26 @@ const animation: AnimationFunction = (
 
   // Now, newSceneIndex is guaranteed to be a valid index (or we returned early)
   const sceneChanged = currentSceneIndex !== newSceneIndex;
-  previousScene = activeScene;
+  // Store the previous scene's actual data if it exists
+  const actualPreviousScene = (currentSceneIndex >= 0 && currentSceneIndex < timeline.length) ? timeline[currentSceneIndex] : null;
+  // previousScene = activeScene; // REMOVED - Use actualPreviousScene
   currentSceneIndex = newSceneIndex;
   activeScene = timeline[currentSceneIndex];
 
-  // If the scene changes, update targets and reset interpolation timer/state
+  // If the scene changes, START a new transition
   if (sceneChanged) {
     console.log(
-      `[Frame ${currentFrameNum}] Scene changed to index: ${currentSceneIndex}`
+      `[Frame ${currentFrameNum}] SCENE CHANGED! From ${actualPreviousScene?.startFrame ?? 'N/A'} to ${activeScene.startFrame}. Starting transition...`
     );
+    isTransitioning = true;
+    transitionStartFrame = currentFrameNum;
 
-    // Update target colors based *immediately* on the NEW scene
-    previousCellColors = currentCellColors.map((row) => [...row]); // Store current before overwriting target
-    previousBgColor = currentBgColor;
-    previousSecondaryColor = currentSecondaryColor;
+    // Store the CURRENT rendered colors as the starting point for the transition
+    previousCellColors = currentCellColors.map((row) => row.map(c => c)); // Deep copy current colors
+    previousBgColor = currentBgColor ? p.color(currentBgColor.toString()) : null; // Clone current color
+    previousSecondaryColor = currentSecondaryColor ? p.color(currentSecondaryColor.toString()) : null;
 
-    // Calculate NEW target scene colors
+    // Calculate NEW target scene colors based on the NEW active scene
     targetBgColor = parseColor(
       p,
       activeScene.backgroundColor,
@@ -662,83 +670,106 @@ const animation: AnimationFunction = (
       p,
       activeScene.secondaryColor,
       activeColorScheme.primary_darker
-    ); // Use darker primary as default secondary
+    );
 
-    // Recalculate target cell colors based on the *new* active scene
+    // Calculate NEW target cell colors based on the NEW active scene and its target secondary color
     calculateTargetCellColors(p, activeScene, targetSecondaryColor);
 
-    sceneTransitionProgress = 0; // Reset scene transition progress
+    // sceneTransitionProgress = 0; // REMOVED
 
-    // Update target points only when scene changes (layout potentially changes)
+    // Update target points only when scene changes
     calculateNewTargetPoints(p, currentFrameNum);
-  } else {
-    // If scene hasn't changed, continue the existing transition if it's in progress
-    if (sceneTransitionProgress < 1) {
-      sceneTransitionProgress = Math.min(
-        1,
-        sceneTransitionProgress + sceneTransitionIncrement
-      );
-    }
+
+  } // End of sceneChanged block
+
+  // --- Calculate Transition Progress --- 
+  let sceneTransitionProgress = 1.0;
+  if (isTransitioning) {
+      const framesSinceStart = currentFrameNum - transitionStartFrame;
+      sceneTransitionProgress = Math.min(1.0, framesSinceStart / config.colorTransitionFrames);
+
+      // Log progress during transition
+      if (currentFrameNum % 5 === 0) {
+            console.log(`[Frame ${currentFrameNum}] Transition Progress: ${sceneTransitionProgress.toFixed(3)} (Frames elapsed: ${framesSinceStart})`);
+      }
+
+      if (sceneTransitionProgress >= 1.0) {
+          isTransitioning = false; // End transition
+          console.log(`[Frame ${currentFrameNum}] Transition Finished.`);
+          // Ensure final colors match target precisely
+          previousBgColor = targetBgColor;
+          previousSecondaryColor = targetSecondaryColor;
+          previousCellColors = targetCellColors;
+      }
   }
 
-  // --- Always Update Colors ---
-  // Calculate interpolation factor for scene-level color changes
-  const sceneColorT = sceneTransitionProgress; // Use the scene transition progress directly
+  // Apply easing to the progress if desired (optional)
+  // const easedTransitionProgress = easeInOutQuad(sceneTransitionProgress); // Example
+  const finalTransitionProgress = sceneTransitionProgress; // Use linear for now
 
-  // Interpolate background and secondary colors ALWAYS based on transition progress
+  // --- Interpolate Colors --- 
   currentBgColor = interpolateColor(
     p,
-    previousBgColor!,
+    previousBgColor!, 
     targetBgColor!,
-    sceneColorT
+    finalTransitionProgress // Use the calculated progress
   );
   currentSecondaryColor = interpolateColor(
     p,
     previousSecondaryColor!,
     targetSecondaryColor!,
-    sceneColorT
+    finalTransitionProgress // Use the calculated progress
   );
 
-  // ALWAYS recalculate target cell colors based on the current active scene and the *interpolated* secondary color.
-  // This handles cases where layout changes within a scene or ensures correct colors during/after transition.
-  calculateTargetCellColors(p, activeScene, currentSecondaryColor);
+  // Log interpolated BgColor during transition
+  if (isTransitioning && currentFrameNum % 5 === 0) {
+       console.log(`[Frame ${currentFrameNum}] BgColor Lerp: Prev=${previousBgColor?.toString()}, Target=${targetBgColor?.toString()}, Current=${currentBgColor?.toString()}, T=${finalTransitionProgress.toFixed(3)}`);
+  }
 
-  // Interpolate individual cell colors based on the colorTransitionFrames setting
-  const cellColorT = Math.min(
-    1,
-    (currentFrameNum % config.colorTransitionFrames) /
-      (config.colorTransitionFrames - 1)
-  );
+  // Interpolate individual cell colors using the same progress
   for (let r = 0; r < config.gridRows; r++) {
     for (let c = 0; c < config.gridColumns; c++) {
-      // Ensure arrays/colors exist before interpolation
       if (
         previousCellColors[r]?.[c] &&
-        targetCellColors[r]?.[c] &&
-        currentCellColors[r]?.[c]
+        targetCellColors[r]?.[c]
       ) {
-        // Simple immediate switch for now, or use lerp for smooth transition
-        // currentCellColors[r][c] = targetCellColors[r][c]; // Immediate switch
-        // Use lerpColor for smoother transition (Need to manage previous state better for this)
-        // If we want smooth cell transitions INDEPENDENT of scene transition,
-        // we need a separate timer/progress for cell color lerp.
-        // For now, let's just set to target, relying on scene transition for smoothness.
-        // --- OR --- maybe lerp from previous *scene's* target to current scene's target?
-        // Let's try lerping from the *stored* previousCellColors (set during scene change) to the new target.
-
-        // Use the scene transition progress for cell colors too for consistency
         currentCellColors[r][c] = interpolateColor(
           p,
           previousCellColors[r][c],
           targetCellColors[r][c],
-          sceneColorT
+          finalTransitionProgress // Use the calculated progress
         );
+         // --- Fix Linter and Log for Cell[0][0] Color ---
+         if (r === 0 && c === 0 && isTransitioning && currentFrameNum % 5 === 0) {
+              const prevHex = previousCellColors[r][c].toString('#rrggbb');
+              const targetHex = targetCellColors[r][c].toString('#rrggbb');
+              const currentHex = currentCellColors[r][c].toString('#rrggbb');
+              console.log(`[Frame ${currentFrameNum}] Cell[0][0] Lerp: Prev=${prevHex}, Target=${targetHex}, Current=${currentHex}, T=${finalTransitionProgress.toFixed(3)}`);
+         }
       } else if (targetCellColors[r]?.[c]) {
-        // If previous doesn't exist (initialization?), set directly
+        // Fallback if previous doesn't exist (e.g., grid resize?)
         currentCellColors[r][c] = targetCellColors[r][c];
       } else {
         // Fallback if target is somehow missing
-        currentCellColors[r][c] = currentSecondaryColor; // Use interpolated secondary as fallback
+        currentCellColors[r][c] = currentSecondaryColor ?? p.color(128); // Use interpolated secondary or gray
+      }
+    }
+  }
+
+  // --- Recalculate Target Cell Colors based on INTERPOLATED secondary color ---
+  // This is important if filler cells should fade with the secondary color transition
+  // If filler cells should snap to the new scene's secondary color, calculate targetCellColors
+  // ONLY during sceneChanged block.
+  // Let's assume fillers should transition smoothly:
+  calculateTargetCellColors(p, activeScene, currentSecondaryColor!);
+  // Re-apply target colors to the currentCellColors where the original layout was null
+  // (This ensures filler cells update during the transition)
+  for (let r = 0; r < config.gridRows; r++) {
+    for (let c = 0; c < config.gridColumns; c++) {
+      if (!activeScene.layoutGrid?.[r]?.[c]) { // If it's a filler cell in the *target* layout
+        if (targetCellColors[r]?.[c]) {
+          currentCellColors[r][c] = targetCellColors[r][c]; // Update filler cell to the calculated target (based on interpolated secondary)
+        }
       }
     }
   }
