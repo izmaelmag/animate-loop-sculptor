@@ -12,19 +12,18 @@ import RhythmTapperPage from './pages/RhythmTapperPage';
 const queryClient = new QueryClient();
 
 const App = () => {
-  const navStyle: React.CSSProperties = { padding: '10px 20px', backgroundColor: '#eee', marginBottom: '20px' };
-  const linkStyle: React.CSSProperties = { marginRight: '15px', textDecoration: 'none', color: 'blue' };
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AnimationProvider>
           <Toaster />
           <Sonner />
-          <nav style={navStyle}>
-            <Link to="/" style={linkStyle}>Home (Index Page)</Link>
-            <Link to="/editor" style={linkStyle}>Timeline Editor</Link>
-            <Link to="/tapper" style={linkStyle}>Rhythm Tapper</Link>
+          <nav 
+             className="fixed bottom-4 right-4 z-50 bg-gray-800/90 backdrop-blur-sm rounded-md p-2 shadow-lg flex gap-3"
+          >
+            <Link to="/" className="text-blue-400 hover:text-blue-300 text-sm">Home</Link>
+            <Link to="/editor" className="text-blue-400 hover:text-blue-300 text-sm">Editor</Link>
+            <Link to="/tapper" className="text-blue-400 hover:text-blue-300 text-sm">Tapper</Link>
           </nav>
           <Routes>
             <Route path="/" element={<Index />} />
