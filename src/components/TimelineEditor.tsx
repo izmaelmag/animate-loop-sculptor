@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { toast } from "sonner"; // Import toast from sonner
+import ColorPalette from './ui/ColorPalette'; // Import the new component
 
 // Import core types (adjust path if needed)
 import {
@@ -48,6 +49,12 @@ const INITIAL_GRID_ROWS = 6;
 const DEFAULT_BG_COLOR = "#282c34"; // Default grid background
 const DEFAULT_SECONDARY_COLOR = "#333"; // Default null cell background
 const FPS = 60; // Define FPS for frame calculation
+
+// --- Default Palette Colors ---
+const defaultPaletteColors = [
+  "#FFFFFF", "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00",
+  "#FF00FF", "#00FFFF", "#FFA500", "#800080", "#4682B4", "#808080",
+];
 
 // --- GridDisplay Component ---
 interface GridDisplayProps {
@@ -513,18 +520,29 @@ const TimelineEditor: React.FC = () => {
     [selectedSceneIndex, lastUsedColor] // Add lastUsedColor as dependency
   );
 
-  // Update color for selected cell AND store it as last used color
-  const handleSelectedCellColorChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  // Update color for selected cell using the native input
+  const handleSelectedCellColorChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (selectedCellCoords) {
       const newColor = event.target.value;
-      handleCellChange(selectedCellCoords.row, selectedCellCoords.col, {
-        color: newColor,
-      });
-      setLastUsedColor(newColor); // Remember this color
+      handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: newColor });
+      setLastUsedColor(newColor); 
     }
-  };
+  }, [selectedCellCoords, handleCellChange, setLastUsedColor]);
+
+  // --- NEW: Handle color selection from the palette ---
+  const handlePaletteColorSelect = useCallback((color: string) => {
+      if (selectedCellCoords) {
+          console.log(`Palette color selected: ${color} for cell [${selectedCellCoords.row}, ${selectedCellCoords.col}]`);
+          // Use the existing logic to update the cell
+          handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: color });
+          // Update the last used color
+          setLastUsedColor(color);
+      } else {
+          console.log("Palette color selected, but no cell is selected.");
+          // Optionally, update lastUsedColor even if no cell is selected?
+          // setLastUsedColor(color);
+      }
+  }, [selectedCellCoords, handleCellChange, setLastUsedColor]); // Dependencies
 
   // --- Scene Parameter Editing ---
   const handleSceneParamChange = (
@@ -976,7 +994,6 @@ const TimelineEditor: React.FC = () => {
                   <div className="flex flex-col gap-3">
                     <p className="text-sm">Editing Cell: [{selectedCellCoords.row}, {selectedCellCoords.col}]</p>
                     <label className="text-sm"> Character:
-                       {/* Simple input for single character */}
                        <input
                          ref={hiddenInputRef} // Use ref for potential focus later
                          type="text"
@@ -1001,14 +1018,25 @@ const TimelineEditor: React.FC = () => {
                          className="ml-2 w-10 p-1 rounded bg-gray-700 border border-gray-600 text-center font-mono"
                        />
                     </label>
-                     <label className="text-sm"> Text Color:
+                     <label className="text-sm flex items-center gap-2"> 
+                       <span>Text Color:</span>
                        <input
                          type="color"
                          value={selectedCellData?.color ?? lastUsedColor}
-                         onChange={handleSelectedCellColorChange}
-                         className="ml-2 h-6 w-10 p-0 border-none rounded"
+                         onChange={handleSelectedCellColorChange} // Keep existing handler for native input
+                         className="h-6 w-10 p-0 border-none rounded"
                        />
                      </label>
+                     
+                     {/* NEW: Color Palette */}
+                     <div className="mt-2">
+                         <label className="text-sm block mb-1">Palette:</label>
+                         <ColorPalette 
+                             colors={defaultPaletteColors}
+                             onSelect={handlePaletteColorSelect} // Use the new handler
+                         />
+                     </div>
+                     
                   </div>
                 ) : (
                    <p className="text-sm text-gray-500">Click a cell in the grid preview to edit.</p>
