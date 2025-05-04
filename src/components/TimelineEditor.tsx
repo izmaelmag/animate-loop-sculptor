@@ -4,13 +4,13 @@ import React, {
   useMemo,
   useRef,
   useEffect,
-  useLayoutEffect
+  useLayoutEffect,
 } from "react";
 import { toast } from "sonner"; // Import toast from sonner
-import ColorPalette from './ui/ColorPalette'; // Import the new component
-import { HexColorPicker } from 'react-colorful'; // Import picker
-import { usePopper } from 'react-popper'; // Using react-popper for popover positioning
-import { useColorPaletteStore } from '@/stores/colorPaletteStore'; // Import store to potentially reset palette
+import ColorPalette from "./ui/ColorPalette"; // Import the new component
+import { HexColorPicker } from "react-colorful"; // Import picker
+import { usePopper } from "react-popper"; // Using react-popper for popover positioning
+import { useColorPaletteStore } from "@/stores/colorPaletteStore"; // Import store to potentially reset palette
 
 // Import core types (adjust path if needed)
 import {
@@ -57,8 +57,18 @@ const FPS = 60; // Define FPS for frame calculation
 
 // --- Default Palette Colors ---
 const defaultPaletteColors = [
-  "#FFFFFF", "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00",
-  "#FF00FF", "#00FFFF", "#FFA500", "#800080", "#4682B4", "#808080",
+  "#FFFFFF",
+  "#000000",
+  "#FF0000",
+  "#00FF00",
+  "#0000FF",
+  "#FFFF00",
+  "#FF00FF",
+  "#00FFFF",
+  "#FFA500",
+  "#800080",
+  "#4682B4",
+  "#808080",
 ];
 
 // --- GridDisplay Component ---
@@ -89,49 +99,58 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
   const cellSecondaryBg = secondaryColor || DEFAULT_SECONDARY_COLOR;
 
   // Use Tailwind for cell base styles where possible
-  const cellBaseClasses = "border border-gray-600 w-[35px] h-[35px] flex items-center justify-center text-sm text-gray-300 overflow-hidden box-border relative cursor-pointer select-none";
+  const cellBaseClasses =
+    "border border-gray-600 w-[35px] h-[35px] flex items-center justify-center text-sm text-gray-300 overflow-hidden box-border relative cursor-pointer select-none";
 
   return (
-    <div className="flex flex-col items-center"> {/* Center the grid */}
+    <div className="flex flex-col items-center">
+      {" "}
+      {/* Center the grid */}
       <h4 className="text-base mb-2 text-gray-400">
         Click a cell to select/edit ({rows} x {cols})
       </h4>
-      <div 
+      <div
         className="grid border border-gray-500"
-        style={{ 
+        style={{
           gridTemplateColumns: `repeat(${cols}, auto)`,
           gridTemplateRows: `repeat(${rows}, auto)`,
           backgroundColor: gridBg,
-          maxWidth: 'fit-content', // Keep grid from expanding
+          maxWidth: "fit-content", // Keep grid from expanding
         }}
       >
         {Array.from({ length: rows }).flatMap((_, r) =>
           Array.from({ length: cols }).map((_, c) => {
             const cellData = layoutGrid?.[r]?.[c];
-            const isSelected = selectedCellCoords?.row === r && selectedCellCoords?.col === c;
-            
+            const isSelected =
+              selectedCellCoords?.row === r && selectedCellCoords?.col === c;
+
             // Determine background color using Tailwind classes if possible, fallback to style
-            let bgColorClass = '';
+            let bgColorClass = "";
             if (isSelected) {
-                bgColorClass = 'bg-blue-700'; // Selection color
+              bgColorClass = "bg-blue-700"; // Selection color
             } else if (cellData) {
-                 // Keep specific color for cell data if needed, otherwise use default
-                 // bgColorClass = 'bg-gray-700'; 
+              // Keep specific color for cell data if needed, otherwise use default
+              // bgColorClass = 'bg-gray-700';
             } else {
-                // Use secondary color passed down or default
-            }
-            
-            const cellStyle: React.CSSProperties = {
-               // Use inline styles for colors that come from state/props directly
-               backgroundColor: isSelected ? '#445588' : (cellData ? (cellData.color ? 'transparent' : '#333') : cellSecondaryBg), // Simplified logic, might need refinement
-               color: cellData?.color || (isSelected ? '#fff' : '#ccc'), // Use cell's specific color if set
-               fontWeight: cellData ? 'bold' : 'normal',
-            };
-            
-            if (cellData?.color) {
-                cellStyle.backgroundColor = 'transparent'; // Let text color show on default bg
+              // Use secondary color passed down or default
             }
 
+            const cellStyle: React.CSSProperties = {
+              // Use inline styles for colors that come from state/props directly
+              backgroundColor: isSelected
+                ? "#445588"
+                : cellData
+                ? cellData.color
+                  ? "transparent"
+                  : "#333"
+                : cellSecondaryBg, // Simplified logic, might need refinement
+              color: cellData?.color || (isSelected ? "#fff" : "#ccc"), // Use cell's specific color if set
+              fontWeight: cellData ? "bold" : "normal",
+            };
+
+            if (cellData?.color) {
+              cellStyle.backgroundColor = "transparent"; // Let text color show on default bg
+            }
 
             return (
               <div
@@ -156,15 +175,28 @@ const LOCAL_STORAGE_KEY = "timelineEditorState";
 
 // --- Helper: Panel Component Wrapper (Assuming a Panel component exists and adds padding/styling) ---
 // If Panel doesn't exist or doesn't add padding, we might need to add p-4 etc. directly
-const PanelWrapper: React.FC<{ title?: string; children: React.ReactNode; className?: string }> = ({ title, children, className }) => (
-  <div className={`bg-gray-800 border border-gray-700 rounded-lg p-4 shadow-md ${className || ''}`}>
-    {title && <h3 className="text-lg font-semibold mb-3 text-gray-200">{title}</h3>}
+const PanelWrapper: React.FC<{
+  title?: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ title, children, className }) => (
+  <div
+    className={`bg-gray-800 border border-gray-700 rounded-lg p-4 shadow-md ${
+      className || ""
+    }`}
+  >
+    {title && (
+      <h3 className="text-lg font-semibold mb-3 text-gray-200">{title}</h3>
+    )}
     {children}
   </div>
 );
 
 // MODIFIED: Hook accepts array of refs to ignore clicks on
-const useClickOutside = (refsToIgnore: React.RefObject<HTMLElement>[], handler: (event: MouseEvent | TouchEvent) => void) => {
+const useClickOutside = (
+  refsToIgnore: React.RefObject<HTMLElement>[],
+  handler: (event: MouseEvent | TouchEvent) => void
+) => {
   useEffect(() => {
     const listener = (event: MouseEvent | TouchEvent) => {
       // Check if the click target is inside *any* of the refs to ignore
@@ -182,15 +214,15 @@ const useClickOutside = (refsToIgnore: React.RefObject<HTMLElement>[], handler: 
         handler(event);
       }
     };
-    
+
     document.addEventListener("mousedown", listener);
     document.addEventListener("touchstart", listener);
     return () => {
       document.removeEventListener("mousedown", listener);
       document.removeEventListener("touchstart", listener);
     };
-  // Make sure the dependency array includes all refs (though refs themselves shouldn't change often)
-  }, [refsToIgnore, handler]); 
+    // Make sure the dependency array includes all refs (though refs themselves shouldn't change often)
+  }, [refsToIgnore, handler]);
 };
 
 // --- Main Editor Component ---
@@ -199,8 +231,13 @@ const TimelineEditor: React.FC = () => {
   const [gridCols, setGridCols] = useState<number>(INITIAL_GRID_COLS);
   const [gridRows, setGridRows] = useState<number>(INITIAL_GRID_ROWS);
   const [scenes, setScenes] = useState<EditableScene[]>([]);
-  const [selectedSceneIndex, setSelectedSceneIndex] = useState<number | null>(null);
-  const [selectedCellCoords, setSelectedCellCoords] = useState<{ row: number; col: number } | null>(null);
+  const [selectedSceneIndex, setSelectedSceneIndex] = useState<number | null>(
+    null
+  );
+  const [selectedCellCoords, setSelectedCellCoords] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
   const [nextSceneId, setNextSceneId] = useState<number>(0);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const wordsJsonInputRef = useRef<HTMLInputElement>(null);
@@ -212,8 +249,9 @@ const TimelineEditor: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showCellColorPicker, setShowCellColorPicker] = useState(false);
   const [showBgColorPicker, setShowBgColorPicker] = useState(false);
-  const [showSecondaryColorPicker, setShowSecondaryColorPicker] = useState(false);
-  
+  const [showSecondaryColorPicker, setShowSecondaryColorPicker] =
+    useState(false);
+
   // Refs for popper positioning
   const cellPickerButtonRef = useRef<HTMLButtonElement>(null);
   const cellPickerPopoverRef = useRef<HTMLDivElement>(null);
@@ -221,55 +259,76 @@ const TimelineEditor: React.FC = () => {
   const bgPickerPopoverRef = useRef<HTMLDivElement>(null);
   const secondaryPickerButtonRef = useRef<HTMLButtonElement>(null);
   const secondaryPickerPopoverRef = useRef<HTMLDivElement>(null);
-  
-  // Popper setup - Initialize only when refs are set
-  const popperOptions = useMemo(() => ({ 
-      placement: 'bottom-start' as const, 
-      modifiers: [{ name: 'offset', options: { offset: [0, 8] } }] 
-  }), []);
 
-  const { styles: cellStyles, attributes: cellAttributes, update: updateCellPopper } = usePopper(
-      cellPickerButtonRef.current, 
-      cellPickerPopoverRef.current, 
-      popperOptions
+  // Popper setup - Initialize only when refs are set
+  const popperOptions = useMemo(
+    () => ({
+      placement: "bottom-start" as const,
+      modifiers: [{ name: "offset", options: { offset: [0, 8] } }],
+    }),
+    []
   );
-  const { styles: bgStyles, attributes: bgAttributes, update: updateBgPopper } = usePopper(
-      bgPickerButtonRef.current, 
-      bgPickerPopoverRef.current, 
-      popperOptions
+
+  const {
+    styles: cellStyles,
+    attributes: cellAttributes,
+    update: updateCellPopper,
+  } = usePopper(
+    cellPickerButtonRef.current,
+    cellPickerPopoverRef.current,
+    popperOptions
   );
-  const { styles: secondaryStyles, attributes: secondaryAttributes, update: updateSecondaryPopper } = usePopper(
-      secondaryPickerButtonRef.current, 
-      secondaryPickerPopoverRef.current, 
-      popperOptions
+  const {
+    styles: bgStyles,
+    attributes: bgAttributes,
+    update: updateBgPopper,
+  } = usePopper(
+    bgPickerButtonRef.current,
+    bgPickerPopoverRef.current,
+    popperOptions
+  );
+  const {
+    styles: secondaryStyles,
+    attributes: secondaryAttributes,
+    update: updateSecondaryPopper,
+  } = usePopper(
+    secondaryPickerButtonRef.current,
+    secondaryPickerPopoverRef.current,
+    popperOptions
   );
 
   // MODIFIED: Use useLayoutEffect instead of useEffect
   useLayoutEffect(() => {
-      if (showCellColorPicker && updateCellPopper) {
-          console.log("Updating cell popper position");
-          updateCellPopper();
-      }
+    if (showCellColorPicker && updateCellPopper) {
+      console.log("Updating cell popper position");
+      updateCellPopper();
+    }
   }, [showCellColorPicker, updateCellPopper]);
-  
+
   useLayoutEffect(() => {
-      if (showBgColorPicker && updateBgPopper) {
-           console.log("Updating background popper position");
-           updateBgPopper();
-      }
+    if (showBgColorPicker && updateBgPopper) {
+      console.log("Updating background popper position");
+      updateBgPopper();
+    }
   }, [showBgColorPicker, updateBgPopper]);
 
   useLayoutEffect(() => {
-      if (showSecondaryColorPicker && updateSecondaryPopper) {
-          console.log("Updating secondary popper position");
-          updateSecondaryPopper();
-      }
+    if (showSecondaryColorPicker && updateSecondaryPopper) {
+      console.log("Updating secondary popper position");
+      updateSecondaryPopper();
+    }
   }, [showSecondaryColorPicker, updateSecondaryPopper]);
 
   // MODIFIED: Pass both popover AND button refs to useClickOutside
-  useClickOutside([cellPickerPopoverRef, cellPickerButtonRef], () => setShowCellColorPicker(false));
-  useClickOutside([bgPickerPopoverRef, bgPickerButtonRef], () => setShowBgColorPicker(false));
-  useClickOutside([secondaryPickerPopoverRef, secondaryPickerButtonRef], () => setShowSecondaryColorPicker(false));
+  useClickOutside([cellPickerPopoverRef, cellPickerButtonRef], () =>
+    setShowCellColorPicker(false)
+  );
+  useClickOutside([bgPickerPopoverRef, bgPickerButtonRef], () =>
+    setShowBgColorPicker(false)
+  );
+  useClickOutside([secondaryPickerPopoverRef, secondaryPickerButtonRef], () =>
+    setShowSecondaryColorPicker(false)
+  );
 
   // --- Load State from localStorage on Mount ---
   useEffect(() => {
@@ -294,11 +353,11 @@ const TimelineEditor: React.FC = () => {
         console.error("Failed to parse saved state from localStorage:", error);
       }
     } else {
-        console.log("No saved state found.");
-        setNextSceneId(0);
-        setLastUsedColor("#ffffff"); // Ensure default last used color
+      console.log("No saved state found.");
+      setNextSceneId(0);
+      setLastUsedColor("#ffffff"); // Ensure default last used color
     }
-    setIsLoaded(true); 
+    setIsLoaded(true);
   }, []); // Empty dependency array
 
   // --- Save State to localStorage on Update ---
@@ -609,109 +668,145 @@ const TimelineEditor: React.FC = () => {
   );
 
   // MODIFIED: Update color for selected cell (accepts color string directly)
-  const handleSelectedCellColorChange = useCallback((newColor: string) => { 
-    if (selectedCellCoords) {
-      handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: newColor });
-      setLastUsedColor(newColor); 
-      // Maybe close picker after selection?
-      // setShowCellColorPicker(false); 
-    }
-  }, [selectedCellCoords, handleCellChange, setLastUsedColor]);
+  const handleSelectedCellColorChange = useCallback(
+    (newColor: string) => {
+      if (selectedCellCoords) {
+        handleCellChange(selectedCellCoords.row, selectedCellCoords.col, {
+          color: newColor,
+        });
+        setLastUsedColor(newColor);
+        // Maybe close picker after selection?
+        // setShowCellColorPicker(false);
+      }
+    },
+    [selectedCellCoords, handleCellChange, setLastUsedColor]
+  );
 
   // Handle color selection from the palette
-  const handlePaletteColorSelect = useCallback((color: string) => {
-    if (selectedCellCoords) {
-      handleCellChange(selectedCellCoords.row, selectedCellCoords.col, { color: color });
-      setLastUsedColor(color);
-      setShowCellColorPicker(false); // Close main picker if palette is used
-    } else {
-       setLastUsedColor(color); // Update last used color even if no cell selected
-       toast.info("Color selected as last used", { description: "Click a cell to apply it." });
-    }
-  }, [selectedCellCoords, handleCellChange, setLastUsedColor]);
+  const handlePaletteColorSelect = useCallback(
+    (color: string) => {
+      if (selectedCellCoords) {
+        handleCellChange(selectedCellCoords.row, selectedCellCoords.col, {
+          color: color,
+        });
+        setLastUsedColor(color);
+        setShowCellColorPicker(false); // Close main picker if palette is used
+      } else {
+        setLastUsedColor(color); // Update last used color even if no cell selected
+        toast.info("Color selected as last used", {
+          description: "Click a cell to apply it.",
+        });
+      }
+    },
+    [selectedCellCoords, handleCellChange, setLastUsedColor]
+  );
 
   // MODIFIED: Handle scene color changes (accepts color string directly)
-  const handleSceneColorChange = useCallback((param: "backgroundColor" | "secondaryColor", value: string) => {
-    if (selectedSceneIndex === null) return;
-    
-    const effectiveValue = value === "" ? undefined : value; 
+  const handleSceneColorChange = useCallback(
+    (param: "backgroundColor" | "secondaryColor", value: string) => {
+      if (selectedSceneIndex === null) return;
 
-    setScenes((prevScenes) => {
-      if (selectedSceneIndex === 0) {
-            console.log(`Applying ${param}=${effectiveValue} to ALL scenes because Scene 0 was changed.`);
-            return prevScenes.map((scene) => ({ ...scene, [param]: effectiveValue, }));
+      const effectiveValue = value === "" ? undefined : value;
+
+      setScenes((prevScenes) => {
+        if (selectedSceneIndex === 0) {
+          console.log(
+            `Applying ${param}=${effectiveValue} to ALL scenes because Scene 0 was changed.`
+          );
+          return prevScenes.map((scene) => ({
+            ...scene,
+            [param]: effectiveValue,
+          }));
         } else {
-            console.log(`Applying ${param}=${effectiveValue} to Scene ${selectedSceneIndex} only.`);
-            return prevScenes.map((scene, index) => {
-                if (index === selectedSceneIndex) { return { ...scene, [param]: effectiveValue }; }
-                return scene;
-            });
+          console.log(
+            `Applying ${param}=${effectiveValue} to Scene ${selectedSceneIndex} only.`
+          );
+          return prevScenes.map((scene, index) => {
+            if (index === selectedSceneIndex) {
+              return { ...scene, [param]: effectiveValue };
+            }
+            return scene;
+          });
         }
-    });
-  }, [selectedSceneIndex, setScenes]);
+      });
+    },
+    [selectedSceneIndex, setScenes]
+  );
 
   // MODIFIED: Handle general scene parameter changes (including new backgroundChars)
-  const handleSceneParamChange = useCallback(( 
-      param: "startFrame" | "durationFrames" | "backgroundChars", 
+  const handleSceneParamChange = useCallback(
+    (
+      param: "startFrame" | "durationFrames" | "backgroundChars",
       value: string | number
     ) => {
-    if (selectedSceneIndex === null) return;
+      if (selectedSceneIndex === null) return;
 
-    const currentSceneIndex = selectedSceneIndex;
+      const currentSceneIndex = selectedSceneIndex;
 
-    setScenes((prevScenes) => {
-      let processedValue: number | string | undefined = value;
+      setScenes((prevScenes) => {
+        let processedValue: number | string | undefined = value;
 
-      if (param === "startFrame" || param === "durationFrames") {
-        let numericValue: number | undefined;
-        numericValue = typeof value === "string" ? parseInt(value, 10) : value;
-        if (isNaN(numericValue)) {
-          if (param === "durationFrames" && value === "") {
-            numericValue = undefined; // Allow clearing duration
-          } else {
-            return prevScenes; // Invalid number for frame/duration
-          }
-        } else {
-          numericValue = Math.max(0, numericValue); 
-          if (param === "durationFrames" && numericValue === 0) numericValue = 1; 
-        }
-        processedValue = numericValue;
-      } else if (param === "backgroundChars") {
-           // Keep as string, allow empty string
-           processedValue = typeof value === 'string' ? value : '';
-      }
-
-      const updatedScenes = [...prevScenes];
-      const sceneToUpdate = { ...updatedScenes[currentSceneIndex] };
-
-      // Use a safer approach with key check:
-      if (param === 'startFrame' || param === 'durationFrames') {
-          sceneToUpdate[param] = processedValue as number | undefined;
-      } else if (param === 'backgroundChars') {
-          sceneToUpdate[param] = processedValue as string | undefined;
-      } else {
-          // Log error or ignore if the parameter isn't one we expect to handle here
-          console.warn(`Attempted to update unhandled scene parameter: ${param}`);
-      }
-
-      updatedScenes[currentSceneIndex] = sceneToUpdate;
-
-      // Adjust subsequent scene timings if startFrame or durationFrames changed
-      if (param === "startFrame" || param === "durationFrames") {
-            let previousEndFrame = sceneToUpdate.startFrame + (sceneToUpdate.durationFrames || 1); 
-            for (let i = currentSceneIndex + 1; i < updatedScenes.length; i++) {
-                const currentStart = updatedScenes[i].startFrame;
-                const currentDuration = updatedScenes[i].durationFrames;
-                if (currentStart !== previousEndFrame) {
-                    updatedScenes[i] = { ...updatedScenes[i], startFrame: previousEndFrame, };
-                }
-                previousEndFrame = updatedScenes[i].startFrame + (currentDuration || 1);
+        if (param === "startFrame" || param === "durationFrames") {
+          let numericValue: number | undefined;
+          numericValue =
+            typeof value === "string" ? parseInt(value, 10) : value;
+          if (isNaN(numericValue)) {
+            if (param === "durationFrames" && value === "") {
+              numericValue = undefined; // Allow clearing duration
+            } else {
+              return prevScenes; // Invalid number for frame/duration
             }
-      }
-      
-      return updatedScenes;
-    });
-  }, [selectedSceneIndex, setScenes]);
+          } else {
+            numericValue = Math.max(0, numericValue);
+            if (param === "durationFrames" && numericValue === 0)
+              numericValue = 1;
+          }
+          processedValue = numericValue;
+        } else if (param === "backgroundChars") {
+          // Keep as string, allow empty string
+          processedValue = typeof value === "string" ? value : "";
+        }
+
+        const updatedScenes = [...prevScenes];
+        const sceneToUpdate = { ...updatedScenes[currentSceneIndex] };
+
+        // Use a safer approach with key check:
+        if (param === "startFrame" || param === "durationFrames") {
+          sceneToUpdate[param] = processedValue as number | undefined;
+        } else if (param === "backgroundChars") {
+          sceneToUpdate[param] = processedValue as string | undefined;
+        } else {
+          // Log error or ignore if the parameter isn't one we expect to handle here
+          console.warn(
+            `Attempted to update unhandled scene parameter: ${param}`
+          );
+        }
+
+        updatedScenes[currentSceneIndex] = sceneToUpdate;
+
+        // Adjust subsequent scene timings if startFrame or durationFrames changed
+        if (param === "startFrame" || param === "durationFrames") {
+          let previousEndFrame =
+            sceneToUpdate.startFrame + (sceneToUpdate.durationFrames || 1);
+          for (let i = currentSceneIndex + 1; i < updatedScenes.length; i++) {
+            const currentStart = updatedScenes[i].startFrame;
+            const currentDuration = updatedScenes[i].durationFrames;
+            if (currentStart !== previousEndFrame) {
+              updatedScenes[i] = {
+                ...updatedScenes[i],
+                startFrame: previousEndFrame,
+              };
+            }
+            previousEndFrame =
+              updatedScenes[i].startFrame + (currentDuration || 1);
+          }
+        }
+
+        return updatedScenes;
+      });
+    },
+    [selectedSceneIndex, setScenes]
+  );
 
   // --- NEW: Copy Grid Logic ---
   const handleCopyGridFromPrevious = () => {
@@ -746,134 +841,182 @@ const TimelineEditor: React.FC = () => {
   };
 
   // --- NEW: Words JSON Import Callback ---
-  const handleImportWordsJson = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleImportWordsJson = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const text = e.target?.result;
-      if (typeof text !== 'string') {
-        toast.error("Error reading file content.");
-        return;
-      }
-      try {
-        const wordsData: WordData[] = JSON.parse(text);
-        if (
-          !Array.isArray(wordsData) ||
-          wordsData.some(
-            (w) =>
-              typeof w.word !== "string" ||
-              typeof w.frame_start !== "number" ||
-              typeof w.frame_end !== "number"
-          )
-        ) {
-          throw new Error(
-            "Invalid JSON structure. Expected array of {word, frame_start, frame_end}."
-          );
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const text = e.target?.result;
+        if (typeof text !== "string") {
+          toast.error("Error reading file content.");
+          return;
         }
-        let currentId = 0;
-        const newScenes: EditableScene[] = wordsData.map((wordData) => {
-          const duration = Math.max(1, wordData.frame_end - wordData.frame_start); 
-          const word = wordData.word.trim();
-          const characters = word.split("");
-          const newLayoutGrid: (EditableLayoutCell | null)[][] = Array.from({ length: gridRows }, () => Array(gridCols).fill(null));
-          const middleRow = Math.floor(gridRows / 2);
-          const startCol = Math.max(0, Math.floor((gridCols - characters.length) / 2));
-          if (middleRow < gridRows) {
-              for (let i = 0; i < characters.length; i++) {
-                  const currentCol = startCol + i;
-                  if (currentCol < gridCols) {
-                      newLayoutGrid[middleRow][currentCol] = { char: characters[i], color: "#FFFFFF" };
-                  }
-              }
+        try {
+          const wordsData: WordData[] = JSON.parse(text);
+          if (
+            !Array.isArray(wordsData) ||
+            wordsData.some(
+              (w) =>
+                typeof w.word !== "string" ||
+                typeof w.frame_start !== "number" ||
+                typeof w.frame_end !== "number"
+            )
+          ) {
+            throw new Error(
+              "Invalid JSON structure. Expected array of {word, frame_start, frame_end}."
+            );
           }
-          const newScene: EditableScene = {
-              id: currentId++, startFrame: wordData.frame_start, durationFrames: duration, layoutGrid: newLayoutGrid,
-              stylePresets: { filler: { color: DEFAULT_SECONDARY_COLOR }, default: { color: "#FFFFFF" }, },
-              backgroundColor: DEFAULT_BG_COLOR, secondaryColor: DEFAULT_SECONDARY_COLOR,
-          };
-          return newScene;
-      });
-      setScenes(newScenes);
-      setNextSceneId(currentId); 
-      setSelectedSceneIndex(newScenes.length > 0 ? 0 : null); 
-      setSelectedCellCoords(null); 
-      toast.success(
-        `Successfully imported ${newScenes.length} scenes from words.json!`
-      );
-    } catch (error) {
-      console.error("Failed to parse or process words JSON:", error);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error importing words JSON", { description: message });
-    }
-  };
-  reader.onerror = () => {
-     toast.error("Error reading file.");
-  };
-  reader.readAsText(file);
-  event.target.value = "";
-}, [gridRows, gridCols, setScenes, setNextSceneId, setSelectedSceneIndex, setSelectedCellCoords]);
+          let currentId = 0;
+          const newScenes: EditableScene[] = wordsData.map((wordData) => {
+            const duration = Math.max(
+              1,
+              wordData.frame_end - wordData.frame_start
+            );
+            const word = wordData.word.trim();
+            const characters = word.split("");
+            const newLayoutGrid: (EditableLayoutCell | null)[][] = Array.from(
+              { length: gridRows },
+              () => Array(gridCols).fill(null)
+            );
+            const middleRow = Math.floor(gridRows / 2);
+            const startCol = Math.max(
+              0,
+              Math.floor((gridCols - characters.length) / 2)
+            );
+            if (middleRow < gridRows) {
+              for (let i = 0; i < characters.length; i++) {
+                const currentCol = startCol + i;
+                if (currentCol < gridCols) {
+                  newLayoutGrid[middleRow][currentCol] = {
+                    char: characters[i],
+                    color: "#FFFFFF",
+                  };
+                }
+              }
+            }
+            const newScene: EditableScene = {
+              id: currentId++,
+              startFrame: wordData.frame_start,
+              durationFrames: duration,
+              layoutGrid: newLayoutGrid,
+              stylePresets: {
+                filler: { color: DEFAULT_SECONDARY_COLOR },
+                default: { color: "#FFFFFF" },
+              },
+              backgroundColor: DEFAULT_BG_COLOR,
+              secondaryColor: DEFAULT_SECONDARY_COLOR,
+            };
+            return newScene;
+          });
+          setScenes(newScenes);
+          setNextSceneId(currentId);
+          setSelectedSceneIndex(newScenes.length > 0 ? 0 : null);
+          setSelectedCellCoords(null);
+          toast.success(
+            `Successfully imported ${newScenes.length} scenes from words.json!`
+          );
+        } catch (error) {
+          console.error("Failed to parse or process words JSON:", error);
+          const message =
+            error instanceof Error ? error.message : "Unknown error";
+          toast.error("Error importing words JSON", { description: message });
+        }
+      };
+      reader.onerror = () => {
+        toast.error("Error reading file.");
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    },
+    [
+      gridRows,
+      gridCols,
+      setScenes,
+      setNextSceneId,
+      setSelectedSceneIndex,
+      setSelectedCellCoords,
+    ]
+  );
 
   // --- Export Logic ---
-  const convertEditableToAnimationScenes = useCallback((
-    editableScenes: EditableScene[]
-  ): AnimationScene[] => {
-    return editableScenes.map((scene) => {
+  const convertEditableToAnimationScenes = useCallback(
+    (editableScenes: EditableScene[]): AnimationScene[] => {
+      return editableScenes.map((scene) => {
         const sceneStylePresets = { ...scene.stylePresets };
         const newLayoutGrid: (LayoutCell | null)[][] = scene.layoutGrid.map(
-          (row) => row.map((cell) => {
-            if (!cell) return null;
-            const layoutCell: LayoutCell = { char: cell.char };
-            if (cell.color) { layoutCell.style = { color: cell.color }; }
-            return layoutCell;
-          })
+          (row) =>
+            row.map((cell) => {
+              if (!cell) return null;
+              const layoutCell: LayoutCell = { char: cell.char };
+              if (cell.color) {
+                layoutCell.style = { color: cell.color };
+              }
+              return layoutCell;
+            })
         );
         const animationScene: AnimationScene = {
-            startFrame: scene.startFrame,
-            layoutGrid: newLayoutGrid,
-            stylePresets: sceneStylePresets, 
-            ...(scene.backgroundColor && { backgroundColor: scene.backgroundColor }),
-            ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
-            ...(scene.backgroundChars && { backgroundChars: scene.backgroundChars }), // Include backgroundChars
+          startFrame: scene.startFrame,
+          layoutGrid: newLayoutGrid,
+          stylePresets: sceneStylePresets,
+          ...(scene.backgroundColor && {
+            backgroundColor: scene.backgroundColor,
+          }),
+          ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
+          ...(scene.backgroundChars && {
+            backgroundChars: scene.backgroundChars,
+          }), // Include backgroundChars
         };
         if (scene.durationFrames !== undefined) {
-            animationScene.durationFrames = scene.durationFrames;
+          animationScene.durationFrames = scene.durationFrames;
         }
         return animationScene;
-    });
-  }, []);
+      });
+    },
+    []
+  );
 
   const handleGenerateExport = useCallback(() => {
-    setExportJson("Generating..."); 
+    setExportJson("Generating...");
     setTimeout(() => {
-        try {
-            const animationScenes = convertEditableToAnimationScenes(scenes);
-            const jsonString = JSON.stringify(animationScenes, null, 2);
-            setExportJson(jsonString);
-        } catch (error) {
-            console.error("Error generating export JSON:", error);
-            // Fix the linter error by checking if error is an instance of Error
-            const message = error instanceof Error ? error.message : "Unknown error";
-            setExportJson(`Error generating JSON: ${message}. Check console.`);
-            toast.error("Error generating JSON", { description: message });
-        }
-    }, 10); 
+      try {
+        const animationScenes = convertEditableToAnimationScenes(scenes);
+        const jsonString = JSON.stringify(animationScenes, null, 2);
+        setExportJson(jsonString);
+      } catch (error) {
+        console.error("Error generating export JSON:", error);
+        // Fix the linter error by checking if error is an instance of Error
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        setExportJson(`Error generating JSON: ${message}. Check console.`);
+        toast.error("Error generating JSON", { description: message });
+      }
+    }, 10);
   }, [scenes, convertEditableToAnimationScenes]); // Dependencies for handleGenerateExport
 
   // --- NEW: Handle Copy JSON ---
   const handleCopyJson = useCallback(() => {
-    if (!exportJson || exportJson === "Generating..." || exportJson.startsWith("Error")) {
-      toast.error("Cannot copy", { description: "No valid JSON generated yet." });
+    if (
+      !exportJson ||
+      exportJson === "Generating..." ||
+      exportJson.startsWith("Error")
+    ) {
+      toast.error("Cannot copy", {
+        description: "No valid JSON generated yet.",
+      });
       return;
     }
-    navigator.clipboard.writeText(exportJson)
+    navigator.clipboard
+      .writeText(exportJson)
       .then(() => {
         toast.success("JSON copied to clipboard!");
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Failed to copy JSON: ", err);
-        toast.error("Copy failed", { description: "Could not copy JSON to clipboard." });
+        toast.error("Copy failed", {
+          description: "Could not copy JSON to clipboard.",
+        });
       });
   }, [exportJson]); // Dependency: exportJson
 
@@ -901,10 +1044,8 @@ const TimelineEditor: React.FC = () => {
   // --- NEW: Main Layout Structure ---
   return (
     <div className="flex h-screen bg-gray-900 text-gray-300">
-      
       {/* Left Sidebar */}
-      <aside className="w-80 flex-shrink-0 bg-gray-850 p-4 overflow-y-auto flex flex-col gap-4 border-r border-gray-700">
-        
+      <aside className="w-[35rem] flex-shrink-0 bg-gray-850 p-4 overflow-y-auto flex flex-col gap-4 border-r border-gray-700">
         {/* Global Grid Settings */}
         <PanelWrapper title="Global Grid">
           <div className="flex flex-col gap-2">
@@ -925,30 +1066,43 @@ const TimelineEditor: React.FC = () => {
                 min="1"
                 value={gridRows}
                 onChange={(e) => handleGridSizeChange("rows", e.target.value)}
-                 className="ml-2 w-16 p-1 rounded bg-gray-700 border border-gray-600 text-gray-200"
+                className="ml-2 w-16 p-1 rounded bg-gray-700 border border-gray-600 text-gray-200"
               />
             </label>
           </div>
         </PanelWrapper>
 
         {/* Scenes List */}
-        <PanelWrapper title="Scenes" className="flex-grow flex flex-col min-h-0"> {/* Allow shrinking and scrolling */}
-           <div className="flex gap-2 mb-3">
-             <button onClick={handleAddScene} className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded">
-               + Add Scene
-             </button>
-             <input
-                ref={wordsJsonInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleImportWordsJson}
-                className="hidden"
-             />
-             <button onClick={() => wordsJsonInputRef.current?.click()} className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 rounded">
-                Import Words JSON
+        <PanelWrapper
+          title="Scenes"
+          className="flex-grow flex flex-col min-h-0"
+        >
+          {" "}
+          {/* Allow shrinking and scrolling */}
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={handleAddScene}
+              className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded"
+            >
+              + Add Scene
             </button>
-           </div>
-           <div className="overflow-y-auto flex-grow pr-1"> {/* Inner scroll for scene list */}
+            <input
+              ref={wordsJsonInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleImportWordsJson}
+              className="hidden"
+            />
+            <button
+              onClick={() => wordsJsonInputRef.current?.click()}
+              className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 rounded"
+            >
+              Import Words JSON
+            </button>
+          </div>
+          <div className="overflow-y-auto flex-grow pr-1">
+            {" "}
+            {/* Inner scroll for scene list */}
             {scenes.map((scene, index) => (
               <div
                 key={scene.id}
@@ -961,45 +1115,66 @@ const TimelineEditor: React.FC = () => {
               >
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium">
-                      Scene {index} (Start: {scene.startFrame}) | Dur: {scene.durationFrames ?? 'N/A'}
+                    Scene {index} (Start: {scene.startFrame}) | Dur:{" "}
+                    {scene.durationFrames ?? "N/A"}
                   </span>
                   <div className="flex gap-1">
-                     <button
-                        onClick={(e) => { e.stopPropagation(); handleDuplicateScene(index); }}
-                        className="px-1 py-0.5 text-xs bg-yellow-600 hover:bg-yellow-700 rounded"
-                        title="Duplicate Scene"
-                     > Dup </button>
-                     <button
-                        onClick={(e) => { e.stopPropagation(); handleDeleteScene(index); }}
-                        className="px-1 py-0.5 text-xs bg-red-600 hover:bg-red-700 rounded"
-                        title="Delete Scene"
-                      > Del </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDuplicateScene(index);
+                      }}
+                      className="px-1 py-0.5 text-xs bg-yellow-600 hover:bg-yellow-700 rounded"
+                      title="Duplicate Scene"
+                    >
+                      {" "}
+                      Dup{" "}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteScene(index);
+                      }}
+                      className="px-1 py-0.5 text-xs bg-red-600 hover:bg-red-700 rounded"
+                      title="Delete Scene"
+                    >
+                      {" "}
+                      Del{" "}
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
-            {scenes.length === 0 && <p className="text-sm text-gray-500">No scenes yet.</p>}
+            {scenes.length === 0 && (
+              <p className="text-sm text-gray-500">No scenes yet.</p>
+            )}
           </div>
         </PanelWrapper>
 
         {/* Export Timeline */}
         <PanelWrapper title="Export Timeline" className="flex-shrink-0">
-           <div className="flex gap-2 mb-2"> {/* Container for buttons */}
-             <button 
-               onClick={handleGenerateExport} 
-               className="flex-1 px-3 py-1 text-sm bg-purple-600 hover:bg-purple-700 rounded"
-             >
-               Generate Export JSON
-             </button>
-             <button 
-                onClick={handleCopyJson} 
-                className="flex-1 px-3 py-1 text-sm bg-teal-600 hover:bg-teal-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!exportJson || exportJson === "Generating..." || exportJson.startsWith("Error")} // Disable if no valid JSON
-             >
-                Copy JSON
-             </button>
-           </div>
-           {exportJson && (
+          <div className="flex gap-2 mb-2">
+            {" "}
+            {/* Container for buttons */}
+            <button
+              onClick={handleGenerateExport}
+              className="flex-1 px-3 py-1 text-sm bg-purple-600 hover:bg-purple-700 rounded"
+            >
+              Generate Export JSON
+            </button>
+            <button
+              onClick={handleCopyJson}
+              className="flex-1 px-3 py-1 text-sm bg-teal-600 hover:bg-teal-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={
+                !exportJson ||
+                exportJson === "Generating..." ||
+                exportJson.startsWith("Error")
+              } // Disable if no valid JSON
+            >
+              Copy JSON
+            </button>
+          </div>
+          {exportJson && (
             <textarea
               readOnly
               value={exportJson}
@@ -1011,181 +1186,248 @@ const TimelineEditor: React.FC = () => {
         </PanelWrapper>
 
         {/* Maybe add a button to reset palette? */}
-        <button onClick={useColorPaletteStore.getState().resetColors} className="mt-auto text-xs text-gray-500 hover:text-gray-300">Reset Palette</button>
-
+        <button
+          onClick={useColorPaletteStore.getState().resetColors}
+          className="mt-auto text-xs text-gray-500 hover:text-gray-300"
+        >
+          Reset Palette
+        </button>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-4 flex flex-col gap-4 overflow-hidden"> {/* Prevent main area from scrolling internally unless needed */}
-          
-          {/* Top Row: Settings */}
-          <div className="flex gap-4 flex-shrink-0"> {/* Prevent settings row from growing */}
-             {/* Scene Settings */}
-             <PanelWrapper title="Scene Settings" className="flex-1">
-               {currentScene ? (
-                  <div className="flex flex-col gap-3">
-                     <label className="text-sm"> Start Frame:
-                       <input type="number" min="0" value={currentScene.startFrame} onChange={(e) => handleSceneParamChange("startFrame", e.target.value)} className="ml-2 w-20 p-1 rounded bg-gray-700 border border-gray-600" />
-                     </label>
-                     <label className="text-sm"> Duration (opt.):
-                       <input type="number" min="1" value={currentScene.durationFrames ?? ''} onChange={(e) => handleSceneParamChange("durationFrames", e.target.value)} placeholder="auto" className="ml-2 w-20 p-1 rounded bg-gray-700 border border-gray-600" />
-                     </label>
-                     <label className="text-sm flex items-center gap-2"> 
-                       <span>Background Color:</span>
-                       <button 
-                          ref={bgPickerButtonRef}
-                          onClick={() => setShowBgColorPicker(s => !s)}
-                          className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
-                          style={{ backgroundColor: currentScene.backgroundColor || DEFAULT_BG_COLOR }}
-                       />
-                       {showBgColorPicker && (
-                          <div 
-                             ref={bgPickerPopoverRef} 
-                             style={bgStyles.popper} 
-                             {...bgAttributes.popper}
-                             className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
-                          >
-                              <HexColorPicker 
-                                 color={currentScene.backgroundColor || DEFAULT_BG_COLOR} 
-                                 onChange={(color) => handleSceneColorChange("backgroundColor", color)}
-                              />
-                          </div>
-                       )}
-                     </label>
-                     <label className="text-sm flex items-center gap-2"> 
-                       <span>Secondary Color:</span>
-                       <button 
-                          ref={secondaryPickerButtonRef}
-                          onClick={() => setShowSecondaryColorPicker(s => !s)}
-                          className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
-                          style={{ backgroundColor: currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR }}
-                       />
-                       {showSecondaryColorPicker && (
-                           <div 
-                               ref={secondaryPickerPopoverRef} 
-                               style={secondaryStyles.popper} 
-                               {...secondaryAttributes.popper}
-                               className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
-                           >
-                               <HexColorPicker 
-                                   color={currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR} 
-                                   onChange={(color) => handleSceneColorChange("secondaryColor", color)}
-                               />
-                           </div>
-                       )}
-                     </label>
-                     <label className="text-sm flex items-center"> 
-                       <span>Background Chars (opt.):</span>
-                       <input 
-                            type="text" 
-                            value={currentScene.backgroundChars ?? ''}
-                            onChange={(e) => handleSceneParamChange("backgroundChars", e.target.value)}
-                            placeholder="e.g., .-:" 
-                            maxLength={15}
-                            className="w-40 p-1 rounded bg-gray-700 border border-gray-600 font-mono text-xs ml-2"
-                        />
-                     </label>
-                     <button onClick={handleCopyGridFromPrevious} disabled={selectedSceneIndex === 0} className="mt-2 px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 rounded disabled:opacity-50 disabled:cursor-not-allowed">
-                           Copy Grid from Previous
-                       </button>
-                  </div>
-               ) : (
-                  <p className="text-sm text-gray-500">Select a scene to view settings.</p>
-               )}
-             </PanelWrapper>
-
-             {/* Selected Cell Settings */}
-             <PanelWrapper title="Selected Cell Settings" className="flex-1">
-               {selectedCellCoords && currentScene ? (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-sm">Editing Cell: [{selectedCellCoords.row}, {selectedCellCoords.col}]</p>
-                    <label className="text-sm"> Character:
-                       <input
-                         ref={hiddenInputRef} // Use ref for potential focus later
-                         type="text"
-                         maxLength={1} // Allow only one character
-                         value={selectedCellData?.char ?? ''}
-                         onChange={(e) => { /* This requires a modified handler or direct update */
-                            // Simplified: Update state directly (needs handler adjustment ideally)
-                            const newChar = e.target.value.slice(0, 1); // Ensure only one char
-                            const newScenes = [...scenes];
-                            const sceneToEdit = newScenes[selectedSceneIndex!]; // Assume index is valid
-                            if (!sceneToEdit.layoutGrid[selectedCellCoords.row]) {
-                                sceneToEdit.layoutGrid[selectedCellCoords.row] = [];
-                            }
-                            if (!sceneToEdit.layoutGrid[selectedCellCoords.row][selectedCellCoords.col]) {
-                                sceneToEdit.layoutGrid[selectedCellCoords.row][selectedCellCoords.col] = { char: newChar, color: lastUsedColor };
-                            } else {
-                                sceneToEdit.layoutGrid[selectedCellCoords.row][selectedCellCoords.col]!.char = newChar;
-                            }
-                            setScenes(newScenes);
-                         }}
-                         onKeyDown={handleCellCharacterInput} // Keep complex logic here
-                         className="ml-2 w-10 p-1 rounded bg-gray-700 border border-gray-600 text-center font-mono"
-                       />
-                    </label>
-                     <label className="text-sm"> 
-                       <span>Text Color:</span>
-                       {/* Color Swatch Button */}
-                       <button 
-                          ref={cellPickerButtonRef}
-                          onClick={() => setShowCellColorPicker(s => !s)}
-                          className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
-                          style={{ backgroundColor: selectedCellData?.color ?? lastUsedColor }}
-                        />
-                        {/* Popper for Cell Color Picker */}
-                        {showCellColorPicker && (
-                            <div 
-                              ref={cellPickerPopoverRef} 
-                              style={cellStyles.popper} 
-                              {...cellAttributes.popper}
-                              className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
-                            >
-                                <HexColorPicker 
-                                   color={selectedCellData?.color ?? lastUsedColor}
-                                   onChange={handleSelectedCellColorChange} // Use updated handler
-                                />
-                           </div>
-                        )}
-                     </label>
-                     
-                     {/* Updated Color Palette Usage */}
-                     <div className="mt-2">
-                         <label className="text-sm block mb-1">Palette:</label>
-                         <ColorPalette 
-                             onSelect={handlePaletteColorSelect} // No colors prop needed
-                         />
-                     </div>
-                     
-                  </div>
-                ) : (
-                   <p className="text-sm text-gray-500">Click a cell in the grid preview to edit.</p>
-                )}
-             </PanelWrapper>
-          </div>
-
-          {/* Bottom Row: Grid Preview - takes remaining space */}
-          <PanelWrapper title="Grid Preview" className="flex-1 overflow-hidden flex flex-col"> {/* Allow preview to take space */}
-             {currentScene ? (
-                // Center the grid within this panel
-               <div className="flex-1 overflow-auto flex items-center justify-center"> 
-                 <GridDisplay
-                   rows={gridRows}
-                   cols={gridCols}
-                   layoutGrid={currentScene.layoutGrid}
-                   selectedCellCoords={selectedCellCoords}
-                   onCellClick={handleCellClick}
-                   backgroundColor={currentScene.backgroundColor}
-                   secondaryColor={currentScene.secondaryColor}
-                 />
-               </div>
-             ) : (
-                <div className="flex items-center justify-center h-full">
-                    <p className="text-gray-500">Select a scene to view its grid.</p>
-                </div>
-             )}
+      <main className="flex-1 p-4 flex flex-col gap-4 overflow-hidden">
+        {" "}
+        {/* Prevent main area from scrolling internally unless needed */}
+        {/* Top Row: Settings */}
+        <div className="flex gap-4 flex-shrink-0">
+          {" "}
+          {/* Prevent settings row from growing */}
+          {/* Scene Settings */}
+          <PanelWrapper title="Scene Settings" className="flex-1">
+            {currentScene ? (
+              <div className="flex flex-col gap-3">
+                <label className="text-sm">
+                  {" "}
+                  Start Frame:
+                  <input
+                    type="number"
+                    min="0"
+                    value={currentScene.startFrame}
+                    onChange={(e) =>
+                      handleSceneParamChange("startFrame", e.target.value)
+                    }
+                    className="ml-2 w-20 p-1 rounded bg-gray-700 border border-gray-600"
+                  />
+                </label>
+                <label className="text-sm">
+                  {" "}
+                  Duration (opt.):
+                  <input
+                    type="number"
+                    min="1"
+                    value={currentScene.durationFrames ?? ""}
+                    onChange={(e) =>
+                      handleSceneParamChange("durationFrames", e.target.value)
+                    }
+                    placeholder="auto"
+                    className="ml-2 w-20 p-1 rounded bg-gray-700 border border-gray-600"
+                  />
+                </label>
+                <label className="text-sm flex items-center gap-2">
+                  <span>Background Color:</span>
+                  <button
+                    ref={bgPickerButtonRef}
+                    onClick={() => setShowBgColorPicker((s) => !s)}
+                    className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                    style={{
+                      backgroundColor:
+                        currentScene.backgroundColor || DEFAULT_BG_COLOR,
+                    }}
+                  />
+                  {showBgColorPicker && (
+                    <div
+                      ref={bgPickerPopoverRef}
+                      style={bgStyles.popper}
+                      {...bgAttributes.popper}
+                      className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                    >
+                      <HexColorPicker
+                        color={currentScene.backgroundColor || DEFAULT_BG_COLOR}
+                        onChange={(color) =>
+                          handleSceneColorChange("backgroundColor", color)
+                        }
+                      />
+                    </div>
+                  )}
+                </label>
+                <label className="text-sm flex items-center gap-2">
+                  <span>Secondary Color:</span>
+                  <button
+                    ref={secondaryPickerButtonRef}
+                    onClick={() => setShowSecondaryColorPicker((s) => !s)}
+                    className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                    style={{
+                      backgroundColor:
+                        currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR,
+                    }}
+                  />
+                  {showSecondaryColorPicker && (
+                    <div
+                      ref={secondaryPickerPopoverRef}
+                      style={secondaryStyles.popper}
+                      {...secondaryAttributes.popper}
+                      className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                    >
+                      <HexColorPicker
+                        color={
+                          currentScene.secondaryColor || DEFAULT_SECONDARY_COLOR
+                        }
+                        onChange={(color) =>
+                          handleSceneColorChange("secondaryColor", color)
+                        }
+                      />
+                    </div>
+                  )}
+                </label>
+                <label className="text-sm flex items-center">
+                  <span>Background Chars (opt.):</span>
+                  <input
+                    type="text"
+                    value={currentScene.backgroundChars ?? ""}
+                    onChange={(e) =>
+                      handleSceneParamChange("backgroundChars", e.target.value)
+                    }
+                    placeholder="e.g., .-:"
+                    maxLength={15}
+                    className="w-40 p-1 rounded bg-gray-700 border border-gray-600 font-mono text-xs ml-2"
+                  />
+                </label>
+                <button
+                  onClick={handleCopyGridFromPrevious}
+                  disabled={selectedSceneIndex === 0}
+                  className="mt-2 px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Copy Grid from Previous
+                </button>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Select a scene to view settings.
+              </p>
+            )}
           </PanelWrapper>
-          
+          {/* Selected Cell Settings */}
+          <PanelWrapper title="Selected Cell Settings" className="flex-1">
+            {selectedCellCoords && currentScene ? (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm">
+                  Editing Cell: [{selectedCellCoords.row},{" "}
+                  {selectedCellCoords.col}]
+                </p>
+                <label className="text-sm">
+                  {" "}
+                  Character:
+                  <input
+                    ref={hiddenInputRef} // Use ref for potential focus later
+                    type="text"
+                    maxLength={1} // Allow only one character
+                    value={selectedCellData?.char ?? ""}
+                    onChange={(e) => {
+                      /* This requires a modified handler or direct update */
+                      // Simplified: Update state directly (needs handler adjustment ideally)
+                      const newChar = e.target.value.slice(0, 1); // Ensure only one char
+                      const newScenes = [...scenes];
+                      const sceneToEdit = newScenes[selectedSceneIndex!]; // Assume index is valid
+                      if (!sceneToEdit.layoutGrid[selectedCellCoords.row]) {
+                        sceneToEdit.layoutGrid[selectedCellCoords.row] = [];
+                      }
+                      if (
+                        !sceneToEdit.layoutGrid[selectedCellCoords.row][
+                          selectedCellCoords.col
+                        ]
+                      ) {
+                        sceneToEdit.layoutGrid[selectedCellCoords.row][
+                          selectedCellCoords.col
+                        ] = { char: newChar, color: lastUsedColor };
+                      } else {
+                        sceneToEdit.layoutGrid[selectedCellCoords.row][
+                          selectedCellCoords.col
+                        ]!.char = newChar;
+                      }
+                      setScenes(newScenes);
+                    }}
+                    onKeyDown={handleCellCharacterInput} // Keep complex logic here
+                    className="ml-2 w-10 p-1 rounded bg-gray-700 border border-gray-600 text-center font-mono"
+                  />
+                </label>
+                <label className="text-sm">
+                  <span>Text Color:</span>
+                  {/* Color Swatch Button */}
+                  <button
+                    ref={cellPickerButtonRef}
+                    onClick={() => setShowCellColorPicker((s) => !s)}
+                    className="ml-2 h-6 w-10 rounded border border-gray-500 inline-block align-middle"
+                    style={{
+                      backgroundColor: selectedCellData?.color ?? lastUsedColor,
+                    }}
+                  />
+                  {/* Popper for Cell Color Picker */}
+                  {showCellColorPicker && (
+                    <div
+                      ref={cellPickerPopoverRef}
+                      style={cellStyles.popper}
+                      {...cellAttributes.popper}
+                      className="z-50 p-2 bg-gray-700 rounded shadow-lg border border-gray-600"
+                    >
+                      <HexColorPicker
+                        color={selectedCellData?.color ?? lastUsedColor}
+                        onChange={handleSelectedCellColorChange} // Use updated handler
+                      />
+                    </div>
+                  )}
+                </label>
+
+                {/* Updated Color Palette Usage */}
+                <div className="mt-2">
+                  <label className="text-sm block mb-1">Palette:</label>
+                  <ColorPalette
+                    onSelect={handlePaletteColorSelect} // No colors prop needed
+                  />
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Click a cell in the grid preview to edit.
+              </p>
+            )}
+          </PanelWrapper>
+        </div>
+        {/* Bottom Row: Grid Preview - takes remaining space */}
+        <PanelWrapper
+          title="Grid Preview"
+          className="flex-1 overflow-hidden flex flex-col"
+        >
+          {" "}
+          {/* Allow preview to take space */}
+          {currentScene ? (
+            // Center the grid within this panel
+            <div className="flex-1 overflow-auto flex items-center justify-center">
+              <GridDisplay
+                rows={gridRows}
+                cols={gridCols}
+                layoutGrid={currentScene.layoutGrid}
+                selectedCellCoords={selectedCellCoords}
+                onCellClick={handleCellClick}
+                backgroundColor={currentScene.backgroundColor}
+                secondaryColor={currentScene.secondaryColor}
+              />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-500">Select a scene to view its grid.</p>
+            </div>
+          )}
+        </PanelWrapper>
       </main>
 
       {/* Hidden input for character entry (if needed, keep logic) */}
