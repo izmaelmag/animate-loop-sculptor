@@ -193,7 +193,7 @@ export const config: UnstableGridConfig = {
   textureSizeRender: 512,
   useHighResTextures: false,
   textureUvEpsilon: 0.01,
-  subdivisionLevel: 1,
+  subdivisionLevel: 8,
 
   // Animation Timing
   easingFunctionName: "easeInOutElastic",
