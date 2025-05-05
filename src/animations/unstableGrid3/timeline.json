@@ -1,0 +1,4776 @@
+[
+  {
+    "startFrame": 214,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "G",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 253,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 43
+  },
+  {
+    "startFrame": 296,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 36
+  },
+  {
+    "startFrame": 332,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "b",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "l",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 371,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 392,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 135
+  },
+  {
+    "startFrame": 527,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "G",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 548,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 24
+  },
+  {
+    "startFrame": 572,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 611,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 40
+  },
+  {
+    "startFrame": 651,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 37
+  },
+  {
+    "startFrame": 688,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 709,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 112
+  },
+  {
+    "startFrame": 821,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "I",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "m",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 20
+  },
+  {
+    "startFrame": 841,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "l",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "l",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 43
+  },
+  {
+    "startFrame": 884,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "u",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 38
+  },
+  {
+    "startFrame": 922,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "I",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "v",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 40
+  },
+  {
+    "startFrame": 962,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 1001,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 1022,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 89
+  },
+  {
+    "startFrame": 1111,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 18
+  },
+  {
+    "startFrame": 1129,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  },
+  {
+    "startFrame": 1148,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 1164,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 20
+  },
+  {
+    "startFrame": 1184,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 74
+  },
+  {
+    "startFrame": 1258,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "S",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 41
+  },
+  {
+    "startFrame": 1299,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "m",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 45
+  },
+  {
+    "startFrame": 1344,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 31
+  },
+  {
+    "startFrame": 1375,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 1391,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 1412,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  },
+  {
+    "startFrame": 1431,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 38
+  },
+  {
+    "startFrame": 1469,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        {
+          "char": "L",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "v",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "b",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "l",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        }
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 82
+  },
+  {
+    "startFrame": 1551,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 29
+  },
+  {
+    "startFrame": 1580,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 49
+  },
+  {
+    "startFrame": 1629,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 1650,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "b",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 123
+  },
+  {
+    "startFrame": 1773,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "M",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 43
+  },
+  {
+    "startFrame": 1816,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "u",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 37
+  },
+  {
+    "startFrame": 1853,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 42
+  },
+  {
+    "startFrame": 1895,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "u",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 1934,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "b",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 24
+  },
+  {
+    "startFrame": 1958,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 126
+  },
+  {
+    "startFrame": 2084,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "G",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 23
+  },
+  {
+    "startFrame": 2107,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 22
+  },
+  {
+    "startFrame": 2129,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 36
+  },
+  {
+    "startFrame": 2165,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 2186,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  },
+  {
+    "startFrame": 2205,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "m",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 53
+  },
+  {
+    "startFrame": 2258,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 95
+  },
+  {
+    "startFrame": 2353,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 18
+  },
+  {
+    "startFrame": 2371,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  },
+  {
+    "startFrame": 2390,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 2411,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 18
+  },
+  {
+    "startFrame": 2429,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 77
+  },
+  {
+    "startFrame": 2506,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "S",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 2545,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "m",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 42
+  },
+  {
+    "startFrame": 2587,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 29
+  },
+  {
+    "startFrame": 2616,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 13
+  },
+  {
+    "startFrame": 2629,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 2650,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 2671,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 40
+  },
+  {
+    "startFrame": 2711,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "L",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 23
+  },
+  {
+    "startFrame": 2734,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 18
+  },
+  {
+    "startFrame": 2752,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 40
+  },
+  {
+    "startFrame": 2792,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 2813,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 2829,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "z",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 56
+  },
+  {
+    "startFrame": 2885,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 135
+  },
+  {
+    "startFrame": 3020,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "E",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "v",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "r",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 39
+  },
+  {
+    "startFrame": 3059,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 37
+  },
+  {
+    "startFrame": 3096,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 3117,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 3133,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "l",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "g",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 60
+  },
+  {
+    "startFrame": 3193,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "o",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "n",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 134
+  },
+  {
+    "startFrame": 3327,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "S",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 3348,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 18
+  },
+  {
+    "startFrame": 3366,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 40
+  },
+  {
+    "startFrame": 3406,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 3422,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "a",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 3443,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "k",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "d",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 53
+  },
+  {
+    "startFrame": 3496,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 95
+  },
+  {
+    "startFrame": 3591,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 3607,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 3628,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 16
+  },
+  {
+    "startFrame": 3644,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 21
+  },
+  {
+    "startFrame": 3665,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 74
+  },
+  {
+    "startFrame": 3739,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "S",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "e",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "s",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 45
+  },
+  {
+    "startFrame": 3784,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "m",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "y",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 42
+  },
+  {
+    "startFrame": 3826,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        {
+          "char": "w",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "i",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "t",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "c",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        {
+          "char": "h",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 27
+  },
+  {
+    "startFrame": 3853,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  },
+  {
+    "startFrame": 3872,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 18
+  },
+  {
+    "startFrame": 3890,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  },
+  {
+    "startFrame": 3909,
+    "layoutGrid": [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [
+        null,
+        null,
+        null,
+        {
+          "char": "q",
+          "style": {
+            "color": "#FFFFFF"
+          }
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null]
+    ],
+    "stylePresets": {
+      "filler": {
+        "color": "#333"
+      },
+      "default": {
+        "color": "#FFFFFF"
+      }
+    },
+    "backgroundColor": "#282c34",
+    "secondaryColor": "#333",
+    "durationFrames": 19
+  }
+]

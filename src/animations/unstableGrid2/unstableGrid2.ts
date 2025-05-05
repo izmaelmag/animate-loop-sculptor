@@ -75,7 +75,7 @@ let activeColorScheme = getActiveColorScheme(config.colorSchemeName);
 
 // Timeline state
 let currentSceneIndex = -1;
-let activeScene: AnimationScene | null = null;
+let activeScene: AnimationScene | null = null; 
 let previousScene: AnimationScene | null = null;
 let allNeededChars = ""; // String containing all unique characters for textures
 
@@ -87,7 +87,7 @@ let currentCellColors: p5.Color[][] = [];
 // NEW: Scene Color state
 let previousBgColor: p5.Color | null = null;
 let targetBgColor: p5.Color | null = null;
-let currentBgColor: p5.Color | null = null;
+let currentBgColor: p5.Color | null = null; 
 let previousSecondaryColor: p5.Color | null = null;
 let targetSecondaryColor: p5.Color | null = null;
 let currentSecondaryColor: p5.Color | null = null;
@@ -135,10 +135,10 @@ function getActiveEasingFunction(): (t: number) => number {
 
 // --- lerpPoint Helper ---
 function lerpPoint(p: p5, p1: Point, p2: Point, t: number): Point {
-  return {
-    x: p.lerp(p1.x, p2.x, t),
-    y: p.lerp(p1.y, p2.y, t),
-  };
+    return {
+        x: p.lerp(p1.x, p2.x, t),
+        y: p.lerp(p1.y, p2.y, t),
+    };
 }
 
 // --- Bilinear Interpolation Helper for Points (NEW) ---
@@ -151,8 +151,8 @@ function bilinearInterpolatePoint(
   u: number,
   v: number
 ): Point {
-  const p1 = lerpPoint(p, tl, tr, u); // Interpolate top edge
-  const p2 = lerpPoint(p, bl, br, u); // Interpolate bottom edge
+    const p1 = lerpPoint(p, tl, tr, u); // Interpolate top edge
+    const p2 = lerpPoint(p, bl, br, u); // Interpolate bottom edge
   return lerpPoint(p, p1, p2, v); // Interpolate vertically
 }
 
@@ -162,23 +162,23 @@ function parseColor(
   hex: string | undefined,
   defaultHex: string
 ): p5.Color {
-  try {
-    const validHex = hex || defaultHex;
-    if (!/^#([0-9A-F]{3}){1,2}$/i.test(validHex)) {
-      throw new Error("Invalid hex format");
-    }
-    return p.color(validHex);
-  } catch (e) {
+    try {
+        const validHex = hex || defaultHex;
+        if (!/^#([0-9A-F]{3}){1,2}$/i.test(validHex)) {
+            throw new Error("Invalid hex format");
+        }
+        return p.color(validHex);
+    } catch (e) {
     // console.warn(
     //   `Invalid hex color: "${hex}". Using default: "${defaultHex}".`,
     //   e
     // );
-    try {
-      return p.color(defaultHex);
-    } catch {
-      return p.color(defaultHex === DEFAULT_BG_COLOR ? 0 : 128);
+        try {
+            return p.color(defaultHex);
+        } catch {
+            return p.color(defaultHex === DEFAULT_BG_COLOR ? 0 : 128);
+        }
     }
-  }
 }
 
 function interpolateColor(
@@ -198,13 +198,13 @@ const renderTexturedRectangle: RectangleRenderFunction = (
   _lines: Line[],
   _intersection: Point | null,
   vertices: Point[], // Expecting [topLeft, topRight, bottomRight, bottomLeft]
-  _color: Color,
+  _color: Color, 
   metadata: RectangleMetadata | null,
   currentFrameNum: number
 ): void => {
-  const col = metadata?.colTopLeft;
-  const row = metadata?.rowTopLeft;
-  const rectIndex = metadata?.rectIndex;
+  const col = metadata?.colTopLeft; 
+  const row = metadata?.rowTopLeft; 
+  const rectIndex = metadata?.rectIndex; 
 
   if (
     col === undefined ||
@@ -214,54 +214,54 @@ const renderTexturedRectangle: RectangleRenderFunction = (
     !activeScene
   )
     return;
-
+  
   let letter: string | null = null;
   const layoutCell = activeScene.layoutGrid?.[row]?.[col];
-  if (layoutCell) {
+  if (layoutCell) { 
     letter = layoutCell.char;
-  } else {
+  } else { 
     if (config.fillerChars && config.fillerChars.length > 0) {
-      const charIndex = (rectIndex + col + row) % config.fillerChars.length;
-      letter = config.fillerChars[charIndex];
+        const charIndex = (rectIndex + col + row) % config.fillerChars.length;
+        letter = config.fillerChars[charIndex];
     } else {
-      letter = " ";
+        letter = " "; 
     }
   }
 
   const interpolatedColor = currentCellColors?.[row]?.[col];
   if (!interpolatedColor) {
-    return;
+    return; 
   }
-
+  
   if (letter) {
     const texture = alphabetTextures[letter];
 
     if (texture) {
       p.push();
       p.tint(interpolatedColor);
-      p.textureMode(p.NORMAL);
+      p.textureMode(p.NORMAL); 
       p.textureWrap(p.CLAMP);
       p.texture(texture);
       p.noStroke();
 
       const N = Math.max(1, Math.floor(config.subdivisionLevel)); // Ensure N >= 1
       const UV_EPSILON = config.textureUvEpsilon;
-
+      
       // Original corner vertices
       const [tl_v, tr_v, br_v, bl_v] = vertices;
-
+      
       // Iterate through the sub-grid
       for (let j = 0; j < N; j++) {
         // Vertical subdivisions
         for (let i = 0; i < N; i++) {
           // Horizontal subdivisions
-          // Calculate normalized u, v for the four corners of the sub-quad
-          const u0 = i / N;
-          const u1 = (i + 1) / N;
-          const v0 = j / N;
-          const v1 = (j + 1) / N;
+            // Calculate normalized u, v for the four corners of the sub-quad
+            const u0 = i / N;
+            const u1 = (i + 1) / N;
+            const v0 = j / N;
+            const v1 = (j + 1) / N;
 
-          // Calculate vertex positions using bilinear interpolation
+            // Calculate vertex positions using bilinear interpolation
           const sub_tl = bilinearInterpolatePoint(
             p,
             tl_v,
@@ -299,26 +299,26 @@ const renderTexturedRectangle: RectangleRenderFunction = (
             v1
           );
 
-          // Calculate UV coordinates with epsilon
-          const uv_tl_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u0);
-          const uv_tl_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v0);
-          const uv_tr_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u1);
-          const uv_tr_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v0);
-          const uv_br_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u1);
-          const uv_br_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v1);
-          const uv_bl_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u0);
-          const uv_bl_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v1);
+            // Calculate UV coordinates with epsilon
+            const uv_tl_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u0);
+            const uv_tl_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v0);
+            const uv_tr_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u1);
+            const uv_tr_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v0);
+            const uv_br_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u1);
+            const uv_br_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v1);
+            const uv_bl_u = p.lerp(UV_EPSILON, 1 - UV_EPSILON, u0);
+            const uv_bl_v = p.lerp(UV_EPSILON, 1 - UV_EPSILON, v1);
 
-          // Draw the sub-quad
-          p.beginShape();
-          p.vertex(sub_tl.x, sub_tl.y, uv_tl_u, uv_tl_v);
-          p.vertex(sub_tr.x, sub_tr.y, uv_tr_u, uv_tr_v);
-          p.vertex(sub_br.x, sub_br.y, uv_br_u, uv_br_v);
-          p.vertex(sub_bl.x, sub_bl.y, uv_bl_u, uv_bl_v);
-          p.endShape(p.CLOSE);
+            // Draw the sub-quad
+            p.beginShape();
+            p.vertex(sub_tl.x, sub_tl.y, uv_tl_u, uv_tl_v);
+            p.vertex(sub_tr.x, sub_tr.y, uv_tr_u, uv_tr_v);
+            p.vertex(sub_br.x, sub_br.y, uv_br_u, uv_br_v);
+            p.vertex(sub_bl.x, sub_bl.y, uv_bl_u, uv_bl_v);
+            p.endShape(p.CLOSE);
         }
       }
-
+      
       p.noTint();
       p.pop();
     }
@@ -467,7 +467,7 @@ function updateRectangles() {
 }
 
 // --- Calculate New Target Points (Uses Noise) ---
-function calculateNewTargetPoints(p: p5, frame: number) {
+function calculateNewTargetPoints(p: p5, frame: number) { 
   const cols = config.gridColumns;
   const rows = config.gridRows;
   const gridW = config.width;
@@ -484,9 +484,9 @@ function calculateNewTargetPoints(p: p5, frame: number) {
 
   // Use the specific noise3D function
   const noiseFn = noise3D; // Use our initialized 3D noise function
-  if (!noiseFn) {
+  if (!noiseFn) { 
     // console.warn("noise3D function not initialized!");
-    return; // Exit if noise isn't ready
+      return; // Exit if noise isn't ready
   }
 
   // console.log(`[Frame ${frame}] Calculating noise target points...`);
@@ -494,16 +494,16 @@ function calculateNewTargetPoints(p: p5, frame: number) {
   for (let j = 0; j <= rows; j++) {
     for (let i = 0; i <= cols; i++) {
       if (i === 0 || i === cols || j === 0 || j === rows) {
-        targetPoints[j][i] = { ...originalPoints[j][i] };
-        continue;
+        targetPoints[j][i] = { ...originalPoints[j][i] }; 
+        continue; 
       }
-
+      
       const noiseValX = noiseFn(i * freqX, j * freqY, frame * speed) * 2 - 1;
       const noiseValY =
         noiseFn(i * freqX + 100, j * freqY + 100, frame * speed) * 2 - 1;
       const displacementX = noiseValX * ampX;
       const displacementY = noiseValY * ampY;
-
+      
       // Log displacement for one point
       /* // COMMENTED OUT - Too much noise
       if (j === 1 && i === 1 && frame % 30 === 0) {
@@ -529,43 +529,43 @@ function calculateTargetCellColors(
   scene: AnimationScene,
   interpolatedSecondaryColor: p5.Color
 ) {
-  const rows = config.gridRows;
-  const cols = config.gridColumns;
-  const newTargetColors: p5.Color[][] = [];
+    const rows = config.gridRows;
+    const cols = config.gridColumns;
+    const newTargetColors: p5.Color[][] = [];
 
-  // Default color from the active scheme (get the string)
+    // Default color from the active scheme (get the string)
   const defaultPrimaryHexString = activeColorScheme.primary || "#FFFFFF";
   const defaultPrimaryColor = parseColor(p, defaultPrimaryHexString, "#FFFFFF"); // Parse default once
-  // Use the provided interpolated secondary color for null cells
-  const secondaryColor = interpolatedSecondaryColor;
+    // Use the provided interpolated secondary color for null cells
+    const secondaryColor = interpolatedSecondaryColor; 
 
-  for (let r = 0; r < rows; r++) {
-    newTargetColors[r] = [];
-    for (let c = 0; c < cols; c++) {
-      const layoutCell = scene.layoutGrid?.[r]?.[c];
-      let targetColor: p5.Color;
+    for (let r = 0; r < rows; r++) {
+        newTargetColors[r] = [];
+        for (let c = 0; c < cols; c++) {
+            const layoutCell = scene.layoutGrid?.[r]?.[c];
+            let targetColor: p5.Color;
 
-      if (layoutCell) {
-        // Check for direct style color first
-        if (layoutCell.style?.color) {
-          // Parse the cell's color, falling back to default hex string
+            if (layoutCell) {
+                // Check for direct style color first
+                if (layoutCell.style?.color) {
+                    // Parse the cell's color, falling back to default hex string
           targetColor = parseColor(
             p,
             layoutCell.style.color,
             defaultPrimaryHexString
           );
-        } else {
-          // No direct style, use the pre-parsed default primary color
-          targetColor = defaultPrimaryColor;
+                } else {
+                    // No direct style, use the pre-parsed default primary color
+                    targetColor = defaultPrimaryColor;
+                }
+            } else {
+                // Null cell - use the secondary color
+                targetColor = secondaryColor;
+            }
+            newTargetColors[r][c] = targetColor;
         }
-      } else {
-        // Null cell - use the secondary color
-        targetColor = secondaryColor;
-      }
-      newTargetColors[r][c] = targetColor;
     }
-  }
-  targetCellColors = newTargetColors;
+    targetCellColors = newTargetColors;
 }
 
 // --- Initialize Cell Colors (NEW) ---
@@ -574,24 +574,24 @@ function initializeCellColors(
   scene: AnimationScene,
   initialSecondaryColor: p5.Color
 ) {
-  const rows = config.gridRows;
-  const cols = config.gridColumns;
-  previousCellColors = [];
-  currentCellColors = [];
+    const rows = config.gridRows;
+    const cols = config.gridColumns;
+    previousCellColors = [];
+    currentCellColors = [];
 
-  // Calculate initial target colors using the provided secondary color
-  calculateTargetCellColors(p, scene, initialSecondaryColor);
+    // Calculate initial target colors using the provided secondary color
+    calculateTargetCellColors(p, scene, initialSecondaryColor); 
 
-  // Initialize previous and current colors to the initial target colors
-  for (let r = 0; r < rows; r++) {
-    previousCellColors[r] = [];
-    currentCellColors[r] = [];
-    for (let c = 0; c < cols; c++) {
-      const initialColor = targetCellColors[r][c];
-      previousCellColors[r][c] = initialColor;
-      currentCellColors[r][c] = initialColor;
+    // Initialize previous and current colors to the initial target colors
+    for (let r = 0; r < rows; r++) {
+        previousCellColors[r] = [];
+        currentCellColors[r] = [];
+        for (let c = 0; c < cols; c++) {
+            const initialColor = targetCellColors[r][c]; 
+            previousCellColors[r][c] = initialColor;
+            currentCellColors[r][c] = initialColor;
+        }
     }
-  }
 }
 
 // --- Animation Loop ---
@@ -627,7 +627,7 @@ const animation: AnimationFunction = (
   let newSceneIndex = -1;
   for (let i = timeline.length - 1; i >= 0; i--) {
     if (currentFrameNum >= timeline[i].startFrame) {
-      newSceneIndex = i;
+          newSceneIndex = i;
       break;
     }
   }
@@ -813,13 +813,13 @@ const animation: AnimationFunction = (
   updateRectangles(); // RE-ENABLED
 
   // Render Background
-  p.background(currentBgColor);
+  p.background(currentBgColor); 
 
   // --- Render Main Rectangles (using TEXTURED renderer again) ---
   rectangles.forEach((rect, index) => {
-    const metadata = rect.getMetadata();
+      const metadata = rect.getMetadata();
     if (metadata) {
-      metadata.rectIndex = index;
+          metadata.rectIndex = index; 
 
       // --- DEBUG: Log render call and vertices for the first rectangle --- (REMOVED)
       /*
@@ -831,12 +831,12 @@ const animation: AnimationFunction = (
       // --- END DEBUG ---
 
       // Use the TEXTURED renderer again
-      renderTexturedRectangle(
-        p,
-        _normalizedTime,
-        rect.getLines(),
-        rect.getDiagonalIntersection(),
-        rect.getVertices(),
+          renderTexturedRectangle(
+              p, 
+              _normalizedTime, 
+              rect.getLines(), 
+              rect.getDiagonalIntersection(), 
+              rect.getVertices(), 
         rect.getColor(),
         metadata,
         currentFrameNum // Pass currentFrameNum
@@ -911,7 +911,7 @@ const setupAnimation: AnimationFunction = (
   console.info("[Setup] Running setup...");
   // --- End Setup Guard ---
 
-  let initialSceneIndex = 0;
+  let initialSceneIndex = 0; 
 
   activeColorScheme = getActiveColorScheme(config.colorSchemeName);
   p.background(activeColorScheme.background);
@@ -986,7 +986,7 @@ const setupAnimation: AnimationFunction = (
           if (!filename) {
             if (char === " ") {
               // console.info("[Setup] Skipping space character texture (likely not generated)."); // Optional log
-            } else {
+  } else {
               console.warn(
                 `[Setup] Character '${char}' not found in texture map. Skipping.` // Changed log prefix
               );
@@ -1028,32 +1028,32 @@ const setupAnimation: AnimationFunction = (
       textureMap = null; // Clear map on error too
     });
   // REMOVED .finally() block as redundant now promise is cleared in then/catch
-
+  
   // Initialize Grid & Scene
-  setupGridPoints(p);
+  setupGridPoints(p); 
   currentSceneIndex = -1;
   activeScene = null;
-  if (timeline.length === 0) {
-    console.error("Timeline is empty. Cannot initialize animation.");
-    return;
-  }
-  for (let i = timeline.length - 1; i >= 0; i--) {
-    if (0 >= timeline[i].startFrame) {
-      initialSceneIndex = i;
-      break;
-    }
-  }
-  currentSceneIndex = initialSceneIndex;
-  activeScene = timeline[currentSceneIndex];
+   if (timeline.length === 0) {
+       console.error("Timeline is empty. Cannot initialize animation.");
+       return; 
+   }
+   for (let i = timeline.length - 1; i >= 0; i--) {
+       if (0 >= timeline[i].startFrame) {
+           initialSceneIndex = i;
+           break;
+       }
+   }
+   currentSceneIndex = initialSceneIndex;
+   activeScene = timeline[currentSceneIndex];
   previousScene = null;
 
   if (!activeScene) {
     console.error(
       `Failed to find active scene with index ${initialSceneIndex}. Initializing with defaults.`
     );
-    targetBgColor = parseColor(p, undefined, DEFAULT_BG_COLOR);
-    targetSecondaryColor = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
-  } else {
+       targetBgColor = parseColor(p, undefined, DEFAULT_BG_COLOR);
+       targetSecondaryColor = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);
+   } else {
     targetBgColor = parseColor(
       p,
       activeScene.backgroundColor,
@@ -1066,20 +1066,20 @@ const setupAnimation: AnimationFunction = (
     );
   }
 
-  previousBgColor = targetBgColor;
-  previousSecondaryColor = targetSecondaryColor;
-  currentBgColor = targetBgColor;
+   previousBgColor = targetBgColor; 
+   previousSecondaryColor = targetSecondaryColor;
+   currentBgColor = targetBgColor;
   currentSecondaryColor = targetSecondaryColor;
-
-  if (activeScene) {
+   
+   if (activeScene) {
     calculateNewTargetPoints(p, 0);
     const initialSecondaryParsed = parseColor(
       p,
       activeScene.secondaryColor,
       DEFAULT_SECONDARY_COLOR
     );
-    initializeCellColors(p, activeScene, initialSecondaryParsed);
-  } else {
+       initializeCellColors(p, activeScene, initialSecondaryParsed); 
+   } else {
     targetPoints = originalPoints.map((row) => row.map((pt) => ({ ...pt })));
     // Initialize cell colors with defaults if no active scene
     const defaultSecondary = parseColor(p, undefined, DEFAULT_SECONDARY_COLOR);

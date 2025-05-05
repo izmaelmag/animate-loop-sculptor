@@ -246,3 +246,4 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({
 };
 
 export default ColorPalette;
+ 

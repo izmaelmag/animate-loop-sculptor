@@ -322,10 +322,10 @@ export class AnimationController {
     // The redraw might already be handled by the currentFrame setter triggering notifyFrameChanged,
     // depending on how SketchView consumes that notification. 
     // Explicit redraw here might be redundant or cause double redraws, but let's keep it for now.
-    this.redraw(); 
+    this.redraw();
 
     // Continue the animation loop
-    this.animationFrameRef = requestAnimationFrame(this.updateFrame);
+      this.animationFrameRef = requestAnimationFrame(this.updateFrame);
   };
 
   //-------------------------------------

@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 // --- Configuration (Simplified & Self-Contained) ---
 // Characters to generate textures for (Modify this string as needed!)
-const CHARS_TO_RENDER_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+const CHARS_TO_RENDER_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const CHARS_TO_RENDER = new Set(CHARS_TO_RENDER_STRING.split(""));
 
 const FONT_FILENAME = "font.ttf"; // Expected font filename IN THE SAME DIRECTORY as the script
@@ -85,96 +85,59 @@ function sanitizeFilename(char) {
 }
 
 for (const char of CHARS_TO_RENDER) {
-  // 1. Draw on temporary large canvas
-  const tempCanvas = createCanvas(TEMP_CANVAS_SIZE, TEMP_CANVAS_SIZE);
-  const tempCtx = tempCanvas.getContext("2d");
-
-  tempCtx.fillStyle = "white";
-  tempCtx.textAlign = "center";
-  tempCtx.textBaseline = "middle";
-  const initialFontSize = TEMP_CANVAS_SIZE * 0.8; // Large font on temp canvas
-  tempCtx.font = `${initialFontSize}px "${FONT_FAMILY_NAME}"`;
-  tempCtx.fillText(char, TEMP_CANVAS_SIZE / 2, TEMP_CANVAS_SIZE / 2);
-
-  // 2. Find Bounding Box on temporary canvas
-  let minX = TEMP_CANVAS_SIZE,
-    minY = TEMP_CANVAS_SIZE,
-    maxX = -1,
-    maxY = -1;
-  let isEmpty = true;
-  try {
-    const imageData = tempCtx.getImageData(
-      0,
-      0,
-      TEMP_CANVAS_SIZE,
-      TEMP_CANVAS_SIZE
-    );
-    const data = imageData.data;
-    for (let y = 0; y < TEMP_CANVAS_SIZE; y++) {
-      for (let x = 0; x < TEMP_CANVAS_SIZE; x++) {
-        const alphaIndex = (y * TEMP_CANVAS_SIZE + x) * 4 + 3;
-        if (data[alphaIndex] > 0) {
-          // Check alpha
-          isEmpty = false;
-          if (x < minX) minX = x;
-          if (x > maxX) maxX = x;
-          if (y < minY) minY = y;
-          if (y > maxY) maxY = y;
-        }
-      }
-    }
-  } catch (imgErr) {
-    console.error(
-      `Error getting image data for char '${char}': ${imgErr}. Skipping.`
-    );
-    errorCount++;
-    continue;
-  }
-
-  // 4. Create final 512x512 canvas
+  // 1. Create final 512x512 canvas
   const finalCanvas = createCanvas(FINAL_TEXTURE_SIZE, FINAL_TEXTURE_SIZE);
   const finalCtx = finalCanvas.getContext("2d");
 
-  // 3. Handle empty character
-  if (isEmpty || maxX < minX || maxY < minY) {
-    // console.log(`Character '${char}' is empty, saving empty 512x512 texture.`);
-    // finalCanvas is already transparent, do nothing else
-  } else {
-    // 5. Copy and STRETCH the cropped portion to the final canvas
-    const tightWidth = maxX - minX + 1;
-    const tightHeight = maxY - minY + 1;
+  try {
+    // 2. Set reference font size and get metrics
+    const refFontSize = 500; // Large reference size
+    finalCtx.font = `${refFontSize}px \"${FONT_FAMILY_NAME}\"`;
+    const metrics = finalCtx.measureText(char);
+    
+    const measuredWidth = metrics.width;
+    // Use actualBoundingBox for height as it's tighter than font ascent/descent
+    const measuredHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
 
-    // console.log(`Drawing char '${char}' from [${minX},${minY},${tightWidth},${tightHeight}] to [0,0,${FINAL_TEXTURE_SIZE},${FINAL_TEXTURE_SIZE}]`);
-
-    finalCtx.drawImage(
-      tempCanvas, // Source: temporary canvas
-      minX,
-      minY, // Source coords (top-left of bounding box)
-      tightWidth,
-      tightHeight, // Source dimensions (tight bounding box)
-      0,
-      0, // Destination coords (top-left of final canvas)
-      FINAL_TEXTURE_SIZE,
-      FINAL_TEXTURE_SIZE // Destination dimensions (STRETCH to fill)
-    );
+    // Handle cases where measurement might fail (e.g., empty char, font issue)
+    if (!measuredWidth || !measuredHeight || measuredWidth <= 0 || measuredHeight <= 0) {
+        // console.log(`Character '${char}' has zero dimensions, saving empty texture.`);
+         // Leave canvas transparent
+    } else {
+        // 3. Calculate scale factor to fit the measured dimensions
+        const paddingFactor = 0.95; // Use 95% of the space to avoid touching edges directly
+        const targetSize = FINAL_TEXTURE_SIZE * paddingFactor;
+        const scaleFactor = Math.min(targetSize / measuredWidth, targetSize / measuredHeight);
+        
+        // 4. Calculate final font size
+        const finalFontSize = refFontSize * scaleFactor;
+        
+        // 5. Set final font properties and draw centered
+        finalCtx.font = `${finalFontSize}px \"${FONT_FAMILY_NAME}\"`;
+        finalCtx.textAlign = "center";
+        finalCtx.textBaseline = "middle";
+        finalCtx.fillStyle = "white";
+        finalCtx.fillText(char, FINAL_TEXTURE_SIZE / 2, FINAL_TEXTURE_SIZE / 2);
+    }
+    
+  } catch(measureError) {
+      console.error(`Error measuring char '${char}': ${measureError}. Skipping.`);
+      errorCount++;
+      continue; // Skip saving for this char
   }
 
   // 6. Save the final 512x512 canvas
   const filename = sanitizeFilename(char);
   const outputPath = path.join(OUTPUT_DIR, `${filename}.png`);
-  // --- NEW: Add entry to the map ---
   textureMap[char] = `${filename}.png`;
 
   try {
-    const buffer = finalCanvas.toBuffer("image/png"); // Save final canvas
+    const buffer = finalCanvas.toBuffer("image/png");
     fs.writeFileSync(outputPath, buffer);
     generatedCount++;
-    // console.log(` -> Saved ${outputPath}`); // Optional: log each file
   } catch (err) {
     console.error(
-      `Failed to save texture for character "${char}" (${filename}): ${
-        err instanceof Error ? err.message : err
-      }`
+      `Failed to save texture for character "${char}" (${filename}): ${err instanceof Error ? err.message : err}`
     );
     errorCount++;
   }

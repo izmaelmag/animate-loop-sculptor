@@ -50,8 +50,8 @@ const SketchView = () => {
 
     } else {
       unsubscribeFrame = controller.onFrameChanged((frame) => {
-        setCurrentFrame(frame);
-      });
+      setCurrentFrame(frame);
+    });
     }
 
     return () => {

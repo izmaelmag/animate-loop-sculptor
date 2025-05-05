@@ -34,13 +34,5 @@
   "W": "char_W.png",
   "X": "char_X.png",
   "Y": "char_Y.png",
-  "Z": "char_Z.png",
-  "!": "char_hex_21.png",
-  "@": "char_hex_40.png",
-  "#": "char_hex_23.png",
-  "$": "char_hex_24.png",
-  "%": "char_hex_25.png",
-  "^": "char_hex_5E.png",
-  "&": "char_hex_26.png",
-  "*": "char_hex_2A.png"
+  "Z": "char_Z.png"
 }

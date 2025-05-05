@@ -82,14 +82,14 @@ interface GridDisplayProps {
   secondaryColor?: string; // Optional scene secondary color
 }
 
-const GridDisplay: React.FC<GridDisplayProps> = ({
-  rows,
-  cols,
-  layoutGrid,
-  selectedCellCoords,
-  onCellClick,
-  backgroundColor, // Use passed colors
-  secondaryColor,
+const GridDisplay: React.FC<GridDisplayProps> = ({ 
+    rows, 
+    cols, 
+    layoutGrid, 
+    selectedCellCoords, 
+    onCellClick, 
+    backgroundColor, // Use passed colors
+    secondaryColor, 
 }) => {
   if (rows <= 0 || cols <= 0) {
     return <div className="text-red-500">Invalid grid dimensions</div>;
@@ -112,15 +112,15 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
       <div
         className="grid border border-gray-500"
         style={{
-          gridTemplateColumns: `repeat(${cols}, auto)`,
-          gridTemplateRows: `repeat(${rows}, auto)`,
+    gridTemplateColumns: `repeat(${cols}, auto)`,
+    gridTemplateRows: `repeat(${rows}, auto)`,
           backgroundColor: gridBg,
           maxWidth: "fit-content", // Keep grid from expanding
         }}
       >
         {Array.from({ length: rows }).flatMap((_, r) =>
           Array.from({ length: cols }).map((_, c) => {
-            const cellData = layoutGrid?.[r]?.[c];
+      const cellData = layoutGrid?.[r]?.[c];
             const isSelected =
               selectedCellCoords?.row === r && selectedCellCoords?.col === c;
 
@@ -135,7 +135,7 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
               // Use secondary color passed down or default
             }
 
-            const cellStyle: React.CSSProperties = {
+      const cellStyle: React.CSSProperties = {
               // Use inline styles for colors that come from state/props directly
               backgroundColor: isSelected
                 ? "#445588"
@@ -153,16 +153,16 @@ const GridDisplay: React.FC<GridDisplayProps> = ({
             }
 
             return (
-              <div
-                key={`${r}-${c}`}
+        <div
+          key={`${r}-${c}`}
                 className={`${cellBaseClasses} ${bgColorClass}`} // Combine base and dynamic bg classes
                 style={cellStyle} // Apply dynamic inline styles (text color, specific bg)
-                onClick={() => onCellClick(r, c)}
+          onClick={() => onCellClick(r, c)}
                 title={`Cell [${r}, ${c}]`}
-              >
+        >
                 {cellData?.char || ""}
-              </div>
-            );
+        </div>
+      );
           })
         )}
       </div>
@@ -353,8 +353,8 @@ const TimelineEditor: React.FC = () => {
         console.error("Failed to parse saved state from localStorage:", error);
       }
     } else {
-      console.log("No saved state found.");
-      setNextSceneId(0);
+        console.log("No saved state found.");
+        setNextSceneId(0);
       setLastUsedColor("#ffffff"); // Ensure default last used color
     }
     setIsLoaded(true);
@@ -363,7 +363,7 @@ const TimelineEditor: React.FC = () => {
   // --- Save State to localStorage on Update ---
   useEffect(() => {
     if (!isLoaded) {
-      return;
+        return;
     }
     console.log("State changed, saving to localStorage...");
     const stateToSave = {
@@ -374,20 +374,20 @@ const TimelineEditor: React.FC = () => {
       lastUsedColor, // Save last used color
     };
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToSave));
-      console.log("State saved.");
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToSave));
+        console.log("State saved.");
     } catch (error) {
-      console.error("Failed to save state to localStorage:", error);
+        console.error("Failed to save state to localStorage:", error);
     }
   }, [scenes, gridCols, gridRows, selectedSceneIndex, isLoaded, lastUsedColor]); // Added lastUsedColor
 
   // Memoize current scene and cell data to avoid unnecessary calculations
   const currentScene = useMemo(() => {
-    return selectedSceneIndex !== null ? scenes[selectedSceneIndex] : null;
+      return selectedSceneIndex !== null ? scenes[selectedSceneIndex] : null;
   }, [scenes, selectedSceneIndex]);
 
   const selectedCellData = useMemo(() => {
-    if (!currentScene || !selectedCellCoords) return null;
+      if (!currentScene || !selectedCellCoords) return null;
     return (
       currentScene.layoutGrid?.[selectedCellCoords.row]?.[
         selectedCellCoords.col
@@ -397,14 +397,14 @@ const TimelineEditor: React.FC = () => {
 
   // Effect to focus the hidden input when a cell is selected
   useEffect(() => {
-    if (selectedCellCoords && hiddenInputRef.current) {
-      hiddenInputRef.current.focus();
-    }
+      if (selectedCellCoords && hiddenInputRef.current) {
+          hiddenInputRef.current.focus();
+      }
   }, [selectedCellCoords]); // Dependency array ensures this runs when selection changes
 
   // --- Callbacks ---
   const handleGridSizeChange = (dimension: "rows" | "cols", value: string) => {
-    const numValue = Math.max(1, parseInt(value, 10) || 1);
+      const numValue = Math.max(1, parseInt(value, 10) || 1);
 
     // Calculate the final dimensions *before* updating state
     const finalNewRows = dimension === "rows" ? numValue : gridRows; // Use current gridRows if cols change
@@ -443,14 +443,14 @@ const TimelineEditor: React.FC = () => {
       })
     );
 
-    setSelectedCellCoords(null); // Deselect cell on resize
+      setSelectedCellCoords(null); // Deselect cell on resize
   };
 
   const handleAddScene = () => {
     // Create a new layout grid filled with nulls based on CURRENT grid size
     const newLayoutGrid: (EditableLayoutCell | null)[][] = Array.from(
-      { length: gridRows },
-      () => Array(gridCols).fill(null)
+        { length: gridRows },
+        () => Array(gridCols).fill(null)
     );
 
     const newScene: EditableScene = {
@@ -462,28 +462,28 @@ const TimelineEditor: React.FC = () => {
           : 0,
       durationFrames: 60,
       layoutGrid: newLayoutGrid,
-      stylePresets: {
+      stylePresets: { 
         filler: { color: DEFAULT_SECONDARY_COLOR },
         default: { color: "#FFFFFF" },
       },
-      backgroundColor: DEFAULT_BG_COLOR,
+      backgroundColor: DEFAULT_BG_COLOR, 
       secondaryColor: DEFAULT_SECONDARY_COLOR,
     };
     const newScenes = [...scenes, newScene];
     setScenes(newScenes);
     setNextSceneId(nextSceneId + 1);
-    setSelectedSceneIndex(newScenes.length - 1);
-    setSelectedCellCoords(null);
+    setSelectedSceneIndex(newScenes.length - 1); 
+    setSelectedCellCoords(null); 
   };
 
-  // --- NEW: Duplicate Scene ---
+  // --- NEW: Duplicate Scene --- 
   const handleDuplicateScene = (indexToDuplicate: number) => {
     if (indexToDuplicate < 0 || indexToDuplicate >= scenes.length) {
-      console.error("Invalid index for duplication");
-      return;
+        console.error("Invalid index for duplication");
+        return;
     }
     const sceneToDuplicate = scenes[indexToDuplicate];
-
+    
     // Deep copy the scene (simple way for this structure)
     const duplicatedSceneData = JSON.parse(JSON.stringify(sceneToDuplicate));
 
@@ -504,25 +504,25 @@ const TimelineEditor: React.FC = () => {
     setSelectedCellCoords(null);
   };
 
-  // --- NEW: Delete Scene ---
+  // --- NEW: Delete Scene --- 
   const handleDeleteScene = (indexToDelete: number) => {
-    if (indexToDelete < 0 || indexToDelete >= scenes.length) {
-      console.error("Invalid index for deletion");
-      return;
-    }
-
-    const sceneToDelete = scenes[indexToDelete];
+      if (indexToDelete < 0 || indexToDelete >= scenes.length) {
+           console.error("Invalid index for deletion");
+           return;
+      }
+      
+      const sceneToDelete = scenes[indexToDelete];
     if (
       window.confirm(
         `Are you sure you want to delete Scene ${indexToDelete} (ID: ${sceneToDelete.id})?`
       )
     ) {
-      const newScenes = scenes.filter((_, index) => index !== indexToDelete);
-      setScenes(newScenes);
+          const newScenes = scenes.filter((_, index) => index !== indexToDelete);
+          setScenes(newScenes);
 
-      // Adjust selected index
-      if (selectedSceneIndex === indexToDelete) {
-        // If deleted scene was selected, select previous or null
+          // Adjust selected index
+          if (selectedSceneIndex === indexToDelete) {
+              // If deleted scene was selected, select previous or null
         setSelectedSceneIndex(
           indexToDelete > 0
             ? indexToDelete - 1
@@ -534,12 +534,12 @@ const TimelineEditor: React.FC = () => {
         selectedSceneIndex !== null &&
         selectedSceneIndex > indexToDelete
       ) {
-        // If a later scene was selected, decrement its index
-        setSelectedSceneIndex(selectedSceneIndex - 1);
+              // If a later scene was selected, decrement its index
+              setSelectedSceneIndex(selectedSceneIndex - 1);
+          }
+          // If an earlier or no scene was selected, index remains the same (or null)
+          setSelectedCellCoords(null); // Deselect cell after deletion
       }
-      // If an earlier or no scene was selected, index remains the same (or null)
-      setSelectedCellCoords(null); // Deselect cell after deletion
-    }
   };
 
   const handleSelectScene = (index: number) => {
@@ -548,12 +548,12 @@ const TimelineEditor: React.FC = () => {
   };
 
   const handleCellClick = (row: number, col: number) => {
-    // Toggle selection or select new cell
-    if (selectedCellCoords?.row === row && selectedCellCoords?.col === col) {
-      setSelectedCellCoords(null);
-    } else {
-      setSelectedCellCoords({ row, col });
-    }
+      // Toggle selection or select new cell
+      if (selectedCellCoords?.row === row && selectedCellCoords?.col === col) {
+          setSelectedCellCoords(null);
+      } else {
+          setSelectedCellCoords({ row, col });
+      }
   };
 
   // --- Cell Editing ---
@@ -561,25 +561,25 @@ const TimelineEditor: React.FC = () => {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     console.log("[Input KeyDown] Key:", event.key); // Log the pressed key
-    if (!currentScene || !selectedCellCoords) {
+      if (!currentScene || !selectedCellCoords) {
       console.log(
         "[Input KeyDown] Aborted: No current scene or cell selected."
       );
-      return;
-    }
+           return;
+      }
 
     let newChar = "";
     let advanceFocus = false;
-    if (event.key.length === 1) {
-      newChar = event.key;
+      if (event.key.length === 1) {
+          newChar = event.key;
       advanceFocus = true; // Advance focus only on character input
     } else if (event.key === "Backspace" || event.key === "Delete") {
       newChar = ""; // Clear character
-    } else {
+      } else {
       console.log("[Input KeyDown] Key ignored:", event.key);
       event.preventDefault();
-      return;
-    }
+          return;
+      }
     event.preventDefault();
 
     console.log(
@@ -622,23 +622,23 @@ const TimelineEditor: React.FC = () => {
       if (selectedSceneIndex === null) return;
 
       setScenes((prevScenes) => {
-        const newScenes = [...prevScenes];
-        const sceneToUpdate = { ...newScenes[selectedSceneIndex] };
+          const newScenes = [...prevScenes];
+          const sceneToUpdate = { ...newScenes[selectedSceneIndex] }; 
         const newLayoutGrid = sceneToUpdate.layoutGrid.map((r) => [...r]);
-        const currentCell = newLayoutGrid[row]?.[col];
+          const currentCell = newLayoutGrid[row]?.[col];
 
         if (updates.char === "" && Object.keys(updates).length === 1) {
-          console.log(`[handleCellChange] Clearing cell [${row}, ${col}]`);
-          newLayoutGrid[row][col] = null;
-        } else {
+               console.log(`[handleCellChange] Clearing cell [${row}, ${col}]`);
+               newLayoutGrid[row][col] = null; 
+          } else {
           const existingData = currentCell || { char: "" };
-
+              
           // Start with existing data and apply updates
-          const newCellData: EditableLayoutCell = {
-            ...existingData,
-            ...updates,
-          };
-
+              const newCellData: EditableLayoutCell = {
+                  ...existingData,
+                  ...updates, 
+              };
+              
           // Apply last used color if a character is being set/changed,
           // no explicit color is in this update, and a last color exists.
           if (updates.char && updates.color === undefined && lastUsedColor) {
@@ -656,12 +656,12 @@ const TimelineEditor: React.FC = () => {
             `[handleCellChange] Setting cell [${row}, ${col}] to:`,
             newCellData
           );
-          newLayoutGrid[row][col] = newCellData;
-        }
+              newLayoutGrid[row][col] = newCellData;
+          }
 
-        sceneToUpdate.layoutGrid = newLayoutGrid;
-        newScenes[selectedSceneIndex] = sceneToUpdate;
-        return newScenes;
+          sceneToUpdate.layoutGrid = newLayoutGrid;
+          newScenes[selectedSceneIndex] = sceneToUpdate;
+          return newScenes;
       });
     },
     [selectedSceneIndex, lastUsedColor] // Add lastUsedColor as dependency
@@ -737,9 +737,9 @@ const TimelineEditor: React.FC = () => {
   const handleSceneParamChange = useCallback(
     (
       param: "startFrame" | "durationFrames" | "backgroundChars",
-      value: string | number
-    ) => {
-      if (selectedSceneIndex === null) return;
+     value: string | number
+   ) => {
+     if (selectedSceneIndex === null) return;
 
       const currentSceneIndex = selectedSceneIndex;
 
@@ -767,7 +767,7 @@ const TimelineEditor: React.FC = () => {
           processedValue = typeof value === "string" ? value : "";
         }
 
-        const updatedScenes = [...prevScenes];
+         const updatedScenes = [...prevScenes];
         const sceneToUpdate = { ...updatedScenes[currentSceneIndex] };
 
         // Use a safer approach with key check:
@@ -802,7 +802,7 @@ const TimelineEditor: React.FC = () => {
           }
         }
 
-        return updatedScenes;
+         return updatedScenes;
       });
     },
     [selectedSceneIndex, setScenes]
@@ -837,8 +837,8 @@ const TimelineEditor: React.FC = () => {
         }
         return scene;
       });
-    });
-  };
+     });
+   };
 
   // --- NEW: Reset Grid Logic ---
   const handleResetGrid = useCallback(() => {
@@ -991,42 +991,42 @@ const TimelineEditor: React.FC = () => {
             row.map((cell) => {
               if (!cell) return null;
               const layoutCell: LayoutCell = { char: cell.char };
-              if (cell.color) {
-                layoutCell.style = { color: cell.color };
-              }
-              return layoutCell;
+                if (cell.color) {
+                    layoutCell.style = { color: cell.color };
+                }
+                return layoutCell;
             })
         );
         const animationScene: AnimationScene = {
-          startFrame: scene.startFrame,
-          layoutGrid: newLayoutGrid,
+            startFrame: scene.startFrame,
+            layoutGrid: newLayoutGrid,
           stylePresets: sceneStylePresets,
           ...(scene.backgroundColor && {
             backgroundColor: scene.backgroundColor,
           }),
-          ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
+            ...(scene.secondaryColor && { secondaryColor: scene.secondaryColor }),
           ...(scene.backgroundChars && {
             backgroundChars: scene.backgroundChars,
           }), // Include backgroundChars
         };
         if (scene.durationFrames !== undefined) {
-          animationScene.durationFrames = scene.durationFrames;
+            animationScene.durationFrames = scene.durationFrames;
         }
         return animationScene;
-      });
+    });
     },
     []
   );
 
   const handleGenerateExport = useCallback(() => {
-    setExportJson("Generating...");
-    setTimeout(() => {
-      try {
-        const animationScenes = convertEditableToAnimationScenes(scenes);
-        const jsonString = JSON.stringify(animationScenes, null, 2);
-        setExportJson(jsonString);
-      } catch (error) {
-        console.error("Error generating export JSON:", error);
+      setExportJson("Generating..."); 
+      setTimeout(() => {
+          try {
+              const animationScenes = convertEditableToAnimationScenes(scenes);
+              const jsonString = JSON.stringify(animationScenes, null, 2);
+              setExportJson(jsonString);
+          } catch (error) {
+              console.error("Error generating export JSON:", error);
         // Fix the linter error by checking if error is an instance of Error
         const message =
           error instanceof Error ? error.message : "Unknown error";
@@ -1092,7 +1092,7 @@ const TimelineEditor: React.FC = () => {
           <div className="flex flex-col gap-2">
             <label className="text-sm">
               Columns:
-              <input
+            <input
                 type="number"
                 min="1"
                 value={gridCols}
@@ -1110,7 +1110,7 @@ const TimelineEditor: React.FC = () => {
                 className="ml-2 w-16 p-1 rounded bg-gray-700 border border-gray-600 text-gray-200"
               />
             </label>
-          </div>
+         </div>
         </PanelWrapper>
 
         {/* Scenes List */}
@@ -1144,10 +1144,10 @@ const TimelineEditor: React.FC = () => {
           <div className="overflow-y-auto flex-grow pr-1">
             {" "}
             {/* Inner scroll for scene list */}
-            {scenes.map((scene, index) => (
+          {scenes.map((scene, index) => (
               <div
-                key={scene.id}
-                onClick={() => handleSelectScene(index)}
+              key={scene.id} 
+              onClick={() => handleSelectScene(index)} 
                 className={`p-2 mb-2 rounded border cursor-pointer ${
                   selectedSceneIndex === index
                     ? "bg-blue-800 border-blue-600"
@@ -1160,10 +1160,10 @@ const TimelineEditor: React.FC = () => {
                     {scene.durationFrames ?? "N/A"}
                   </span>
                   <div className="flex gap-1">
-                    <button
-                      onClick={(e) => {
+                  <button 
+                      onClick={(e) => { 
                         e.stopPropagation();
-                        handleDuplicateScene(index);
+                          handleDuplicateScene(index); 
                       }}
                       className="px-1 py-0.5 text-xs bg-yellow-600 hover:bg-yellow-700 rounded"
                       title="Duplicate Scene"
@@ -1171,10 +1171,10 @@ const TimelineEditor: React.FC = () => {
                       {" "}
                       Dup{" "}
                     </button>
-                    <button
-                      onClick={(e) => {
+                  <button 
+                      onClick={(e) => { 
                         e.stopPropagation();
-                        handleDeleteScene(index);
+                          handleDeleteScene(index); 
                       }}
                       className="px-1 py-0.5 text-xs bg-red-600 hover:bg-red-700 rounded"
                       title="Delete Scene"
@@ -1182,14 +1182,14 @@ const TimelineEditor: React.FC = () => {
                       {" "}
                       Del{" "}
                     </button>
-                  </div>
+              </div>
                 </div>
               </div>
-            ))}
+          ))}
             {scenes.length === 0 && (
               <p className="text-sm text-gray-500">No scenes yet.</p>
             )}
-          </div>
+      </div>
         </PanelWrapper>
 
         {/* Export Timeline */}
@@ -1245,12 +1245,12 @@ const TimelineEditor: React.FC = () => {
           {/* Prevent settings row from growing */}
           {/* Scene Settings */}
           <PanelWrapper title="Scene Settings" className="flex-1">
-            {currentScene ? (
+        {currentScene ? ( 
               <div className="flex flex-col gap-3">
                 <label className="text-sm">
                   {" "}
                   Start Frame:
-                  <input
+              <input 
                     type="number"
                     min="0"
                     value={currentScene.startFrame}
@@ -1263,7 +1263,7 @@ const TimelineEditor: React.FC = () => {
                 <label className="text-sm">
                   {" "}
                   Duration (opt.):
-                  <input
+              <input 
                     type="number"
                     min="1"
                     value={currentScene.durationFrames ?? ""}
@@ -1297,8 +1297,8 @@ const TimelineEditor: React.FC = () => {
                         onChange={(color) =>
                           handleSceneColorChange("backgroundColor", color)
                         }
-                      />
-                    </div>
+              />
+            </div> 
                   )}
                 </label>
                 <label className="text-sm flex items-center gap-2">
@@ -1327,7 +1327,7 @@ const TimelineEditor: React.FC = () => {
                           handleSceneColorChange("secondaryColor", color)
                         }
                       />
-                    </div>
+      </div>
                   )}
                 </label>
                 <label className="text-sm flex items-center">
@@ -1357,7 +1357,7 @@ const TimelineEditor: React.FC = () => {
               </p>
             )}
           </PanelWrapper>
-          {/* Selected Cell Settings */}
+      {/* Selected Cell Settings */}
           <PanelWrapper title="Selected Cell Settings" className="flex-1">
             {selectedCellCoords && currentScene ? (
               <div className="flex flex-col gap-3">
@@ -1368,7 +1368,7 @@ const TimelineEditor: React.FC = () => {
                 <label className="text-sm">
                   {" "}
                   Character:
-                  <input
+                       <input
                     ref={hiddenInputRef} // Use ref for potential focus later
                     type="text"
                     maxLength={1} // Allow only one character
@@ -1423,8 +1423,8 @@ const TimelineEditor: React.FC = () => {
                       <HexColorPicker
                         color={selectedCellData?.color ?? lastUsedColor}
                         onChange={handleSelectedCellColorChange} // Use updated handler
-                      />
-                    </div>
+                       />
+                     </div>
                   )}
                 </label>
 
@@ -1459,25 +1459,25 @@ const TimelineEditor: React.FC = () => {
             >
               Reset Grid
             </button>
-          </div>
+       </div>
 
-          {currentScene ? (
+            {currentScene ? (
             // Center the grid within this panel
             <div className="flex-1 overflow-auto flex items-center justify-center">
-              <GridDisplay
-                rows={gridRows}
-                cols={gridCols}
-                layoutGrid={currentScene.layoutGrid}
-                selectedCellCoords={selectedCellCoords}
-                onCellClick={handleCellClick}
-                backgroundColor={currentScene.backgroundColor}
-                secondaryColor={currentScene.secondaryColor}
-              />
+                 <GridDisplay
+                    rows={gridRows}
+                    cols={gridCols}
+                    layoutGrid={currentScene.layoutGrid}
+                    selectedCellCoords={selectedCellCoords}
+                    onCellClick={handleCellClick}
+                    backgroundColor={currentScene.backgroundColor}
+                    secondaryColor={currentScene.secondaryColor}
+                 />
             </div>
-          ) : (
+            ) : (
             <div className="flex items-center justify-center h-full">
               <p className="text-gray-500">Select a scene to view its grid.</p>
-            </div>
+       </div>
           )}
         </PanelWrapper>
       </main>
@@ -1488,4 +1488,4 @@ const TimelineEditor: React.FC = () => {
   );
 };
 
-export default TimelineEditor;
+export default TimelineEditor; 
