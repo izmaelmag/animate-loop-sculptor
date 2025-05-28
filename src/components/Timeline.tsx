@@ -1,11 +1,4 @@
-// WORKING VERSION!!!
-// DO NOT TOUCH !!!!
-// I AM TELLING THIS TO YOU FOR A REASON!!!
-// NO CHANGES SHOULD BE MADE TO THIS FILE
-// IF YOU DO, YOU WILL BREAK THE ANIMATION
-// AND WE WILL HAVE TO START FROM SCRATCH
-// I MEAN IT, DON'T TOUCH IT
-// I AM NOT KIDDING
+// Displays animation playback controls and a frame scrubber timeline.
 import { useState, useEffect, useReducer } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
