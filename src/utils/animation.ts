@@ -30,8 +30,14 @@ export const frameToNormalizedTime = (
   // Ensure frame is within valid range
   const clampedFrame = Math.max(0, Math.min(totalFrames - 1, frame));
 
+  // Avoid divide-by-zero and match AnimationController.normalizedTime
+  if (totalFrames <= 1) {
+    return 0;
+  }
+
   // Convert to normalized time (0-1)
-  return clampedFrame / totalFrames;
+  // Use totalFrames - 1 so the last frame maps exactly to 1
+  return clampedFrame / (totalFrames - 1);
 };
 
 /**
