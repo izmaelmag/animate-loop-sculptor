@@ -1,21 +1,14 @@
 import React from "react";
 import { P5Animation } from "./P5Animation";
-import { AnimationName } from "../animations";
-import { animationSettings, defaultAnimation } from "../animations";
+import { defaultAnimation } from "../animations";
 
 interface MyVideoProps {
-  templateId?: AnimationName;
+  templateId?: string;
 }
 
 export const MyVideo: React.FC<MyVideoProps> = ({
   templateId = defaultAnimation.id,
 }) => {
-  const currentSettings = animationSettings[templateId] || defaultAnimation;
-
-  if (!currentSettings) {
-    console.error(`Animation not found: ${templateId}, using default`);
-  }
-
   return (
     <div
       style={{
