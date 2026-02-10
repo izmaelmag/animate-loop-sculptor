@@ -41,7 +41,7 @@ export const P5Animation = ({
       p.setup = () => {
         const width = currentSettings.width || 1080;
         const height = currentSettings.height || 1920;
-        p.createCanvas(width, height, p.WEBGL);
+        p.createCanvas(width, height);
         p.pixelDensity(1);
 
         if (setupFn) {

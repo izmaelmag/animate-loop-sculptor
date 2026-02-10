@@ -29,7 +29,7 @@ export class P5Renderer {
 
     const sketch = (p: p5) => {
       p.setup = () => {
-        p.createCanvas(width, height, p.WEBGL);
+        p.createCanvas(width, height);
         p.pixelDensity(1);
         p.frameRate(settings.fps);
 

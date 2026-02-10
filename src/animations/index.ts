@@ -1,18 +1,12 @@
 import { AnimationSettings } from "@/types/animations";
 
-import { settings as defaultAnimation } from "./default";
-import { settings as demo } from "./demo";
-import { settings as decksDark } from "./decks-dark/animation";
-import { settings as orbital } from "./orbital";
+import { settings as defaultAnimation } from "./orbital";
 
-export { settings as defaultAnimation } from "./default";
+export { settings as defaultAnimation } from "./orbital";
 
 // All animation settings keyed by ID
 export const animationSettings: Record<string, AnimationSettings> = {
   [defaultAnimation.id]: defaultAnimation,
-  [demo.id]: demo,
-  [decksDark.id]: decksDark,
-  [orbital.id]: orbital,
 };
 
 export type AnimationId = keyof typeof animationSettings;
