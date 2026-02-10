@@ -5,10 +5,11 @@ import { animation, setupAnimation } from "./orbital";
 export const settings: AnimationSettings = {
   name: NAME,
   id: NAME.toLowerCase().replace(/ /g, "-"),
+  renderer: "p5",
   fps: FPS,
   totalFrames: TOTAL_FRAMES,
   width: WIDTH,
   height: HEIGHT,
-  function: animation,
-  onSetup: setupAnimation,
+  draw: animation,
+  setup: setupAnimation,
 };

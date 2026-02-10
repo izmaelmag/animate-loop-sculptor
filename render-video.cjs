@@ -7,7 +7,7 @@ const { renderMedia, getCompositions } = require("@remotion/renderer");
 const parseArgs = () => {
   const args = process.argv.slice(2);
   const options = {
-    template: "gridOrbit", // Default template
+    template: "default", // Default template
     quality: "high", // Default quality
   };
 

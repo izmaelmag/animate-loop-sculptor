@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { AnimationFunction } from "@/types/animations";
+import { P5AnimationFunction, FrameContext } from "@/types/animations";
 import { FPS, CENTER, WIDTH, HEIGHT, TOTAL_FRAMES } from "./constants";
 import { easeInOutCubic } from "../../utils/easing";
 import { createGrid } from "./createGrid";
@@ -10,50 +10,20 @@ const UNIT = WIDTH / (2 * SCALE);
 
 let TrailGraphics: p5.Graphics;
 
-// let prevLerpX = 0;
-// let prevLerpY = 0;
-
 const R1 = UNIT * 4;
 const R2 = UNIT * 2;
 
-// const lines = [
-//   {
-//     x1: 0,
-//     y1: 0,
-//     x2: 0,
-//     y2: 0,
-//   },
-// ];
-
-/**
- * [0] – opacity of the orientation
- * [1] – opacity of the trail
- * [2] – opacity of the gridLines
- */
 const numset = new Numset([0, 0, 255]);
 
 numset.change([255, 0, 255], 30, 20);
 numset.change([255, 255, 255], 50, 20);
-
 numset.change([0, 255, 255], TOTAL_FRAMES / 2, 60);
 numset.change([0, 255, 0], TOTAL_FRAMES / 2 + 60, 90);
 numset.change([0, 0, 0], TOTAL_FRAMES / 2 + 180, 60);
 
-/*
- * Starter Animation Template
- *
- * @param {object} p - p5 instance
- * @param {number} t - normalized total time from 0 to 1
- * @param {number} frame - current frame number
- * @param {number} totalFrames - total number of frames in the video
- */
-export const animation: AnimationFunction = (
-  p: p5,
-  normalizedTime: number,
-  frameNumber: number,
-  totalFrames: number
-) => {
-  // Clear the canvas to prevent flickering
+export const animation: P5AnimationFunction = (p: p5, ctx: FrameContext) => {
+  const { currentFrame: frameNumber, totalFrames } = ctx;
+
   p.background(0);
 
   let lastX: number | null = null;
@@ -73,9 +43,9 @@ export const animation: AnimationFunction = (
       SCALE,
       [CENTER.x, CENTER.y]
     ),
-    0,
-    0
+    0, 0
   );
+
   p.push();
   p.stroke(100, 100, 100, numset.values.at(0));
   p.strokeWeight(2);
@@ -83,9 +53,6 @@ export const animation: AnimationFunction = (
   p.circle(CENTER.x, CENTER.y, R1);
   p.circle(CENTER.x, CENTER.y, R2);
   p.pop();
-
-  // const halfFrames = totalFrames / 2;
-  // const progress = Math.min(frameNumber, halfFrames);
 
   const tNorm = frameNumber / totalFrames;
   let buildProgress = Math.min(tNorm * 2, 1);
@@ -101,7 +68,6 @@ export const animation: AnimationFunction = (
     const y2 = CENTER.y + (R2 / 2) * p.sin(angle * 2 - p.PI / 2);
 
     const sineT = p.map(p.sin(t * p.PI * 2 + p.PI / 2), -1, 1, 0, 1);
-
     const interpX = p.lerp(x1, x2, easeInOutCubic(sineT));
     const interpY = p.lerp(y1, y2, easeInOutCubic(sineT));
 
@@ -155,10 +121,8 @@ export const animation: AnimationFunction = (
   p.pop();
 };
 
-export const setupAnimation: AnimationFunction = (p: p5) => {
-  // Setup code here
+export const setupAnimation = (p: p5): void => {
   p.background(0);
   p.frameRate(FPS);
-
   TrailGraphics = p.createGraphics(WIDTH, HEIGHT);
 };
