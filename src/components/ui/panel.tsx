@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import classNames from "classnames";
+import { clsx as classNames } from "clsx";
 
 interface PanelProps {
   children: ReactNode;
