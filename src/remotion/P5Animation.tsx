@@ -57,9 +57,9 @@ export const P5Animation = ({
         const width = currentSettings.width || 1080;
         const height = currentSettings.height || 1920;
         try {
-          p.createCanvas(width, height);
+          p.createCanvas(width, height, p.WEBGL);
         } catch (e) {
-          console.error("Error creating canvas:", e);
+          console.error("Error creating WebGL canvas:", e);
           throw e;
         }
         p.pixelDensity(1);
