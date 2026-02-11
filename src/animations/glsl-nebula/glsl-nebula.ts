@@ -5,7 +5,7 @@ import {
   destroyFullscreenQuad,
   destroyProgram,
   FullscreenQuad,
-} from "@/utils/webgl";
+} from "../../utils/webgl";
 
 const WIDTH = 1080;
 const HEIGHT = 1920;

@@ -1,14 +1,18 @@
-import { AnimationSettings, FrameContext, WebGLAnimationFunction } from "@/types/animations";
+import {
+  AnimationSettings,
+  FrameContext,
+  WebGLAnimationFunction,
+} from "@/types/animations";
 import {
   createFullscreenQuad,
   createProgram,
   destroyFullscreenQuad,
   destroyProgram,
   FullscreenQuad,
-} from "@/utils/webgl";
+} from "../../utils/webgl";
 
-const WIDTH = 1080;
-const HEIGHT = 1920;
+const WIDTH = 2160;
+const HEIGHT = 3840;
 const FPS = 60;
 const TOTAL_FRAMES = FPS * 8;
 
@@ -80,7 +84,7 @@ const setup = (gl: WebGL2RenderingContext, canvas: HTMLCanvasElement): void => {
 const draw: WebGLAnimationFunction = (
   gl: WebGL2RenderingContext,
   canvas: HTMLCanvasElement,
-  ctx: FrameContext
+  ctx: FrameContext,
 ): void => {
   if (!program || !quad) {
     return;
