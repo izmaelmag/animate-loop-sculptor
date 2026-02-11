@@ -21,30 +21,34 @@ export function usePlayback() {
   const settings =
     animationSettings[selectedAnimationId] || defaultAnimation;
 
+  // Ref callback to store container reference
+  const setContainerRef = useCallback((container: HTMLElement | null) => {
+    containerRef.current = container;
+  }, []);
+
   // Initialize renderer when animation changes or container is set
-  const initRenderer = useCallback(
-    (container: HTMLElement | null) => {
-      containerRef.current = container;
+  useEffect(() => {
+    const container = containerRef.current;
 
-      if (rendererRef.current) {
-        rendererRef.current.destroy();
-        rendererRef.current = null;
-      }
+    // Clean up existing renderer
+    if (rendererRef.current) {
+      rendererRef.current.destroy();
+      rendererRef.current = null;
+    }
 
-      if (!container) return;
+    if (!container) return;
 
-      const renderer = createRenderer(settings.renderer);
-      renderer.initialize(container, settings);
-      rendererRef.current = renderer;
+    // Create and initialize new renderer
+    const renderer = createRenderer(settings.renderer);
+    renderer.initialize(container, settings);
+    rendererRef.current = renderer;
 
-      // Draw initial frame
-      const totalFrames = settings.totalFrames;
-      const normalizedTime =
-        totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
-      renderer.renderFrame({ normalizedTime, currentFrame, totalFrames });
-    },
-    [selectedAnimationId] // Only reinit when animation changes
-  );
+    // Draw initial frame
+    const totalFrames = settings.totalFrames;
+    const normalizedTime =
+      totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
+    renderer.renderFrame({ normalizedTime, currentFrame, totalFrames });
+  }, [selectedAnimationId, settings, currentFrame]);
 
   // Redraw when frame changes (scrubbing or playback)
   useEffect(() => {
@@ -86,5 +90,5 @@ export function usePlayback() {
     };
   }, []);
 
-  return { containerRef: initRenderer, settings };
+  return { containerRef: setContainerRef, settings };
 }
