@@ -7,15 +7,19 @@ const calculateMetaData = async ({
 }: {
   props: Record<string, unknown>;
 }) => {
-  const templateId =
-    (props.templateId as string) || defaultAnimation.id;
-  const settings = animationSettings[templateId] || defaultAnimation;
+  const requestedTemplateId = props.templateId as string | undefined;
+  const templateId = requestedTemplateId || defaultAnimation.id;
+  const settings = animationSettings[templateId];
+
+  if (requestedTemplateId && !settings) {
+    throw new Error(`Unknown templateId "${requestedTemplateId}"`);
+  }
 
   return {
-    durationInFrames: settings.totalFrames,
-    fps: settings.fps,
-    width: settings.width || 1080,
-    height: settings.height || 1920,
+    durationInFrames: (settings || defaultAnimation).totalFrames,
+    fps: (settings || defaultAnimation).fps,
+    width: (settings || defaultAnimation).width || 1080,
+    height: (settings || defaultAnimation).height || 1920,
   };
 };
 
