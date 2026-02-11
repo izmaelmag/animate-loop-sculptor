@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { animationSettings } from "@/animations";
 import { useAnimationStore } from "@/stores/animationStore";
 import { LoaderPinwheel } from "lucide-react";
+import RenderControls from "@/components/RenderControls";
 
 const Sidebar = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
@@ -49,6 +50,10 @@ const Sidebar = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="p-4 border-t border-neutral-800">
+        <RenderControls />
       </div>
     </div>
   );
