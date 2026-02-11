@@ -1,12 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {RenderQuality} from "@/api/renderApi";
 import {useRenderJob} from "@/hooks/useRenderJob";
 import {useAnimationStore} from "@/stores/animationStore";
@@ -43,6 +36,11 @@ const RenderControls = () => {
   };
 
   const canOpenFile = Boolean(job?.outputUrl && job?.status === "success");
+  const qualityOptions: Array<{label: string; value: RenderQuality}> = [
+    {label: "High", value: "high"},
+    {label: "Medium", value: "medium"},
+    {label: "Low", value: "low"},
+  ];
 
   useEffect(() => {
     if (!job) {
@@ -106,61 +104,61 @@ const RenderControls = () => {
     <div className="space-y-2">
       <h3 className="text-sm font-medium text-white/70">Render Video</h3>
       <div className="flex items-center gap-2">
-        <Select
-          value={quality}
-          onValueChange={(value) => setQuality(value as RenderQuality)}
-          disabled={isRendering}
-        >
-          <SelectTrigger className="w-[130px] bg-black border-gray-700 cursor-pointer">
-            <SelectValue placeholder="Quality" />
-          </SelectTrigger>
-          <SelectContent className="bg-black border-gray-700 text-white">
-            <SelectItem value="high" className="cursor-pointer">
-              High
-            </SelectItem>
-            <SelectItem value="medium" className="cursor-pointer">
-              Medium
-            </SelectItem>
-            <SelectItem value="low" className="cursor-pointer">
-              Low
-            </SelectItem>
-          </SelectContent>
-        </Select>
+        {qualityOptions.map((option) => {
+          const isActive = quality === option.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setQuality(option.value)}
+              disabled={isRendering}
+              className={[
+                "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors",
+                isActive
+                  ? "bg-white text-black border-white"
+                  : "bg-transparent text-white/70 border-white/30 hover:border-white/60 hover:text-white",
+                isRendering ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+              ].join(" ")}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
 
-        <Button
-          size="sm"
-          onClick={handleRender}
-          disabled={isRendering || isSubmitting}
-          className="bg-white text-black hover:bg-white/90"
-        >
-          {isRendering ? "Rendering..." : "Render"}
-        </Button>
-
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => {
+      <Button
+        size="sm"
+        onClick={() => {
+          if (isRendering) {
             void cancel();
-          }}
-          disabled={!isRendering}
-          className="text-white/80 hover:bg-white/15"
-        >
-          Cancel
-        </Button>
-      </div>
+            return;
+          }
+          void handleRender();
+        }}
+        disabled={isSubmitting}
+        className={[
+          "w-full bg-transparent text-white border border-neutral-700",
+          "hover:bg-white/5 hover:border-neutral-500",
+          "disabled:opacity-50",
+        ].join(" ")}
+      >
+        {isRendering ? "Cancel" : "Render"}
+      </Button>
 
-      <div className="space-y-1">
-        <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-          <div
-            className="h-full bg-white/80 transition-all"
-            style={{width: `${percent}%`}}
-          />
+      {isRendering ? (
+        <div className="space-y-1">
+          <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+            <div
+              className="h-full bg-white/80 transition-all"
+              style={{width: `${percent}%`}}
+            />
+          </div>
+          <div className="flex items-center justify-between text-xs text-white/60">
+            <span>{statusLabel}</span>
+            <span>{percent}%</span>
+          </div>
         </div>
-        <div className="flex items-center justify-between text-xs text-white/60">
-          <span>{statusLabel}</span>
-          <span>{percent}%</span>
-        </div>
-      </div>
+      ) : null}
 
       {canOpenFile ? (
         <a
