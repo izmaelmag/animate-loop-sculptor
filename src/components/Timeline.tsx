@@ -26,63 +26,73 @@ const Timeline = () => {
   };
 
   return (
-    <Panel>
-      <div className="flex items-end justify-between mb-2">
-        <div className="flex gap-2">
+    <div className="quicktime-player px-6 py-4">
+      <div className="flex flex-col gap-3 min-w-[500px]">
+        {/* Playback Controls */}
+        <div className="flex items-center justify-center gap-2">
           <Button
             size="sm"
             variant={isPlaying ? "secondary" : "default"}
             onClick={togglePlayback}
+            className="rounded-full w-10 h-10 p-0"
           >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
           </Button>
-          <Button size="sm" variant="default" onClick={reset}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={reset}
+            className="rounded-full w-9 h-9 p-0 hover:bg-white/20"
+          >
             <RotateCcw size={16} />
           </Button>
           <Button
             size="sm"
-            variant="default"
+            variant="ghost"
             onClick={() => setCurrentFrame(currentFrame - 1)}
             disabled={isPlaying || currentFrame === 0}
+            className="rounded-full w-9 h-9 p-0 hover:bg-white/20 disabled:opacity-30"
           >
             <StepBack size={16} />
           </Button>
           <Button
             size="sm"
-            variant="default"
+            variant="ghost"
             onClick={() => setCurrentFrame(currentFrame + 1)}
             disabled={isPlaying || currentFrame >= maxFrame}
+            className="rounded-full w-9 h-9 p-0 hover:bg-white/20 disabled:opacity-30"
           >
             <StepForward size={16} />
           </Button>
         </div>
-        <div className="text-xs font-mono">
+
+        {/* Timeline Slider */}
+        <Slider
+          value={[displayCurrentFrame]}
+          min={0}
+          step={1}
+          max={maxFrame}
+          onValueChange={handleSliderChange}
+          className="cursor-pointer"
+        />
+
+        {/* Frame Info */}
+        <div className="text-xs font-mono text-center text-white/70">
           <span>
-            Frame:{" "}
             {(displayCurrentFrame + 1)
               .toString()
               .padStart(displayTotalFrames.toString().length, "0")}
-            /
+            {" / "}
             {displayTotalFrames
               .toString()
               .padStart(displayTotalFrames.toString().length, "0")}
           </span>
-          <span className="ml-2 text-white/50">
-            ({(normalizedTime * 100).toFixed(2).padStart(6, "0")}% at {fps}{" "}
-            fps)
+          <span className="ml-3 text-white/40">
+            {(normalizedTime * 100).toFixed(1)}% · {fps} fps
           </span>
         </div>
       </div>
-
-      <Slider
-        value={[displayCurrentFrame]}
-        min={0}
-        step={1}
-        max={maxFrame}
-        onValueChange={handleSliderChange}
-        className="mt-2 mb-6"
-      />
-    </Panel>
+    </div>
   );
 };
 
