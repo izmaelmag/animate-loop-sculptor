@@ -28,33 +28,55 @@ uniform float u_time;
 
 out vec4 outColor;
 
-vec3 palette(float t) {
-  vec3 a = vec3(0.45, 0.35, 0.60);
-  vec3 b = vec3(0.45, 0.40, 0.30);
-  vec3 c = vec3(1.0, 1.0, 1.0);
-  vec3 d = vec3(0.0, 0.33, 0.67);
-  return a + b * cos(6.28318 * (c * t + d));
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+
+  float a = hash(i);
+  float b = hash(i + vec2(1.0, 0.0));
+  float c = hash(i + vec2(0.0, 1.0));
+  float d = hash(i + vec2(1.0, 1.0));
+
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
+float fbm(vec2 p) {
+  float value = 0.0;
+  float amp = 0.5;
+  for (int i = 0; i < 5; i++) {
+    value += amp * noise(p);
+    p *= 2.0;
+    amp *= 0.5;
+  }
+  return value;
 }
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
-  float loopT = u_time * 6.28318530718;
+  float t = u_time * 6.28318530718;
 
-  float flowA = sin(loopT + uv.x * 3.0) * 0.25;
-  float flowB = cos(loopT * 2.0 + uv.y * 5.0) * 0.18;
-  float radial = length(uv + vec2(flowA, flowB));
+  vec2 drift = vec2(cos(t), sin(t)) * 0.35;
+  vec2 p = uv * 2.2 + drift;
+  float n1 = fbm(p + vec2(0.0, t * 0.2));
+  float n2 = fbm(p * 1.7 - vec2(t * 0.15, 0.0));
+  float cloud = smoothstep(0.28, 0.92, 0.55 * n1 + 0.45 * n2);
 
-  float waves = sin(12.0 * radial - loopT * 3.0);
-  float ribbons = cos((uv.x - uv.y) * 10.0 + loopT * 2.0);
-  float mixSignal = 0.5 + 0.5 * sin(loopT + radial * 8.0 + ribbons * 0.8);
+  float glow = exp(-3.2 * length(uv));
+  vec3 base = vec3(0.03, 0.04, 0.10);
+  vec3 pink = vec3(0.95, 0.35, 0.75);
+  vec3 cyan = vec3(0.25, 0.85, 1.00);
 
-  float shade = 0.45 + 0.35 * waves + 0.20 * ribbons;
-  vec3 colorA = palette(shade + mixSignal * 0.25);
-  vec3 colorB = palette(shade * 0.7 + 0.2 - mixSignal * 0.2);
-  vec3 color = mix(colorA, colorB, mixSignal);
+  float cycle = 0.5 + 0.5 * sin(t + cloud * 6.0);
+  vec3 nebula = mix(pink, cyan, cycle);
+  vec3 color = base + nebula * cloud * (0.6 + 0.4 * glow);
 
-  float vignette = smoothstep(1.2, 0.2, radial);
-  color *= 0.4 + 0.6 * vignette;
+  float stars = step(0.996, hash(floor((uv + 1.0) * 450.0 + vec2(t * 4.0))));
+  color += vec3(stars) * 0.9 * glow;
 
   outColor = vec4(color, 1.0);
 }
@@ -115,8 +137,8 @@ const cleanup = (): void => {
 };
 
 export const settings: AnimationSettings = {
-  id: "glsl-demo",
-  name: "[WebGL] GLSL Flow",
+  id: "glsl-nebula",
+  name: "[WebGL] GLSL Nebula",
   renderer: "webgl",
   fps: FPS,
   totalFrames: TOTAL_FRAMES,

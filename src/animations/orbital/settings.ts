@@ -4,7 +4,7 @@ import { animation, setupAnimation } from "./orbital";
 
 export const settings: AnimationSettings = {
   name: NAME,
-  id: NAME.toLowerCase().replace(/ /g, "-"),
+  id: "orbital",
   renderer: "p5",
   fps: FPS,
   totalFrames: TOTAL_FRAMES,

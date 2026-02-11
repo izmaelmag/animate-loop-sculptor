@@ -7,7 +7,7 @@ interface RendererAnimationProps {
   templateId?: string;
 }
 
-export const P5Animation = ({
+export const RendererAnimation = ({
   templateId = defaultAnimation.id,
 }: RendererAnimationProps) => {
   const containerRef = useRef<HTMLDivElement>(null);

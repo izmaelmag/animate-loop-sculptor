@@ -112,7 +112,7 @@ const setup = (p: p5): void => {
 };
 
 export const settings: AnimationSettings = {
-  name: "Demo",
+  name: "[P5] Demo",
   id: "demo",
   renderer: "p5",
   fps: FPS,

@@ -1,5 +1,5 @@
 import React from "react";
-import { P5Animation } from "./P5Animation";
+import { RendererAnimation } from "./RendererAnimation";
 import { defaultAnimation } from "../animations";
 
 interface MyVideoProps {
@@ -21,7 +21,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({
         height: "100%",
       }}
     >
-      <P5Animation templateId={templateId} />
+      <RendererAnimation templateId={templateId} />
     </div>
   );
 };

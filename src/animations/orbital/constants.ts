@@ -1,4 +1,4 @@
-export const NAME = "Default";
+export const NAME = "[P5] Orbital";
 export const FPS = 60;
 export const SECONDS = 10;
 export const TOTAL_FRAMES = FPS * SECONDS;

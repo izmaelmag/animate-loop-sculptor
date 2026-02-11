@@ -2,6 +2,6 @@
 
 This directory appears to be related to video rendering or animation. Key files include:
 
-- **P5Animation.tsx**: Manages animations using the P5 library.
-- **RemotionVideo.tsx**: Handles video rendering with Remotion.
-- **index.ts**: Entry point for the remotion module. 
+- **RendererAnimation.tsx**: Manages rendering for any supported animation renderer.
+- **MyVideo.tsx**: Hosts the selected animation inside the Remotion composition.
+- **index.tsx**: Remotion entry point and composition registration.
