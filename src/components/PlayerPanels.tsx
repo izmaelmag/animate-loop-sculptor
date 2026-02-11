@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo } from "react";
+import { useRef, memo, useMemo } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import Timeline from "./Timeline";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -6,24 +6,36 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const STORAGE_KEY = "timeline-player-position";
 const PADDING = 20;
 
+// Load initial position from localStorage
+const getInitialPosition = (): { x: number; y: number } => {
+  if (typeof window === "undefined") return { x: 0, y: 0 };
+  
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const savedPos = JSON.parse(saved);
+      if (typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+        return savedPos;
+      }
+    }
+  } catch (e) {
+    console.error("Failed to parse saved position:", e);
+  }
+  
+  return { x: 0, y: 0 };
+};
+
 // Memoize to prevent re-renders during animation playback
 const DraggablePlayer = memo(() => {
   const nodeRef = useRef<HTMLDivElement>(null);
-  const positionRef = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const savedPos = JSON.parse(saved);
-        if (typeof savedPos.x === "number" && typeof savedPos.y === "number") {
-          positionRef.current = savedPos;
-        }
-      } catch (e) {
-        console.error("Failed to parse saved position:", e);
-      }
-    }
-  }, []);
+  const positionRef = useRef(getInitialPosition());
+  
+  const bounds = useMemo(() => ({
+    left: -window.innerWidth / 2 + PADDING,
+    right: window.innerWidth / 2 - PADDING,
+    top: -window.innerHeight / 2 + PADDING,
+    bottom: window.innerHeight / 2 - PADDING,
+  }), []);
 
   const handleDrag = (_e: DraggableEvent, data: DraggableData) => {
     positionRef.current = { x: data.x, y: data.y };
@@ -40,12 +52,7 @@ const DraggablePlayer = memo(() => {
       defaultPosition={positionRef.current}
       onDrag={handleDrag}
       onStop={handleDragStop}
-      bounds={{
-        left: -window.innerWidth / 2 + PADDING,
-        right: window.innerWidth / 2 - PADDING,
-        top: -window.innerHeight / 2 + PADDING,
-        bottom: window.innerHeight / 2 - PADDING,
-      }}
+      bounds={bounds}
     >
       <div
         ref={nodeRef}
