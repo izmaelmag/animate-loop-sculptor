@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { animationSettings } from "@/animations";
 import { useAnimationStore } from "@/stores/animationStore";
-import { Button } from "@/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 
 const Sidebar = () => {
@@ -35,22 +34,22 @@ const Sidebar = () => {
         <h3 className="text-sm font-medium text-white/50 mb-3 uppercase tracking-wider">
           Animations
         </h3>
-        <div className="space-y-2">
+        <div className="space-y-1">
           {animationOptions.map((animation) => (
-            <Button
+            <div
               key={animation.key}
-              variant={
-                selectedAnimationId === animation.id ? "default" : "ghost"
-              }
-              className={`w-full justify-start text-left ${
-                selectedAnimationId === animation.id
-                  ? "bg-white text-black hover:bg-white/90"
-                  : "text-white/70 hover:text-white hover:bg-white/10"
-              }`}
               onClick={() => setSelectedAnimationId(animation.id)}
+              className={`
+                px-3 py-2 rounded cursor-pointer transition-colors
+                ${
+                  selectedAnimationId === animation.id
+                    ? "text-white font-medium bg-white/10"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }
+              `}
             >
               {animation.name}
-            </Button>
+            </div>
           ))}
         </div>
       </div>

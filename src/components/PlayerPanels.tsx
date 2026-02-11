@@ -1,5 +1,63 @@
+import { useEffect, useRef, memo } from "react";
+import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import Timeline from "./Timeline";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+const STORAGE_KEY = "timeline-player-position";
+const PADDING = 20;
+
+// Memoize to prevent re-renders during animation playback
+const DraggablePlayer = memo(() => {
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const savedPos = JSON.parse(saved);
+        if (typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+          positionRef.current = savedPos;
+        }
+      } catch (e) {
+        console.error("Failed to parse saved position:", e);
+      }
+    }
+  }, []);
+
+  const handleDrag = (_e: DraggableEvent, data: DraggableData) => {
+    positionRef.current = { x: data.x, y: data.y };
+  };
+
+  const handleDragStop = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(positionRef.current));
+  };
+
+  return (
+    <Draggable
+      nodeRef={nodeRef}
+      handle=".drag-handle"
+      defaultPosition={positionRef.current}
+      onDrag={handleDrag}
+      onStop={handleDragStop}
+      bounds={{
+        left: -window.innerWidth / 2 + PADDING,
+        right: window.innerWidth / 2 - PADDING,
+        top: -window.innerHeight / 2 + PADDING,
+        bottom: window.innerHeight / 2 - PADDING,
+      }}
+    >
+      <div
+        ref={nodeRef}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50"
+      >
+        <Timeline />
+      </div>
+    </Draggable>
+  );
+});
+
+DraggablePlayer.displayName = "DraggablePlayer";
 
 export default function PlayerPanels() {
   const isMobile = useIsMobile();
@@ -12,10 +70,5 @@ export default function PlayerPanels() {
     );
   }
 
-  // Desktop: Floating QuickTime-style player at bottom center of main section
-  return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <Timeline />
-    </div>
-  );
+  return <DraggablePlayer />;
 }
