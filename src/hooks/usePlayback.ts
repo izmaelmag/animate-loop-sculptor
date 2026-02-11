@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useAnimationStore } from "@/stores/animationStore";
 import { PlaybackEngine } from "@/engine/PlaybackEngine";
 import { createRenderer, Renderer } from "@/engine/createRenderer";
@@ -11,7 +11,7 @@ import { animationSettings, defaultAnimation } from "@/animations";
 export function usePlayback() {
   const engineRef = useRef<PlaybackEngine>(new PlaybackEngine());
   const rendererRef = useRef<Renderer | null>(null);
-  const containerRef = useRef<HTMLElement | null>(null);
+  const [containerNode, setContainerNode] = useState<HTMLElement | null>(null);
 
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
   const isPlaying = useAnimationStore((s) => s.isPlaying);
@@ -23,32 +23,25 @@ export function usePlayback() {
 
   // Ref callback to store container reference
   const setContainerRef = useCallback((container: HTMLElement | null) => {
-    containerRef.current = container;
+    setContainerNode(container);
   }, []);
 
   // Initialize renderer when animation changes or container is set
   useEffect(() => {
-    const container = containerRef.current;
-
     // Clean up existing renderer
     if (rendererRef.current) {
       rendererRef.current.destroy();
       rendererRef.current = null;
     }
 
-    if (!container) return;
+    if (!containerNode) return;
 
     // Create and initialize new renderer
     const renderer = createRenderer(settings.renderer);
-    renderer.initialize(container, settings);
+    renderer.initialize(containerNode, settings);
     rendererRef.current = renderer;
 
-    // Draw initial frame
-    const totalFrames = settings.totalFrames;
-    const normalizedTime =
-      totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
-    renderer.renderFrame({ normalizedTime, currentFrame, totalFrames });
-  }, [selectedAnimationId, settings, currentFrame]);
+  }, [containerNode, selectedAnimationId, settings]);
 
   // Redraw when frame changes (scrubbing or playback)
   useEffect(() => {
@@ -81,8 +74,10 @@ export function usePlayback() {
 
   // Cleanup on unmount
   useEffect(() => {
+    const engine = engineRef.current;
+
     return () => {
-      engineRef.current.stop();
+      engine.stop();
       if (rendererRef.current) {
         rendererRef.current.destroy();
         rendererRef.current = null;

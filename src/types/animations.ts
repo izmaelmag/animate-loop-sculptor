@@ -4,7 +4,7 @@ import p5 from "p5";
  * Renderer backends supported by the animation engine.
  * Each animation declares which renderer it needs.
  */
-export type RendererType = "p5" | "canvas2d" | "three";
+export type RendererType = "p5" | "canvas2d" | "three" | "webgl";
 
 /**
  * Frame context passed to every animation function on each frame.
@@ -45,12 +45,23 @@ export type ThreeAnimationFunction = (
 ) => void;
 
 /**
+ * WebGL animation function signature.
+ * Receives a WebGL2 context, canvas element, and frame context.
+ */
+export type WebGLAnimationFunction = (
+  gl: WebGL2RenderingContext,
+  canvas: HTMLCanvasElement,
+  ctx: FrameContext,
+) => void;
+
+/**
  * Union of all animation function types.
  */
 export type AnimationFunction =
   | P5AnimationFunction
   | Canvas2DAnimationFunction
-  | ThreeAnimationFunction;
+  | ThreeAnimationFunction
+  | WebGLAnimationFunction;
 
 /**
  * Setup function called once when the animation initializes.
@@ -59,7 +70,8 @@ export type AnimationFunction =
 export type AnimationSetupFunction =
   | ((p: p5) => void)
   | ((ctx2d: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void)
-  | ((container: HTMLElement) => void);
+  | ((container: HTMLElement) => void)
+  | ((gl: WebGL2RenderingContext, canvas: HTMLCanvasElement) => void);
 
 /**
  * Cleanup function called when the animation is destroyed.

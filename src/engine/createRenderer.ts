@@ -2,6 +2,7 @@ import { RendererType, FrameContext, AnimationSettings } from "@/types/animation
 import { P5Renderer } from "./renderers/P5Renderer";
 import { Canvas2DRenderer } from "./renderers/Canvas2DRenderer";
 import { ThreeRenderer } from "./renderers/ThreeRenderer";
+import { WebGLRenderer } from "./renderers/WebGLRenderer";
 
 /**
  * Common interface for all renderer backends.
@@ -23,6 +24,8 @@ export function createRenderer(type: RendererType): Renderer {
       return new Canvas2DRenderer();
     case "three":
       return new ThreeRenderer();
+    case "webgl":
+      return new WebGLRenderer();
     default:
       throw new Error(`Unknown renderer type: ${type}`);
   }
