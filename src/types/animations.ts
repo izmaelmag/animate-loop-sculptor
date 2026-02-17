@@ -14,7 +14,22 @@ export interface FrameContext {
   normalizedTime: number;
   currentFrame: number;
   totalFrames: number;
+  params: AnimationParams;
 }
+
+export type AnimationParams = Record<string, unknown>;
+
+export interface AnimationParamsPaneContext {
+  pane: any;
+  params: AnimationParams;
+  setParams: (next: AnimationParams) => void;
+  patchParams: (patch: Partial<AnimationParams>) => void;
+  resetParams: () => void;
+}
+
+export type CreateAnimationParamsPane = (
+  ctx: AnimationParamsPaneContext,
+) => void | (() => void);
 
 /**
  * p5.js animation function signature.
@@ -108,6 +123,8 @@ export interface AnimationSettings {
   draw: AnimationFunction;
   setup?: AnimationSetupFunction;
   cleanup?: AnimationCleanupFunction;
+  defaultParams?: AnimationParams;
+  createParamsPane?: CreateAnimationParamsPane;
 }
 
 // Legacy type alias for backward compatibility during migration

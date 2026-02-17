@@ -1,12 +1,27 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { animationSettings, defaultAnimation } from "@/animations";
-import { AnimationSettings, FrameContext } from "@/types/animations";
+import { AnimationSettings, AnimationParams, FrameContext } from "@/types/animations";
+
+const getDefaultParamsForAnimation = (id: string): AnimationParams => {
+  const settings = animationSettings[id];
+  return { ...(settings?.defaultParams || {}) };
+};
 
 interface AnimationStore {
   // Which animation template is selected
   selectedAnimationId: string;
   setSelectedAnimationId: (id: string) => void;
+
+  // Animation parameters per animation id
+  animationParamsById: Record<string, AnimationParams>;
+  getParamsForAnimation: (id?: string) => AnimationParams;
+  setAnimationParams: (
+    id: string,
+    next: AnimationParams | ((prev: AnimationParams) => AnimationParams),
+  ) => void;
+  patchAnimationParams: (id: string, patch: Partial<AnimationParams>) => void;
+  resetAnimationParams: (id: string) => void;
 
   // Playback state
   currentFrame: number;
@@ -25,13 +40,69 @@ export const useAnimationStore = create<AnimationStore>()(
   persist(
     (set, get) => ({
       selectedAnimationId: defaultAnimation.id,
+      animationParamsById: {
+        [defaultAnimation.id]: getDefaultParamsForAnimation(defaultAnimation.id),
+      },
       currentFrame: 0,
       isPlaying: false,
 
       setSelectedAnimationId: (id: string) => {
         const settings = animationSettings[id];
         if (!settings) return;
-        set({ selectedAnimationId: id, currentFrame: 0, isPlaying: false });
+        set((state) => ({
+          selectedAnimationId: id,
+          currentFrame: 0,
+          isPlaying: false,
+          animationParamsById: state.animationParamsById[id]
+            ? state.animationParamsById
+            : {
+                ...state.animationParamsById,
+                [id]: getDefaultParamsForAnimation(id),
+              },
+        }));
+      },
+
+      getParamsForAnimation: (id?: string) => {
+        const animationId = id || get().selectedAnimationId;
+        const existing = get().animationParamsById[animationId];
+        return existing ? { ...existing } : getDefaultParamsForAnimation(animationId);
+      },
+
+      setAnimationParams: (id, next) => {
+        set((state) => {
+          const prev = state.animationParamsById[id] || getDefaultParamsForAnimation(id);
+          const resolved = typeof next === "function" ? next(prev) : next;
+          return {
+            animationParamsById: {
+              ...state.animationParamsById,
+              [id]: { ...resolved },
+            },
+          };
+        });
+      },
+
+      patchAnimationParams: (id, patch) => {
+        set((state) => {
+          const prev = state.animationParamsById[id] || getDefaultParamsForAnimation(id);
+          return {
+            animationParamsById: {
+              ...state.animationParamsById,
+              [id]: {
+                ...prev,
+                ...patch,
+              },
+            },
+          };
+        });
+      },
+
+      resetAnimationParams: (id) => {
+        set((state) => ({
+          animationParamsById: {
+            ...state.animationParamsById,
+            [id]: getDefaultParamsForAnimation(id),
+          },
+        }));
       },
 
       setCurrentFrame: (frame: number) => {
@@ -52,18 +123,20 @@ export const useAnimationStore = create<AnimationStore>()(
       },
 
       getFrameContext: () => {
-        const { currentFrame } = get();
+        const { currentFrame, selectedAnimationId } = get();
         const settings = get().getSettings();
         const totalFrames = settings.totalFrames;
         const normalizedTime =
           totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
-        return { normalizedTime, currentFrame, totalFrames };
+        const params = get().getParamsForAnimation(selectedAnimationId);
+        return { normalizedTime, currentFrame, totalFrames, params };
       },
     }),
     {
       name: "animation-storage",
       partialize: (state) => ({
         selectedAnimationId: state.selectedAnimationId,
+        animationParamsById: state.animationParamsById,
       }),
     }
   )

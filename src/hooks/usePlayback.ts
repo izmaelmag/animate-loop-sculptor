@@ -17,6 +17,7 @@ export function usePlayback() {
   const isPlaying = useAnimationStore((s) => s.isPlaying);
   const currentFrame = useAnimationStore((s) => s.currentFrame);
   const setCurrentFrame = useAnimationStore((s) => s.setCurrentFrame);
+  const animationParamsById = useAnimationStore((s) => s.animationParamsById);
 
   const settings =
     animationSettings[selectedAnimationId] || defaultAnimation;
@@ -49,12 +50,14 @@ export function usePlayback() {
     const totalFrames = settings.totalFrames;
     const normalizedTime =
       totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
+    const params = animationParamsById[selectedAnimationId] || settings.defaultParams || {};
     rendererRef.current.renderFrame({
       normalizedTime,
       currentFrame,
       totalFrames,
+      params,
     });
-  }, [currentFrame, settings]);
+  }, [currentFrame, settings, selectedAnimationId, animationParamsById]);
 
   // Start/stop playback engine
   useEffect(() => {

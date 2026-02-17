@@ -41,15 +41,17 @@ export const RendererAnimation = ({
 
   useEffect(() => {
     const normalizedTime = totalFrames > 1 ? frame / (totalFrames - 1) : 0;
+    const params = currentSettings.defaultParams || {};
 
     if (rendererRef.current) {
       rendererRef.current.renderFrame({
         normalizedTime,
         currentFrame: frame,
         totalFrames,
+        params,
       });
     }
-  }, [frame, totalFrames]);
+  }, [frame, totalFrames, currentSettings]);
 
   const width = currentSettings.width || 1080;
   const height = currentSettings.height || 1920;

@@ -23,6 +23,7 @@ export class R3FRenderer {
     normalizedTime: 0,
     currentFrame: 0,
     totalFrames: 1,
+    params: {},
   };
 
   initialize(container: HTMLElement, settings: AnimationSettings) {
