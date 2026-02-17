@@ -22,6 +22,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.4",
+    "@react-three/fiber": "^8.18.0",
     "@remotion/cli": "^4.0.133",
     "@remotion/player": "^4.0.133",
     "@remotion/renderer": "^4.0.133",
@@ -39,6 +40,7 @@
     "remotion": "^4.0.133",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.182.0",
     "zustand": "^5.0.4"
   },
   "devDependencies": {

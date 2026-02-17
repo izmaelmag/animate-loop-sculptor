@@ -3,6 +3,7 @@ import { P5Renderer } from "./renderers/P5Renderer";
 import { Canvas2DRenderer } from "./renderers/Canvas2DRenderer";
 import { ThreeRenderer } from "./renderers/ThreeRenderer";
 import { WebGLRenderer } from "./renderers/WebGLRenderer";
+import { R3FRenderer } from "./renderers/R3FRenderer";
 
 /**
  * Common interface for all renderer backends.
@@ -26,6 +27,8 @@ export function createRenderer(type: RendererType): Renderer {
       return new ThreeRenderer();
     case "webgl":
       return new WebGLRenderer();
+    case "r3f":
+      return new R3FRenderer();
     default:
       throw new Error(`Unknown renderer type: ${type}`);
   }

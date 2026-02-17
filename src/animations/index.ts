@@ -4,12 +4,14 @@ import { settings as orbitalAnimation } from "./orbital";
 import { settings as demoAnimation } from "./demo";
 import { settings as glslDemoAnimation } from "./glsl-demo";
 import { settings as glslNebulaAnimation } from "./glsl-nebula";
+import { settings as r3fDemoAnimation } from "./r3f-demo";
 
 export { settings as defaultAnimation } from "./orbital";
 export { settings as orbitalAnimation } from "./orbital";
 export { settings as demoAnimation } from "./demo";
 export { settings as glslDemoAnimation } from "./glsl-demo";
 export { settings as glslNebulaAnimation } from "./glsl-nebula";
+export { settings as r3fDemoAnimation } from "./r3f-demo";
 
 // All animation settings keyed by ID
 export const animationSettings: Record<string, AnimationSettings> = {
@@ -17,6 +19,7 @@ export const animationSettings: Record<string, AnimationSettings> = {
   [demoAnimation.id]: demoAnimation,
   [glslDemoAnimation.id]: glslDemoAnimation,
   [glslNebulaAnimation.id]: glslNebulaAnimation,
+  [r3fDemoAnimation.id]: r3fDemoAnimation,
 };
 
 export type AnimationId = keyof typeof animationSettings;

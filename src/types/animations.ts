@@ -1,10 +1,11 @@
 import p5 from "p5";
+import type { ComponentType } from "react";
 
 /**
  * Renderer backends supported by the animation engine.
  * Each animation declares which renderer it needs.
  */
-export type RendererType = "p5" | "canvas2d" | "three" | "webgl";
+export type RendererType = "p5" | "canvas2d" | "three" | "webgl" | "r3f";
 
 /**
  * Frame context passed to every animation function on each frame.
@@ -55,13 +56,27 @@ export type WebGLAnimationFunction = (
 ) => void;
 
 /**
+ * Props passed into a react-three-fiber scene component.
+ */
+export interface R3FSceneProps {
+  ctx: FrameContext;
+}
+
+/**
+ * react-three-fiber animation function signature.
+ * A React component rendered inside an r3f <Canvas />.
+ */
+export type R3FAnimationFunction = ComponentType<R3FSceneProps>;
+
+/**
  * Union of all animation function types.
  */
 export type AnimationFunction =
   | P5AnimationFunction
   | Canvas2DAnimationFunction
   | ThreeAnimationFunction
-  | WebGLAnimationFunction;
+  | WebGLAnimationFunction
+  | R3FAnimationFunction;
 
 /**
  * Setup function called once when the animation initializes.
