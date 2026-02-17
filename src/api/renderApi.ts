@@ -42,7 +42,11 @@ const parseApiError = (status: number, body?: ApiResponse<RenderJob>): RenderApi
 const parseJson = async <T>(response: Response): Promise<T | undefined> => {
   const text = await response.text();
   if (!text) return undefined;
-  return JSON.parse(text) as T;
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return undefined;
+  }
 };
 
 export const startRender = async (payload: {

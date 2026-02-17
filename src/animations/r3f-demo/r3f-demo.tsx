@@ -42,7 +42,7 @@ function DemoScene({ ctx }: R3FSceneProps): JSX.Element {
 
 export const settings: AnimationSettings = {
   id: "r3f-demo",
-  name: "[R3F] Basic Scene",
+  name: "🧊 Basic Scene",
   renderer: "r3f",
   fps: FPS,
   totalFrames: TOTAL_FRAMES,

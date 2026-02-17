@@ -166,7 +166,7 @@ const cleanup = (): void => {
 
 export const settings: AnimationSettings = {
   id: "glsl-nebula",
-  name: "[WebGL] GLSL Nebula",
+  name: "🧪 GLSL Nebula",
   renderer: "webgl",
   fps: FPS,
   totalFrames: TOTAL_FRAMES,

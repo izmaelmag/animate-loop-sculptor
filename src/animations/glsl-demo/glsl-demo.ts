@@ -256,7 +256,7 @@ const createParamsPane = ({
 
 export const settings: AnimationSettings = {
   id: "glsl-demo",
-  name: "[WebGL] GLSL Flow",
+  name: "🧪 GLSL Flow",
   renderer: "webgl",
   fps: FPS,
   totalFrames: TOTAL_FRAMES,
