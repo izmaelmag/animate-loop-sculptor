@@ -6,6 +6,10 @@ import {
   destroyProgram,
   FullscreenQuad,
 } from "../../utils/webgl";
+import {
+  defaultGrainOverlaySettings,
+  grainOverlayShaderChunk,
+} from "../../utils/glsl/postFx";
 
 const WIDTH = 1080;
 const HEIGHT = 1920;
@@ -25,8 +29,12 @@ precision highp float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform float u_grainStrength;
+uniform float u_grainScale;
 
 out vec4 outColor;
+
+${grainOverlayShaderChunk}
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -77,6 +85,14 @@ void main() {
 
   float stars = step(0.996, hash(floor((uv + 1.0) * 450.0 + vec2(t * 4.0))));
   color += vec3(stars) * 0.9 * glow;
+  color = applyGrainOverlay(
+    color,
+    gl_FragCoord.xy,
+    u_resolution,
+    u_time,
+    u_grainStrength,
+    u_grainScale
+  );
 
   outColor = vec4(color, 1.0);
 }
@@ -86,6 +102,8 @@ let program: WebGLProgram | null = null;
 let quad: FullscreenQuad | null = null;
 let timeLocation: WebGLUniformLocation | null = null;
 let resolutionLocation: WebGLUniformLocation | null = null;
+let grainStrengthLocation: WebGLUniformLocation | null = null;
+let grainScaleLocation: WebGLUniformLocation | null = null;
 let glRef: WebGL2RenderingContext | null = null;
 
 const setup = (gl: WebGL2RenderingContext, canvas: HTMLCanvasElement): void => {
@@ -95,6 +113,8 @@ const setup = (gl: WebGL2RenderingContext, canvas: HTMLCanvasElement): void => {
 
   timeLocation = gl.getUniformLocation(program, "u_time");
   resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+  grainStrengthLocation = gl.getUniformLocation(program, "u_grainStrength");
+  grainScaleLocation = gl.getUniformLocation(program, "u_grainScale");
   glRef = gl;
   gl.viewport(0, 0, canvas.width, canvas.height);
 };
@@ -117,6 +137,12 @@ const draw: WebGLAnimationFunction = (
   if (timeLocation) {
     gl.uniform1f(timeLocation, ctx.normalizedTime);
   }
+  if (grainStrengthLocation) {
+    gl.uniform1f(grainStrengthLocation, defaultGrainOverlaySettings.strength);
+  }
+  if (grainScaleLocation) {
+    gl.uniform1f(grainScaleLocation, defaultGrainOverlaySettings.scale);
+  }
 
   gl.bindVertexArray(quad.vao);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -133,6 +159,8 @@ const cleanup = (): void => {
   quad = null;
   timeLocation = null;
   resolutionLocation = null;
+  grainStrengthLocation = null;
+  grainScaleLocation = null;
   glRef = null;
 };
 

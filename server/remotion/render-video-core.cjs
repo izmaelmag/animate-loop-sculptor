@@ -15,9 +15,9 @@ let cachedBundleLocation = null;
 let cachedEntryMtimeMs = null;
 
 const QUALITY_TO_CRF = {
-  high: 18,
-  medium: 23,
-  low: 28,
+  high: 16,
+  medium: 20,
+  low: 24,
 };
 
 const forceGarbageCollection = () => {
@@ -126,8 +126,11 @@ const renderVideoCore = async ({
     codec: "h264",
     outputLocation: outputPath,
     inputProps,
-    imageFormat: "jpeg",
+    imageFormat: "png",
     crf,
+    x264Preset: "slow",
+    pixelFormat: "yuv420p",
+    colorSpace: "bt709",
     concurrency,
     logLevel: "info",
     timeoutInMilliseconds,
