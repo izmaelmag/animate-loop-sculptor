@@ -1,6 +1,7 @@
 const REGISTRY_UPDATE_FAILED = "REGISTRY_UPDATE_FAILED";
 const MAX_ANIMATION_NAME_LENGTH = 80;
 const SUPPORTED_TEMPLATE_RENDERERS = ["p5", "webgl", "r3f"];
+const ARCHIVE_DIR_NAME = "archive";
 const RENDERER_EMOJI = {
   p5: "🎨",
   webgl: "🧪",
@@ -159,9 +160,40 @@ const updateAnimationRegistrySource = ({source, id, alias}) => {
   return next;
 };
 
+const removeAnimationFromRegistrySource = ({source, id, alias}) => {
+  const importLine = `import { settings as ${alias} } from "./${id}";`;
+  const exportLine = `export { settings as ${alias} } from "./${id}";`;
+  const settingsLine = `  [${alias}.id]: ${alias},`;
+
+  let next = source;
+  if (!next.includes(importLine) && !next.includes(exportLine) && !next.includes(settingsLine)) {
+    const err = new Error(`Animation "${id}" is not registered in animations index.`);
+    err.code = "ANIMATION_NOT_REGISTERED";
+    throw err;
+  }
+
+  next = next.replace(`${importLine}\n`, "");
+  next = next.replace(`${exportLine}\n`, "");
+  next = next.replace(`${settingsLine}\n`, "");
+
+  return next;
+};
+
+const getDefaultAnimationIdFromRegistrySource = (source) => {
+  const match = source.match(
+    /^export { settings as defaultAnimation } from "\.\/([^"]+)";$/m,
+  );
+  return match ? match[1] : null;
+};
+
+const buildArchiveFolderName = ({id, timestamp = Date.now()}) => {
+  return `${timestamp}-${id}`;
+};
+
 module.exports = {
   MAX_ANIMATION_NAME_LENGTH,
   REGISTRY_UPDATE_FAILED,
+  ARCHIVE_DIR_NAME,
   SUPPORTED_TEMPLATE_RENDERERS,
   RENDERER_EMOJI,
   normalizeAnimationNameInput,
@@ -173,4 +205,7 @@ module.exports = {
   getAnimationDisplayName,
   createAnimationTemplateSource,
   updateAnimationRegistrySource,
+  removeAnimationFromRegistrySource,
+  getDefaultAnimationIdFromRegistrySource,
+  buildArchiveFolderName,
 };

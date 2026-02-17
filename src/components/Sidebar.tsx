@@ -1,10 +1,13 @@
 import { useMemo } from "react";
-import { animationSettings } from "@/animations";
+import { animationSettings, defaultAnimation } from "@/animations";
 import { useAnimationStore } from "@/stores/animationStore";
-import { LoaderPinwheel } from "lucide-react";
+import { LoaderPinwheel, Trash2 } from "lucide-react";
 import RenderControls from "@/components/RenderControls";
 import AnimationParamsPane from "@/components/AnimationParamsPane";
-import { createAnimationTemplate } from "@/api/animationTemplatesApi";
+import {
+  archiveAnimationTemplate,
+  createAnimationTemplate,
+} from "@/api/animationTemplatesApi";
 import { toast } from "@/hooks/use-toast";
 
 const rendererPromptMap = {
@@ -76,6 +79,29 @@ const Sidebar = () => {
     }
   };
 
+  const handleArchiveAnimation = async (id: string, name: string) => {
+    if (id === defaultAnimation.id) return;
+    const confirmed = window.confirm(
+      `Archive animation "${name}"?\n\nIt will be moved to src/animations/archive.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      const result = await archiveAnimationTemplate({id});
+      toast({
+        title: "Animation archived",
+        description: `${name} moved to ${result.archived.archivedTo}. Reloading...`,
+      });
+      window.location.reload();
+    } catch (error) {
+      const apiError = error as {code?: string; message?: string};
+      toast({
+        title: "Failed to archive animation",
+        description: `${apiError.code || "ERROR"}: ${apiError.message || "Unknown error"}`,
+      });
+    }
+  };
+
   return (
     <div className="w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col h-full">
       {/* Header */}
@@ -104,7 +130,7 @@ const Sidebar = () => {
               key={animation.key}
               onClick={() => setSelectedAnimationId(animation.id)}
               className={`
-                cursor-pointer transition-colors
+                group cursor-pointer transition-colors flex items-center justify-between gap-2
                 ${
                   selectedAnimationId === animation.id
                     ? "text-white"
@@ -112,7 +138,22 @@ const Sidebar = () => {
                 }
               `}
             >
-              {animation.name}
+              <span className="truncate">{animation.name}</span>
+              {animation.id !== defaultAnimation.id ? (
+                <button
+                  type="button"
+                  aria-label={`Archive ${animation.name}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void handleArchiveAnimation(animation.id, animation.name);
+                  }}
+                  className="shrink-0 opacity-0 group-hover:opacity-100 text-white/45 hover:text-red-300 transition-opacity"
+                >
+                  <Trash2 size={14} />
+                </button>
+              ) : (
+                <span className="w-[14px] shrink-0" />
+              )}
             </div>
           ))}
         </div>

@@ -8,6 +8,7 @@ const {
 } = require("./render-jobs.cjs");
 const {
   REGISTRY_UPDATE_FAILED,
+  ARCHIVE_DIR_NAME,
   validateAnimationNameInput,
   validateRendererInput,
   toAnimationId,
@@ -15,6 +16,9 @@ const {
   createAnimationTemplateSource,
   getAnimationDisplayName,
   updateAnimationRegistrySource,
+  removeAnimationFromRegistrySource,
+  getDefaultAnimationIdFromRegistrySource,
+  buildArchiveFolderName,
 } = require("./animation-template-utils.cjs");
 
 const createApp = ({
@@ -166,6 +170,111 @@ const createApp = ({
           details: error?.message || "Unknown server error",
         },
         filesCreated: createdFiles,
+      });
+    }
+  });
+
+  app.post("/api/animations/archive", async (req, res) => {
+    const id = typeof req.body?.id === "string" ? req.body.id.trim() : "";
+    if (!id) {
+      return res.status(400).json({
+        error: {
+          code: "INVALID_ID",
+          message: "Field \"id\" is required.",
+        },
+      });
+    }
+
+    const registrySource = await fs.promises.readFile(animationsIndexPath, "utf8");
+    const defaultAnimationId = getDefaultAnimationIdFromRegistrySource(registrySource);
+    if (defaultAnimationId && id === defaultAnimationId) {
+      return res.status(403).json({
+        error: {
+          code: "DEFAULT_ANIMATION_FORBIDDEN",
+          message: `Cannot archive default animation "${id}".`,
+        },
+      });
+    }
+
+    const animationDir = path.resolve(animationsDir, id);
+    if (!animationDir.startsWith(`${animationsDir}${path.sep}`)) {
+      return res.status(400).json({
+        error: {
+          code: "INVALID_ID",
+          message: "Animation id produced an invalid directory path.",
+        },
+      });
+    }
+
+    if (!fs.existsSync(animationDir)) {
+      return res.status(404).json({
+        error: {
+          code: "ANIMATION_NOT_FOUND",
+          message: `Animation "${id}" not found.`,
+        },
+      });
+    }
+
+    const archiveDir = path.resolve(animationsDir, ARCHIVE_DIR_NAME);
+    const archiveFolderName = buildArchiveFolderName({id});
+    const archiveTargetDir = path.resolve(archiveDir, archiveFolderName);
+    if (!archiveTargetDir.startsWith(`${archiveDir}${path.sep}`)) {
+      return res.status(400).json({
+        error: {
+          code: "INVALID_ID",
+          message: "Archive target path is invalid.",
+        },
+      });
+    }
+
+    const movedFiles = [];
+    try {
+      await fs.promises.mkdir(archiveDir, {recursive: true});
+      await fs.promises.rename(animationDir, archiveTargetDir);
+      movedFiles.push(path.relative(rootDir, archiveTargetDir));
+
+      const alias = toAnimationAlias(id);
+      const updatedRegistry = removeAnimationFromRegistrySource({
+        source: registrySource,
+        id,
+        alias,
+      });
+      await fs.promises.writeFile(animationsIndexPath, updatedRegistry, "utf8");
+
+      return res.status(200).json({
+        archived: {
+          id,
+          archivedTo: path.relative(rootDir, archiveTargetDir),
+        },
+        filesMoved: movedFiles,
+      });
+    } catch (error) {
+      if (error?.code === "ANIMATION_NOT_REGISTERED") {
+        return res.status(409).json({
+          error: {
+            code: "ANIMATION_NOT_REGISTERED",
+            message: error.message,
+          },
+          filesMoved: movedFiles,
+        });
+      }
+      if (error?.code === REGISTRY_UPDATE_FAILED) {
+        return res.status(500).json({
+          error: {
+            code: REGISTRY_UPDATE_FAILED,
+            message: "Animation moved to archive, but registry update failed.",
+            details: error.message,
+          },
+          filesMoved: movedFiles,
+        });
+      }
+      return res.status(500).json({
+        error: {
+          code: "ARCHIVE_ANIMATION_FAILED",
+          message: "Failed to archive animation.",
+          details: error?.message || "Unknown server error",
+        },
+        filesMoved: movedFiles,
       });
     }
   });

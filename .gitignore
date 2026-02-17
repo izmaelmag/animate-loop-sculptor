@@ -12,6 +12,7 @@ dist
 dist-ssr
 output
 *.local
+src/animations/archive/
 
 # Editor directories and files
 .vscode/*

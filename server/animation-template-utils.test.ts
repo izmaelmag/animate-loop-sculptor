@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const {
   REGISTRY_UPDATE_FAILED,
+  ARCHIVE_DIR_NAME,
   validateAnimationNameInput,
   validateRendererInput,
   toAnimationId,
@@ -12,6 +13,9 @@ const {
   getAnimationDisplayName,
   createAnimationTemplateSource,
   updateAnimationRegistrySource,
+  removeAnimationFromRegistrySource,
+  getDefaultAnimationIdFromRegistrySource,
+  buildArchiveFolderName,
 } = require("./animation-template-utils.cjs");
 
 const baseRegistrySource = `import { AnimationSettings } from "@/types/animations";
@@ -124,5 +128,30 @@ describe("animation-template-utils", () => {
     } catch (error) {
       expect((error as { code?: string }).code).toBe(REGISTRY_UPDATE_FAILED);
     }
+  });
+
+  it("removes animation lines from registry source", () => {
+    const source = updateAnimationRegistrySource({
+      source: baseRegistrySource,
+      id: "fresh-loop",
+      alias: "freshLoopAnimation",
+    });
+    const without = removeAnimationFromRegistrySource({
+      source,
+      id: "fresh-loop",
+      alias: "freshLoopAnimation",
+    });
+    expect(without).not.toContain('import { settings as freshLoopAnimation } from "./fresh-loop";');
+    expect(without).not.toContain('export { settings as freshLoopAnimation } from "./fresh-loop";');
+    expect(without).not.toContain("  [freshLoopAnimation.id]: freshLoopAnimation,");
+  });
+
+  it("reads default animation id from registry", () => {
+    expect(getDefaultAnimationIdFromRegistrySource(baseRegistrySource)).toBe("orbital");
+  });
+
+  it("builds archive folder name", () => {
+    expect(ARCHIVE_DIR_NAME).toBe("archive");
+    expect(buildArchiveFolderName({id: "demo", timestamp: 123})).toBe("123-demo");
   });
 });
