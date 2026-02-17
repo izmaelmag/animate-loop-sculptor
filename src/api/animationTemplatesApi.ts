@@ -4,11 +4,22 @@ export interface AnimationTemplatesApiError {
   details?: string;
 }
 
+export type AnimationTemplateRenderer = "p5" | "webgl" | "r3f";
+
+export interface CreateAnimationTemplatePayload {
+  name: string;
+  renderer: AnimationTemplateRenderer;
+  fps: number;
+  durationSeconds: number;
+  width: number;
+  height: number;
+}
+
 export interface CreatedAnimationTemplate {
   animation: {
     id: string;
     name: string;
-    renderer: "p5" | "webgl" | "r3f";
+    renderer: AnimationTemplateRenderer;
   };
   filesCreated: string[];
   error?: AnimationTemplatesApiError;
@@ -56,10 +67,9 @@ const parseApiError = (
   };
 };
 
-export const createAnimationTemplate = async (payload: {
-  name: string;
-  renderer: "p5" | "webgl" | "r3f";
-}): Promise<CreatedAnimationTemplate> => {
+export const createAnimationTemplate = async (
+  payload: CreateAnimationTemplatePayload,
+): Promise<CreatedAnimationTemplate> => {
   const response = await fetch("/api/animations/new", {
     method: "POST",
     headers: {"Content-Type": "application/json"},

@@ -1,10 +1,10 @@
 import p5 from "p5";
 import { AnimationSettings, P5AnimationFunction, FrameContext } from "@/types/animations";
 
-const FPS = 30;
-const WIDTH = 1080;
-const HEIGHT = 1920;
-const DURATION_SECONDS = 4;
+const FPS = {{fpsLiteral}};
+const WIDTH = {{widthLiteral}};
+const HEIGHT = {{heightLiteral}};
+const DURATION_SECONDS = {{durationSecondsLiteral}};
 
 const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
   p.background(0);

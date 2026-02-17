@@ -2,6 +2,12 @@ const REGISTRY_UPDATE_FAILED = "REGISTRY_UPDATE_FAILED";
 const MAX_ANIMATION_NAME_LENGTH = 80;
 const SUPPORTED_TEMPLATE_RENDERERS = ["p5", "webgl", "r3f"];
 const ARCHIVE_DIR_NAME = "archive";
+const DEFAULT_TEMPLATE_CONFIG = {
+  fps: 30,
+  durationSeconds: 8,
+  width: 1080,
+  height: 1920,
+};
 const RENDERER_EMOJI = {
   p5: "🎨",
   webgl: "🧪",
@@ -58,6 +64,51 @@ const validateRendererInput = (rawRenderer) => {
   return {ok: true, renderer};
 };
 
+const toPositiveInt = (value, fallback) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.floor(parsed);
+};
+
+const validateTemplateConfigInput = (rawConfig) => {
+  const fps = toPositiveInt(rawConfig?.fps, DEFAULT_TEMPLATE_CONFIG.fps);
+  const durationSeconds = toPositiveInt(
+    rawConfig?.durationSeconds,
+    DEFAULT_TEMPLATE_CONFIG.durationSeconds,
+  );
+  const width = toPositiveInt(rawConfig?.width, DEFAULT_TEMPLATE_CONFIG.width);
+  const height = toPositiveInt(rawConfig?.height, DEFAULT_TEMPLATE_CONFIG.height);
+
+  if (fps < 1 || fps > 240) {
+    return {
+      ok: false,
+      code: "INVALID_TEMPLATE_CONFIG",
+      message: "FPS must be between 1 and 240.",
+    };
+  }
+
+  if (durationSeconds < 1 || durationSeconds > 600) {
+    return {
+      ok: false,
+      code: "INVALID_TEMPLATE_CONFIG",
+      message: "Duration must be between 1 and 600 seconds.",
+    };
+  }
+
+  if (width < 64 || width > 8192 || height < 64 || height > 8192) {
+    return {
+      ok: false,
+      code: "INVALID_TEMPLATE_CONFIG",
+      message: "Width and height must be between 64 and 8192 px.",
+    };
+  }
+
+  return {
+    ok: true,
+    config: {fps, durationSeconds, width, height},
+  };
+};
+
 const toAnimationId = (name) => {
   return String(name || "")
     .trim()
@@ -99,6 +150,27 @@ const createAnimationTemplateSource = ({templateSource, renderer, name, id}) => 
     idLiteral: JSON.stringify(id),
     nameLiteral: JSON.stringify(name),
     displayNameLiteral: JSON.stringify(getAnimationDisplayName(renderer, name)),
+    durationSecondsLiteral: String(DEFAULT_TEMPLATE_CONFIG.durationSeconds),
+    widthLiteral: String(DEFAULT_TEMPLATE_CONFIG.width),
+    heightLiteral: String(DEFAULT_TEMPLATE_CONFIG.height),
+  });
+};
+
+const createAnimationTemplateSourceWithConfig = ({
+  templateSource,
+  renderer,
+  name,
+  id,
+  config,
+}) => {
+  return renderTemplate(templateSource, {
+    idLiteral: JSON.stringify(id),
+    nameLiteral: JSON.stringify(name),
+    displayNameLiteral: JSON.stringify(getAnimationDisplayName(renderer, name)),
+    fpsLiteral: String(config.fps),
+    durationSecondsLiteral: String(config.durationSeconds),
+    widthLiteral: String(config.width),
+    heightLiteral: String(config.height),
   });
 };
 
@@ -194,16 +266,19 @@ module.exports = {
   MAX_ANIMATION_NAME_LENGTH,
   REGISTRY_UPDATE_FAILED,
   ARCHIVE_DIR_NAME,
+  DEFAULT_TEMPLATE_CONFIG,
   SUPPORTED_TEMPLATE_RENDERERS,
   RENDERER_EMOJI,
   normalizeAnimationNameInput,
   validateAnimationNameInput,
   validateRendererInput,
+  validateTemplateConfigInput,
   toAnimationId,
   toAnimationAlias,
   renderTemplate,
   getAnimationDisplayName,
   createAnimationTemplateSource,
+  createAnimationTemplateSourceWithConfig,
   updateAnimationRegistrySource,
   removeAnimationFromRegistrySource,
   getDefaultAnimationIdFromRegistrySource,

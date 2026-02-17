@@ -103,7 +103,13 @@ describe("POST /api/animations/new", () => {
     const res = await fetch(`${baseUrl}/api/animations/new`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "Test Bloom" }),
+      body: JSON.stringify({
+        name: "Test Bloom",
+        fps: 60,
+        durationSeconds: 11,
+        width: 1080,
+        height: 1080,
+      }),
     });
     const body = (await res.json()) as {
       animation: { id: string; name: string; renderer: string };
@@ -128,6 +134,10 @@ describe("POST /api/animations/new", () => {
     );
     expect(animationFile).toContain('id: "test-bloom"');
     expect(animationFile).toContain('name: "🎨 Test Bloom"');
+    expect(animationFile).toContain("const FPS = 60;");
+    expect(animationFile).toContain("const WIDTH = 1080;");
+    expect(animationFile).toContain("const HEIGHT = 1080;");
+    expect(animationFile).toContain("const DURATION_SECONDS = 11;");
 
     const registrySource = await fs.promises.readFile(
       path.join(rootDir, "src", "animations", "index.ts"),

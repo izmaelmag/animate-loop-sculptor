@@ -5,13 +5,15 @@ const require = createRequire(import.meta.url);
 const {
   REGISTRY_UPDATE_FAILED,
   ARCHIVE_DIR_NAME,
+  DEFAULT_TEMPLATE_CONFIG,
   validateAnimationNameInput,
   validateRendererInput,
+  validateTemplateConfigInput,
   toAnimationId,
   toAnimationAlias,
   renderTemplate,
   getAnimationDisplayName,
-  createAnimationTemplateSource,
+  createAnimationTemplateSourceWithConfig,
   updateAnimationRegistrySource,
   removeAnimationFromRegistrySource,
   getDefaultAnimationIdFromRegistrySource,
@@ -66,25 +68,51 @@ describe("animation-template-utils", () => {
     });
   });
 
+  it("validates template config with defaults", () => {
+    expect(validateTemplateConfigInput({})).toEqual({
+      ok: true,
+      config: DEFAULT_TEMPLATE_CONFIG,
+    });
+    expect(validateTemplateConfigInput({durationSeconds: 0})).toEqual({
+      ok: false,
+      code: "INVALID_TEMPLATE_CONFIG",
+      message: "Duration must be between 1 and 600 seconds.",
+    });
+    expect(validateTemplateConfigInput({fps: 0})).toEqual({
+      ok: false,
+      code: "INVALID_TEMPLATE_CONFIG",
+      message: "FPS must be between 1 and 240.",
+    });
+  });
+
   it("renders template tokens", () => {
     const rendered = renderTemplate("A={{a}}, B={{b}}", {a: 1, b: "x"});
     expect(rendered).toBe("A=1, B=x");
   });
 
   it("creates animation source from template and renderer metadata", () => {
-    const source = createAnimationTemplateSource({
+    const source = createAnimationTemplateSourceWithConfig({
       templateSource: [
+        "fps: {{fpsLiteral}}",
         "id: {{idLiteral}}",
         "name: {{displayNameLiteral}}",
         "label: {{nameLiteral}}",
+        "duration: {{durationSecondsLiteral}}",
+        "width: {{widthLiteral}}",
+        "height: {{heightLiteral}}",
       ].join("\n"),
       renderer: "p5",
       name: "Test Scene",
       id: "test-scene",
+      config: {fps: 60, durationSeconds: 12, width: 2048, height: 1024},
     });
+    expect(source).toContain("fps: 60");
     expect(source).toContain('id: "test-scene"');
     expect(source).toContain('name: "🎨 Test Scene"');
     expect(source).toContain('label: "Test Scene"');
+    expect(source).toContain("duration: 12");
+    expect(source).toContain("width: 2048");
+    expect(source).toContain("height: 1024");
   });
 
   it("maps renderer to emoji display name", () => {

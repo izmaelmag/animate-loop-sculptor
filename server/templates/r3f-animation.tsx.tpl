@@ -1,10 +1,10 @@
 import { AnimationSettings, R3FSceneProps } from "@/types/animations";
 import type { JSX } from "react";
 
-const FPS = 30;
-const WIDTH = 1080;
-const HEIGHT = 1920;
-const DURATION_SECONDS = 6;
+const FPS = {{fpsLiteral}};
+const WIDTH = {{widthLiteral}};
+const HEIGHT = {{heightLiteral}};
+const DURATION_SECONDS = {{durationSecondsLiteral}};
 
 function Scene({ ctx }: R3FSceneProps): JSX.Element {
   const angle = ctx.normalizedTime * Math.PI * 2;

@@ -11,9 +11,10 @@ const {
   ARCHIVE_DIR_NAME,
   validateAnimationNameInput,
   validateRendererInput,
+  validateTemplateConfigInput,
   toAnimationId,
   toAnimationAlias,
-  createAnimationTemplateSource,
+  createAnimationTemplateSourceWithConfig,
   getAnimationDisplayName,
   updateAnimationRegistrySource,
   removeAnimationFromRegistrySource,
@@ -68,6 +69,16 @@ const createApp = ({
       });
     }
     const renderer = rendererValidation.renderer;
+    const templateConfigValidation = validateTemplateConfigInput(req.body);
+    if (!templateConfigValidation.ok) {
+      return res.status(400).json({
+        error: {
+          code: templateConfigValidation.code,
+          message: templateConfigValidation.message,
+        },
+      });
+    }
+    const templateConfig = templateConfigValidation.config;
 
     const id = toAnimationId(name);
     if (!id) {
@@ -112,11 +123,12 @@ const createApp = ({
 
       await fs.promises.writeFile(
         animationFilePath,
-        createAnimationTemplateSource({
+        createAnimationTemplateSourceWithConfig({
           templateSource: templateSources[renderer],
           renderer,
           name,
           id,
+          config: templateConfig,
         }),
         "utf8",
       );
