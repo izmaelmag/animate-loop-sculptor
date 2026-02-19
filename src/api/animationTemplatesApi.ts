@@ -34,6 +34,16 @@ export interface ArchivedAnimationTemplate {
   error?: AnimationTemplatesApiError;
 }
 
+export interface CopiedAnimationTemplate {
+  animation: {
+    id: string;
+    name: string;
+    renderer: AnimationTemplateRenderer;
+  };
+  filesCopied: string[];
+  error?: AnimationTemplatesApiError;
+}
+
 const parseJson = async <T>(response: Response): Promise<T | undefined> => {
   const text = await response.text();
   if (!text) return undefined;
@@ -47,7 +57,7 @@ const parseJson = async <T>(response: Response): Promise<T | undefined> => {
 
 const parseApiError = (
   status: number,
-  body?: CreatedAnimationTemplate | ArchivedAnimationTemplate,
+  body?: CreatedAnimationTemplate | ArchivedAnimationTemplate | CopiedAnimationTemplate,
 ): AnimationTemplatesApiError => {
   if (body?.error) {
     return body.error;
@@ -95,6 +105,23 @@ export const archiveAnimationTemplate = async (payload: {
 
   const body = await parseJson<ArchivedAnimationTemplate>(response);
   if (!response.ok || !body?.archived) {
+    throw parseApiError(response.status, body);
+  }
+
+  return body;
+};
+
+export const copyAnimationTemplate = async (payload: {
+  id: string;
+}): Promise<CopiedAnimationTemplate> => {
+  const response = await fetch("/api/animations/copy", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload),
+  });
+
+  const body = await parseJson<CopiedAnimationTemplate>(response);
+  if (!response.ok || !body?.animation) {
     throw parseApiError(response.status, body);
   }
 

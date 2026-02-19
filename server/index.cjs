@@ -20,6 +20,7 @@ const {
   removeAnimationFromRegistrySource,
   getDefaultAnimationIdFromRegistrySource,
   buildArchiveFolderName,
+  resolveNextCopyIdentity,
 } = require("./animation-template-utils.cjs");
 
 const createApp = ({
@@ -287,6 +288,157 @@ const createApp = ({
           details: error?.message || "Unknown server error",
         },
         filesMoved: movedFiles,
+      });
+    }
+  });
+
+  app.post("/api/animations/copy", async (req, res) => {
+    const sourceId = typeof req.body?.id === "string" ? req.body.id.trim() : "";
+    if (!sourceId) {
+      return res.status(400).json({
+        error: {
+          code: "INVALID_ID",
+          message: "Field \"id\" is required.",
+        },
+      });
+    }
+
+    const sourceAnimationDir = path.resolve(animationsDir, sourceId);
+    if (!sourceAnimationDir.startsWith(`${animationsDir}${path.sep}`)) {
+      return res.status(400).json({
+        error: {
+          code: "INVALID_ID",
+          message: "Animation id produced an invalid directory path.",
+        },
+      });
+    }
+    if (!fs.existsSync(sourceAnimationDir)) {
+      return res.status(404).json({
+        error: {
+          code: "ANIMATION_NOT_FOUND",
+          message: `Animation "${sourceId}" not found.`,
+        },
+      });
+    }
+
+    const sourceTsPath = path.resolve(sourceAnimationDir, `${sourceId}.ts`);
+    const sourceTsxPath = path.resolve(sourceAnimationDir, `${sourceId}.tsx`);
+    const sourceAnimationFilePath = fs.existsSync(sourceTsxPath)
+      ? sourceTsxPath
+      : sourceTsPath;
+    if (!fs.existsSync(sourceAnimationFilePath)) {
+      return res.status(409).json({
+        error: {
+          code: "COPY_SOURCE_INVALID",
+          message: `Animation "${sourceId}" does not have a copyable source file.`,
+        },
+      });
+    }
+
+    const copiedFiles = [];
+    try {
+      const sourceAnimationFile = await fs.promises.readFile(sourceAnimationFilePath, "utf8");
+      const sourceNameMatch = sourceAnimationFile.match(/\bname:\s*"([^"]+)"/);
+      const sourceRendererMatch = sourceAnimationFile.match(/\brenderer:\s*"([^"]+)"/);
+      const sourceName = sourceNameMatch ? sourceNameMatch[1] : sourceId;
+      const sourceRenderer = sourceRendererMatch ? sourceRendererMatch[1] : "p5";
+      const sourcePrefix = `${getAnimationDisplayName(sourceRenderer, "")}`;
+      const sourceBaseName = sourceName.startsWith(sourcePrefix)
+        ? sourceName.slice(sourcePrefix.length)
+        : sourceName;
+
+      const nextIdentity = resolveNextCopyIdentity({
+        name: sourceBaseName,
+        isIdTaken: (id) => {
+          const candidateDir = path.resolve(animationsDir, id);
+          return fs.existsSync(candidateDir);
+        },
+      });
+      const nextId = nextIdentity.id;
+      const nextName = nextIdentity.name;
+
+      const copiedAnimationDir = path.resolve(animationsDir, nextId);
+      if (!copiedAnimationDir.startsWith(`${animationsDir}${path.sep}`)) {
+        return res.status(400).json({
+          error: {
+            code: "INVALID_NAME",
+            message: "Copy name produced an invalid directory path.",
+          },
+        });
+      }
+
+      await fs.promises.cp(sourceAnimationDir, copiedAnimationDir, {
+        recursive: true,
+        errorOnExist: true,
+      });
+
+      const sourceExtension = path.extname(sourceAnimationFilePath);
+      const copiedSourceFilePath = path.resolve(copiedAnimationDir, `${sourceId}${sourceExtension}`);
+      const copiedTargetFilePath = path.resolve(copiedAnimationDir, `${nextId}${sourceExtension}`);
+      let copiedAnimationSource = await fs.promises.readFile(copiedSourceFilePath, "utf8");
+      copiedAnimationSource = copiedAnimationSource.replace(
+        /\bname:\s*"([^"]+)"/,
+        `name: ${JSON.stringify(getAnimationDisplayName(sourceRenderer, nextName))}`,
+      );
+      copiedAnimationSource = copiedAnimationSource.replace(
+        /\bid:\s*"([^"]+)"/,
+        `id: ${JSON.stringify(nextId)}`,
+      );
+      await fs.promises.writeFile(copiedSourceFilePath, copiedAnimationSource, "utf8");
+      await fs.promises.rename(copiedSourceFilePath, copiedTargetFilePath);
+
+      const copiedIndexPath = path.resolve(copiedAnimationDir, "index.ts");
+      await fs.promises.writeFile(copiedIndexPath, `export * from "./${nextId}";\n`, "utf8");
+
+      const registrySource = await fs.promises.readFile(animationsIndexPath, "utf8");
+      const nextAlias = toAnimationAlias(nextId);
+      const updatedRegistry = updateAnimationRegistrySource({
+        source: registrySource,
+        id: nextId,
+        alias: nextAlias,
+      });
+      await fs.promises.writeFile(animationsIndexPath, updatedRegistry, "utf8");
+
+      copiedFiles.push(path.relative(rootDir, copiedTargetFilePath));
+      copiedFiles.push(path.relative(rootDir, copiedIndexPath));
+      copiedFiles.push(path.relative(rootDir, animationsIndexPath));
+
+      return res.status(201).json({
+        animation: {
+          id: nextId,
+          name: getAnimationDisplayName(sourceRenderer, nextName),
+          renderer: sourceRenderer,
+        },
+        filesCopied: copiedFiles,
+      });
+    } catch (error) {
+      if (error?.code === REGISTRY_UPDATE_FAILED) {
+        return res.status(500).json({
+          error: {
+            code: REGISTRY_UPDATE_FAILED,
+            message: "Animation files were copied, but registry update failed.",
+            details: error.message,
+          },
+          filesCopied: copiedFiles,
+        });
+      }
+      if (error?.code === "COPY_NAME_CONFLICT") {
+        return res.status(409).json({
+          error: {
+            code: error.code,
+            message: error.message,
+          },
+          filesCopied: copiedFiles,
+        });
+      }
+
+      return res.status(500).json({
+        error: {
+          code: "COPY_ANIMATION_FAILED",
+          message: "Failed to copy animation.",
+          details: error?.message || "Unknown server error",
+        },
+        filesCopied: copiedFiles,
       });
     }
   });

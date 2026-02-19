@@ -262,6 +262,40 @@ const buildArchiveFolderName = ({id, timestamp = Date.now()}) => {
   return `${timestamp}-${id}`;
 };
 
+const getNextAnimationCopyName = (rawName) => {
+  const name = normalizeAnimationNameInput(rawName);
+  if (!name) return "2";
+
+  const trailingNumberMatch = name.match(/^(.*?)(\d+)$/);
+  if (!trailingNumberMatch) {
+    return `${name} 2`;
+  }
+
+  const prefix = trailingNumberMatch[1];
+  const currentNumber = Number.parseInt(trailingNumberMatch[2], 10);
+  if (!Number.isFinite(currentNumber)) {
+    return `${name} 2`;
+  }
+
+  return `${prefix}${currentNumber + 1}`;
+};
+
+const resolveNextCopyIdentity = ({name, isIdTaken, maxAttempts = 500}) => {
+  let nextName = getNextAnimationCopyName(name);
+
+  for (let i = 0; i < maxAttempts; i += 1) {
+    const id = toAnimationId(nextName);
+    if (id && !isIdTaken(id)) {
+      return {name: nextName, id};
+    }
+    nextName = getNextAnimationCopyName(nextName);
+  }
+
+  const err = new Error("Failed to resolve unique animation copy name.");
+  err.code = "COPY_NAME_CONFLICT";
+  throw err;
+};
+
 module.exports = {
   MAX_ANIMATION_NAME_LENGTH,
   REGISTRY_UPDATE_FAILED,
@@ -283,4 +317,6 @@ module.exports = {
   removeAnimationFromRegistrySource,
   getDefaultAnimationIdFromRegistrySource,
   buildArchiveFolderName,
+  getNextAnimationCopyName,
+  resolveNextCopyIdentity,
 };

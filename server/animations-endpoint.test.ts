@@ -288,3 +288,177 @@ describe("POST /api/animations/archive", () => {
     expect(body.error.code).toBe("ANIMATION_NOT_FOUND");
   });
 });
+
+describe("POST /api/animations/copy", () => {
+  let rootDir = "";
+  let server: { close: () => void } | null = null;
+  let baseUrl = "";
+
+  beforeEach(async () => {
+    rootDir = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), "animate-loop-sculptor-test-"),
+    );
+    const animationsDir = path.join(rootDir, "src", "animations");
+    const orbitalDir = path.join(animationsDir, "orbital");
+    const sourceDir = path.join(animationsDir, "lissajou-curves");
+    const existingCopyDir = path.join(animationsDir, "lissajou-curves-2");
+
+    await fs.promises.mkdir(orbitalDir, { recursive: true });
+    await fs.promises.mkdir(sourceDir, { recursive: true });
+    await fs.promises.mkdir(existingCopyDir, { recursive: true });
+
+    await fs.promises.writeFile(
+      path.join(sourceDir, "lissajou-curves.ts"),
+      `export const settings = {
+  id: "lissajou-curves",
+  name: "🎨 Lissajou Curves",
+  renderer: "p5",
+};
+`,
+      "utf8",
+    );
+    await fs.promises.writeFile(
+      path.join(sourceDir, "index.ts"),
+      'export * from "./lissajou-curves";\n',
+      "utf8",
+    );
+    await fs.promises.writeFile(
+      path.join(existingCopyDir, "lissajou-curves-2.ts"),
+      `export const settings = {
+  id: "lissajou-curves-2",
+  name: "🎨 Lissajou Curves 2",
+  renderer: "p5",
+};
+`,
+      "utf8",
+    );
+    await fs.promises.writeFile(
+      path.join(existingCopyDir, "index.ts"),
+      'export * from "./lissajou-curves-2";\n',
+      "utf8",
+    );
+
+    await fs.promises.writeFile(
+      path.join(animationsDir, "index.ts"),
+      `import { AnimationSettings } from "@/types/animations";
+
+import { settings as orbitalAnimation } from "./orbital";
+import { settings as lissajouCurvesAnimation } from "./lissajou-curves";
+import { settings as lissajouCurves2Animation } from "./lissajou-curves-2";
+
+export { settings as defaultAnimation } from "./orbital";
+export { settings as orbitalAnimation } from "./orbital";
+export { settings as lissajouCurvesAnimation } from "./lissajou-curves";
+export { settings as lissajouCurves2Animation } from "./lissajou-curves-2";
+
+export const animationSettings: Record<string, AnimationSettings> = {
+  [orbitalAnimation.id]: orbitalAnimation,
+  [lissajouCurvesAnimation.id]: lissajouCurvesAnimation,
+  [lissajouCurves2Animation.id]: lissajouCurves2Animation,
+};
+`,
+      "utf8",
+    );
+
+    const app = createApp({ rootDir });
+    server = await new Promise((resolve) => {
+      const started = app.listen(0, () => resolve(started));
+    });
+    const address = (server as unknown as { address: () => { port: number } }).address();
+    baseUrl = `http://127.0.0.1:${address.port}`;
+  });
+
+  afterEach(async () => {
+    if (server) {
+      await new Promise<void>((resolve) => {
+        server?.close(() => resolve());
+      });
+      server = null;
+    }
+    if (rootDir) {
+      await fs.promises.rm(rootDir, { recursive: true, force: true });
+    }
+  });
+
+  it("returns 400 for invalid id", async () => {
+    const res = await fetch(`${baseUrl}/api/animations/copy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: "   " }),
+    });
+    const body = (await res.json()) as { error: { code: string } };
+
+    expect(res.status).toBe(400);
+    expect(body.error.code).toBe("INVALID_ID");
+  });
+
+  it("returns 404 for unknown animation", async () => {
+    const res = await fetch(`${baseUrl}/api/animations/copy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: "missing" }),
+    });
+    const body = (await res.json()) as { error: { code: string } };
+
+    expect(res.status).toBe(404);
+    expect(body.error.code).toBe("ANIMATION_NOT_FOUND");
+  });
+
+  it("copies animation files and increments name suffix", async () => {
+    const res = await fetch(`${baseUrl}/api/animations/copy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: "lissajou-curves" }),
+    });
+    const body = (await res.json()) as {
+      animation: { id: string; name: string; renderer: string };
+      filesCopied: string[];
+    };
+
+    expect(res.status).toBe(201);
+    expect(body.animation).toEqual({
+      id: "lissajou-curves-3",
+      name: "🎨 Lissajou Curves 3",
+      renderer: "p5",
+    });
+    expect(body.filesCopied).toEqual([
+      "src/animations/lissajou-curves-3/lissajou-curves-3.ts",
+      "src/animations/lissajou-curves-3/index.ts",
+      "src/animations/index.ts",
+    ]);
+
+    const copiedSource = await fs.promises.readFile(
+      path.join(
+        rootDir,
+        "src",
+        "animations",
+        "lissajou-curves-3",
+        "lissajou-curves-3.ts",
+      ),
+      "utf8",
+    );
+    expect(copiedSource).toContain('id: "lissajou-curves-3"');
+    expect(copiedSource).toContain('name: "🎨 Lissajou Curves 3"');
+    expect(copiedSource).toContain('renderer: "p5"');
+
+    const copiedIndex = await fs.promises.readFile(
+      path.join(rootDir, "src", "animations", "lissajou-curves-3", "index.ts"),
+      "utf8",
+    );
+    expect(copiedIndex).toContain('export * from "./lissajou-curves-3";');
+
+    const registrySource = await fs.promises.readFile(
+      path.join(rootDir, "src", "animations", "index.ts"),
+      "utf8",
+    );
+    expect(registrySource).toContain(
+      'import { settings as lissajouCurves3Animation } from "./lissajou-curves-3";',
+    );
+    expect(registrySource).toContain(
+      'export { settings as lissajouCurves3Animation } from "./lissajou-curves-3";',
+    );
+    expect(registrySource).toContain(
+      "  [lissajouCurves3Animation.id]: lissajouCurves3Animation,",
+    );
+  });
+});

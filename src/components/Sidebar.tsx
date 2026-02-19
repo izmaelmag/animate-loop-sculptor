@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { animationSettings, defaultAnimation } from "@/animations";
 import { useAnimationStore } from "@/stores/animationStore";
-import { LoaderPinwheel, Trash2 } from "lucide-react";
+import { Copy, LoaderPinwheel, Trash2 } from "lucide-react";
 import RenderControls from "@/components/RenderControls";
 import AnimationParamsPane from "@/components/AnimationParamsPane";
 import NewAnimationModal from "@/components/NewAnimationModal";
 import {
   archiveAnimationTemplate,
+  copyAnimationTemplate,
   createAnimationTemplate,
   CreateAnimationTemplatePayload,
 } from "@/api/animationTemplatesApi";
@@ -75,6 +76,26 @@ const Sidebar = () => {
     }
   };
 
+  const handleCopyAnimation = async (id: string, name: string) => {
+    if (id === defaultAnimation.id) return;
+
+    try {
+      const result = await copyAnimationTemplate({id});
+      toast({
+        title: "Animation copied",
+        description: `${name} copied as ${result.animation.name}. Reloading...`,
+      });
+      setSelectedAnimationId(result.animation.id);
+      window.location.reload();
+    } catch (error) {
+      const apiError = error as {code?: string; message?: string};
+      toast({
+        title: "Failed to copy animation",
+        description: `${apiError.code || "ERROR"}: ${apiError.message || "Unknown error"}`,
+      });
+    }
+  };
+
   return (
     <div className="w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col h-full">
       <NewAnimationModal
@@ -120,19 +141,32 @@ const Sidebar = () => {
             >
               <span className="truncate">{animation.name}</span>
               {animation.id !== defaultAnimation.id ? (
-                <button
-                  type="button"
-                  aria-label={`Archive ${animation.name}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    void handleArchiveAnimation(animation.id, animation.name);
-                  }}
-                  className="shrink-0 opacity-0 group-hover:opacity-100 text-white/45 hover:text-red-300 transition-opacity"
-                >
-                  <Trash2 size={14} />
-                </button>
+                <div className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    type="button"
+                    aria-label={`Copy ${animation.name}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void handleCopyAnimation(animation.id, animation.name);
+                    }}
+                    className="text-white/45 hover:text-white transition-colors"
+                  >
+                    <Copy size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`Archive ${animation.name}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void handleArchiveAnimation(animation.id, animation.name);
+                    }}
+                    className="text-white/45 hover:text-red-300 transition-colors"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               ) : (
-                <span className="w-[14px] shrink-0" />
+                <span className="w-9 shrink-0" />
               )}
             </div>
           ))}

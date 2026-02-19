@@ -18,6 +18,8 @@ const {
   removeAnimationFromRegistrySource,
   getDefaultAnimationIdFromRegistrySource,
   buildArchiveFolderName,
+  getNextAnimationCopyName,
+  resolveNextCopyIdentity,
 } = require("./animation-template-utils.cjs");
 
 const baseRegistrySource = `import { AnimationSettings } from "@/types/animations";
@@ -181,5 +183,23 @@ describe("animation-template-utils", () => {
   it("builds archive folder name", () => {
     expect(ARCHIVE_DIR_NAME).toBe("archive");
     expect(buildArchiveFolderName({id: "demo", timestamp: 123})).toBe("123-demo");
+  });
+
+  it("increments animation copy names", () => {
+    expect(getNextAnimationCopyName("Lissajou Curves")).toBe("Lissajou Curves 2");
+    expect(getNextAnimationCopyName("Lissajou Curves 2")).toBe("Lissajou Curves 3");
+    expect(getNextAnimationCopyName("Scene9")).toBe("Scene10");
+  });
+
+  it("resolves next unique copy identity", () => {
+    const taken = new Set(["demo-2", "demo-3"]);
+    const identity = resolveNextCopyIdentity({
+      name: "Demo",
+      isIdTaken: (id: string) => taken.has(id),
+    });
+    expect(identity).toEqual({
+      name: "Demo 4",
+      id: "demo-4",
+    });
   });
 });
