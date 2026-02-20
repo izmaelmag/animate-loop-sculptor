@@ -4,6 +4,8 @@ export interface DynamicStripesParams extends Record<string, unknown> {
   lineAngleDeg: number;
   lineLengthPx: number;
   minSegmentLengthPx: number;
+  strictGap: boolean;
+  debug: boolean;
   segmentCount: number;
   segmentGap: number;
   lineThickness: number;
@@ -20,6 +22,8 @@ export const defaultParams: DynamicStripesParams = {
   lineAngleDeg: 45,
   lineLengthPx: 2200,
   minSegmentLengthPx: 1,
+  strictGap: false,
+  debug: false,
   segmentCount: 4,
   segmentGap: 24,
   lineThickness: 24,
@@ -47,6 +51,8 @@ export const resolveDynamicStripesParams = (
     raw.minSegmentLengthPx,
     defaultParams.minSegmentLengthPx,
   );
+  const strictGap = raw.strictGap === true;
+  const debug = raw.debug === true;
   const segmentCount = Math.round(
     asNumber(raw.segmentCount, defaultParams.segmentCount),
   );
@@ -63,11 +69,13 @@ export const resolveDynamicStripesParams = (
   const amplitude = asNumber(raw.amplitude, defaultParams.amplitude);
 
   return {
-    margin: Math.max(-1920, Math.min(500, margin)),
+    margin: Math.max(-1920, Math.min(2000, margin)),
     edgeDivisions: Math.max(1, Math.min(256, edgeDivisions)),
     lineAngleDeg: ((lineAngleDeg % 360) + 360) % 360,
     lineLengthPx: Math.max(50, Math.min(6000, lineLengthPx)),
-    minSegmentLengthPx: Math.max(0, Math.min(64, minSegmentLengthPx)),
+    minSegmentLengthPx: Math.max(0, Math.min(256, minSegmentLengthPx)),
+    strictGap,
+    debug,
     segmentCount: Math.max(2, Math.min(24, segmentCount)),
     segmentGap: Math.max(0, Math.min(1024, segmentGap)),
     lineThickness: Math.max(1, Math.min(265, lineThickness)),

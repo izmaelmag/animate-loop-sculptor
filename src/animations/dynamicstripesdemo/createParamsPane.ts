@@ -16,7 +16,7 @@ export const createDynamicStripesParamsPane = ({
   pane
     .addBinding(model, "margin", {
       min: -1920,
-      max: 500,
+      max: 2000,
       step: 1,
       label: "Margin",
     })
@@ -52,11 +52,23 @@ export const createDynamicStripesParamsPane = ({
   pane
     .addBinding(model, "minSegmentLengthPx", {
       min: 0,
-      max: 64,
+      max: 256,
       step: 1,
       label: "Min Seg",
     })
     .on("change", (ev) => patchParams({ minSegmentLengthPx: ev.value }));
+
+  pane
+    .addBinding(model, "strictGap", {
+      label: "Strict Gap",
+    })
+    .on("change", (ev) => patchParams({ strictGap: ev.value }));
+
+  pane
+    .addBinding(model, "debug", {
+      label: "Debug",
+    })
+    .on("change", (ev) => patchParams({ debug: ev.value }));
 
   pane
     .addBinding(model, "segmentCount", {

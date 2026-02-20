@@ -12,6 +12,7 @@ export interface DynamicSegmentsOptions {
   segmentCount?: number;
   gap?: number;
   minSegmentLength?: number;
+  strictGap?: boolean;
 }
 
 /**
@@ -25,6 +26,7 @@ export class DynamicSegments {
   private _segmentCount: number;
   private _gap: number;
   private _minSegmentLength: number;
+  private _strictGap: boolean;
 
   constructor(
     a: Point,
@@ -36,6 +38,7 @@ export class DynamicSegments {
     this._segmentCount = 1;
     this._gap = 0;
     this._minSegmentLength = 1;
+    this._strictGap = false;
 
     if (Array.isArray(splitPointsOrOptions)) {
       this._splitPoints = this._normalizeSplitPoints(splitPointsOrOptions);
@@ -47,9 +50,13 @@ export class DynamicSegments {
     this._minSegmentLength = this._normalizeMinSegmentLength(
       splitPointsOrOptions.minSegmentLength ?? 1,
     );
+    this._strictGap = splitPointsOrOptions.strictGap === true;
     if (Array.isArray(splitPointsOrOptions.splitPoints)) {
       this._splitPoints = this._normalizeSplitPoints(splitPointsOrOptions.splitPoints);
       this._segmentCount = this._splitPoints.length + 1;
+      if (this._strictGap) {
+        this._enforceStrictGapOnSplitPoints();
+      }
       return;
     }
 
@@ -78,6 +85,10 @@ export class DynamicSegments {
     return this._minSegmentLength;
   }
 
+  get strictGap(): boolean {
+    return this._strictGap;
+  }
+
   /**
    * Full normalized point list: [0, ...splitPoints, 1].
    */
@@ -99,6 +110,9 @@ export class DynamicSegments {
   public setSplitPoints(points: number[]): void {
     this._splitPoints = this._normalizeSplitPoints(points);
     this._segmentCount = this._splitPoints.length + 1;
+    if (this._strictGap) {
+      this._enforceStrictGapOnSplitPoints();
+    }
   }
 
   /**
@@ -107,6 +121,9 @@ export class DynamicSegments {
   public setSegmentCount(segmentCount: number): void {
     this._segmentCount = this._normalizeSegmentCount(segmentCount);
     this._splitPoints = this._buildEvenSplitPoints(this._segmentCount);
+    if (this._strictGap) {
+      this._enforceStrictGapOnSplitPoints();
+    }
   }
 
   /**
@@ -124,6 +141,16 @@ export class DynamicSegments {
   }
 
   /**
+   * Keeps configured gap fixed by constraining split points layout.
+   */
+  public setStrictGap(strictGap: boolean): void {
+    this._strictGap = strictGap;
+    if (this._strictGap) {
+      this._enforceStrictGapOnSplitPoints();
+    }
+  }
+
+  /**
    * Increments split points by index. Missing increments are treated as 0.
    * Values are clamped to [0, 1], and index order is preserved.
    */
@@ -132,6 +159,9 @@ export class DynamicSegments {
       const delta = deltas[index] ?? 0;
       return this._clamp(point + delta, 0, 1);
     });
+    if (this._strictGap) {
+      this._enforceStrictGapOnSplitPoints();
+    }
   }
 
   /**
@@ -163,8 +193,8 @@ export class DynamicSegments {
    */
   public getDrawableNormalizedSegments(): NormalizedSegment[] {
     const lineLength = this._lineLength();
-    const normalizedHalfGap =
-      lineLength <= 1e-9 ? 0 : (this._normalizeGap(this._gap) / lineLength) / 2;
+    const normalizedGap = this._getEffectiveGapNormalized(lineLength);
+    const normalizedHalfGap = normalizedGap / 2;
     const drawableSegments: NormalizedSegment[] = [];
     const normalizedSegments = this.getNormalizedSegments();
     const lastSegmentIndex = normalizedSegments.length - 1;
@@ -172,7 +202,9 @@ export class DynamicSegments {
     for (let segmentIndex = 0; segmentIndex < normalizedSegments.length; segmentIndex += 1) {
       const [startT, endT] = normalizedSegments[segmentIndex];
       const length = Math.abs(endT - startT);
-      const trim = Math.min(normalizedHalfGap, length / 2);
+      const trim = this._strictGap
+        ? normalizedHalfGap
+        : Math.min(normalizedHalfGap, length / 2);
       const direction = startT <= endT ? 1 : -1;
 
       // Keep line anchors fixed at t=0 and t=1 for outer segments.
@@ -250,6 +282,89 @@ export class DynamicSegments {
   private _normalizeMinSegmentLength(value: number): number {
     if (!Number.isFinite(value)) return 1;
     return Math.max(0, value);
+  }
+
+  private _getEffectiveGapNormalized(lineLength: number): number {
+    if (lineLength <= 1e-9) {
+      return 0;
+    }
+
+    const requestedGapNormalized = this._normalizeGap(this._gap) / lineLength;
+    if (!this._strictGap) {
+      return requestedGapNormalized;
+    }
+
+    const segmentCount = this._splitPoints.length + 1;
+    const maxGapNormalized = segmentCount <= 1 ? 1 : 1 / (segmentCount - 1);
+    return Math.min(requestedGapNormalized, maxGapNormalized);
+  }
+
+  private _getEffectiveMinSegmentLengthNormalized(
+    lineLength: number,
+    gapNormalized: number,
+  ): number {
+    if (lineLength <= 1e-9) {
+      return 0;
+    }
+
+    const requestedMin = this._normalizeMinSegmentLength(this._minSegmentLength) / lineLength;
+    const segmentCount = this._splitPoints.length + 1;
+    if (segmentCount <= 0) {
+      return 0;
+    }
+
+    // Sum constraints:
+    // total = segmentCount * minSeg + (segmentCount - 1) * gap <= 1
+    const maxMin = Math.max(0, (1 - (segmentCount - 1) * gapNormalized) / segmentCount);
+    return Math.min(requestedMin, maxMin);
+  }
+
+  private _enforceStrictGapOnSplitPoints(): void {
+    if (!this._strictGap || this._splitPoints.length === 0) {
+      return;
+    }
+
+    const lineLength = this._lineLength();
+    if (lineLength <= 1e-9) {
+      return;
+    }
+
+    const gapNormalized = this._getEffectiveGapNormalized(lineLength);
+    if (gapNormalized <= 0) {
+      return;
+    }
+    const minSegmentNormalized = this._getEffectiveMinSegmentLengthNormalized(
+      lineLength,
+      gapNormalized,
+    );
+
+    const intervalCount = this._splitPoints.length + 1;
+    const fullPoints = [0, ...this._splitPoints, 1];
+    const required: number[] = [];
+    for (let index = 0; index < intervalCount; index += 1) {
+      const minInterval = index === 0 || index === intervalCount - 1
+        ? minSegmentNormalized + gapNormalized / 2
+        : minSegmentNormalized + gapNormalized;
+      required.push(minInterval);
+    }
+
+    // Forward pass
+    for (let index = 1; index < fullPoints.length - 1; index += 1) {
+      const minPoint = fullPoints[index - 1] + required[index - 1];
+      if (fullPoints[index] < minPoint) {
+        fullPoints[index] = minPoint;
+      }
+    }
+
+    // Backward pass
+    for (let index = fullPoints.length - 2; index >= 1; index -= 1) {
+      const maxPoint = fullPoints[index + 1] - required[index];
+      if (fullPoints[index] > maxPoint) {
+        fullPoints[index] = maxPoint;
+      }
+    }
+
+    this._splitPoints = fullPoints.slice(1, -1).map((point) => this._clamp(point, 0, 1));
   }
 
   private _lineLength(): number {
