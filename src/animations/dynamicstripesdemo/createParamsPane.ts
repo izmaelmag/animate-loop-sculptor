@@ -27,9 +27,36 @@ export const createDynamicStripesParamsPane = ({
       min: 1,
       max: 256,
       step: 1,
-      label: "Divisions",
+      label: "Lines",
     })
     .on("change", (ev) => patchParams({ edgeDivisions: ev.value }));
+
+  pane
+    .addBinding(model, "lineAngleDeg", {
+      min: 0,
+      max: 360,
+      step: 1,
+      label: "Angle",
+    })
+    .on("change", (ev) => patchParams({ lineAngleDeg: ev.value }));
+
+  pane
+    .addBinding(model, "lineLengthPx", {
+      min: 50,
+      max: 6000,
+      step: 1,
+      label: "Length",
+    })
+    .on("change", (ev) => patchParams({ lineLengthPx: ev.value }));
+
+  pane
+    .addBinding(model, "minSegmentLengthPx", {
+      min: 0,
+      max: 64,
+      step: 1,
+      label: "Min Seg",
+    })
+    .on("change", (ev) => patchParams({ minSegmentLengthPx: ev.value }));
 
   pane
     .addBinding(model, "segmentCount", {
@@ -43,7 +70,7 @@ export const createDynamicStripesParamsPane = ({
   pane
     .addBinding(model, "segmentGap", {
       min: 0,
-      max: 200,
+      max: 1024,
       step: 1,
       label: "Gap",
     })
@@ -52,7 +79,7 @@ export const createDynamicStripesParamsPane = ({
   pane
     .addBinding(model, "lineThickness", {
       min: 1,
-      max: 64,
+      max: 265,
       step: 1,
       label: "Width",
     })

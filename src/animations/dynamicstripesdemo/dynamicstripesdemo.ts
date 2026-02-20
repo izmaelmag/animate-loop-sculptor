@@ -21,86 +21,56 @@ interface DiagonalLine {
   phaseOrder: number;
 }
 
-interface RectBounds {
-  left: number;
-  top: number;
-  right: number;
-  bottom: number;
+interface LineSeed {
+  a: Point;
+  b: Point;
+  projectionTRBL: number;
 }
 
-const buildRectBounds = (margin: number): RectBounds => {
-  const minMargin = -Math.max(WIDTH, HEIGHT);
-  const maxMarginX = Math.max(0, WIDTH / 2 - 1);
-  const maxMarginY = Math.max(0, HEIGHT / 2 - 1);
-  const maxMargin = Math.min(maxMarginX, maxMarginY);
-  const clampedMargin = Math.min(Math.max(minMargin, margin), maxMargin);
-
-  return {
-    left: clampedMargin,
-    top: clampedMargin,
-    right: WIDTH - clampedMargin,
-    bottom: HEIGHT - clampedMargin,
-  };
-};
-
-const buildDiagonalLines = (
-  edgeDivisions: number,
-  bounds: RectBounds,
+const buildParallelLines = (
+  lineCountInput: number,
+  lineAngleDeg: number,
+  margin: number,
+  lineLengthPx: number,
 ): DiagonalLine[] => {
-  const divisions = Math.max(1, Math.round(edgeDivisions));
-  const rectWidth = bounds.right - bounds.left;
-  const rectHeight = bounds.bottom - bounds.top;
-  const diagonalLines: DiagonalLine[] = [];
-  const maxOrder = divisions - 1;
+  const lineCount = Math.max(1, Math.round(lineCountInput));
+  const angleRad = (lineAngleDeg * Math.PI) / 180;
+  const dir: Point = [Math.cos(angleRad), Math.sin(angleRad)];
+  const normal: Point = [-dir[1], dir[0]];
+  const center: Point = [WIDTH / 2, HEIGHT / 2];
 
-  // Top -> Right family. We reverse order so the phase starts near top-right.
-  for (let step = 0; step <= divisions; step += 1) {
-    const t = step / divisions;
-    const offsetX = rectWidth * t;
-    const offsetY = rectHeight * t;
-    const ax = bounds.left + offsetX;
-    const ay = bounds.top;
-    const bx = bounds.right;
-    const by = bounds.bottom - offsetY;
+  const projectionRadius =
+    (Math.abs(normal[0]) * WIDTH + Math.abs(normal[1]) * HEIGHT) / 2;
+  const spanAlongNormal = Math.max(0, projectionRadius - margin);
+  const lineLength = Math.max(1, lineLengthPx);
+  const halfLength = lineLength / 2;
+  const seeds: LineSeed[] = [];
 
-    if (Math.abs(ax - bx) < 1e-6 && Math.abs(ay - by) < 1e-6) {
-      continue;
-    }
+  for (let index = 0; index < lineCount; index += 1) {
+    const t = lineCount === 1 ? 0.5 : index / (lineCount - 1);
+    const offsetAlongNormal = -spanAlongNormal + 2 * spanAlongNormal * t;
+    const cx = center[0] + normal[0] * offsetAlongNormal;
+    const cy = center[1] + normal[1] * offsetAlongNormal;
 
-    diagonalLines.push({
-      a: [ax, ay],
-      b: [bx, by],
-      phaseOrder: maxOrder - step,
-    });
+    const a: Point = [cx - dir[0] * halfLength, cy - dir[1] * halfLength];
+    const b: Point = [cx + dir[0] * halfLength, cy + dir[1] * halfLength];
+    // Global axis for stable wave direction semantics.
+    const projectionTRBL = cy - cx;
+
+    seeds.push({ a, b, projectionTRBL });
   }
 
-  // Left -> Bottom family continues the same phase order toward bottom-left.
-  for (let step = 1; step <= divisions; step += 1) {
-    const t = step / divisions;
-    const offsetX = rectWidth * t;
-    const offsetY = rectHeight * t;
-    const ax = bounds.left;
-    const ay = bounds.top + offsetY;
-    const bx = bounds.right - offsetX;
-    const by = bounds.bottom;
-
-    if (Math.abs(ax - bx) < 1e-6 && Math.abs(ay - by) < 1e-6) {
-      continue;
-    }
-
-    diagonalLines.push({
-      a: [ax, ay],
-      b: [bx, by],
-      phaseOrder: maxOrder + step,
-    });
-  }
-
-  return diagonalLines;
+  seeds.sort((left, right) => left.projectionTRBL - right.projectionTRBL);
+  return seeds.map((seed, phaseOrder) => ({
+    a: seed.a,
+    b: seed.b,
+    phaseOrder,
+  }));
 };
 
 const dynamicSegments = new DynamicSegments(
-  [defaultParams.margin, defaultParams.margin],
-  [WIDTH - defaultParams.margin, HEIGHT - defaultParams.margin],
+  [0, 0],
+  [WIDTH, HEIGHT],
   {
     segmentCount: defaultParams.segmentCount,
     gap: defaultParams.segmentGap,
@@ -109,8 +79,12 @@ const dynamicSegments = new DynamicSegments(
 
 const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
   const params = resolveDynamicStripesParams(ctx.params);
-  const bounds = buildRectBounds(params.margin);
-  const diagonalLines = buildDiagonalLines(params.edgeDivisions, bounds);
+  const diagonalLines = buildParallelLines(
+    params.edgeDivisions,
+    params.lineAngleDeg,
+    params.margin,
+    params.lineLengthPx,
+  );
   const totalFrames = Math.max(1, ctx.totalFrames);
   const loopFrame =
     ((ctx.currentFrame % totalFrames) + totalFrames) % totalFrames;
@@ -135,6 +109,7 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     dynamicSegments.setPoints(lineA, lineB);
     dynamicSegments.setSegmentCount(params.segmentCount);
     dynamicSegments.setGap(params.segmentGap);
+    dynamicSegments.setMinSegmentLength(params.minSegmentLengthPx);
 
     const deltas = dynamicSegments.splitPoints.map((_, pointIndex) => {
       const phase =

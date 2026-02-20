@@ -1,6 +1,9 @@
 export interface DynamicStripesParams extends Record<string, unknown> {
   margin: number;
   edgeDivisions: number;
+  lineAngleDeg: number;
+  lineLengthPx: number;
+  minSegmentLengthPx: number;
   segmentCount: number;
   segmentGap: number;
   lineThickness: number;
@@ -14,6 +17,9 @@ export interface DynamicStripesParams extends Record<string, unknown> {
 export const defaultParams: DynamicStripesParams = {
   margin: 108,
   edgeDivisions: 8,
+  lineAngleDeg: 45,
+  lineLengthPx: 2200,
+  minSegmentLengthPx: 1,
   segmentCount: 4,
   segmentGap: 24,
   lineThickness: 24,
@@ -35,6 +41,12 @@ export const resolveDynamicStripesParams = (
   const edgeDivisions = Math.round(
     asNumber(raw.edgeDivisions, defaultParams.edgeDivisions),
   );
+  const lineAngleDeg = asNumber(raw.lineAngleDeg, defaultParams.lineAngleDeg);
+  const lineLengthPx = asNumber(raw.lineLengthPx, defaultParams.lineLengthPx);
+  const minSegmentLengthPx = asNumber(
+    raw.minSegmentLengthPx,
+    defaultParams.minSegmentLengthPx,
+  );
   const segmentCount = Math.round(
     asNumber(raw.segmentCount, defaultParams.segmentCount),
   );
@@ -53,9 +65,12 @@ export const resolveDynamicStripesParams = (
   return {
     margin: Math.max(-1920, Math.min(500, margin)),
     edgeDivisions: Math.max(1, Math.min(256, edgeDivisions)),
+    lineAngleDeg: ((lineAngleDeg % 360) + 360) % 360,
+    lineLengthPx: Math.max(50, Math.min(6000, lineLengthPx)),
+    minSegmentLengthPx: Math.max(0, Math.min(64, minSegmentLengthPx)),
     segmentCount: Math.max(2, Math.min(24, segmentCount)),
-    segmentGap: Math.max(0, Math.min(200, segmentGap)),
-    lineThickness: Math.max(1, Math.min(64, lineThickness)),
+    segmentGap: Math.max(0, Math.min(1024, segmentGap)),
+    lineThickness: Math.max(1, Math.min(265, lineThickness)),
     strokeCap,
     // Integer cycles-per-loop keeps the animation seamless on loop boundary.
     speed: Math.max(1, Math.min(20, Math.round(speed))),
