@@ -165,10 +165,6 @@ export class DynamicSegments {
     const lineLength = this._lineLength();
     const normalizedHalfGap =
       lineLength <= 1e-9 ? 0 : (this._normalizeGap(this._gap) / lineLength) / 2;
-    const minSegmentLengthNormalized =
-      lineLength <= 1e-9
-        ? 0
-        : this._normalizeMinSegmentLength(this._minSegmentLength) / lineLength;
     const drawableSegments: NormalizedSegment[] = [];
     const normalizedSegments = this.getNormalizedSegments();
     const lastSegmentIndex = normalizedSegments.length - 1;
@@ -178,30 +174,10 @@ export class DynamicSegments {
       const length = Math.abs(endT - startT);
       const trim = Math.min(normalizedHalfGap, length / 2);
       const direction = startT <= endT ? 1 : -1;
-      const targetMinLength = Math.min(length, minSegmentLengthNormalized);
 
       // Keep line anchors fixed at t=0 and t=1 for outer segments.
-      let trimStart = segmentIndex === 0 ? 0 : trim;
-      let trimEnd = segmentIndex === lastSegmentIndex ? 0 : trim;
-
-      const currentLength = length - trimStart - trimEnd;
-      if (currentLength < targetMinLength) {
-        let shortage = targetMinLength - currentLength;
-
-        // Reduce trims to keep a guaranteed minimum visible segment length.
-        const reduceStart = Math.min(trimStart, shortage / 2);
-        trimStart -= reduceStart;
-        shortage -= reduceStart;
-
-        const reduceEnd = Math.min(trimEnd, shortage);
-        trimEnd -= reduceEnd;
-        shortage -= reduceEnd;
-
-        if (shortage > 0) {
-          const extraStart = Math.min(trimStart, shortage);
-          trimStart -= extraStart;
-        }
-      }
+      const trimStart = segmentIndex === 0 ? 0 : trim;
+      const trimEnd = segmentIndex === lastSegmentIndex ? 0 : trim;
 
       const drawStartT = startT + direction * trimStart;
       const drawEndT = endT - direction * trimEnd;

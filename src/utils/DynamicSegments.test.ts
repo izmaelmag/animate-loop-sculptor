@@ -185,7 +185,7 @@ describe("DynamicSegments", () => {
     expect(longGap).toBeCloseTo(20, 8);
   });
 
-  it("keeps minimum segment length even with large gap", () => {
+  it("does not reduce gap due to min segment setting", () => {
     const segments = new DynamicSegments([0, 0], [100, 0], {
       splitPoints: [0.5],
       gap: 80,
@@ -193,10 +193,9 @@ describe("DynamicSegments", () => {
     });
 
     const drawablePx = segments.getDrawableSegmentsPx();
-    const firstLength = Math.abs(drawablePx[0][1][0] - drawablePx[0][0][0]);
-    const secondLength = Math.abs(drawablePx[1][1][0] - drawablePx[1][0][0]);
+    const gap = drawablePx[1][0][0] - drawablePx[0][1][0];
 
-    expect(firstLength).toBeGreaterThanOrEqual(12);
-    expect(secondLength).toBeGreaterThanOrEqual(12);
+    // Gap is geometrically capped by available space at the split.
+    expect(gap).toBeCloseTo(50, 8);
   });
 });
