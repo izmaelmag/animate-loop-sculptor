@@ -444,10 +444,14 @@ const createApp = ({
   });
 
   app.post("/api/renders", (req, res) => {
-    const {templateId, quality = "high"} = req.body || {};
+    const {templateId, quality = "high", animationParams = {}} = req.body || {};
+    const safeAnimationParams =
+      animationParams && typeof animationParams === "object" && !Array.isArray(animationParams)
+        ? animationParams
+        : {};
 
     try {
-      const job = createRenderJob({templateId, quality});
+      const job = createRenderJob({templateId, quality, animationParams: safeAnimationParams});
       res.status(201).json({job});
     } catch (error) {
       if (error.code === "RENDER_IN_PROGRESS") {

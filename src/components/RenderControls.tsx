@@ -15,6 +15,7 @@ const statusToLabel: Record<string, string> = {
 
 const RenderControls = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
+  const getParamsForAnimation = useAnimationStore((s) => s.getParamsForAnimation);
   const {job, isRendering, isSubmitting, apiError, start, cancel} = useRenderJob();
   const [quality, setQuality] = useState<RenderQuality>("high");
   const progressToastRef = useRef<ReturnType<typeof toast> | null>(null);
@@ -29,7 +30,8 @@ const RenderControls = () => {
 
   const handleRender = async () => {
     try {
-      await start(selectedAnimationId, quality);
+      const animationParams = getParamsForAnimation(selectedAnimationId);
+      await start(selectedAnimationId, quality, animationParams);
     } catch {
       // Error is already captured in hook state and toast effect.
     }

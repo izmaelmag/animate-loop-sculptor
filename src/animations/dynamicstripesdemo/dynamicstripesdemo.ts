@@ -117,12 +117,18 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
   const loopT = loopFrame / totalFrames;
   const baseTimePhase = loopT * Math.PI * 2 * params.speed;
   const directionSign = params.waveDirection === "tr-bl" ? 1 : -1;
+  const strokeCapMode =
+    params.strokeCap === "square"
+      ? p.SQUARE
+      : params.strokeCap === "project"
+        ? p.PROJECT
+        : p.ROUND;
 
   p.background(0);
   p.noFill();
   p.stroke(255);
   p.strokeWeight(params.lineThickness);
-  p.strokeCap(p.ROUND);
+  p.strokeCap(strokeCapMode);
 
   for (let lineIndex = 0; lineIndex < diagonalLines.length; lineIndex += 1) {
     const { a: lineA, b: lineB, phaseOrder } = diagonalLines[lineIndex];

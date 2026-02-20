@@ -59,6 +59,17 @@ export const createDynamicStripesParamsPane = ({
     .on("change", (ev) => patchParams({ lineThickness: ev.value }));
 
   pane
+    .addBinding(model, "strokeCap", {
+      label: "Cap",
+      options: {
+        Round: "round",
+        Square: "square",
+        Project: "project",
+      },
+    })
+    .on("change", (ev) => patchParams({ strokeCap: ev.value }));
+
+  pane
     .addBinding(model, "speed", {
       min: 1,
       max: 20,

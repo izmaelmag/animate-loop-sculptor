@@ -53,12 +53,16 @@ export const useRenderJob = () => {
   );
 
   const start = useCallback(
-    async (templateId: string, quality: RenderQuality) => {
+    async (
+      templateId: string,
+      quality: RenderQuality,
+      animationParams?: Record<string, unknown>,
+    ) => {
       setIsSubmitting(true);
       setApiError(null);
 
       try {
-        const nextJob = await startRender({templateId, quality});
+        const nextJob = await startRender({templateId, quality, animationParams});
         setJob(nextJob);
         beginPolling(nextJob.id);
         return nextJob;

@@ -68,6 +68,7 @@ const buildOutputPath = ({outputDir, templateId, quality}) => {
 const renderVideoCore = async ({
   templateId,
   quality = "high",
+  animationParams = {},
   outputDir = DEFAULT_OUTPUT_DIR,
   concurrency = DEFAULT_CONCURRENCY,
   timeoutInMilliseconds = DEFAULT_TIMEOUT_MS,
@@ -93,7 +94,13 @@ const renderVideoCore = async ({
   });
 
   const bundleLocation = await getBundleLocation({forceRebundle});
-  const inputProps = {templateId};
+  const inputProps = {
+    templateId,
+    animationParams:
+      animationParams && typeof animationParams === "object" && !Array.isArray(animationParams)
+        ? animationParams
+        : {},
+  };
 
   const composition = await selectComposition({
     serveUrl: bundleLocation,

@@ -93,6 +93,7 @@ const runRender = async (jobId) => {
     const result = await renderVideoCore({
       templateId: current.templateId,
       quality: current.quality,
+      animationParams: current.animationParams,
       outputDir: OUTPUT_DIR,
       concurrency: 1,
       cancelSignal,
@@ -145,7 +146,7 @@ const runRender = async (jobId) => {
   }
 };
 
-const createRenderJob = ({templateId, quality}) => {
+const createRenderJob = ({templateId, quality, animationParams = {}}) => {
   if (!templateId || typeof templateId !== "string") {
     const err = new Error('Field "templateId" is required.');
     err.code = "INVALID_TEMPLATE_ID";
@@ -181,6 +182,10 @@ const createRenderJob = ({templateId, quality}) => {
     outputUrl: null,
     cancel: null,
     error: null,
+    animationParams:
+      animationParams && typeof animationParams === "object" && !Array.isArray(animationParams)
+        ? {...animationParams}
+        : {},
   };
 
   jobs.set(id, job);
