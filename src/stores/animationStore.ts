@@ -8,6 +8,16 @@ const getDefaultParamsForAnimation = (id: string): AnimationParams => {
   return { ...(settings?.defaultParams || {}) };
 };
 
+const getMergedParamsForAnimation = (
+  id: string,
+  existing?: AnimationParams,
+): AnimationParams => {
+  return {
+    ...getDefaultParamsForAnimation(id),
+    ...(existing || {}),
+  };
+};
+
 interface AnimationStore {
   // Which animation template is selected
   selectedAnimationId: string;
@@ -65,17 +75,17 @@ export const useAnimationStore = create<AnimationStore>()(
       getParamsForAnimation: (id?: string) => {
         const animationId = id || get().selectedAnimationId;
         const existing = get().animationParamsById[animationId];
-        return existing ? { ...existing } : getDefaultParamsForAnimation(animationId);
+        return getMergedParamsForAnimation(animationId, existing);
       },
 
       setAnimationParams: (id, next) => {
         set((state) => {
-          const prev = state.animationParamsById[id] || getDefaultParamsForAnimation(id);
+          const prev = getMergedParamsForAnimation(id, state.animationParamsById[id]);
           const resolved = typeof next === "function" ? next(prev) : next;
           return {
             animationParamsById: {
               ...state.animationParamsById,
-              [id]: { ...resolved },
+              [id]: getMergedParamsForAnimation(id, resolved),
             },
           };
         });
@@ -83,14 +93,14 @@ export const useAnimationStore = create<AnimationStore>()(
 
       patchAnimationParams: (id, patch) => {
         set((state) => {
-          const prev = state.animationParamsById[id] || getDefaultParamsForAnimation(id);
+          const prev = getMergedParamsForAnimation(id, state.animationParamsById[id]);
           return {
             animationParamsById: {
               ...state.animationParamsById,
-              [id]: {
+              [id]: getMergedParamsForAnimation(id, {
                 ...prev,
                 ...patch,
-              },
+              }),
             },
           };
         });
