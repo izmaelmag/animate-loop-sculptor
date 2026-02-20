@@ -77,6 +77,10 @@ const dynamicSegments = new DynamicSegments(
   },
 );
 
+const wrap01 = (value: number): number => {
+  return ((value % 1) + 1) % 1;
+};
+
 const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
   const params = resolveDynamicStripesParams(ctx.params);
   const diagonalLines = buildParallelLines(
@@ -90,6 +94,7 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     ((ctx.currentFrame % totalFrames) + totalFrames) % totalFrames;
   const loopT = loopFrame / totalFrames;
   const baseTimePhase = loopT * Math.PI * 2 * params.speed;
+  const originOffset = wrap01(loopT * params.originSpeed);
   const directionSign = params.waveDirection === "tr-bl" ? 1 : -1;
   const strokeCapMode =
     params.strokeCap === "square"
@@ -112,14 +117,22 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     dynamicSegments.setMinSegmentLength(params.minSegmentLengthPx);
     dynamicSegments.setStrictGap(params.strictGap);
 
-    const deltas = dynamicSegments.splitPoints.map((_, pointIndex) => {
+    const splitCount = Math.max(0, params.segmentCount - 1);
+    const shiftedSplitPoints: number[] = [];
+
+    for (let pointIndex = 0; pointIndex < splitCount; pointIndex += 1) {
+      const basePoint = (pointIndex + 1) / params.segmentCount;
       const phase =
         baseTimePhase +
         pointIndex * params.phaseDelta +
         directionSign * phaseOrder * LINE_PHASE_STEP;
-      return Math.sin(phase) * params.amplitude;
-    });
-    dynamicSegments.updateSplitPoints(deltas);
+      const oscillation = Math.sin(phase) * params.amplitude;
+      const movedBase = wrap01(basePoint + originOffset);
+      shiftedSplitPoints.push(wrap01(movedBase + oscillation));
+    }
+
+    shiftedSplitPoints.sort((a, b) => a - b);
+    dynamicSegments.setSplitPoints(shiftedSplitPoints);
 
     const drawableSegments = dynamicSegments.getDrawableSegmentsPx();
     for (

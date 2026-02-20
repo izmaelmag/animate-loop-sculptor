@@ -118,6 +118,15 @@ export const createDynamicStripesParamsPane = ({
     .on("change", (ev) => patchParams({ speed: ev.value }));
 
   pane
+    .addBinding(model, "originSpeed", {
+      min: -20,
+      max: 20,
+      step: 1,
+      label: "Drift",
+    })
+    .on("change", (ev) => patchParams({ originSpeed: ev.value }));
+
+  pane
     .addBinding(model, "waveDirection", {
       label: "Dir",
       options: {

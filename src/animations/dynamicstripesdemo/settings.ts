@@ -11,6 +11,7 @@ export interface DynamicStripesParams extends Record<string, unknown> {
   lineThickness: number;
   strokeCap: "round" | "square" | "project";
   speed: number;
+  originSpeed: number;
   waveDirection: "tr-bl" | "bl-tr";
   phaseDelta: number;
   amplitude: number;
@@ -29,6 +30,7 @@ export const defaultParams: DynamicStripesParams = {
   lineThickness: 24,
   strokeCap: "round",
   speed: 10,
+  originSpeed: 0,
   waveDirection: "tr-bl",
   phaseDelta: 0.6,
   amplitude: 0.02,
@@ -63,6 +65,7 @@ export const resolveDynamicStripesParams = (
       ? raw.strokeCap
       : defaultParams.strokeCap;
   const speed = asNumber(raw.speed, defaultParams.speed);
+  const originSpeed = asNumber(raw.originSpeed, defaultParams.originSpeed);
   const waveDirection =
     raw.waveDirection === "bl-tr" ? "bl-tr" : defaultParams.waveDirection;
   const phaseDelta = asNumber(raw.phaseDelta, defaultParams.phaseDelta);
@@ -82,6 +85,8 @@ export const resolveDynamicStripesParams = (
     strokeCap,
     // Integer cycles-per-loop keeps the animation seamless on loop boundary.
     speed: Math.max(1, Math.min(20, Math.round(speed))),
+    // Signed integer cycles-per-loop: one control for speed and direction.
+    originSpeed: Math.max(-20, Math.min(20, Math.round(originSpeed))),
     waveDirection,
     phaseDelta: Math.max(0, phaseDelta),
     amplitude: Math.max(0, Math.min(0.2, amplitude)),
