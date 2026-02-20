@@ -63,7 +63,7 @@ const AnimationParamsPane = () => {
 
   return (
     <div className="p-4 border-t border-neutral-800 overflow-y-auto max-h-[40vh]">
-      <div ref={hostRef} />
+      <div ref={hostRef} className="tweakpane-host" />
     </div>
   );
 };

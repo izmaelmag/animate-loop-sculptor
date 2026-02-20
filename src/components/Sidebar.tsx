@@ -97,7 +97,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col h-full">
+    <div className="w-80 bg-neutral-900 border-r border-neutral-800 flex flex-col h-full">
       <NewAnimationModal
         isOpen={isCreateModalOpen}
         isSubmitting={isCreatingAnimation}

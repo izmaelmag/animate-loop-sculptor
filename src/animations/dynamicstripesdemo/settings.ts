@@ -1,19 +1,23 @@
 export interface DynamicStripesParams extends Record<string, unknown> {
+  margin: number;
   edgeDivisions: number;
   segmentCount: number;
   segmentGap: number;
   lineThickness: number;
   speed: number;
+  waveDirection: "tr-bl" | "bl-tr";
   phaseDelta: number;
   amplitude: number;
 }
 
 export const defaultParams: DynamicStripesParams = {
+  margin: 108,
   edgeDivisions: 8,
   segmentCount: 4,
   segmentGap: 24,
   lineThickness: 24,
   speed: 10,
+  waveDirection: "tr-bl",
   phaseDelta: 0.6,
   amplitude: 0.02,
 };
@@ -25,6 +29,7 @@ const asNumber = (value: unknown, fallback: number): number => {
 export const resolveDynamicStripesParams = (
   raw: Record<string, unknown>,
 ): DynamicStripesParams => {
+  const margin = asNumber(raw.margin, defaultParams.margin);
   const edgeDivisions = Math.round(
     asNumber(raw.edgeDivisions, defaultParams.edgeDivisions),
   );
@@ -34,16 +39,20 @@ export const resolveDynamicStripesParams = (
   const segmentGap = asNumber(raw.segmentGap, defaultParams.segmentGap);
   const lineThickness = asNumber(raw.lineThickness, defaultParams.lineThickness);
   const speed = asNumber(raw.speed, defaultParams.speed);
+  const waveDirection =
+    raw.waveDirection === "bl-tr" ? "bl-tr" : defaultParams.waveDirection;
   const phaseDelta = asNumber(raw.phaseDelta, defaultParams.phaseDelta);
   const amplitude = asNumber(raw.amplitude, defaultParams.amplitude);
 
   return {
-    edgeDivisions: Math.max(1, Math.min(48, edgeDivisions)),
+    margin: Math.max(-1920, Math.min(500, margin)),
+    edgeDivisions: Math.max(1, Math.min(256, edgeDivisions)),
     segmentCount: Math.max(2, Math.min(24, segmentCount)),
     segmentGap: Math.max(0, Math.min(200, segmentGap)),
     lineThickness: Math.max(1, Math.min(64, lineThickness)),
     // Integer cycles-per-loop keeps the animation seamless on loop boundary.
     speed: Math.max(1, Math.min(20, Math.round(speed))),
+    waveDirection,
     phaseDelta: Math.max(0, phaseDelta),
     amplitude: Math.max(0, Math.min(0.2, amplitude)),
   };

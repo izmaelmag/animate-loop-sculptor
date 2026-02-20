@@ -1,4 +1,4 @@
-import { AnimationParamsPaneContext } from "@/types/animations";
+import { AnimationParamsPaneContext } from "../../types/animations";
 import {
   defaultParams,
   resolveDynamicStripesParams,
@@ -14,11 +14,20 @@ export const createDynamicStripesParamsPane = ({
   const model: DynamicStripesParams = resolveDynamicStripesParams(params);
 
   pane
+    .addBinding(model, "margin", {
+      min: -1920,
+      max: 500,
+      step: 1,
+      label: "Margin",
+    })
+    .on("change", (ev) => patchParams({ margin: ev.value }));
+
+  pane
     .addBinding(model, "edgeDivisions", {
       min: 1,
-      max: 48,
+      max: 256,
       step: 1,
-      label: "Edge Divisions",
+      label: "Divisions",
     })
     .on("change", (ev) => patchParams({ edgeDivisions: ev.value }));
 
@@ -27,7 +36,7 @@ export const createDynamicStripesParamsPane = ({
       min: 2,
       max: 24,
       step: 1,
-      label: "Segments",
+      label: "Segs",
     })
     .on("change", (ev) => patchParams({ segmentCount: ev.value }));
 
@@ -36,7 +45,7 @@ export const createDynamicStripesParamsPane = ({
       min: 0,
       max: 200,
       step: 1,
-      label: "Gap (px)",
+      label: "Gap",
     })
     .on("change", (ev) => patchParams({ segmentGap: ev.value }));
 
@@ -45,7 +54,7 @@ export const createDynamicStripesParamsPane = ({
       min: 1,
       max: 64,
       step: 1,
-      label: "Line Thickness",
+      label: "Width",
     })
     .on("change", (ev) => patchParams({ lineThickness: ev.value }));
 
@@ -54,16 +63,26 @@ export const createDynamicStripesParamsPane = ({
       min: 1,
       max: 20,
       step: 1,
-      label: "Speed (cycles)",
+      label: "Cycles",
     })
     .on("change", (ev) => patchParams({ speed: ev.value }));
+
+  pane
+    .addBinding(model, "waveDirection", {
+      label: "Dir",
+      options: {
+        "TR->BL": "tr-bl",
+        "BL->TR": "bl-tr",
+      },
+    })
+    .on("change", (ev) => patchParams({ waveDirection: ev.value }));
 
   pane
     .addBinding(model, "phaseDelta", {
       min: 0,
       max: Math.PI * 2,
       step: 0.01,
-      label: "Phase Delta",
+      label: "Phase",
     })
     .on("change", (ev) => patchParams({ phaseDelta: ev.value }));
 
