@@ -11,6 +11,7 @@ export interface DynamicSegmentsOptions {
   splitPoints?: number[];
   segmentCount?: number;
   gap?: number;
+  minSegmentLength?: number;
 }
 
 /**
@@ -23,6 +24,7 @@ export class DynamicSegments {
   private _splitPoints: number[];
   private _segmentCount: number;
   private _gap: number;
+  private _minSegmentLength: number;
 
   constructor(
     a: Point,
@@ -33,6 +35,7 @@ export class DynamicSegments {
     this._b = [...b];
     this._segmentCount = 1;
     this._gap = 0;
+    this._minSegmentLength = 1;
 
     if (Array.isArray(splitPointsOrOptions)) {
       this._splitPoints = this._normalizeSplitPoints(splitPointsOrOptions);
@@ -41,6 +44,9 @@ export class DynamicSegments {
     }
 
     this._gap = this._normalizeGap(splitPointsOrOptions.gap ?? 0);
+    this._minSegmentLength = this._normalizeMinSegmentLength(
+      splitPointsOrOptions.minSegmentLength ?? 1,
+    );
     if (Array.isArray(splitPointsOrOptions.splitPoints)) {
       this._splitPoints = this._normalizeSplitPoints(splitPointsOrOptions.splitPoints);
       this._segmentCount = this._splitPoints.length + 1;
@@ -66,6 +72,10 @@ export class DynamicSegments {
 
   get gap(): number {
     return this._gap;
+  }
+
+  get minSegmentLength(): number {
+    return this._minSegmentLength;
   }
 
   /**
@@ -100,10 +110,17 @@ export class DynamicSegments {
   }
 
   /**
-   * Sets normalized gap ratio (0..0.95) used by drawable segment methods.
+   * Sets fixed gap in pixels used by drawable segment methods.
    */
   public setGap(gap: number): void {
     this._gap = this._normalizeGap(gap);
+  }
+
+  /**
+   * Sets minimum drawable segment length in pixels.
+   */
+  public setMinSegmentLength(minSegmentLength: number): void {
+    this._minSegmentLength = this._normalizeMinSegmentLength(minSegmentLength);
   }
 
   /**
@@ -142,10 +159,16 @@ export class DynamicSegments {
   }
 
   /**
-   * Returns normalized segments trimmed by the stored gap ratio.
+   * Returns normalized segments trimmed by the stored fixed pixel gap.
    */
   public getDrawableNormalizedSegments(): NormalizedSegment[] {
-    const clampedGap = this._normalizeGap(this._gap);
+    const lineLength = this._lineLength();
+    const normalizedHalfGap =
+      lineLength <= 1e-9 ? 0 : (this._normalizeGap(this._gap) / lineLength) / 2;
+    const minSegmentLengthNormalized =
+      lineLength <= 1e-9
+        ? 0
+        : this._normalizeMinSegmentLength(this._minSegmentLength) / lineLength;
     const drawableSegments: NormalizedSegment[] = [];
     const normalizedSegments = this.getNormalizedSegments();
     const lastSegmentIndex = normalizedSegments.length - 1;
@@ -153,12 +176,32 @@ export class DynamicSegments {
     for (let segmentIndex = 0; segmentIndex < normalizedSegments.length; segmentIndex += 1) {
       const [startT, endT] = normalizedSegments[segmentIndex];
       const length = Math.abs(endT - startT);
-      const trim = Math.min((length * clampedGap) / 2, length / 2);
+      const trim = Math.min(normalizedHalfGap, length / 2);
       const direction = startT <= endT ? 1 : -1;
+      const targetMinLength = Math.min(length, minSegmentLengthNormalized);
 
       // Keep line anchors fixed at t=0 and t=1 for outer segments.
-      const trimStart = segmentIndex === 0 ? 0 : trim;
-      const trimEnd = segmentIndex === lastSegmentIndex ? 0 : trim;
+      let trimStart = segmentIndex === 0 ? 0 : trim;
+      let trimEnd = segmentIndex === lastSegmentIndex ? 0 : trim;
+
+      const currentLength = length - trimStart - trimEnd;
+      if (currentLength < targetMinLength) {
+        let shortage = targetMinLength - currentLength;
+
+        // Reduce trims to keep a guaranteed minimum visible segment length.
+        const reduceStart = Math.min(trimStart, shortage / 2);
+        trimStart -= reduceStart;
+        shortage -= reduceStart;
+
+        const reduceEnd = Math.min(trimEnd, shortage);
+        trimEnd -= reduceEnd;
+        shortage -= reduceEnd;
+
+        if (shortage > 0) {
+          const extraStart = Math.min(trimStart, shortage);
+          trimStart -= extraStart;
+        }
+      }
 
       const drawStartT = startT + direction * trimStart;
       const drawEndT = endT - direction * trimEnd;
@@ -225,7 +268,18 @@ export class DynamicSegments {
 
   private _normalizeGap(value: number): number {
     if (!Number.isFinite(value)) return 0;
-    return this._clamp(value, 0, 0.95);
+    return Math.max(0, value);
+  }
+
+  private _normalizeMinSegmentLength(value: number): number {
+    if (!Number.isFinite(value)) return 1;
+    return Math.max(0, value);
+  }
+
+  private _lineLength(): number {
+    const dx = this._b[0] - this._a[0];
+    const dy = this._b[1] - this._a[1];
+    return Math.hypot(dx, dy);
   }
 
   private _lerp(a: number, b: number, t: number): number {

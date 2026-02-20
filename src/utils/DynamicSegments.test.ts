@@ -114,11 +114,11 @@ describe("DynamicSegments", () => {
   it("supports constructor options with segmentCount and gap", () => {
     const segments = new DynamicSegments([0, 0], [100, 0], {
       segmentCount: 4,
-      gap: 0.2,
+      gap: 10,
     });
 
     expect(segments.segmentCount).toBe(4);
-    expect(segments.gap).toBe(0.2);
+    expect(segments.gap).toBe(10);
     expect(segments.splitPoints).toEqual([0.25, 0.5, 0.75]);
   });
 
@@ -126,17 +126,17 @@ describe("DynamicSegments", () => {
     const segments = new DynamicSegments([0, 0], [100, 0], [0.5]);
 
     segments.setSegmentCount(5);
-    segments.setGap(0.4);
+    segments.setGap(12);
 
     expect(segments.segmentCount).toBe(5);
-    expect(segments.gap).toBe(0.4);
+    expect(segments.gap).toBe(12);
     expect(segments.splitPoints).toEqual([0.2, 0.4, 0.6, 0.8]);
   });
 
   it("returns drawable segments trimmed by gap", () => {
     const segments = new DynamicSegments([0, 0], [100, 0], {
       splitPoints: [0.5],
-      gap: 0.2,
+      gap: 10,
     });
 
     expect(segments.getDrawableNormalizedSegments()).toEqual([
@@ -157,11 +157,46 @@ describe("DynamicSegments", () => {
   it("keeps edge anchors for first and last drawable segments", () => {
     const segments = new DynamicSegments([10, 0], [110, 0], {
       segmentCount: 4,
-      gap: 0.8,
+      gap: 80,
     });
 
     const drawablePx = segments.getDrawableSegmentsPx();
     expect(drawablePx[0][0]).toEqual([10, 0]);
     expect(drawablePx[drawablePx.length - 1][1]).toEqual([110, 0]);
+  });
+
+  it("keeps same pixel gap for different line lengths", () => {
+    const shortLine = new DynamicSegments([0, 0], [100, 0], {
+      splitPoints: [0.5],
+      gap: 20,
+    });
+    const longLine = new DynamicSegments([0, 0], [200, 0], {
+      splitPoints: [0.5],
+      gap: 20,
+    });
+
+    const shortSegments = shortLine.getDrawableSegmentsPx();
+    const longSegments = longLine.getDrawableSegmentsPx();
+
+    const shortGap = shortSegments[1][0][0] - shortSegments[0][1][0];
+    const longGap = longSegments[1][0][0] - longSegments[0][1][0];
+
+    expect(shortGap).toBeCloseTo(20, 8);
+    expect(longGap).toBeCloseTo(20, 8);
+  });
+
+  it("keeps minimum segment length even with large gap", () => {
+    const segments = new DynamicSegments([0, 0], [100, 0], {
+      splitPoints: [0.5],
+      gap: 80,
+      minSegmentLength: 12,
+    });
+
+    const drawablePx = segments.getDrawableSegmentsPx();
+    const firstLength = Math.abs(drawablePx[0][1][0] - drawablePx[0][0][0]);
+    const secondLength = Math.abs(drawablePx[1][1][0] - drawablePx[1][0][0]);
+
+    expect(firstLength).toBeGreaterThanOrEqual(12);
+    expect(secondLength).toBeGreaterThanOrEqual(12);
   });
 });
