@@ -68,14 +68,10 @@ const buildParallelLines = (
   }));
 };
 
-const dynamicSegments = new DynamicSegments(
-  [0, 0],
-  [WIDTH, HEIGHT],
-  {
-    segmentCount: defaultParams.segmentCount,
-    gap: defaultParams.segmentGap,
-  },
-);
+const dynamicSegments = new DynamicSegments([0, 0], [WIDTH, HEIGHT], {
+  segmentCount: defaultParams.segmentCount,
+  gap: defaultParams.segmentGap,
+});
 
 const wrap01 = (value: number): number => {
   return ((value % 1) + 1) % 1;
@@ -94,7 +90,10 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     ((ctx.currentFrame % totalFrames) + totalFrames) % totalFrames;
   const loopT = loopFrame / totalFrames;
   const baseTimePhase = loopT * Math.PI * 2 * params.speed;
-  const originOffset = wrap01(loopT * params.originSpeed);
+  const originDirectionSign = params.originDirection === "backward" ? -1 : 1;
+  const originOffset = wrap01(
+    loopT * params.originCycles * originDirectionSign,
+  );
   const directionSign = params.waveDirection === "tr-bl" ? 1 : -1;
   const strokeCapMode =
     params.strokeCap === "square"
@@ -156,7 +155,11 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     p.noFill();
     p.stroke(255, 64, 64, 200);
     p.strokeWeight(Math.max(1, params.lineThickness * 0.2));
-    for (let segmentIndex = 0; segmentIndex < drawableSegments.length; segmentIndex += 1) {
+    for (
+      let segmentIndex = 0;
+      segmentIndex < drawableSegments.length;
+      segmentIndex += 1
+    ) {
       const [[x1, y1], [x2, y2]] = drawableSegments[segmentIndex];
       p.line(x1, y1, x2, y2);
     }
@@ -175,7 +178,11 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     p.push();
     p.noStroke();
     p.fill(80, 160, 255, 110);
-    for (let pointIndex = 0; pointIndex < internalPoints.length; pointIndex += 1) {
+    for (
+      let pointIndex = 0;
+      pointIndex < internalPoints.length;
+      pointIndex += 1
+    ) {
       const [px, py] = internalPoints[pointIndex];
       p.circle(px, py, params.segmentGap);
     }
@@ -186,7 +193,11 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     p.textSize(10);
     p.fill(255, 150, 150, 220);
     p.noStroke();
-    for (let segmentIndex = 0; segmentIndex < drawableSegments.length; segmentIndex += 1) {
+    for (
+      let segmentIndex = 0;
+      segmentIndex < drawableSegments.length;
+      segmentIndex += 1
+    ) {
       const [[x1, y1], [x2, y2]] = drawableSegments[segmentIndex];
       const length = Math.hypot(x2 - x1, y2 - y1);
       const cx = (x1 + x2) / 2;
