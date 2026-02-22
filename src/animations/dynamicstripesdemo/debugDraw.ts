@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { Point, Segment } from "@/utils/DynamicSegments";
+import { Point, Segment } from "../../utils/DynamicSegments";
 
 interface DebugDrawInput {
   p: p5;

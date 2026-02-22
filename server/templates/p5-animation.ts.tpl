@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { AnimationSettings, P5AnimationFunction, FrameContext } from "@/types/animations";
+import { AnimationSettings, P5AnimationFunction, FrameContext } from "../../types/animations";
 
 const FPS = {{fpsLiteral}};
 const WIDTH = {{widthLiteral}};

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Pane } from "tweakpane";
-import { animationSettings, defaultAnimation } from "@/animations";
-import { useAnimationStore } from "@/stores/animationStore";
+import { animationSettings, defaultAnimation } from "../animations";
+import { useAnimationStore } from "../stores/animationStore";
 
 const AnimationParamsPane = () => {
   const hostRef = useRef<HTMLDivElement | null>(null);

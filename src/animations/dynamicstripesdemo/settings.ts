@@ -1,4 +1,6 @@
 export interface DynamicStripesParams extends Record<string, unknown> {
+  backgroundColor: string;
+  segmentColor: string;
   margin: number;
   edgeDivisions: number;
   lineAngleDeg: number;
@@ -19,6 +21,8 @@ export interface DynamicStripesParams extends Record<string, unknown> {
 }
 
 export const defaultParams: DynamicStripesParams = {
+  backgroundColor: "#000000",
+  segmentColor: "#ffffff",
   margin: 108,
   edgeDivisions: 8,
   lineAngleDeg: 45,
@@ -42,9 +46,22 @@ const asNumber = (value: unknown, fallback: number): number => {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 };
 
+const isHexColor = (value: unknown): value is string => {
+  return (
+    typeof value === "string" &&
+    /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(value)
+  );
+};
+
 export const resolveDynamicStripesParams = (
   raw: Record<string, unknown>,
 ): DynamicStripesParams => {
+  const backgroundColor = isHexColor(raw.backgroundColor)
+    ? raw.backgroundColor
+    : defaultParams.backgroundColor;
+  const segmentColor = isHexColor(raw.segmentColor)
+    ? raw.segmentColor
+    : defaultParams.segmentColor;
   const margin = asNumber(raw.margin, defaultParams.margin);
   const edgeDivisions = Math.round(
     asNumber(raw.edgeDivisions, defaultParams.edgeDivisions),
@@ -76,6 +93,8 @@ export const resolveDynamicStripesParams = (
   const amplitude = asNumber(raw.amplitude, defaultParams.amplitude);
 
   return {
+    backgroundColor,
+    segmentColor,
     margin: Math.max(-1920, Math.min(2000, margin)),
     edgeDivisions: Math.max(1, Math.min(256, edgeDivisions)),
     lineAngleDeg: ((lineAngleDeg % 360) + 360) % 360,

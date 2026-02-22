@@ -14,6 +14,20 @@ export const createDynamicStripesParamsPane = ({
   const model: DynamicStripesParams = resolveDynamicStripesParams(params);
 
   pane
+    .addBinding(model, "backgroundColor", {
+      view: "color",
+      label: "Background",
+    })
+    .on("change", (ev) => patchParams({ backgroundColor: ev.value }));
+
+  pane
+    .addBinding(model, "segmentColor", {
+      view: "color",
+      label: "Segments",
+    })
+    .on("change", (ev) => patchParams({ segmentColor: ev.value }));
+
+  pane
     .addBinding(model, "margin", {
       min: -1920,
       max: 2000,

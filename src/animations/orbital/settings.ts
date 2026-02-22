@@ -1,4 +1,4 @@
-import { AnimationSettings } from "@/types/animations";
+import { AnimationSettings } from "../../types/animations";
 import { NAME, FPS, TOTAL_FRAMES, WIDTH, HEIGHT } from "./constants";
 import { animation, setupAnimation } from "./orbital";
 

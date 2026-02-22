@@ -2,7 +2,7 @@ import {
   AnimationSettings,
   ThreeAnimationFunction,
   FrameContext,
-} from "@/types/animations";
+} from "../../types/animations";
 
 /**
  * Manages a Three.js rendering context.

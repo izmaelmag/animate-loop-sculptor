@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   AnimationTemplateRenderer,
   CreateAnimationTemplatePayload,
-} from "@/api/animationTemplatesApi";
+} from "../api/animationTemplatesApi";
 
 type SizePreset = "9:16" | "1:1" | "16:9" | "custom";
 type FpsPreset = "24" | "30" | "60";

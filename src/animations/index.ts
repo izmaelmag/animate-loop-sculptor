@@ -1,4 +1,4 @@
-import { AnimationSettings } from "@/types/animations";
+import { AnimationSettings } from "../types/animations";
 
 import { settings as orbitalAnimation } from "./orbital";
 import { settings as demoAnimation } from "./demo";

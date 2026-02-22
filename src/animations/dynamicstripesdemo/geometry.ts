@@ -1,4 +1,4 @@
-import { Point } from "@/utils/DynamicSegments";
+import { Point } from "../../utils/DynamicSegments";
 
 interface LineSeed {
   a: Point;

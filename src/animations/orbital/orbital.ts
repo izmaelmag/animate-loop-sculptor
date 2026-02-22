@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { P5AnimationFunction, FrameContext } from "@/types/animations";
+import { P5AnimationFunction, FrameContext } from "../../types/animations";
 import { FPS, CENTER, WIDTH, HEIGHT, TOTAL_FRAMES } from "./constants";
 import { easeInOutCubic } from "../../utils/easing";
 import { createGrid } from "./createGrid";

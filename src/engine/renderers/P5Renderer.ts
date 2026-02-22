@@ -3,7 +3,7 @@ import {
   AnimationSettings,
   P5AnimationFunction,
   FrameContext,
-} from "@/types/animations";
+} from "../../types/animations";
 
 /**
  * Manages a p5.js instance lifecycle: creation, frame drawing, and cleanup.

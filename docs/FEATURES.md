@@ -141,7 +141,7 @@ See [VIDEO_PIPELINE.md](./VIDEO_PIPELINE.md) for detailed rendering architecture
 
 ## 7. Developer Tooling
 
-- Path alias: `@/` maps to `./src/` (configured in `vite.config.ts` and `tsconfig.json`)
+- Relative imports throughout (no path aliases)
 - Hot module replacement via Vite
 - Unit tests for utility classes (Point, Line, Color, Numset, animation helpers)
 - ESLint with React Hooks and React Refresh plugins

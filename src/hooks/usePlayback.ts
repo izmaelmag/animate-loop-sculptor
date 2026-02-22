@@ -1,8 +1,8 @@
 import { useEffect, useRef, useCallback, useState } from "react";
-import { useAnimationStore } from "@/stores/animationStore";
-import { PlaybackEngine } from "@/engine/PlaybackEngine";
-import { createRenderer, Renderer } from "@/engine/createRenderer";
-import { animationSettings, defaultAnimation } from "@/animations";
+import { useAnimationStore } from "../stores/animationStore";
+import { PlaybackEngine } from "../engine/PlaybackEngine";
+import { createRenderer, Renderer } from "../engine/createRenderer";
+import { animationSettings, defaultAnimation } from "../animations";
 
 /**
  * Hook that wires the PlaybackEngine and Renderer to the Zustand store.

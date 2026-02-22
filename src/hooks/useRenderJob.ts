@@ -6,7 +6,7 @@ import {
   RenderJob,
   RenderQuality,
   startRender,
-} from "@/api/renderApi";
+} from "../api/renderApi";
 
 const POLL_INTERVAL_MS = 800;
 

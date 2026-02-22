@@ -1,8 +1,8 @@
-import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
+import { Slider } from "./ui/slider";
+import { Button } from "./ui/button";
 import { Play, Pause, RotateCcw, StepForward, StepBack, GripVertical } from "lucide-react";
-import { useAnimationStore } from "@/stores/animationStore";
-import Panel from "@/components/ui/panel";
+import { useAnimationStore } from "../stores/animationStore";
+import Panel from "./ui/panel";
 
 const Timeline = () => {
   const currentFrame = useAnimationStore((s) => s.currentFrame);

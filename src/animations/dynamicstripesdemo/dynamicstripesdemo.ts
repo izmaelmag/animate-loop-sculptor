@@ -4,9 +4,9 @@ import {
   P5AnimationFunction,
   FrameContext,
 } from "../../types/animations";
-import { Point, Segment } from "@/utils/DynamicSegments";
-import { GapPolicy, StraightLinePath } from "@/utils/segmentation";
-import { NormalizedSegment } from "@/utils/segmentation/types";
+import { Point, Segment } from "../../utils/DynamicSegments";
+import { GapPolicy, StraightLinePath } from "../../utils/segmentation";
+import { NormalizedSegment } from "../../utils/segmentation/types";
 import { defaultParams, resolveDynamicStripesParams } from "./settings";
 import { createDynamicStripesParamsPane } from "./createParamsPane";
 import { buildParallelLines } from "./geometry";
@@ -67,9 +67,9 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
         ? p.PROJECT
         : p.ROUND;
 
-  p.background(0);
+  p.background(params.backgroundColor);
   p.noFill();
-  p.stroke(255);
+  p.stroke(params.segmentColor);
   p.strokeWeight(params.lineThickness);
   p.strokeCap(strokeCapMode);
 
@@ -125,7 +125,7 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
 };
 
 const setup = (p: p5): void => {
-  p.background(0);
+  p.background(defaultParams.backgroundColor);
   p.frameRate(FPS);
 };
 

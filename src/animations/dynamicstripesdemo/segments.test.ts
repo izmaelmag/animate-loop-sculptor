@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GapPolicy } from "@/utils/segmentation";
+import { GapPolicy } from "../../utils/segmentation";
 import {
   buildLogicalSegmentsFromPoints,
   splitSegmentsToUnitInterval,

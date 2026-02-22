@@ -1,9 +1,9 @@
 import {useEffect, useMemo, useRef, useState} from "react";
-import {Button} from "@/components/ui/button";
-import {RenderQuality} from "@/api/renderApi";
-import {useRenderJob} from "@/hooks/useRenderJob";
-import {useAnimationStore} from "@/stores/animationStore";
-import {toast} from "@/hooks/use-toast";
+import {Button} from "./ui/button";
+import {RenderQuality} from "../api/renderApi";
+import {useRenderJob} from "../hooks/useRenderJob";
+import {useAnimationStore} from "../stores/animationStore";
+import {toast} from "../hooks/use-toast";
 
 const statusToLabel: Record<string, string> = {
   queued: "Queued",

@@ -1,4 +1,4 @@
-import { AnimationSettings, FrameContext, WebGLAnimationFunction } from "@/types/animations";
+import { AnimationSettings, FrameContext, WebGLAnimationFunction } from "../../types/animations";
 import {
   createFullscreenQuad,
   createProgram,

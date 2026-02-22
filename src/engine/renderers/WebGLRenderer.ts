@@ -2,7 +2,7 @@ import {
   AnimationSettings,
   FrameContext,
   WebGLAnimationFunction,
-} from "@/types/animations";
+} from "../../types/animations";
 
 /**
  * Manages a WebGL2 rendering context lifecycle.

@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
-import { animationSettings, defaultAnimation } from "@/animations";
-import { useAnimationStore } from "@/stores/animationStore";
+import { animationSettings, defaultAnimation } from "../animations";
+import { useAnimationStore } from "../stores/animationStore";
 import { Copy, LoaderPinwheel, Trash2 } from "lucide-react";
-import RenderControls from "@/components/RenderControls";
-import AnimationParamsPane from "@/components/AnimationParamsPane";
-import NewAnimationModal from "@/components/NewAnimationModal";
+import RenderControls from "./RenderControls";
+import AnimationParamsPane from "./AnimationParamsPane";
+import NewAnimationModal from "./NewAnimationModal";
 import {
   archiveAnimationTemplate,
   copyAnimationTemplate,
   createAnimationTemplate,
   CreateAnimationTemplatePayload,
-} from "@/api/animationTemplatesApi";
-import { toast } from "@/hooks/use-toast";
+} from "../api/animationTemplatesApi";
+import { toast } from "../hooks/use-toast";
 
 const Sidebar = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);

@@ -3,7 +3,7 @@
 import Sidebar from "./Sidebar";
 import SketchView from "./SketchView";
 import SettingsPanel from "./SettingsPanel";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "../hooks/use-mobile";
 import { LoaderPinwheel } from "lucide-react";
 
 const Workspace = () => {

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { animationSettings, defaultAnimation } from "@/animations";
-import { AnimationSettings, AnimationParams, FrameContext } from "@/types/animations";
+import { animationSettings, defaultAnimation } from "../animations";
+import { AnimationSettings, AnimationParams, FrameContext } from "../types/animations";
 
 const getDefaultParamsForAnimation = (id: string): AnimationParams => {
   const settings = animationSettings[id];

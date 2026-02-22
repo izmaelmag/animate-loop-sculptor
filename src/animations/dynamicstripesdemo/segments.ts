@@ -1,4 +1,4 @@
-import { NormalizedSegment } from "@/utils/segmentation/types";
+import { NormalizedSegment } from "../../utils/segmentation/types";
 import { wrap01 } from "./motion";
 
 const EPSILON = 1e-9;

@@ -4,7 +4,7 @@ import type {
   FrameContext,
   R3FAnimationFunction,
   R3FSceneProps,
-} from "@/types/animations";
+} from "../../types/animations";
 import { createRoot, Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 
