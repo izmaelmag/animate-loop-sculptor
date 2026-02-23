@@ -15,6 +15,8 @@ import AnimationNotesButton from "./AnimationNotesButton";
 
 const Sidebar = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
+  const getParamsForAnimation = useAnimationStore((s) => s.getParamsForAnimation);
+  const setAnimationParams = useAnimationStore((s) => s.setAnimationParams);
   const setSelectedAnimationId = useAnimationStore(
     (s) => s.setSelectedAnimationId,
   );
@@ -78,9 +80,13 @@ const Sidebar = () => {
 
   const handleCopyAnimation = async (id: string, name: string) => {
     if (id === defaultAnimation.id) return;
+    const sourceParamsSnapshot = {
+      ...getParamsForAnimation(id),
+    };
 
     try {
       const result = await copyAnimationTemplate({id});
+      setAnimationParams(result.animation.id, sourceParamsSnapshot);
       toast({
         title: "Animation copied",
         description: `${name} copied as ${result.animation.name}. Reloading...`,
