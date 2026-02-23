@@ -3,7 +3,6 @@ import { animationSettings, defaultAnimation } from "../animations";
 import { useAnimationStore } from "../stores/animationStore";
 import { Copy, LoaderPinwheel, Trash2 } from "lucide-react";
 import RenderControls from "./RenderControls";
-import AnimationParamsPane from "./AnimationParamsPane";
 import NewAnimationModal from "./NewAnimationModal";
 import {
   archiveAnimationTemplate,
@@ -176,8 +175,6 @@ const Sidebar = () => {
           ))}
         </div>
       </div>
-
-      <AnimationParamsPane />
 
       <div className="p-4 border-t border-neutral-800">
         <RenderControls />
