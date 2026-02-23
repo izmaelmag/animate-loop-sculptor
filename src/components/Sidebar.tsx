@@ -27,11 +27,57 @@ const Sidebar = () => {
     () =>
       Object.entries(animationSettings).map(([key, s]) => ({
         id: s.id,
+        parentId: s.parentId,
         name: s.name,
         key,
       })),
     [],
   );
+
+  const orderedAnimationRows = useMemo(() => {
+    const byId = new Map(animationOptions.map((option) => [option.id, option]));
+    const childrenByRoot = new Map<string, typeof animationOptions>();
+    const roots: typeof animationOptions = [];
+
+    const resolveRootId = (id: string): string => {
+      const visited = new Set<string>();
+      let cursorId = id;
+      while (true) {
+        const cursor = byId.get(cursorId);
+        if (!cursor || !cursor.parentId || cursor.parentId === cursorId) {
+          return cursorId;
+        }
+        if (visited.has(cursorId)) {
+          return id;
+        }
+        const parent = byId.get(cursor.parentId);
+        if (!parent) {
+          return id;
+        }
+        visited.add(cursorId);
+        cursorId = parent.id;
+      }
+    };
+
+    animationOptions.forEach((option) => {
+      const rootId = resolveRootId(option.id);
+      if (rootId === option.id) {
+        roots.push(option);
+        return;
+      }
+      const siblings = childrenByRoot.get(rootId) ?? [];
+      siblings.push(option);
+      childrenByRoot.set(rootId, siblings);
+    });
+
+    return roots.flatMap((root) => {
+      const children = childrenByRoot.get(root.id) ?? [];
+      return [
+        { ...root, depth: 0 },
+        ...children.map((child) => ({ ...child, depth: 1 })),
+      ];
+    });
+  }, [animationOptions]);
 
   const handleCreateAnimation = async (payload: CreateAnimationTemplatePayload) => {
     setIsCreatingAnimation(true);
@@ -135,12 +181,13 @@ const Sidebar = () => {
         </div>
 
         <div className="space-y-1">
-          {animationOptions.map((animation) => (
+          {orderedAnimationRows.map((animation) => (
             <div
               key={animation.key}
               onClick={() => setSelectedAnimationId(animation.id)}
               className={`
                 group cursor-pointer transition-colors flex items-center justify-between gap-2
+                ${animation.depth === 1 ? "pl-4" : ""}
                 ${
                   selectedAnimationId === animation.id
                     ? "text-white"

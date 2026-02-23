@@ -340,8 +340,14 @@ const createApp = ({
       const sourceAnimationFile = await fs.promises.readFile(sourceAnimationFilePath, "utf8");
       const sourceNameMatch = sourceAnimationFile.match(/\bname:\s*"([^"]+)"/);
       const sourceRendererMatch = sourceAnimationFile.match(/\brenderer:\s*"([^"]+)"/);
+      const sourceParentIdMatch = sourceAnimationFile.match(/\bparentId:\s*"([^"]+)"/);
       const sourceName = sourceNameMatch ? sourceNameMatch[1] : sourceId;
       const sourceRenderer = sourceRendererMatch ? sourceRendererMatch[1] : "p5";
+      const sourceParentId =
+        sourceParentIdMatch && sourceParentIdMatch[1]
+          ? sourceParentIdMatch[1].trim()
+          : "";
+      const resolvedParentId = sourceParentId || sourceId;
       const sourcePrefix = `${getAnimationDisplayName(sourceRenderer, "")}`;
       const sourceBaseName = sourceName.startsWith(sourcePrefix)
         ? sourceName.slice(sourcePrefix.length)
@@ -384,6 +390,17 @@ const createApp = ({
         /\bid:\s*"([^"]+)"/,
         `id: ${JSON.stringify(nextId)}`,
       );
+      if (/\bparentId:\s*"([^"]+)"/.test(copiedAnimationSource)) {
+        copiedAnimationSource = copiedAnimationSource.replace(
+          /\bparentId:\s*"([^"]+)"/,
+          `parentId: ${JSON.stringify(resolvedParentId)}`,
+        );
+      } else {
+        copiedAnimationSource = copiedAnimationSource.replace(
+          /\bid:\s*"([^"]+)"/,
+          `id: ${JSON.stringify(nextId)},\n  parentId: ${JSON.stringify(resolvedParentId)}`,
+        );
+      }
       await fs.promises.writeFile(copiedSourceFilePath, copiedAnimationSource, "utf8");
       await fs.promises.rename(copiedSourceFilePath, copiedTargetFilePath);
 

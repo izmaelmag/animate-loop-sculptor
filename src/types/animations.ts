@@ -114,6 +114,7 @@ export type AnimationCleanupFunction = () => void;
  */
 export interface AnimationSettings {
   id: string;
+  parentId?: string;
   name: string;
   renderer: RendererType;
   fps: number;
