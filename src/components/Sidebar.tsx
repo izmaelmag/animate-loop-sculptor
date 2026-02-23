@@ -12,6 +12,7 @@ import {
   CreateAnimationTemplatePayload,
 } from "../api/animationTemplatesApi";
 import { toast } from "../hooks/use-toast";
+import AnimationNotesButton from "./AnimationNotesButton";
 
 const Sidebar = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
@@ -115,15 +116,18 @@ const Sidebar = () => {
 
       {/* Animations List */}
       <div className="flex-1 overflow-y-auto p-4">
-        <button
-          type="button"
-          onClick={() => {
-            setIsCreateModalOpen(true);
-          }}
-          className="w-full mb-3 px-3 py-2 rounded border border-neutral-700 text-sm text-white/90 hover:bg-neutral-800 transition-colors"
-        >
-          New animation
-        </button>
+        <div className="mb-3 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setIsCreateModalOpen(true);
+            }}
+            className="flex-1 px-3 py-2 rounded border border-neutral-700 text-sm text-white/90 hover:bg-neutral-800 transition-colors"
+          >
+            New animation
+          </button>
+          <AnimationNotesButton iconOnly />
+        </div>
 
         <div className="space-y-1">
           {animationOptions.map((animation) => (

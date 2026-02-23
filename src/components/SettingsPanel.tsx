@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import RenderControls from "./RenderControls";
+import AnimationNotesButton from "./AnimationNotesButton";
 
 const SettingsPanel = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
@@ -66,6 +67,9 @@ const SettingsPanel = () => {
         </div>
 
         <div className="pt-2 border-t border-white/10">
+          <div className="mb-3">
+            <AnimationNotesButton />
+          </div>
           <RenderControls />
         </div>
       </div>

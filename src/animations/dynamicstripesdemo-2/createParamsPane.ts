@@ -11,8 +11,6 @@ interface DslPreset {
   colorDsl: string;
 }
 
-const NOTES_STORAGE_KEY = "dynamicstripesdemo-2:notes";
-
 const DSL_PRESETS: DslPreset[] = [
   {
     title: "Mono",
@@ -49,154 +47,13 @@ const toSingleLineDsl = (value: string): string => {
   return `[${sanitizeDslToken(value.trim())}]`;
 };
 
-interface NotesModalController {
-  open: () => void;
-  cleanup: () => void;
-}
-
-const createNotesModalController = (storageKey: string): NotesModalController => {
-  let overlay: HTMLDivElement | null = null;
-  let panel: HTMLDivElement | null = null;
-  let textarea: HTMLTextAreaElement | null = null;
-  let handleOverlayClick: ((event: MouseEvent) => void) | null = null;
-  let handleEscape: ((event: KeyboardEvent) => void) | null = null;
-
-  const close = (): void => {
-    if (handleEscape) {
-      window.removeEventListener("keydown", handleEscape);
-    }
-    handleEscape = null;
-    if (handleOverlayClick && overlay) {
-      overlay.removeEventListener("click", handleOverlayClick);
-    }
-    handleOverlayClick = null;
-    if (overlay) {
-      overlay.remove();
-    }
-    overlay = null;
-    panel = null;
-    textarea = null;
-  };
-
-  const open = (): void => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      return;
-    }
-    if (overlay) {
-      textarea?.focus();
-      return;
-    }
-
-    overlay = document.createElement("div");
-    overlay.style.position = "fixed";
-    overlay.style.inset = "0";
-    overlay.style.background = "rgba(0, 0, 0, 0.65)";
-    overlay.style.zIndex = "99999";
-    overlay.style.display = "flex";
-    overlay.style.alignItems = "center";
-    overlay.style.justifyContent = "center";
-    overlay.style.padding = "24px";
-
-    panel = document.createElement("div");
-    panel.style.width = "min(900px, 100%)";
-    panel.style.maxHeight = "85vh";
-    panel.style.display = "flex";
-    panel.style.flexDirection = "column";
-    panel.style.gap = "12px";
-    panel.style.borderRadius = "12px";
-    panel.style.border = "1px solid rgba(255, 255, 255, 0.15)";
-    panel.style.background = "#111";
-    panel.style.color = "#eee";
-    panel.style.padding = "14px";
-    panel.style.boxSizing = "border-box";
-
-    const heading = document.createElement("div");
-    heading.textContent = "Quick Notes";
-    heading.style.fontSize = "14px";
-    heading.style.fontWeight = "700";
-    heading.style.letterSpacing = "0.2px";
-
-    textarea = document.createElement("textarea");
-    textarea.rows = 16;
-    textarea.spellcheck = false;
-    textarea.placeholder = "Write notes here...";
-    textarea.value = window.localStorage.getItem(storageKey) ?? "";
-    textarea.style.width = "100%";
-    textarea.style.minHeight = "240px";
-    textarea.style.resize = "vertical";
-    textarea.style.borderRadius = "8px";
-    textarea.style.border = "1px solid rgba(255, 255, 255, 0.2)";
-    textarea.style.background = "#0b0b0b";
-    textarea.style.color = "#f5f5f5";
-    textarea.style.padding = "12px";
-    textarea.style.fontSize = "13px";
-    textarea.style.fontFamily =
-      'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
-    textarea.style.lineHeight = "1.45";
-    textarea.style.boxSizing = "border-box";
-    textarea.addEventListener("input", () => {
-      window.localStorage.setItem(storageKey, textarea?.value ?? "");
-    });
-
-    const actions = document.createElement("div");
-    actions.style.display = "flex";
-    actions.style.justifyContent = "space-between";
-    actions.style.gap = "8px";
-
-    const hint = document.createElement("div");
-    hint.textContent = "Autosaved in localStorage";
-    hint.style.opacity = "0.75";
-    hint.style.fontSize = "12px";
-    hint.style.display = "flex";
-    hint.style.alignItems = "center";
-
-    const closeButton = document.createElement("button");
-    closeButton.type = "button";
-    closeButton.textContent = "Close";
-    closeButton.style.padding = "8px 12px";
-    closeButton.style.borderRadius = "8px";
-    closeButton.style.border = "1px solid rgba(255, 255, 255, 0.2)";
-    closeButton.style.background = "#191919";
-    closeButton.style.color = "#fff";
-    closeButton.style.cursor = "pointer";
-    closeButton.addEventListener("click", () => close());
-
-    actions.append(hint, closeButton);
-    panel.append(heading, textarea, actions);
-    overlay.append(panel);
-    document.body.append(overlay);
-
-    handleOverlayClick = (event: MouseEvent) => {
-      if (event.target === overlay) {
-        close();
-      }
-    };
-    overlay.addEventListener("click", handleOverlayClick);
-
-    handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        close();
-      }
-    };
-    window.addEventListener("keydown", handleEscape);
-
-    textarea.focus();
-  };
-
-  return {
-    open,
-    cleanup: close,
-  };
-};
-
 export const createDynamicStripesParamsPane = ({
   pane,
   params,
   patchParams,
   resetParams,
-}: AnimationParamsPaneContext): (() => void) => {
+}: AnimationParamsPaneContext): void => {
   const model: DynamicStripesParams = resolveDynamicStripesParams(params);
-  const notes = createNotesModalController(NOTES_STORAGE_KEY);
   const applyPatchAndRefresh = (patch: Partial<DynamicStripesParams>): void => {
     Object.assign(model, patch);
     patchParams(patch);
@@ -423,17 +280,10 @@ export const createDynamicStripesParamsPane = ({
       label: "Debug",
     })
     .on("change", (ev) => patchParams({ debug: ev.value }));
-  utilityFolder.addButton({ title: "Notes" }).on("click", () => {
-    notes.open();
-  });
 
   utilityFolder.addButton({ title: "Reset Params" }).on("click", () => {
     resetParams();
     Object.assign(model, defaultParams);
     pane.refresh();
   });
-
-  return () => {
-    notes.cleanup();
-  };
 };
