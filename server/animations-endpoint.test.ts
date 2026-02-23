@@ -7,7 +7,7 @@ import path from "node:path";
 const require = createRequire(import.meta.url);
 const { createApp } = require("./index.cjs");
 
-const makeBaseRegistrySource = () => `import { AnimationSettings } from "@/types/animations";
+const makeBaseRegistrySource = () => `import { AnimationSettings } from "../types/animations";
 
 import { settings as orbitalAnimation } from "./orbital";
 import { settings as demoAnimation } from "./demo";
@@ -340,7 +340,7 @@ describe("POST /api/animations/copy", () => {
 
     await fs.promises.writeFile(
       path.join(animationsDir, "index.ts"),
-      `import { AnimationSettings } from "@/types/animations";
+      `import { AnimationSettings } from "../types/animations";
 
 import { settings as orbitalAnimation } from "./orbital";
 import { settings as lissajouCurvesAnimation } from "./lissajou-curves";

@@ -3,7 +3,7 @@ import {
   AnimationSettings,
   P5AnimationFunction,
   FrameContext,
-} from "@/types/animations";
+} from "../../types/animations";
 
 /**
  * Manages a p5.js instance lifecycle: creation, frame drawing, and cleanup.
@@ -11,6 +11,7 @@ import {
 export class P5Renderer {
   private p5Instance: p5 | null = null;
   private drawFn: P5AnimationFunction | null = null;
+  private isReady = false;
   private frameContext: FrameContext = {
     normalizedTime: 0,
     currentFrame: 0,
@@ -20,6 +21,7 @@ export class P5Renderer {
 
   initialize(container: HTMLElement, settings: AnimationSettings) {
     this.destroy();
+    this.isReady = false;
 
     const drawFn = settings.draw as P5AnimationFunction;
     const setupFn = settings.setup as ((p: p5) => void) | undefined;
@@ -39,6 +41,9 @@ export class P5Renderer {
         }
 
         p.noLoop();
+        this.isReady = true;
+        // Apply the latest frame context once setup is finished.
+        p.redraw();
       };
 
       p.draw = () => {
@@ -53,7 +58,7 @@ export class P5Renderer {
 
   renderFrame(ctx: FrameContext) {
     this.frameContext = ctx;
-    if (this.p5Instance) {
+    if (this.p5Instance && this.isReady) {
       this.p5Instance.redraw();
     }
   }
@@ -63,6 +68,7 @@ export class P5Renderer {
       this.p5Instance.remove();
       this.p5Instance = null;
     }
+    this.isReady = false;
     this.drawFn = null;
   }
 }

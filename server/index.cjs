@@ -302,6 +302,19 @@ const createApp = ({
         },
       });
     }
+    const requestedNameRaw = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+    const requestedNameValidation =
+      requestedNameRaw.length > 0
+        ? validateAnimationNameInput(requestedNameRaw)
+        : null;
+    if (requestedNameValidation && !requestedNameValidation.ok) {
+      return res.status(400).json({
+        error: {
+          code: requestedNameValidation.code,
+          message: requestedNameValidation.message,
+        },
+      });
+    }
 
     const sourceAnimationDir = path.resolve(animationsDir, sourceId);
     if (!sourceAnimationDir.startsWith(`${animationsDir}${path.sep}`)) {
@@ -340,15 +353,26 @@ const createApp = ({
       const sourceAnimationFile = await fs.promises.readFile(sourceAnimationFilePath, "utf8");
       const sourceNameMatch = sourceAnimationFile.match(/\bname:\s*"([^"]+)"/);
       const sourceRendererMatch = sourceAnimationFile.match(/\brenderer:\s*"([^"]+)"/);
+      const sourceParentIdMatch = sourceAnimationFile.match(/\bparentId:\s*"([^"]+)"/);
       const sourceName = sourceNameMatch ? sourceNameMatch[1] : sourceId;
       const sourceRenderer = sourceRendererMatch ? sourceRendererMatch[1] : "p5";
+      const sourceParentId =
+        sourceParentIdMatch && sourceParentIdMatch[1]
+          ? sourceParentIdMatch[1].trim()
+          : "";
+      const resolvedParentId = sourceParentId || sourceId;
       const sourcePrefix = `${getAnimationDisplayName(sourceRenderer, "")}`;
       const sourceBaseName = sourceName.startsWith(sourcePrefix)
         ? sourceName.slice(sourcePrefix.length)
         : sourceName;
+      const requestedBaseName = requestedNameValidation
+        ? requestedNameValidation.name.startsWith(sourcePrefix)
+          ? requestedNameValidation.name.slice(sourcePrefix.length)
+          : requestedNameValidation.name
+        : sourceBaseName;
 
       const nextIdentity = resolveNextCopyIdentity({
-        name: sourceBaseName,
+        name: requestedBaseName,
         isIdTaken: (id) => {
           const candidateDir = path.resolve(animationsDir, id);
           return fs.existsSync(candidateDir);
@@ -384,6 +408,17 @@ const createApp = ({
         /\bid:\s*"([^"]+)"/,
         `id: ${JSON.stringify(nextId)}`,
       );
+      if (/\bparentId:\s*"([^"]+)"/.test(copiedAnimationSource)) {
+        copiedAnimationSource = copiedAnimationSource.replace(
+          /\bparentId:\s*"([^"]+)"/,
+          `parentId: ${JSON.stringify(resolvedParentId)}`,
+        );
+      } else {
+        copiedAnimationSource = copiedAnimationSource.replace(
+          /\bid:\s*"([^"]+)"/,
+          `id: ${JSON.stringify(nextId)},\n  parentId: ${JSON.stringify(resolvedParentId)}`,
+        );
+      }
       await fs.promises.writeFile(copiedSourceFilePath, copiedAnimationSource, "utf8");
       await fs.promises.rename(copiedSourceFilePath, copiedTargetFilePath);
 
@@ -444,10 +479,14 @@ const createApp = ({
   });
 
   app.post("/api/renders", (req, res) => {
-    const {templateId, quality = "high"} = req.body || {};
+    const {templateId, quality = "high", animationParams = {}} = req.body || {};
+    const safeAnimationParams =
+      animationParams && typeof animationParams === "object" && !Array.isArray(animationParams)
+        ? animationParams
+        : {};
 
     try {
-      const job = createRenderJob({templateId, quality});
+      const job = createRenderJob({templateId, quality, animationParams: safeAnimationParams});
       res.status(201).json({job});
     } catch (error) {
       if (error.code === "RENDER_IN_PROGRESS") {

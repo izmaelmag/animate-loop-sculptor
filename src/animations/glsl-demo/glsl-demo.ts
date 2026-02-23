@@ -3,7 +3,7 @@ import {
   AnimationParamsPaneContext,
   FrameContext,
   WebGLAnimationFunction,
-} from "@/types/animations";
+} from "../../types/animations";
 import {
   createFullscreenQuad,
   createProgram,

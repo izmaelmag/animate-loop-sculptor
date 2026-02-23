@@ -1,8 +1,8 @@
 import { useEffect, useRef, useCallback, useState } from "react";
-import { useAnimationStore } from "@/stores/animationStore";
-import { PlaybackEngine } from "@/engine/PlaybackEngine";
-import { createRenderer, Renderer } from "@/engine/createRenderer";
-import { animationSettings, defaultAnimation } from "@/animations";
+import { useAnimationStore } from "../stores/animationStore";
+import { PlaybackEngine } from "../engine/PlaybackEngine";
+import { createRenderer, Renderer } from "../engine/createRenderer";
+import { animationSettings, defaultAnimation } from "../animations";
 
 /**
  * Hook that wires the PlaybackEngine and Renderer to the Zustand store.
@@ -18,6 +18,7 @@ export function usePlayback() {
   const currentFrame = useAnimationStore((s) => s.currentFrame);
   const setCurrentFrame = useAnimationStore((s) => s.setCurrentFrame);
   const animationParamsById = useAnimationStore((s) => s.animationParamsById);
+  const getParamsForAnimation = useAnimationStore((s) => s.getParamsForAnimation);
 
   const settings =
     animationSettings[selectedAnimationId] || defaultAnimation;
@@ -40,9 +41,25 @@ export function usePlayback() {
     // Create and initialize new renderer
     const renderer = createRenderer(settings.renderer);
     renderer.initialize(containerNode, settings);
+    const totalFrames = settings.totalFrames;
+    const normalizedTime =
+      totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
+    const params = getParamsForAnimation(selectedAnimationId);
+    renderer.renderFrame({
+      normalizedTime,
+      currentFrame,
+      totalFrames,
+      params,
+    });
     rendererRef.current = renderer;
 
-  }, [containerNode, selectedAnimationId, settings]);
+  }, [
+    containerNode,
+    selectedAnimationId,
+    settings,
+    currentFrame,
+    getParamsForAnimation,
+  ]);
 
   // Redraw when frame changes (scrubbing or playback)
   useEffect(() => {
@@ -50,14 +67,20 @@ export function usePlayback() {
     const totalFrames = settings.totalFrames;
     const normalizedTime =
       totalFrames > 1 ? currentFrame / (totalFrames - 1) : 0;
-    const params = animationParamsById[selectedAnimationId] || settings.defaultParams || {};
+    const params = getParamsForAnimation(selectedAnimationId);
     rendererRef.current.renderFrame({
       normalizedTime,
       currentFrame,
       totalFrames,
       params,
     });
-  }, [currentFrame, settings, selectedAnimationId, animationParamsById]);
+  }, [
+    currentFrame,
+    settings,
+    selectedAnimationId,
+    animationParamsById,
+    getParamsForAnimation,
+  ]);
 
   // Start/stop playback engine
   useEffect(() => {

@@ -52,6 +52,7 @@ const parseJson = async <T>(response: Response): Promise<T | undefined> => {
 export const startRender = async (payload: {
   templateId: string;
   quality: RenderQuality;
+  animationParams?: Record<string, unknown>;
 }): Promise<RenderJob> => {
   const response = await fetch("/api/renders", {
     method: "POST",

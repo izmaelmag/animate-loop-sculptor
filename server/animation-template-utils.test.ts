@@ -22,7 +22,7 @@ const {
   resolveNextCopyIdentity,
 } = require("./animation-template-utils.cjs");
 
-const baseRegistrySource = `import { AnimationSettings } from "@/types/animations";
+const baseRegistrySource = `import { AnimationSettings } from "../types/animations";
 
 import { settings as orbitalAnimation } from "./orbital";
 import { settings as demoAnimation } from "./demo";

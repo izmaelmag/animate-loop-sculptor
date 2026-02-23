@@ -1,15 +1,16 @@
 import { useMemo } from "react";
-import Panel from "@/components/ui/panel";
-import { animationSettings } from "@/animations";
-import { useAnimationStore } from "@/stores/animationStore";
+import Panel from "./ui/panel";
+import { animationSettings } from "../animations";
+import { useAnimationStore } from "../stores/animationStore";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import RenderControls from "@/components/RenderControls";
+} from "./ui/select";
+import RenderControls from "./RenderControls";
+import AnimationNotesButton from "./AnimationNotesButton";
 
 const SettingsPanel = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
@@ -66,6 +67,9 @@ const SettingsPanel = () => {
         </div>
 
         <div className="pt-2 border-t border-white/10">
+          <div className="mb-3">
+            <AnimationNotesButton />
+          </div>
           <RenderControls />
         </div>
       </div>

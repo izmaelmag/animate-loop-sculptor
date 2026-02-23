@@ -10,9 +10,11 @@ const DEFAULT_OUTPUT_DIR = path.resolve(process.cwd(), "output");
 const DEFAULT_RENDERER_PORT = 3100;
 const COMPOSITION_ID = "MyVideo";
 const ENTRY_POINT = path.resolve(process.cwd(), "src/remotion/index.tsx");
+const SOURCE_ROOT = path.resolve(process.cwd(), "src");
 
 let cachedBundleLocation = null;
 let cachedEntryMtimeMs = null;
+let cachedSourceMtimeMs = null;
 
 const QUALITY_TO_CRF = {
   high: 16,
@@ -32,17 +34,49 @@ const ensureOutputDirectory = (outputDir) => {
   }
 };
 
+const getLatestMtimeMs = (targetPath) => {
+  if (!fs.existsSync(targetPath)) {
+    return 0;
+  }
+
+  const stat = fs.statSync(targetPath);
+  let latest = stat.mtimeMs;
+
+  if (!stat.isDirectory()) {
+    return latest;
+  }
+
+  const entries = fs.readdirSync(targetPath, {withFileTypes: true});
+  for (const entry of entries) {
+    if (entry.name === "node_modules" || entry.name === ".git") {
+      continue;
+    }
+    const entryPath = path.join(targetPath, entry.name);
+    const entryLatest = getLatestMtimeMs(entryPath);
+    if (entryLatest > latest) {
+      latest = entryLatest;
+    }
+  }
+
+  return latest;
+};
+
 const getBundleLocation = async ({forceRebundle = false}) => {
-  const stat = fs.statSync(ENTRY_POINT);
-  const mtime = stat.mtimeMs;
-  const canReuse = !forceRebundle && cachedBundleLocation && cachedEntryMtimeMs === mtime;
+  const entryMtime = fs.statSync(ENTRY_POINT).mtimeMs;
+  const sourceMtime = getLatestMtimeMs(SOURCE_ROOT);
+  const canReuse =
+    !forceRebundle &&
+    cachedBundleLocation &&
+    cachedEntryMtimeMs === entryMtime &&
+    cachedSourceMtimeMs === sourceMtime;
 
   if (canReuse) {
     return cachedBundleLocation;
   }
 
   cachedBundleLocation = await bundle(ENTRY_POINT);
-  cachedEntryMtimeMs = mtime;
+  cachedEntryMtimeMs = entryMtime;
+  cachedSourceMtimeMs = sourceMtime;
   return cachedBundleLocation;
 };
 
@@ -68,6 +102,7 @@ const buildOutputPath = ({outputDir, templateId, quality}) => {
 const renderVideoCore = async ({
   templateId,
   quality = "high",
+  animationParams = {},
   outputDir = DEFAULT_OUTPUT_DIR,
   concurrency = DEFAULT_CONCURRENCY,
   timeoutInMilliseconds = DEFAULT_TIMEOUT_MS,
@@ -93,7 +128,13 @@ const renderVideoCore = async ({
   });
 
   const bundleLocation = await getBundleLocation({forceRebundle});
-  const inputProps = {templateId};
+  const inputProps = {
+    templateId,
+    animationParams:
+      animationParams && typeof animationParams === "object" && !Array.isArray(animationParams)
+        ? animationParams
+        : {},
+  };
 
   const composition = await selectComposition({
     serveUrl: bundleLocation,

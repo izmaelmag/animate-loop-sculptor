@@ -1,9 +1,9 @@
 import {useEffect, useMemo, useRef, useState} from "react";
-import {Button} from "@/components/ui/button";
-import {RenderQuality} from "@/api/renderApi";
-import {useRenderJob} from "@/hooks/useRenderJob";
-import {useAnimationStore} from "@/stores/animationStore";
-import {toast} from "@/hooks/use-toast";
+import {Button} from "./ui/button";
+import {RenderQuality} from "../api/renderApi";
+import {useRenderJob} from "../hooks/useRenderJob";
+import {useAnimationStore} from "../stores/animationStore";
+import {toast} from "../hooks/use-toast";
 
 const statusToLabel: Record<string, string> = {
   queued: "Queued",
@@ -15,6 +15,7 @@ const statusToLabel: Record<string, string> = {
 
 const RenderControls = () => {
   const selectedAnimationId = useAnimationStore((s) => s.selectedAnimationId);
+  const getParamsForAnimation = useAnimationStore((s) => s.getParamsForAnimation);
   const {job, isRendering, isSubmitting, apiError, start, cancel} = useRenderJob();
   const [quality, setQuality] = useState<RenderQuality>("high");
   const progressToastRef = useRef<ReturnType<typeof toast> | null>(null);
@@ -29,7 +30,8 @@ const RenderControls = () => {
 
   const handleRender = async () => {
     try {
-      await start(selectedAnimationId, quality);
+      const animationParams = getParamsForAnimation(selectedAnimationId);
+      await start(selectedAnimationId, quality, animationParams);
     } catch {
       // Error is already captured in hook state and toast effect.
     }

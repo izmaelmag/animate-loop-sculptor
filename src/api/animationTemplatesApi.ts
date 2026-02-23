@@ -113,6 +113,7 @@ export const archiveAnimationTemplate = async (payload: {
 
 export const copyAnimationTemplate = async (payload: {
   id: string;
+  name?: string;
 }): Promise<CopiedAnimationTemplate> => {
   const response = await fetch("/api/animations/copy", {
     method: "POST",

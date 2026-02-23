@@ -1,4 +1,4 @@
-import { AnimationSettings, R3FSceneProps } from "@/types/animations";
+import { AnimationSettings, R3FSceneProps } from "../../types/animations";
 import type { JSX } from "react";
 
 const WIDTH = 1080;

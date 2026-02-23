@@ -1,0 +1,20 @@
+---
+description: Enforce relative imports only
+alwaysApply: true
+---
+
+# Relative Imports Only
+
+Never use path aliases like `@/` in TypeScript/TSX files. Always use relative imports.
+
+**Good:**
+```ts
+import { useAnimationStore } from "../stores/animationStore";
+import { Button } from "./ui/button";
+```
+
+**Bad:**
+```ts
+import { useAnimationStore } from "@/stores/animationStore";
+import { Button } from "@/components/ui/button";
+```

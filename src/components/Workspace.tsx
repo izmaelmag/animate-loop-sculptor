@@ -3,7 +3,8 @@
 import Sidebar from "./Sidebar";
 import SketchView from "./SketchView";
 import SettingsPanel from "./SettingsPanel";
-import { useIsMobile } from "@/hooks/use-mobile";
+import AnimationParamsPane from "./AnimationParamsPane";
+import { useIsMobile } from "../hooks/use-mobile";
 import { LoaderPinwheel } from "lucide-react";
 
 const Workspace = () => {
@@ -34,6 +35,7 @@ const Workspace = () => {
       <main className="flex-1 overflow-hidden main-section">
         <SketchView />
       </main>
+      <AnimationParamsPane />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useRef, memo, useMemo } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import Timeline from "./Timeline";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "../hooks/use-mobile";
 
 const STORAGE_KEY = "timeline-player-position";
 const PADDING = 20;

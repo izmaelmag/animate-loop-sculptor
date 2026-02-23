@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { AnimationSettings, P5AnimationFunction, FrameContext } from "@/types/animations";
+import { AnimationSettings, P5AnimationFunction, FrameContext } from "../../types/animations";
 import { Point } from "../../utils/Point";
 import { Color } from "../../utils/Color";
 import { createGrid } from "./createGrid";

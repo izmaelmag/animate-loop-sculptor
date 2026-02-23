@@ -4,10 +4,12 @@ import { defaultAnimation } from "../animations";
 
 interface MyVideoProps {
   templateId?: string;
+  animationParams?: Record<string, unknown>;
 }
 
 export const MyVideo: React.FC<MyVideoProps> = ({
   templateId = defaultAnimation.id,
+  animationParams = {},
 }) => {
   return (
     <div
@@ -21,7 +23,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({
         height: "100%",
       }}
     >
-      <RendererAnimation templateId={templateId} />
+      <RendererAnimation templateId={templateId} animationParams={animationParams} />
     </div>
   );
 };

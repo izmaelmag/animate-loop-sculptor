@@ -1,4 +1,4 @@
-import { RendererType, FrameContext, AnimationSettings } from "@/types/animations";
+import { RendererType, FrameContext, AnimationSettings } from "../types/animations";
 import { P5Renderer } from "./renderers/P5Renderer";
 import { Canvas2DRenderer } from "./renderers/Canvas2DRenderer";
 import { ThreeRenderer } from "./renderers/ThreeRenderer";

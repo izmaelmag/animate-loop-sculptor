@@ -5,10 +5,12 @@ import { createRenderer, Renderer } from "../engine/createRenderer";
 
 interface RendererAnimationProps {
   templateId?: string;
+  animationParams?: Record<string, unknown>;
 }
 
 export const RendererAnimation = ({
   templateId = defaultAnimation.id,
+  animationParams = {},
 }: RendererAnimationProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<Renderer | null>(null);
@@ -41,7 +43,7 @@ export const RendererAnimation = ({
 
   useEffect(() => {
     const normalizedTime = totalFrames > 1 ? frame / (totalFrames - 1) : 0;
-    const params = currentSettings.defaultParams || {};
+    const params = animationParams;
 
     if (rendererRef.current) {
       rendererRef.current.renderFrame({
@@ -51,7 +53,7 @@ export const RendererAnimation = ({
         params,
       });
     }
-  }, [frame, totalFrames, currentSettings]);
+  }, [frame, totalFrames, currentSettings, animationParams]);
 
   const width = currentSettings.width || 1080;
   const height = currentSettings.height || 1920;

@@ -1,4 +1,4 @@
-import { usePlayback } from "@/hooks/usePlayback";
+import { usePlayback } from "../hooks/usePlayback";
 import PlayerPanels from "./PlayerPanels";
 
 const SketchView = () => {

@@ -2,7 +2,7 @@ import {
   AnimationSettings,
   Canvas2DAnimationFunction,
   FrameContext,
-} from "@/types/animations";
+} from "../../types/animations";
 
 /**
  * Manages a vanilla Canvas 2D rendering context.
