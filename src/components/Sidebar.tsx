@@ -126,12 +126,24 @@ const Sidebar = () => {
 
   const handleCopyAnimation = async (id: string, name: string) => {
     if (id === defaultAnimation.id) return;
+    const namePrompt = window.prompt("Copy animation as:", name);
+    if (namePrompt === null) {
+      return;
+    }
+    const requestedName = namePrompt.trim();
+    if (!requestedName) {
+      toast({
+        title: "Copy cancelled",
+        description: "Animation name cannot be empty.",
+      });
+      return;
+    }
     const sourceParamsSnapshot = {
       ...getParamsForAnimation(id),
     };
 
     try {
-      const result = await copyAnimationTemplate({id});
+      const result = await copyAnimationTemplate({id, name: requestedName});
       setAnimationParams(result.animation.id, sourceParamsSnapshot);
       toast({
         title: "Animation copied",

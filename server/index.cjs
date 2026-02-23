@@ -302,6 +302,19 @@ const createApp = ({
         },
       });
     }
+    const requestedNameRaw = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+    const requestedNameValidation =
+      requestedNameRaw.length > 0
+        ? validateAnimationNameInput(requestedNameRaw)
+        : null;
+    if (requestedNameValidation && !requestedNameValidation.ok) {
+      return res.status(400).json({
+        error: {
+          code: requestedNameValidation.code,
+          message: requestedNameValidation.message,
+        },
+      });
+    }
 
     const sourceAnimationDir = path.resolve(animationsDir, sourceId);
     if (!sourceAnimationDir.startsWith(`${animationsDir}${path.sep}`)) {
@@ -352,9 +365,14 @@ const createApp = ({
       const sourceBaseName = sourceName.startsWith(sourcePrefix)
         ? sourceName.slice(sourcePrefix.length)
         : sourceName;
+      const requestedBaseName = requestedNameValidation
+        ? requestedNameValidation.name.startsWith(sourcePrefix)
+          ? requestedNameValidation.name.slice(sourcePrefix.length)
+          : requestedNameValidation.name
+        : sourceBaseName;
 
       const nextIdentity = resolveNextCopyIdentity({
-        name: sourceBaseName,
+        name: requestedBaseName,
         isIdTaken: (id) => {
           const candidateDir = path.resolve(animationsDir, id);
           return fs.existsSync(candidateDir);
