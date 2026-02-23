@@ -17,6 +17,7 @@ import {
   splitSegmentsToUnitInterval,
   wrapPointsForDebug,
 } from "./segments";
+import { createTextStripTexture, drawTextStripOnSegment } from "./textStrip";
 
 const FPS = 60;
 const WIDTH = 1080;
@@ -30,6 +31,16 @@ const gapPolicy = new GapPolicy({
   strictGap: defaultParams.strictGap,
 });
 
+interface TextStripCache {
+  key: string;
+  texture: p5.Graphics | null;
+}
+
+const textStripCache: TextStripCache = {
+  key: "",
+  texture: null,
+};
+
 const mapSegmentsToPixels = (
   path: StraightLinePath,
   normalizedSegments: NormalizedSegment[],
@@ -38,6 +49,35 @@ const mapSegmentsToPixels = (
     path.getPointAt(startT),
     path.getPointAt(endT),
   ]);
+};
+
+const getTextStripKey = (
+  text: string,
+  color: string,
+  thickness: number,
+): string => {
+  return `${text}|${color}|${Math.round(thickness)}`;
+};
+
+const ensureTextStripTexture = (
+  p: p5,
+  text: string,
+  color: string,
+  thickness: number,
+): p5.Graphics => {
+  const key = getTextStripKey(text, color, thickness);
+  if (textStripCache.texture && textStripCache.key === key) {
+    return textStripCache.texture;
+  }
+
+  if (textStripCache.texture) {
+    textStripCache.texture.remove();
+    textStripCache.texture = null;
+  }
+
+  textStripCache.texture = createTextStripTexture(p, text, color, thickness);
+  textStripCache.key = key;
+  return textStripCache.texture;
 };
 
 const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
@@ -69,6 +109,12 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
 
   p.background(params.backgroundColor);
   p.noFill();
+  const textStrip = ensureTextStripTexture(
+    p,
+    params.segmentText,
+    params.segmentColor,
+    params.lineThickness,
+  );
   p.stroke(params.segmentColor);
   p.strokeWeight(params.lineThickness);
   p.strokeCap(strokeCapMode);
@@ -107,7 +153,15 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
       segmentIndex += 1
     ) {
       const [[x1, y1], [x2, y2]] = drawableSegments[segmentIndex];
-      p.line(x1, y1, x2, y2);
+      drawTextStripOnSegment(
+        p,
+        textStrip,
+        x1,
+        y1,
+        x2,
+        y2,
+        params.lineThickness,
+      );
     }
 
     if (!params.debug) {
@@ -127,6 +181,12 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
 const setup = (p: p5): void => {
   p.background(defaultParams.backgroundColor);
   p.frameRate(FPS);
+  ensureTextStripTexture(
+    p,
+    defaultParams.segmentText,
+    defaultParams.segmentColor,
+    defaultParams.lineThickness,
+  );
 };
 
 export const settings: AnimationSettings = {

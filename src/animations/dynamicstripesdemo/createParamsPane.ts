@@ -28,6 +28,12 @@ export const createDynamicStripesParamsPane = ({
     .on("change", (ev) => patchParams({ segmentColor: ev.value }));
 
   pane
+    .addBinding(model, "segmentText", {
+      label: "Text",
+    })
+    .on("change", (ev) => patchParams({ segmentText: ev.value }));
+
+  pane
     .addBinding(model, "margin", {
       min: -1920,
       max: 2000,

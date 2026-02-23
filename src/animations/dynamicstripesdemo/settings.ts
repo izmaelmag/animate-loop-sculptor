@@ -1,6 +1,7 @@
 export interface DynamicStripesParams extends Record<string, unknown> {
   backgroundColor: string;
   segmentColor: string;
+  segmentText: string;
   margin: number;
   edgeDivisions: number;
   lineAngleDeg: number;
@@ -23,6 +24,7 @@ export interface DynamicStripesParams extends Record<string, unknown> {
 export const defaultParams: DynamicStripesParams = {
   backgroundColor: "#000000",
   segmentColor: "#ffffff",
+  segmentText: "SCULPTOR",
   margin: 108,
   edgeDivisions: 8,
   lineAngleDeg: 45,
@@ -62,6 +64,12 @@ export const resolveDynamicStripesParams = (
   const segmentColor = isHexColor(raw.segmentColor)
     ? raw.segmentColor
     : defaultParams.segmentColor;
+  const segmentTextRaw =
+    typeof raw.segmentText === "string" ? raw.segmentText.trim() : "";
+  const segmentText =
+    segmentTextRaw.length > 0
+      ? segmentTextRaw.slice(0, 128)
+      : defaultParams.segmentText;
   const margin = asNumber(raw.margin, defaultParams.margin);
   const edgeDivisions = Math.round(
     asNumber(raw.edgeDivisions, defaultParams.edgeDivisions),
@@ -95,6 +103,7 @@ export const resolveDynamicStripesParams = (
   return {
     backgroundColor,
     segmentColor,
+    segmentText,
     margin: Math.max(-1920, Math.min(2000, margin)),
     edgeDivisions: Math.max(1, Math.min(256, edgeDivisions)),
     lineAngleDeg: ((lineAngleDeg % 360) + 360) % 360,
