@@ -25,7 +25,7 @@ const WIDTH = 1080;
 const HEIGHT = 1920;
 const DURATION_SECONDS = 15;
 const TOTAL_FRAMES = FPS * DURATION_SECONDS;
-const LINE_PHASE_STEP = 0.2;
+const LINE_PHASE_STEP = 0.6;
 const gapPolicy = new GapPolicy({
   gap: defaultParams.segmentGap,
   minSegmentLength: defaultParams.minSegmentLengthPx,
@@ -146,16 +146,25 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
     const drawablePieces = splitSegmentsToUnitIntervalWithOwners(
       drawableLogicalSegments,
     );
-    const drawableNormalizedSegments = drawablePieces.map((piece) => piece.segment);
-    const drawableSegments = mapSegmentsToPixels(path, drawableNormalizedSegments);
+    const drawableNormalizedSegments = drawablePieces.map(
+      (piece) => piece.segment,
+    );
+    const drawableSegments = mapSegmentsToPixels(
+      path,
+      drawableNormalizedSegments,
+    );
     for (
       let segmentIndex = 0;
       segmentIndex < drawableSegments.length;
       segmentIndex += 1
     ) {
       const [[x1, y1], [x2, y2]] = drawableSegments[segmentIndex];
-      const logicalSegmentIndex = drawablePieces[segmentIndex]?.ownerIndex ?? segmentIndex;
-      const textTokenRaw = textNotation.resolveSegment(lineIndex, logicalSegmentIndex);
+      const logicalSegmentIndex =
+        drawablePieces[segmentIndex]?.ownerIndex ?? segmentIndex;
+      const textTokenRaw = textNotation.resolveSegment(
+        lineIndex,
+        logicalSegmentIndex,
+      );
       const textToken =
         typeof textTokenRaw === "string" && textTokenRaw.trim().length > 0
           ? textTokenRaw.trim()
@@ -163,7 +172,9 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
       const colorTokenRaw = colorNotation
         .resolveSegment(lineIndex, logicalSegmentIndex)
         .trim();
-      const colorToken = isHexColor(colorTokenRaw) ? colorTokenRaw : params.segmentColor;
+      const colorToken = isHexColor(colorTokenRaw)
+        ? colorTokenRaw
+        : params.segmentColor;
       const textStrip = ensureTextStripTexture(
         p,
         textToken,
@@ -187,7 +198,9 @@ const draw: P5AnimationFunction = (p: p5, ctx: FrameContext): void => {
 
     drawDebugSegments({
       p,
-      pointsPx: wrapPointsForDebug(oscillatingPoints).map((t) => path.getPointAt(t) as Point),
+      pointsPx: wrapPointsForDebug(oscillatingPoints).map(
+        (t) => path.getPointAt(t) as Point,
+      ),
       drawableSegments,
       lineThickness: params.lineThickness,
       segmentGap: params.segmentGap,
